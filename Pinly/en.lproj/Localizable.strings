@@ -1,0 +1,98 @@
+// MARK: - Home
+"Merhaba 👋" = "Hello 👋";
+"Ne yapmak istiyorsun?" = "What do you want to do?";
+"Mekanlarım" = "My Places";
+"Henüz mekan eklenmedi" = "No places added yet";
+"%lld mekan kayıtlı" = "%lld places saved";
+"Görüntüle & Düzenle" = "View & Edit";
+"Rota Planla" = "Plan Route";
+"Konumuna göre rota oluştur" = "Create route based on your location";
+"Başla" = "Start";
+"Mekanlarını ekleyip rotanı planla" = "Add your places and plan your route";
+
+// MARK: - Places List
+"+ butonuna basarak mekan ekleyebilirsin" = "Tap + to add a place";
+"%lld mekan yakında" = "%lld places nearby";
+"Kapat" = "Close";
+"mekan" = "place";
+"mekanlar" = "places";
+
+// MARK: - Permissions
+"Konumuna İhtiyacımız Var" = "We Need Your Location";
+"Bulunduğun semtteki mekanları göstermek için konum izni gerekiyor." = "Location permission is required to show places in your area.";
+"Konum İzni Gerekli" = "Location Permission Required";
+"Ayarlar > Pinly > Konum bölümünden izin ver." = "Grant permission from Settings > Pinly > Location.";
+"Ayarlara Git" = "Go to Settings";
+
+// MARK: - Map
+"Rota Oluştur" = "Create Route";
+"Navigate Here" = "Navigate Here";
+
+// MARK: - Route Flow
+"Rotana eklemek istediğin kategorileri seç" = "Choose categories to add to your route";
+"Mekanlar yükleniyor..." = "Loading places...";
+"İptal" = "Cancel";
+"Devam Et" = "Continue";
+"Sırayı belirle" = "Set the order";
+"Hangi sırayla gitmek istiyorsun?" = "In what order do you want to go?";
+"Sürükleyerek sırala" = "Drag to reorder";
+"Sıralama" = "Ordering";
+"Mekan Seçimine Geç" = "Go to Place Selection";
+
+// MARK: - Place Picker
+"Adım %lld / %lld" = "Step %lld / %lld";
+"Bir %@ seç" = "Select a %@";
+"Bu kategoride mekan bulunamadı" = "No places found in this category";
+"Bu adımı atla" = "Skip this step";
+"Arama Yarıçapı" = "Search Radius";
+"Anlık konumuna göre hangi mesafedeki mekanlar gösterilsin?" = "Which distance from your location should be shown?";
+"Tümü" = "All";
+"Tüm kayıtlı mekanları göster" = "Show all saved places";
+"Konumundan %@ içindeki mekanlar" = "Places within %@ of your location";
+"Arama yarıçapını genişlet (%@)" = "Expand search radius (%@)";
+
+// MARK: - Route Summary
+"Rotanız" = "Your Route";
+"Navigasyon" = "Navigation";
+"Rota Hazır! 🎉" = "Route Ready! 🎉";
+"Rota hesaplanıyor..." = "Calculating route...";
+"Navigasyonu Durdur" = "Stop Navigation";
+"Navigasyonu Başlat" = "Start Navigation";
+"Devam edin" = "Continue ahead";
+"Rota yeniden hesaplanıyor..." = "Recalculating route...";
+"Sonraki Durağa Devam Et" = "Continue to Next Stop";
+"Rota Tamamlandı! 🎉" = "Route Completed! 🎉";
+"Tüm mekanları ziyaret ettin" = "You visited all places";
+"Navigasyona Dön" = "Back to Navigation";
+"Yeni Rota" = "New Route";
+
+// MARK: - Add / Edit Place
+"Yeni Mekan Ekle" = "Add New Place";
+"Mekanı Düzenle" = "Edit Place";
+"Mekan Bilgileri" = "Place Details";
+"Mekan Adı" = "Place Name";
+"Kategori" = "Category";
+"Konum" = "Location";
+"Konum & Adres" = "Location & Address";
+"Adres (Örn: Kadıköy, İstanbul)" = "Address (e.g., Manhattan, New York)";
+"Açık Adres (Örn: Kadıköy, İstanbul)" = "Full Address (e.g., Manhattan, New York)";
+"Notlar" = "Notes";
+"Kaydet" = "Save";
+"Mevcut konum kullanılıyor" = "Using current location";
+"Değiştir" = "Change";
+"Mevcut Konumumu Kullan" = "Use My Current Location";
+"Konum alınıyor..." = "Getting location...";
+
+// MARK: - Errors
+"Hata" = "Error";
+"Tamam" = "OK";
+
+// MARK: - Categories
+"Restaurant" = "Restaurant";
+"Café" = "Café";
+"Park" = "Park";
+"Museum" = "Museum";
+"Historical Site" = "Historical Site";
+"Library" = "Library";
+"Dessert" = "Dessert";
+"General" = "General";
