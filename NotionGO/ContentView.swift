@@ -8,21 +8,30 @@ struct ContentView: View {
     @StateObject private var locationManager = LocationManager()
     @StateObject private var routeManager = RouteManager()
 
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+
     var body: some View {
         Group {
-            switch locationManager.authorizationStatus {
-            case .notDetermined:
-                PermissionView()
-            case .denied, .restricted:
-                LocationDeniedView()
-            default:
-                HomeView()
-                    .environmentObject(placeStore)
-                    .environmentObject(locationManager)
-                    .environmentObject(routeManager)
+            if !hasSeenOnboarding {
+                ThemeSelectionView {
+                    hasSeenOnboarding = true
+                }
+            } else {
+                switch locationManager.authorizationStatus {
+                case .notDetermined:
+                    PermissionView()
+                case .denied, .restricted:
+                    LocationDeniedView()
+                default:
+                    HomeView()
+                        .environmentObject(placeStore)
+                        .environmentObject(locationManager)
+                        .environmentObject(routeManager)
+                }
             }
         }
         .onAppear {
+            hasSeenOnboarding = false // TEMP: remove before shipping
             placeStore.load(context: modelContext)
         }
     }
