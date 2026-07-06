@@ -58,7 +58,7 @@ struct SharePlaceView: View {
                         )
                 }
 
-                Text("QR kodu okutarak veya linki paylaşarak arkadaşlarının bu mekanı eklemesini sağla.")
+                Text(NSLocalizedString("QR kodu okutarak veya linki paylaşarak arkadaşlarının bu mekanı eklemesini sağla.", comment: ""))
                     .font(.footnote)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -69,17 +69,17 @@ struct SharePlaceView: View {
                     ShareLink(
                         item: url,
                         subject: Text(place.name),
-                        message: Text("\(place.name) mekanını Pinly'e eklemek için bu linke dokun.")
+                        message: Text(String(format: NSLocalizedString("%@ mekanını Pinly'e eklemek için bu linke dokun.", comment: ""), place.name))
                     ) {
                         HStack(spacing: 8) {
                             Image(systemName: "square.and.arrow.up")
-                            Text("Paylaş")
+                            Text(NSLocalizedString("Paylaş", comment: ""))
                                 .fontWeight(.semibold)
                         }
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(Color.blue)
+                        .background(PinlyTheme.primary)
                         .cornerRadius(14)
                         .padding(.horizontal, 24)
                     }
@@ -87,11 +87,11 @@ struct SharePlaceView: View {
 
                 Spacer()
             }
-            .navigationTitle("Mekanı Paylaş")
+            .navigationTitle(NSLocalizedString("Mekanı Paylaş", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Kapat") { dismiss() }
+                    Button(NSLocalizedString("Kapat", comment: "")) { dismiss() }
                 }
             }
         }

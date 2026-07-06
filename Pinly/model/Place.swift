@@ -73,6 +73,7 @@ class Place {
     var userRating: Int? = nil
     var latitude: Double?
     var longitude: Double?
+    var createdAt: Date = Date()
 
     init(name: String, category: String = PlaceCategory.general.rawValue, address: String = "", notes: String = "", isVisited: Bool = false) {
         self.id = UUID()
@@ -82,6 +83,7 @@ class Place {
         self.address = address
         self.notes = notes
         self.isVisited = isVisited
+        self.createdAt = Date()
     }
 
     @Transient

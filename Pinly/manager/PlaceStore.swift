@@ -7,6 +7,19 @@ import SwiftData
 class PlaceStore: ObservableObject {
     @Published var places: [Place] = []
     @Published var lastError: String? = nil
+    @Published var pendingBadges: [Badge] = []
+
+    private let badges: BadgeServicing
+
+    init(badges: BadgeServicing = DefaultBadgeService.shared) {
+        self.badges = badges
+    }
+
+    /// Rozet kontrolü yapar; yeni açılan rozetleri banner kuyruğuna ekler.
+    func refreshBadges() {
+        let newBadges = badges.check(placeStore: self)
+        pendingBadges.append(contentsOf: newBadges)
+    }
 
     func load(context: ModelContext) {
         do {
@@ -17,10 +30,15 @@ class PlaceStore: ObservableObject {
         }
     }
 
-    func addPlace(name: String, category: String, address: String, notes: String, context: ModelContext) async {
+    func addPlace(name: String, category: String, address: String, notes: String, coordinate: CLLocationCoordinate2D? = nil, context: ModelContext) async {
         let place = Place(name: name, category: category, address: address, notes: notes)
 
-        if let coord = await resolveCoordinate(name: name, address: address) {
+        if let coord = coordinate {
+            // Haritadan pinlenen koordinat — geocode atlanır
+            place.latitude = coord.latitude
+            place.longitude = coord.longitude
+            place.locationName = address
+        } else if let coord = await resolveCoordinate(name: name, address: address) {
             place.latitude = coord.latitude
             place.longitude = coord.longitude
             place.locationName = address
@@ -29,6 +47,7 @@ class PlaceStore: ObservableObject {
         context.insert(place)
         save(context: context)
         load(context: context)
+        refreshBadges()
     }
 
     func deletePlace(_ place: Place, context: ModelContext) {

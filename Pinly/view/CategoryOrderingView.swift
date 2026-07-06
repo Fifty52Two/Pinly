@@ -11,17 +11,17 @@ struct CategoryOrderingView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 6) {
-                Text("Sırayı belirle")
+                Text(NSLocalizedString("Sırayı belirle", comment: ""))
                     .font(.title2)
                     .fontWeight(.bold)
-                Text("Hangi sırayla gitmek istiyorsun?")
+                Text(NSLocalizedString("Hangi sırayla gitmek istiyorsun?", comment: ""))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
             .padding(.top, 20)
             .padding(.bottom, 8)
 
-            Text("Sürükleyerek sırala")
+            Text(NSLocalizedString("Sürükleyerek sırala", comment: ""))
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .padding(.bottom, 20)
@@ -31,7 +31,7 @@ struct CategoryOrderingView: View {
                     HStack(spacing: 14) {
                         ZStack {
                             Circle()
-                                .fill(Color.blue)
+                                .fill(PinlyTheme.primary)
                                 .frame(width: 28, height: 28)
                             Text("\(index + 1)")
                                 .font(.caption)
@@ -66,20 +66,20 @@ struct CategoryOrderingView: View {
                 goToPicker = true
             } label: {
                 HStack {
-                    Text("Mekan Seçimine Geç")
+                    Text(NSLocalizedString("Mekan Seçimine Geç", comment: ""))
                         .fontWeight(.semibold)
                     Image(systemName: "arrow.right")
                 }
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
-                .background(Color.blue)
+                .background(PinlyTheme.primary)
                 .cornerRadius(14)
                 .padding(.horizontal, 20)
                 .padding(.bottom, 30)
             }
         }
-        .navigationTitle("Sıralama")
+        .navigationTitle(NSLocalizedString("Sıralama", comment: ""))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

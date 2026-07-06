@@ -1,8 +1,31 @@
 import Foundation
 import CoreLocation
 import SwiftData
+import UIKit
+
+// MARK: - Route Category
+
+enum RouteCategory: String, CaseIterable, Codable {
+    case city         = "Şehir İçi"
+    case dayTrip      = "Şehir Dışı"
+    case international = "Yurt Dışı"
+
+    var icon: String {
+        switch self {
+        case .city:          return "building.2.fill"
+        case .dayTrip:       return "car.fill"
+        case .international: return "airplane"
+        }
+    }
+}
 
 // MARK: - Import Data
+
+struct RouteImport {
+    let places: [PlaceImportData]
+    let name: String?
+    let category: RouteCategory?
+}
 
 struct PlaceImportData {
     let name: String
@@ -69,9 +92,11 @@ enum PlaceImporter {
     }
 
     // MARK: - Route URL (pinly://route?data=<base64JSON>)
+    // JSON format: {"places": [...], "name": "...", "category": "..."}
+    // Backwards compat: plain array also accepted by parseRouteFull
 
-    static func buildRouteURL(for places: [Place]) -> URL? {
-        let items: [[String: String]] = places.map { p in
+    static func buildRouteURL(for places: [Place], name: String? = nil, category: RouteCategory? = nil) -> URL? {
+        let placeItems: [[String: String]] = places.map { p in
             var d: [String: String] = [
                 "name": p.name,
                 "category": p.placeCategory.rawValue,
@@ -82,27 +107,50 @@ enum PlaceImporter {
             if let lon = p.longitude { d["lon"] = String(lon) }
             return d
         }
-        guard let json   = try? JSONSerialization.data(withJSONObject: items),
+        var wrapper: [String: Any] = ["places": placeItems]
+        if let name = name, !name.isEmpty { wrapper["name"] = name }
+        if let category = category { wrapper["category"] = category.rawValue }
+
+        guard let json   = try? JSONSerialization.data(withJSONObject: wrapper),
               let b64str = String(data: json.base64EncodedData(), encoding: .utf8)
         else { return nil }
         var c = URLComponents()
-          c.scheme = primaryScheme
+        c.scheme = primaryScheme
         c.host   = "route"
         c.queryItems = [URLQueryItem(name: "data", value: b64str)]
         return c.url
     }
 
-    static func parseRoute(url: URL) -> [PlaceImportData]? {
-          guard let scheme = url.scheme,
+    static func parseRouteFull(url: URL) -> RouteImport? {
+        guard let scheme = url.scheme,
               [primaryScheme, legacyScheme].contains(scheme),
               url.host == "route"
-          else { return nil }
+        else { return nil }
         let comps = URLComponents(url: url, resolvingAgainstBaseURL: false)
         guard let b64  = comps?.queryItems?.first(where: { $0.name == "data" })?.value,
               let data = Data(base64Encoded: b64),
-              let arr  = try? JSONSerialization.jsonObject(with: data) as? [[String: String]]
+              let json = try? JSONSerialization.jsonObject(with: data)
         else { return nil }
-        let result = arr.compactMap { d -> PlaceImportData? in
+
+        // New format: {"places": [...], "name": "...", "category": "..."}
+        let rawPlaces: [[String: String]]
+        let routeName: String?
+        let routeCategory: RouteCategory?
+        if let wrapper = json as? [String: Any],
+           let arr = wrapper["places"] as? [[String: String]] {
+            rawPlaces = arr
+            routeName = wrapper["name"] as? String
+            routeCategory = (wrapper["category"] as? String).flatMap { RouteCategory(rawValue: $0) }
+        } else if let arr = json as? [[String: String]] {
+            // Legacy format: plain array
+            rawPlaces = arr
+            routeName = nil
+            routeCategory = nil
+        } else {
+            return nil
+        }
+
+        let places = rawPlaces.compactMap { d -> PlaceImportData? in
             guard let name = d["name"], !name.isEmpty else { return nil }
             return PlaceImportData(
                 name: name,
@@ -113,7 +161,237 @@ enum PlaceImporter {
                 longitude: d["lon"].flatMap(Double.init)
             )
         }
+        guard !places.isEmpty else { return nil }
+        return RouteImport(places: places, name: routeName, category: routeCategory)
+    }
+
+    // MARK: - Swarm Import (checkins.json)
+
+    static func parseSwarm(data: Data) -> [PlaceImportData]? {
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let checkinsObj = json["checkins"] as? [String: Any],
+              let items = checkinsObj["items"] as? [[String: Any]]
+        else { return nil }
+
+        var seen = Set<String>()
+        var result: [PlaceImportData] = []
+
+        for item in items {
+            guard let venue = item["venue"] as? [String: Any],
+                  let name = venue["name"] as? String, !name.isEmpty
+            else { continue }
+
+            let venueId = (venue["id"] as? String) ?? name
+            guard !seen.contains(venueId) else { continue }
+            seen.insert(venueId)
+
+            let location = venue["location"] as? [String: Any] ?? [:]
+            let lat = location["lat"] as? Double
+            let lon = location["lng"] as? Double
+            let street = location["address"] as? String ?? ""
+            let city   = location["city"] as? String ?? ""
+            let address = [street, city].filter { !$0.isEmpty }.joined(separator: ", ")
+            let shout   = item["shout"] as? String ?? ""
+
+            let categories = venue["categories"] as? [[String: Any]] ?? []
+            let primary = categories.first(where: { $0["primary"] as? Bool == true }) ?? categories.first
+            let fqName  = (primary?["name"] as? String ?? "").lowercased()
+
+            result.append(PlaceImportData(
+                name: name,
+                category: swarmCategory(fqName),
+                address: address,
+                notes: shout,
+                latitude: lat,
+                longitude: lon
+            ))
+        }
+
         return result.isEmpty ? nil : result
+    }
+
+    private static func swarmCategory(_ fq: String) -> String {
+        switch true {
+        case fq.contains("restaurant") || fq.contains("food") || fq.contains("burger") ||
+             fq.contains("pizza") || fq.contains("sushi") || fq.contains("grill") ||
+             fq.contains("kebab") || fq.contains("bistro") || fq.contains("diner"):
+            return PlaceCategory.restaurant.rawValue
+        case fq.contains("coffee") || fq.contains("café") || fq.contains("cafe") || fq.contains("tea"):
+            return PlaceCategory.cafe.rawValue
+        case fq.contains("park") || fq.contains("garden") || fq.contains("outdoors") ||
+             fq.contains("nature") || fq.contains("beach") || fq.contains("forest"):
+            return PlaceCategory.park.rawValue
+        case fq.contains("museum") || fq.contains("gallery") || fq.contains("art") ||
+             fq.contains("cultural"):
+            return PlaceCategory.museum.rawValue
+        case fq.contains("historic") || fq.contains("monument") || fq.contains("landmark") ||
+             fq.contains("castle") || fq.contains("mosque") || fq.contains("church") ||
+             fq.contains("temple") || fq.contains("ruins"):
+            return PlaceCategory.historical.rawValue
+        case fq.contains("library") || fq.contains("bookstore") || fq.contains("book"):
+            return PlaceCategory.library.rawValue
+        case fq.contains("dessert") || fq.contains("ice cream") || fq.contains("bakery") ||
+             fq.contains("pastry") || fq.contains("cake") || fq.contains("chocolate") ||
+             fq.contains("patisserie") || fq.contains("candy"):
+            return PlaceCategory.dessert.rawValue
+        default:
+            return PlaceCategory.general.rawValue
+        }
+    }
+
+    // MARK: - PDF Export (PDFKit)
+
+    static func buildPDFFile(for places: [Place], name: String, totalDistance: String = "", totalTime: String = "") -> URL? {
+        let pageWidth: CGFloat = 595   // A4 points
+        let pageHeight: CGFloat = 842
+        let margin: CGFloat = 48
+        let contentWidth = pageWidth - margin * 2
+
+        let pdfData = NSMutableData()
+        UIGraphicsBeginPDFContextToData(pdfData, CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), nil)
+
+        var y: CGFloat = margin
+        var pageOpen = false
+
+        func beginPageIfNeeded() {
+            if !pageOpen {
+                UIGraphicsBeginPDFPage()
+                pageOpen = true
+                y = margin
+            }
+        }
+
+        func newPageIfNeeded(neededHeight: CGFloat) {
+            if y + neededHeight > pageHeight - margin {
+                pageOpen = false
+                beginPageIfNeeded()
+            }
+        }
+
+        beginPageIfNeeded()
+
+        // ---- Header ----
+        let titleAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.boldSystemFont(ofSize: 22),
+            .foregroundColor: UIColor.label
+        ]
+        let routeName = name.isEmpty ? "Rota" : name
+        routeName.draw(in: CGRect(x: margin, y: y, width: contentWidth, height: 28), withAttributes: titleAttrs)
+        y += 32
+
+        let subAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 12),
+            .foregroundColor: UIColor.secondaryLabel
+        ]
+        let dateStr = "Oluşturulma: \(DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .none))"
+        dateStr.draw(in: CGRect(x: margin, y: y, width: contentWidth, height: 18), withAttributes: subAttrs)
+        y += 22
+
+        if !totalDistance.isEmpty || !totalTime.isEmpty {
+            let statsStr = [totalDistance, totalTime].filter { !$0.isEmpty }.joined(separator: "   •   ")
+            statsStr.draw(in: CGRect(x: margin, y: y, width: contentWidth, height: 18), withAttributes: subAttrs)
+            y += 22
+        }
+
+        // Divider
+        let ctx = UIGraphicsGetCurrentContext()
+        ctx?.setStrokeColor(UIColor.separator.cgColor)
+        ctx?.setLineWidth(0.5)
+        ctx?.move(to: CGPoint(x: margin, y: y + 4))
+        ctx?.addLine(to: CGPoint(x: pageWidth - margin, y: y + 4))
+        ctx?.strokePath()
+        y += 16
+
+        // ---- Place list ----
+        let numAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.boldSystemFont(ofSize: 11),
+            .foregroundColor: UIColor.systemBlue
+        ]
+        let nameAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.boldSystemFont(ofSize: 13),
+            .foregroundColor: UIColor.label
+        ]
+        let addrAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 11),
+            .foregroundColor: UIColor.secondaryLabel
+        ]
+        let noteAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.italicSystemFont(ofSize: 11),
+            .foregroundColor: UIColor.secondaryLabel
+        ]
+
+        for (i, place) in places.enumerated() {
+            let rowHeight: CGFloat = 18 + (place.address.isEmpty ? 0 : 16) + (place.notes.isEmpty ? 0 : 16) + 10
+            newPageIfNeeded(neededHeight: rowHeight)
+
+            let numStr = "\(i + 1)."
+            numStr.draw(in: CGRect(x: margin, y: y, width: 24, height: 18), withAttributes: numAttrs)
+            place.name.draw(in: CGRect(x: margin + 28, y: y, width: contentWidth - 28, height: 18), withAttributes: nameAttrs)
+            y += 18
+            if !place.address.isEmpty {
+                place.address.draw(in: CGRect(x: margin + 28, y: y, width: contentWidth - 28, height: 16), withAttributes: addrAttrs)
+                y += 16
+            }
+            if !place.notes.isEmpty {
+                place.notes.draw(in: CGRect(x: margin + 28, y: y, width: contentWidth - 28, height: 16), withAttributes: noteAttrs)
+                y += 16
+            }
+            y += 10
+        }
+
+        // ---- Footer ----
+        let footerAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 10),
+            .foregroundColor: UIColor.tertiaryLabel
+        ]
+        let footerY = pageHeight - margin + 4
+        "Pinly ile oluşturuldu".draw(
+            in: CGRect(x: margin, y: footerY, width: contentWidth, height: 14),
+            withAttributes: footerAttrs
+        )
+
+        UIGraphicsEndPDFContext()
+
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("\(sanitizedFileName(routeName)).pdf")
+        pdfData.write(to: url, atomically: true)
+        return url
+    }
+
+    // Rota adındaki "/" ve ":" gibi karakterler dosya yazımını sessizce bozar
+    private static func sanitizedFileName(_ name: String) -> String {
+        let invalid = CharacterSet(charactersIn: "/\\:?%*|\"<>")
+        let cleaned = name.components(separatedBy: invalid).joined(separator: "-")
+            .trimmingCharacters(in: .whitespaces)
+        return cleaned.isEmpty ? "rota" : cleaned
+    }
+
+    static func buildGPXFile(for places: [Place], name: String) -> URL? {
+        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        xml += "<gpx version=\"1.1\" creator=\"Pinly\" xmlns=\"http://www.topografix.com/GPX/1/1\">\n"
+        xml += "  <metadata><name>\(escapeXML(name))</name></metadata>\n"
+        for place in places {
+            guard let lat = place.latitude, let lon = place.longitude else { continue }
+            let desc = place.address.isEmpty ? place.category : "\(place.category) - \(place.address)"
+            xml += "  <wpt lat=\"\(lat)\" lon=\"\(lon)\"><name>\(escapeXML(place.name))</name><desc>\(escapeXML(desc))</desc></wpt>\n"
+        }
+        xml += "  <rte><name>\(escapeXML(name))</name>\n"
+        for place in places {
+            guard let lat = place.latitude, let lon = place.longitude else { continue }
+            xml += "    <rtept lat=\"\(lat)\" lon=\"\(lon)\"><name>\(escapeXML(place.name))</name></rtept>\n"
+        }
+        xml += "  </rte>\n</gpx>"
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("\(sanitizedFileName(name)).gpx")
+        try? xml.write(to: url, atomically: true, encoding: .utf8)
+        return url
+    }
+
+    private static func escapeXML(_ s: String) -> String {
+        s.replacingOccurrences(of: "&", with: "&amp;")
+         .replacingOccurrences(of: "<", with: "&lt;")
+         .replacingOccurrences(of: ">", with: "&gt;")
+         .replacingOccurrences(of: "\"", with: "&quot;")
     }
 
     // Shared import logic used by both QRScannerView and deep-link handler.
@@ -128,6 +406,7 @@ enum PlaceImporter {
             context.insert(place)
             placeStore.save(context: context)
             placeStore.load(context: context)
+            placeStore.refreshBadges()
         } else {
             await placeStore.addPlace(
                 name: data.name,

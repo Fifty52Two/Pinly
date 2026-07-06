@@ -19,6 +19,11 @@ struct EditPlaceView: View {
     @State private var usedCurrentLocation = false
     @State private var currentCoord: CLLocationCoordinate2D? = nil
 
+    // Haritada Pinle
+    @State private var showMapPicker = false
+    @State private var pinnedCoord: CLLocationCoordinate2D? = nil
+    @State private var pinnedAddress = ""
+
     init(place: Place) {
         self.place = place
         _name = State(initialValue: place.name)
@@ -30,25 +35,25 @@ struct EditPlaceView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section(header: Text("Mekan Bilgileri")) {
-                    TextField("Mekan Adı", text: $name)
-                    Picker("Kategori", selection: $category) {
+                Section(header: Text(NSLocalizedString("Mekan Bilgileri", comment: ""))) {
+                    TextField(NSLocalizedString("Mekan Adı", comment: ""), text: $name)
+                    Picker(NSLocalizedString("Kategori", comment: ""), selection: $category) {
                         ForEach(PlaceCategory.allCases, id: \.rawValue) { cat in
                             Text(cat.rawValue).tag(cat.rawValue)
                         }
                     }
                 }
 
-                Section(header: Text("Konum")) {
+                Section(header: Text(NSLocalizedString("Konum", comment: ""))) {
                     if usedCurrentLocation {
                         HStack {
                             Image(systemName: "location.fill")
                                 .foregroundColor(.blue)
-                            Text("Mevcut konum kullanılıyor")
+                            Text(NSLocalizedString("Mevcut konum kullanılıyor", comment: ""))
                                 .font(.subheadline)
                                 .foregroundColor(.blue)
                             Spacer()
-                            Button("Değiştir") {
+                            Button(NSLocalizedString("Değiştir", comment: "")) {
                                 usedCurrentLocation = false
                                 currentCoord = nil
                             }
@@ -56,31 +61,67 @@ struct EditPlaceView: View {
                             .foregroundColor(.red)
                         }
                     } else {
-                        TextField("Adres (Örn: Kadıköy, İstanbul)", text: $address)
+                        TextField(NSLocalizedString("Adres (Örn: Kadıköy, İstanbul)", comment: ""), text: $address)
+                            .onChange(of: address) {
+                                // Adres elle değiştirilirse pinlenen konum geçersiz olur
+                                if pinnedCoord != nil && address != pinnedAddress {
+                                    pinnedCoord = nil
+                                    pinnedAddress = ""
+                                }
+                            }
+
+                        if pinnedCoord != nil {
+                            HStack {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                Text(NSLocalizedString("Konum haritadan seçildi", comment: ""))
+                                    .font(.subheadline)
+                                    .foregroundColor(.green)
+                                Spacer()
+                                Button(NSLocalizedString("Kaldır", comment: "")) {
+                                    pinnedCoord = nil
+                                    pinnedAddress = ""
+                                    address = place.address
+                                }
+                                .font(.caption)
+                                .foregroundColor(.red)
+                            }
+                        }
 
                         Button {
                             fetchCurrentLocation()
                         } label: {
                             HStack {
                                 Image(systemName: "location.fill")
-                                Text("Mevcut Konumumu Kullan")
+                                Text(NSLocalizedString("Mevcut Konumumu Kullan", comment: ""))
                                     .fontWeight(.medium)
                             }
                             .foregroundColor(.blue)
                         }
+
+                        Button {
+                            showMapPicker = true
+                        } label: {
+                            HStack {
+                                Image(systemName: "mappin.and.ellipse")
+                                Text(NSLocalizedString("Haritada Pinle", comment: ""))
+                                    .fontWeight(.medium)
+                            }
+                            .foregroundColor(PinlyTheme.primary)
+                        }
                     }
                 }
 
-                Section(header: Text("Notlar")) {
+                Section(header: Text(NSLocalizedString("Notlar", comment: ""))) {
                     TextEditor(text: $notes)
                         .frame(height: 120)
                 }
             }
-            .navigationTitle("Mekanı Düzenle")
+            .navigationTitle(NSLocalizedString("Mekanı Düzenle", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("İptal") { dismiss() }
+                    Button(NSLocalizedString("İptal", comment: "")) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button {
@@ -89,11 +130,20 @@ struct EditPlaceView: View {
                         if isSaving {
                             ProgressView().scaleEffect(0.8)
                         } else {
-                            Text("Kaydet")
+                            Text(NSLocalizedString("Kaydet", comment: ""))
                         }
                     }
                     .disabled(name.isEmpty || isSaving)
                 }
+            }
+            .sheet(isPresented: $showMapPicker) {
+                // Düzenleme modu: mevcut koordinatla başla
+                MapPinPickerView(initialCoordinate: pinnedCoord ?? place.coordinate) { coord, resolvedAddress in
+                    pinnedCoord = coord
+                    pinnedAddress = resolvedAddress
+                    address = resolvedAddress
+                }
+                .environmentObject(locationManager)
             }
         }
     }
@@ -120,6 +170,12 @@ struct EditPlaceView: View {
                 place.longitude = coord.longitude
                 place.address = "Mevcut Konum"
                 place.locationName = "Mevcut Konum"
+            } else if let coord = pinnedCoord {
+                // Haritadan pinlenen koordinat — geocode atlanır
+                place.latitude = coord.latitude
+                place.longitude = coord.longitude
+                place.address = address
+                place.locationName = address
             } else if addressChanged {
                 place.address = address
                 if let coord = await geocode(name: name, address: address) {

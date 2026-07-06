@@ -15,6 +15,12 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        authorizationStatus = manager.authorizationStatus
+    }
+
+    /// İzin istemi onboarding bittikten sonra PermissionView'den tetiklenir —
+    /// init'te istemek sistem diyaloğunu onboarding'in üstüne düşürüyordu.
+    func requestPermission() {
         manager.requestWhenInUseAuthorization()
     }
 

@@ -67,7 +67,7 @@ struct LockScreenView: View {
 
     var body: some View {
         VStack(spacing: 10) {
-            HStack {
+            HStack(alignment: .top) {
                 Image(systemName: "arrow.turn.up.right")
                     .font(.title3)
                     .foregroundColor(.blue)
@@ -94,6 +94,20 @@ struct LockScreenView: View {
 
             ProgressView(value: state.completionPercentage)
                 .tint(.blue)
+
+            Link(destination: URL(string: "pinly://navigation")!) {
+                HStack {
+                    Image(systemName: "arrow.right.circle.fill")
+                    Text("Navigasyona Dön")
+                        .fontWeight(.semibold)
+                }
+                .font(.subheadline)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(Color.blue)
+                .cornerRadius(10)
+            }
         }
         .padding(16)
     }

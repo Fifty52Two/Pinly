@@ -21,6 +21,7 @@ struct MapView: View {
     @EnvironmentObject var routeManager: RouteManager
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.entitlements) private var entitlements
 
     @State private var showRouteFlow = false
     @State private var selectedPlace: Place? = nil
@@ -53,10 +54,7 @@ struct MapView: View {
                         }
                     },
                     onNavigate: {
-                        routeManager.reset()
-                        let key = place.id.uuidString
-                        routeManager.selectedCategories = [key]
-                        routeManager.selectedPlaces[key] = place
+                        routeManager.setRoute(places: [place], name: place.name)
                         selectedPlace = nil
                         navigateToSinglePlace = true
                     },
@@ -83,15 +81,15 @@ struct MapView: View {
                 } label: {
                     HStack(spacing: 10) {
                         Image(systemName: "map.fill")
-                        Text("Rota Oluştur")
+                        Text(NSLocalizedString("Rota Oluştur", comment: ""))
                             .fontWeight(.semibold)
                     }
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
-                    .background(Color.blue)
-                    .cornerRadius(16)
-                    .shadow(color: .blue.opacity(0.4), radius: 12, x: 0, y: 6)
+                    .background(PinlyTheme.primary)
+                    .cornerRadius(14)
+                    .shadow(color: .black.opacity(0.18), radius: 10, x: 0, y: 5)
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 40)
@@ -129,7 +127,7 @@ struct MapView: View {
                     }
                     Spacer()
                     Button {
-                        if FreemiumManager.canAddPlace(currentCount: placeStore.places.count) {
+                        if entitlements.canAddPlace(currentCount: placeStore.places.count) {
                             showAddPlace = true
                         } else {
                             showPaywall = true
@@ -140,7 +138,7 @@ struct MapView: View {
                             .fontWeight(.bold)
                             .foregroundColor(.white)
                             .padding(12)
-                            .background(Color.blue)
+                            .background(PinlyTheme.primary)
                             .clipShape(Circle())
                             .shadow(radius: 4)
                     }
@@ -167,14 +165,13 @@ struct MapView: View {
                     .environmentObject(placeStore)
                     .environmentObject(locationManager)
                     .environmentObject(routeManager)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Close") {
-                                navigateToSinglePlace = false
-                                routeManager.reset()
-                            }
-                        }
-                    }
+                    // RouteSummaryView'in X butonu ve tamamlama overlay'i bu
+                    // environment'ı çağırır — set edilmezse kullanıcı ekranda kalır
+                    .environment(\.dismissRouteFlow, {
+                        navigateToSinglePlace = false
+                        locationManager.stopNavigationTracking()
+                        routeManager.reset()
+                    })
             }
         }
         .sheet(isPresented: $showAddPlace) {
@@ -208,6 +205,7 @@ struct MainMapView: UIViewRepresentable {
         let map = MKMapView()
         map.delegate = context.coordinator
         map.showsUserLocation = true
+        map.mapType = .mutedStandard
         // Register annotation view class for proper reuse
         map.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: "place")
 
@@ -239,9 +237,10 @@ struct MainMapView: UIViewRepresentable {
             )
         }
 
-        // Rebuild annotations when the place set changes
-        let currentIds = Set(map.annotations.compactMap { ($0 as? PlaceAnnotation)?.placeId })
-        let newIds = Set(places.compactMap { $0.coordinate != nil ? $0.id.uuidString : nil })
+        // Rebuild annotations when the place set changes.
+        // Kategori de karşılaştırmaya dahil — düzenlenen mekanın pin rengi/ikonu güncellensin.
+        let currentIds = Set(map.annotations.compactMap { ($0 as? PlaceAnnotation)?.placeKey })
+        let newIds = Set(places.compactMap { $0.coordinate != nil ? "\($0.id.uuidString)-\($0.category)" : nil })
 
         guard currentIds != newIds else { return }
 
@@ -294,6 +293,7 @@ class PlaceAnnotation: NSObject, MKAnnotation {
     let place: Place
     let coordinate: CLLocationCoordinate2D
     var placeId: String { place.id.uuidString }
+    var placeKey: String { "\(place.id.uuidString)-\(place.category)" }
     var title: String? { place.name }
 
     init(place: Place, coordinate: CLLocationCoordinate2D) {
@@ -370,9 +370,9 @@ struct PlaceCard: View {
                     Button(action: edit) {
                         Image(systemName: "pencil")
                             .font(.subheadline)
-                            .foregroundColor(.blue.opacity(0.8))
+                            .foregroundColor(PinlyTheme.slate)
                             .padding(6)
-                            .background(Color.blue.opacity(0.08))
+                            .background(PinlyTheme.slate.opacity(0.10))
                             .clipShape(Circle())
                     }
                     .buttonStyle(.plain)
@@ -422,7 +422,7 @@ struct PlaceCard: View {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.caption2)
                             .foregroundColor(.green)
-                        Text("\(place.visitCount)x visited")
+                        Text(String(format: NSLocalizedString("%ldx ziyaret edildi", comment: ""), place.visitCount))
                             .font(.caption2)
                             .fontWeight(.medium)
                             .foregroundColor(.green)
@@ -440,13 +440,13 @@ struct PlaceCard: View {
                 Button(action: navigate) {
                     HStack(spacing: 6) {
                         Image(systemName: "location.fill")
-                        Text("Navigate Here")
+                        Text(NSLocalizedString("Navigate Here", comment: ""))
                             .fontWeight(.semibold)
                     }
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
-                    .background(Color.blue)
+                    .background(PinlyTheme.primary)
                     .cornerRadius(10)
                 }
                 .buttonStyle(.plain)
@@ -457,11 +457,11 @@ struct PlaceCard: View {
         .cornerRadius(20)
         .shadow(color: .black.opacity(0.12), radius: 16, x: 0, y: 6)
         .padding(.horizontal, 16)
-        .confirmationDialog("Bu mekanı silmek istiyor musun?", isPresented: $showDeleteConfirm, titleVisibility: .visible) {
-            Button("Sil", role: .destructive) {
+        .confirmationDialog(NSLocalizedString("Bu mekanı silmek istiyor musun?", comment: ""), isPresented: $showDeleteConfirm, titleVisibility: .visible) {
+            Button(NSLocalizedString("Sil", comment: ""), role: .destructive) {
                 onDelete?()
             }
-            Button("İptal", role: .cancel) {}
+            Button(NSLocalizedString("İptal", comment: ""), role: .cancel) {}
         }
         .sheet(isPresented: $showShare) {
             SharePlaceView(place: place)

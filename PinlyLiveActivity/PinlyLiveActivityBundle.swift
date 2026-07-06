@@ -11,8 +11,7 @@ import SwiftUI
 @main
 struct PinlyLiveActivityBundle: WidgetBundle {
     var body: some Widget {
-        PinlyLiveActivity()
-        PinlyLiveActivityControl()
-        PinlyLiveActivityLiveActivity()
+        PinlyLiveActivityWidget()
+        QuickAddWidget()
     }
 }

@@ -6,6 +6,7 @@ import AVFoundation
 struct QRScannerView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var placeStore: PlaceStore
+    @Environment(\.entitlements) private var entitlements
     @Environment(\.modelContext) private var modelContext
 
     @State private var importData: PlaceImportData? = nil
@@ -38,7 +39,7 @@ struct QRScannerView: View {
                             .stroke(Color.white.opacity(0.8), lineWidth: 3)
                             .frame(width: 240, height: 240)
                             .shadow(color: .white.opacity(0.3), radius: 8)
-                        Text("QR kodu çerçeve içine al")
+                        Text(NSLocalizedString("QR kodu çerçeve içine al", comment: ""))
                             .font(.subheadline)
                             .foregroundColor(.white)
                             .padding(.vertical, 12)
@@ -50,11 +51,11 @@ struct QRScannerView: View {
                     }
                 }
             }
-            .navigationTitle("QR ile Mekan Ekle")
+            .navigationTitle(NSLocalizedString("QR ile Mekan Ekle", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Kapat") { dismiss() }
+                    Button(NSLocalizedString("Kapat", comment: "")) { dismiss() }
                         .foregroundColor(.white)
                 }
             }
@@ -84,7 +85,7 @@ struct QRScannerView: View {
     }
 
     private func importPlace(_ data: PlaceImportData) {
-        guard FreemiumManager.canAddPlace(currentCount: placeStore.places.count) else {
+        guard entitlements.canAddPlace(currentCount: placeStore.places.count) else {
             showImportConfirm = false
             showPaywall = true
             return
@@ -121,26 +122,26 @@ struct ImportConfirmView: View {
                         .font(.title2)
                         .foregroundColor(cat.color)
                 }
-                Text("Bu mekanı eklemek ister misin?")
+                Text(NSLocalizedString("Bu mekanı eklemek ister misin?", comment: ""))
                     .font(.headline)
                     .multilineTextAlignment(.center)
             }
             .padding(.top, 24)
 
             VStack(alignment: .leading, spacing: 10) {
-                InfoRow(label: "Mekan", value: data.name)
-                InfoRow(label: "Kategori", value: PlaceCategory.from(data.category).localizedName)
+                InfoRow(label: NSLocalizedString("Mekan", comment: ""), value: data.name)
+                InfoRow(label: NSLocalizedString("Kategori", comment: ""), value: PlaceCategory.from(data.category).localizedName)
                 if !data.address.isEmpty {
-                    InfoRow(label: "Adres", value: data.address)
+                    InfoRow(label: NSLocalizedString("Adres", comment: ""), value: data.address)
                 }
                 if !data.notes.isEmpty {
-                    InfoRow(label: "Not", value: data.notes)
+                    InfoRow(label: NSLocalizedString("Not", comment: ""), value: data.notes)
                 }
             }
             .padding(.horizontal, 24)
 
             HStack(spacing: 12) {
-                Button("İptal", action: onCancel)
+                Button(NSLocalizedString("İptal", comment: ""), action: onCancel)
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
@@ -153,14 +154,14 @@ struct ImportConfirmView: View {
                     if isSaving {
                         ProgressView().scaleEffect(0.9)
                     } else {
-                        Text("Ekle")
+                        Text(NSLocalizedString("Ekle", comment: ""))
                             .fontWeight(.semibold)
                     }
                 }
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
-                .background(Color.blue)
+                .background(PinlyTheme.primary)
                 .cornerRadius(12)
                 .disabled(isSaving)
             }
@@ -202,7 +203,10 @@ struct CameraPreviewView: UIViewRepresentable {
         return view
     }
 
-    func updateUIView(_ uiView: UIView, context: Context) {}
+    func updateUIView(_ uiView: UIView, context: Context) {
+        // Layout/rotation değişiminde preview'ı görünüme oturt
+        context.coordinator.updatePreviewFrame(to: uiView.bounds)
+    }
 
     static func dismantleUIView(_ uiView: UIView, coordinator: Coordinator) {
         coordinator.stopSession()
@@ -224,6 +228,11 @@ struct CameraPreviewView: UIViewRepresentable {
             session = nil
             previewLayer?.removeFromSuperlayer()
             previewLayer = nil
+        }
+
+        func updatePreviewFrame(to bounds: CGRect) {
+            guard let previewLayer, previewLayer.frame != bounds, !bounds.isEmpty else { return }
+            previewLayer.frame = bounds
         }
 
         func setupSession(in view: UIView) {
@@ -291,10 +300,10 @@ private struct CameraPermissionDeniedView: View {
             Image(systemName: "camera.fill")
                 .font(.system(size: 60))
                 .foregroundColor(.secondary)
-            Text("Kamera İzni Gerekli")
+            Text(NSLocalizedString("Kamera İzni Gerekli", comment: ""))
                 .font(.title3)
                 .fontWeight(.bold)
-            Text("Ayarlar > Pinly > Kamera bölümünden izin ver.")
+            Text(NSLocalizedString("Ayarlar > Pinly > Kamera bölümünden izin ver.", comment: ""))
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -304,12 +313,12 @@ private struct CameraPermissionDeniedView: View {
                     UIApplication.shared.open(url)
                 }
             } label: {
-                Text("Ayarlara Git")
+                Text(NSLocalizedString("Ayarlara Git", comment: ""))
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
                     .padding(.horizontal, 28)
                     .padding(.vertical, 12)
-                    .background(Color.blue)
+                    .background(PinlyTheme.primary)
                     .cornerRadius(12)
             }
         }

@@ -12,10 +12,10 @@ struct CategoryPickerView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 VStack(spacing: 6) {
-                    Text("Ne yapmak istiyorsun?")
+                    Text(NSLocalizedString("Ne yapmak istiyorsun?", comment: ""))
                         .font(.title2)
                         .fontWeight(.bold)
-                    Text("Rotana eklemek istediğin kategorileri seç")
+                    Text(NSLocalizedString("Rotana eklemek istediğin kategorileri seç", comment: ""))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
@@ -23,13 +23,20 @@ struct CategoryPickerView: View {
                 .padding(.bottom, 20)
 
                 if placeStore.places.isEmpty {
+                    // Mekan yoksa spinner değil gerçek boş durum göster —
+                    // eski hali sonsuza dek "yükleniyor" gösteriyordu
                     Spacer()
-                    VStack(spacing: 12) {
-                        ProgressView()
-                            .scaleEffect(1.2)
-                        Text("Mekanlar yükleniyor...")
+                    VStack(spacing: 14) {
+                        Image(systemName: "mappin.slash")
+                            .font(.system(size: 48))
+                            .foregroundColor(.secondary)
+                        Text(NSLocalizedString("Henüz mekan yok", comment: ""))
+                            .font(.headline)
+                        Text(NSLocalizedString("Mekanlarım ekranından mekan ekledikten sonra burada görünür", comment: ""))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 32)
                     }
                     Spacer()
                 } else {
@@ -49,11 +56,11 @@ struct CategoryPickerView: View {
                     }
                 }
             }
-            .navigationTitle("Rota Oluştur")
+            .navigationTitle(NSLocalizedString("Rota Oluştur", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("İptal") {
+                    Button(NSLocalizedString("İptal", comment: "")) {
                         routeManager.reset()
                         dismiss()
                     }
@@ -65,14 +72,14 @@ struct CategoryPickerView: View {
                         goToOrdering = true
                     } label: {
                         HStack {
-                            Text("Devam Et")
+                            Text(NSLocalizedString("Devam Et", comment: ""))
                                 .fontWeight(.semibold)
                             Image(systemName: "arrow.right")
                         }
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(Color.blue)
+                        .background(PinlyTheme.primary)
                         .cornerRadius(14)
                         .padding(.horizontal, 20)
                         .padding(.bottom, 30)

@@ -87,6 +87,176 @@
 "Hata" = "Error";
 "Tamam" = "OK";
 
+// MARK: - Discover
+"Henüz mekan yok" = "No places yet";
+"Mekanlarım ekranından mekan ekledikten sonra burada kategorilere göre görebilirsin." = "Add places from My Places to see them here by category.";
+"Keşfet" = "Discover";
+"Kategorilere göre mekanlarını gör" = "Browse by category";
+"%lld kategori" = "%lld categories";
+"Gözat" = "Browse";
+
+// MARK: - Badges
+"Rozetler" = "Badges";
+"Görüntüle" = "View";
+"Rozet kazanmaya başla" = "Start earning badges";
+"%lld/%lld rozet kazanıldı" = "%lld/%lld badges earned";
+"Yeni Rozet!" = "New Badge!";
+
+// MARK: - Place Detail
+"Konum yok" = "No location";
+"Ziyaret Edildi" = "Visited";
+"Gidilecek" = "To Visit";
+"Düzenle" = "Edit";
+
+// MARK: - Route Export
+"GPX İndir" = "Download GPX";
+"PDF İndir" = "Download PDF";
+
+// MARK: - Saved Routes
+"Kayıtlı Rotalar" = "Saved Routes";
+"Önceden planladığın rotalar" = "Routes you planned ahead";
+"Henüz kayıtlı rota yok" = "No saved routes yet";
+"Önceden bir rota planla, istediğin zaman başlat" = "Plan a route ahead, start it whenever you want";
+"Rotayı Başlat" = "Start Route";
+"Başlangıç Noktası Uzakta" = "Starting Point is Far Away";
+"Yine de Başlat" = "Start Anyway";
+"Rotanın başlangıç noktasına yaklaşık %@ uzaktasınız. Yine de başlatmak istiyor musunuz?" = "You are approximately %@ away from the route's starting point. Do you still want to start?";
+"Rotayı Sil" = "Delete Route";
+"\"%@\" rotasını silmek istiyor musun?" = "Do you want to delete the \"%@\" route?";
+"%lld mekan" = "%lld places";
+"Rotayı Kaydet" = "Save Route";
+"Rota Kaydedildi!" = "Route Saved!";
+"\"%@\" kayıtlı rotalarına eklendi." = "\"%@\" was added to your saved routes.";
+"Rota Bilgileri" = "Route Details";
+"Rota adı (örn: Kadıköy Turu)" = "Route name (e.g. Kadıköy Tour)";
+"Rota Türü" = "Route Type";
+"Seçilen Mekanlar" = "Selected Places";
+"Kaydediliyor..." = "Saving...";
+"\"%@\" rotası %lld mekanla kaydedildi." = "\"%@\" saved with %lld places.";
+
+// MARK: - Plan Route
+"Konum Seç" = "Select Location";
+"Mekan Seç" = "Select Places";
+"Rota Merkezi Seç" = "Select Route Center";
+"Rota için bir nokta seç" = "Tap the map to select a location";
+"Rota merkezi için haritaya dokun" = "Tap the map to set the route center";
+"Konum seçildi — devam edebilirsin" = "Location selected — you can continue";
+"Rotaya eklemek istediğin mekanları seç" = "Select places to add to the route";
+"Henüz mekan eklenmedi. Önce Mekanlarım'a mekan ekle." = "No places added yet. Add places in My Places first.";
+"Mekanlarım ekranından mekan ekledikten sonra burada görünür" = "Add places from My Places to see them here";
+"Konum seçildi" = "Location selected";
+"Çevredeki mekanlar aranıyor..." = "Searching nearby places...";
+"%lld mekan seçildi" = "%lld places selected";
+"Bu çevrede mekan bulunamadı" = "No places found nearby";
+"Farklı bir konum seçmeyi dene" = "Try selecting a different location";
+"Geri Dön" = "Go Back";
+"%lld yer bulundu" = "%lld places found";
+"Bilinmeyen" = "Unknown";
+"Rota Adı" = "Route Name";
+"Mekanlar" = "Places";
+
+// MARK: - Tab Bar
+"Ana" = "Home";
+"Rotalar" = "Routes";
+"Daha Fazla" = "More";
+
+// MARK: - More Tab
+"Rota Geçmişi" = "Route History";
+"Tamamladığın rotalar" = "Your completed routes";
+"Haftalık Rapor" = "Weekly Report";
+"Bu haftanın özeti" = "This week's summary";
+
+// MARK: - Route History
+"Henüz rota tamamlanmadı" = "No routes completed yet";
+"Bir rota tamamladığında burada görünecek." = "Completed routes will appear here.";
+
+// MARK: - Weekly Report
+"Bu hafta henüz rota tamamlanmadı" = "No routes completed this week";
+"Bir rota tamamladığında burada istatistiklerini görebilirsin." = "Complete a route to see your stats here.";
+"Adım" = "Steps";
+"Mesafe" = "Distance";
+"Toplam Ziyaret" = "Total Visits";
+"Rota" = "Route";
+"En Çok Kaydedilen" = "Most Saved";
+"En Çok Ziyaret Edilen Bölge" = "Most Visited District";
+
+// MARK: - Notifications
+"Haftalık Özet" = "Weekly Summary";
+"Bu haftaki mekan maceralarına göz at!" = "Check out your weekly place adventures!";
+
+// MARK: - Badge Titles
+"badge.ilkAdim.title" = "First Step";
+"badge.besli.title" = "Club of Five";
+"badge.onlu.title" = "Club of Ten";
+"badge.yirmili.title" = "Club of Twenty";
+"badge.ellili.title" = "Fifty Places";
+"badge.yuzlu.title" = "Century Club";
+"badge.ilkZiyaret.title" = "First Visit";
+"badge.onZiyaret.title" = "Wandering Soul";
+"badge.gezgin.title" = "Traveler";
+"badge.rotaci.title" = "Route Maker";
+"badge.rotaUstasi.title" = "Route Master";
+"badge.planlamaci.title" = "Planner";
+"badge.kasif.title" = "Explorer";
+"badge.parkSever.title" = "Park Lover";
+"badge.muzeSever.title" = "Museum Buff";
+"badge.gurme.title" = "Gourmet";
+"badge.sabahciKus.title" = "Early Bird";
+"badge.geceKusu.title" = "Night Owl";
+"badge.paylasimci.title" = "Sharer";
+"badge.sosyalKelebek.title" = "Social Butterfly";
+"badge.hafizalik.title" = "Dedicated";
+
+// MARK: - Badge Descriptions
+"badge.ilkAdim.desc" = "Added your first place";
+"badge.besli.desc" = "Saved 5 places";
+"badge.onlu.desc" = "Saved 10 places";
+"badge.yirmili.desc" = "Saved 20 places";
+"badge.ellili.desc" = "Saved 50 places";
+"badge.yuzlu.desc" = "Saved 100 places";
+"badge.ilkZiyaret.desc" = "Visited your first place";
+"badge.onZiyaret.desc" = "Visited 10 places";
+"badge.gezgin.desc" = "Completed your first route";
+"badge.rotaci.desc" = "Completed 3 routes";
+"badge.rotaUstasi.desc" = "Completed 10 routes";
+"badge.planlamaci.desc" = "Created your first saved route";
+"badge.kasif.desc" = "Explored 5 different categories";
+"badge.parkSever.desc" = "Saved 5 parks";
+"badge.muzeSever.desc" = "Visited 3 museums";
+"badge.gurme.desc" = "Saved 10 restaurants or cafés";
+"badge.sabahciKus.desc" = "Started a route between 07:00–09:00";
+"badge.geceKusu.desc" = "Started a route after 21:00";
+"badge.paylasimci.desc" = "Shared your first route";
+"badge.sosyalKelebek.desc" = "Shared 5 routes";
+"badge.hafizalik.desc" = "Opened the app 7 days in a row";
+
+// MARK: - Places List Extra
+"Sonuç bulunamadı" = "No results found";
+"Filtreleri Temizle" = "Clear Filters";
+"Mekan veya adres ara..." = "Search place or address...";
+"Ziyaret Edilmedi" = "Not Visited";
+"%ldx ziyaret" = "Visited %ld×";
+"Dosya Okunamadı" = "File Could Not Be Read";
+"Geçerli bir Swarm checkins.json dosyası seçin." = "Please select a valid Swarm checkins.json file.";
+
+// MARK: - QR Scanner
+"QR kodu çerçeve içine al" = "Align QR code within the frame";
+"QR ile Mekan Ekle" = "Add Place via QR";
+"Bu mekanı eklemek ister misin?" = "Would you like to add this place?";
+"Mekan" = "Place";
+"Adres" = "Address";
+"Not" = "Note";
+"Kamera İzni Gerekli" = "Camera Permission Required";
+"Ayarlar > Pinly > Kamera bölümünden izin ver." = "Grant access in Settings > Pinly > Camera.";
+
+// MARK: - Quick Add
+"Hızlı Mekan Ekle" = "Quick Add Place";
+"Konum hazır" = "Location Ready";
+"Konum alınamadı" = "Location Unavailable";
+"Mekan Bilgisi" = "Place Info";
+"Mekan adı" = "Place name";
+"Ekle" = "Add";
+
 // MARK: - Categories
 "Restaurant" = "Restaurant";
 "Café" = "Café";
@@ -96,3 +266,119 @@
 "Library" = "Library";
 "Dessert" = "Dessert";
 "General" = "General";
+
+// MARK: - Route Summary
+"Varıldı!" = "Arrived!";
+"Mevcut durak" = "Current stop";
+"Sonraki durak" = "Next stop";
+"Not kaydedildi" = "Note saved";
+"Bu mekan için not ekle..." = "Add a note for this place...";
+"Sonraki Durağa Git: %@" = "Go to Next Stop: %@";
+"Rotayı Tamamla" = "Complete Route";
+"Linki Paylaş" = "Share Link";
+"Durak %lld / %lld" = "Stop %lld / %lld";
+"Toplam Yürüyüş" = "Total Walk";
+"Tahmini Süre" = "Est. Time";
+"Durak" = "Stops";
+"Nasıldı?" = "How was it?";
+"Atla" = "Skip";
+"Rota Tamamlandı!" = "Route Completed!";
+"Toplam Mesafe" = "Total Distance";
+"Ziyaret Edilen" = "Visited";
+"Haritaya Dön" = "Back to Map";
+
+// MARK: - Map Card
+"Bu mekanı silmek istiyor musun?" = "Do you want to delete this place?";
+"Sil" = "Delete";
+"%ldx ziyaret edildi" = "Visited %ld times";
+
+// MARK: - Place Detail
+"Ziyaret" = "Visits";
+"Puan" = "Rating";
+"Paylaş" = "Share";
+"Mekanı Paylaş" = "Share Place";
+"QR kodu okutarak veya linki paylaşarak arkadaşlarının bu mekanı eklemesini sağla." = "Scan the QR code or share the link so your friends can add this place.";
+"%@ mekanını Pinly'e eklemek için bu linke dokun." = "Tap this link to add %@ to Pinly.";
+
+// MARK: - Paywall
+"Mekan Limitine Ulaştın" = "You've Reached the Place Limit";
+"Ücretsiz planda en fazla %lld mekan kaydedebilirsin.\nSınırsız mekan için Pro'ya geç." = "Free plan allows up to %lld places.\nGo Pro for unlimited places.";
+"Sınırsız Mekan" = "Unlimited Places";
+"İstediğin kadar mekan kaydet" = "Save as many places as you want";
+"Sınırsız Rota" = "Unlimited Routes";
+"Dilediğin kadar rota oluştur" = "Create as many routes as you want";
+"Çevrimdışı Harita" = "Offline Map";
+"İnternetsiz de çalışır" = "Works without internet";
+"Yakında" = "Coming Soon";
+"Grup Rotaları" = "Group Routes";
+"Arkadaşlarınla birlikte planla" = "Plan together with friends";
+"Yıllık" = "Yearly";
+"%33 Tasarruf" = "33% Off";
+"Aylık" = "Monthly";
+"Pro'ya Geç" = "Go Pro";
+"Satın Alımları Geri Yükle" = "Restore Purchases";
+"Şimdi Değil" = "Not Now";
+
+// MARK: - Route Share & Import
+"%lld Duraklı Rota Paylaşıldı" = "%lld-Stop Route Shared";
+"%lld benzersiz mekan import edilmeye hazır" = "%lld unique places ready to import";
+"+ %lld mekan daha" = "+ %lld more places";
+"Kayıtlı Rotalarıma Ekle" = "Add to My Saved Routes";
+"Pinly Rotası" = "Pinly Route";
+"Rota Adı (isteğe bağlı)" = "Route Name (optional)";
+"Rotayı Paylaş" = "Share Route";
+"Swarm Geçmişin Bulundu" = "Swarm History Found";
+"Tüm mekanları listenize eklemek ister misiniz?" = "Would you like to add all places to your list?";
+"Tümünü Ekle" = "Add All";
+"Ücretsiz limitini aşıyor. Pro'ya geçerek tümünü ekle." = "Exceeds free limit. Go Pro to add them all.";
+
+// MARK: - Sort Options
+"Eklenme Tarihi" = "Date Added";
+"Alfabetik" = "Alphabetical";
+"Mesafe" = "Distance";
+"Ziyaret Sayısı" = "Visit Count";
+
+// Improvement pass — new keys
+"İçe Aktarılan Rota" = "Imported Route";
+"Tümünü Ekle (%lld)" = "Add All (%lld)";
+"Rotayı Güncelle" = "Update Route";
+
+// Phase 2 — onboarding, home, stats, share card
+"Mekanlarını Kaydet" = "Save Your Places";
+"Gittiğin ya da gitmek istediğin her yeri kategorilerle sakla. Swarm geçmişini tek dokunuşla içeri aktar." = "Keep every place you've been or want to go, organized by category. Import your Swarm history in one tap.";
+"Rotanı Planla, Yürü" = "Plan Your Route, Walk";
+"Mekanlarından yürüyüş rotası oluştur. Adım adım navigasyon kilit ekranında seni takip eder." = "Build walking routes from your places. Turn-by-turn navigation follows you on the lock screen.";
+"Rozet Kazan, Paylaş" = "Earn Badges, Share";
+"22 rozet, haftalık raporlar ve arkadaşlarınla QR kod ile rota paylaşımı seni bekliyor." = "22 badges, weekly reports and route sharing with friends via QR code await you.";
+"Günaydın ☀️" = "Good morning ☀️";
+"İyi günler 👋" = "Good afternoon 👋";
+"İyi akşamlar 🌆" = "Good evening 🌆";
+"İyi geceler 🌙" = "Good night 🌙";
+"Gün Serisi" = "Day Streak";
+"Rozet" = "Badges";
+"Mekan Ekle" = "Add Place";
+"Yeni bir yer kaydet" = "Save a new spot";
+"QR Tara" = "Scan QR";
+"Paylaşılan mekanı al" = "Get a shared place";
+"Rota Tasarla" = "Design Route";
+"Sonrası için planla" = "Plan for later";
+"Son Eklenenler" = "Recently Added";
+"İstatistiklerim" = "My Stats";
+"Toplam km, ziyaret ve daha fazlası" = "Total km, visits and more";
+"Süre" = "Duration";
+"En Sevdiğin Kategori" = "Favorite Category";
+"En Çok Mekan" = "Most Places In";
+"Ortalama Puanın" = "Average Rating";
+"Mekan ekledikçe istatistiklerin burada birikecek" = "Your stats will build up here as you add places";
+"Rotayı Tamamladım! 🎉" = "Route Completed! 🎉";
+"+ %lld durak daha" = "+ %lld more stops";
+"Sen de rotanı çiz 🚶" = "Draw your own route 🚶";
+"Başarını Paylaş" = "Share Your Achievement";
+
+// MARK: - Haritada Pinle
+"Haritada Pinle" = "Pin on Map";
+"Bu Konumu Kullan" = "Use This Location";
+"Konumu ayarlamak için haritayı kaydır" = "Move the map to set the location";
+"Konum haritadan seçildi" = "Location picked from map";
+"Kaldır" = "Remove";
+"Adres bulunamadı" = "Address not found";

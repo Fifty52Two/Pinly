@@ -3,9 +3,11 @@ import MapKit
 import CoreLocation
 import ActivityKit
 
+@MainActor
 class RouteManager: ObservableObject {
     @Published var selectedCategories: [String] = []
     @Published var selectedPlaces: [String: Place] = [:]
+    @Published var routeName: String = ""
 
     // Route data
     @Published var routePolylines: [MKPolyline] = []
@@ -40,10 +42,27 @@ class RouteManager: ObservableObject {
         return routePlaces[currentWaypointIndex].coordinate
     }
 
+    /// Rotayı doğrudan sıralı mekan listesiyle kurar (tek mekan navigasyonu,
+    /// kayıtlı rota başlatma vb. — kategori seçim akışını atlayan çağıranlar için).
+    func setRoute(places: [Place], name: String = "") {
+        reset()
+        var categories: [String] = []
+        var dict: [String: Place] = [:]
+        for (i, place) in places.enumerated() {
+            let key = "\(i)_\(place.id.uuidString)"
+            categories.append(key)
+            dict[key] = place
+        }
+        selectedCategories = categories
+        selectedPlaces = dict
+        routeName = name
+    }
+
     func reset() {
         endLiveActivity()
         selectedCategories = []
         selectedPlaces = [:]
+        routeName = ""
         routePolylines = []
         stepsPerSegment = []
         segmentDistances = []
@@ -80,7 +99,10 @@ class RouteManager: ObservableObject {
             completionPercentage: completionPercentage
         )
 
-        let attributes = PinlyActivityAttributes(routeName: routePlaces.map(\.name).joined(separator: " → "))
+        let title = routeName.isEmpty
+            ? routePlaces.map(\.name).joined(separator: " → ")
+            : routeName
+        let attributes = PinlyActivityAttributes(routeName: title)
 
         liveActivity = try? Activity.request(
             attributes: attributes,
@@ -97,7 +119,7 @@ class RouteManager: ObservableObject {
         let state = PinlyActivityAttributes.ContentState(
             instruction: currentInstruction,
             remainingDistance: remainingDistance,
-            stopIndex: currentWaypointIndex + 1,
+            stopIndex: min(currentWaypointIndex + 1, routePlaces.count),
             totalStops: routePlaces.count,
             nextPlaceName: nextPlace,
             completionPercentage: completionPercentage
@@ -124,49 +146,42 @@ class RouteManager: ObservableObject {
         guard allCoords.count >= 2 else { completion(); return }
 
         let pairs = Array(zip(allCoords, allCoords.dropFirst()))
-        let count = pairs.count
-        let group = DispatchGroup()
 
-        var orderedPolylines = [MKPolyline?](repeating: nil, count: count)
-        var orderedSteps = [[MKRoute.Step]?](repeating: nil, count: count)
-        var orderedDistances = [Double?](repeating: nil, count: count)
-        var orderedTimes = [TimeInterval?](repeating: nil, count: count)
+        Task {
+            var orderedRoutes = [MKRoute?](repeating: nil, count: pairs.count)
 
-        for (i, (from, to)) in pairs.enumerated() {
-            group.enter()
-            let request = MKDirections.Request()
-            request.source = MKMapItem(placemark: MKPlacemark(coordinate: from))
-            request.destination = MKMapItem(placemark: MKPlacemark(coordinate: to))
-            request.transportType = .walking
-
-            MKDirections(request: request).calculate { response, _ in
-                DispatchQueue.main.async {
-                    if let route = response?.routes.first {
-                        orderedPolylines[i] = route.polyline
-                        orderedSteps[i] = route.steps
-                        orderedDistances[i] = route.distance
-                        orderedTimes[i] = route.expectedTravelTime
+            await withTaskGroup(of: (Int, MKRoute?).self) { group in
+                for (i, (from, to)) in pairs.enumerated() {
+                    group.addTask {
+                        let request = MKDirections.Request()
+                        request.source = MKMapItem(placemark: MKPlacemark(coordinate: from))
+                        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: to))
+                        request.transportType = .walking
+                        let route = try? await MKDirections(request: request).calculate().routes.first
+                        return (i, route)
                     }
-                    group.leave()
+                }
+                for await (i, route) in group {
+                    orderedRoutes[i] = route
                 }
             }
-        }
 
-        group.notify(queue: .main) {
-            self.routePolylines = orderedPolylines.compactMap { $0 }
-            self.stepsPerSegment = orderedSteps.compactMap { $0 }
-            self.segmentDistances = orderedDistances.compactMap { $0 }
-            self.totalRouteDistance = self.segmentDistances.reduce(0, +)
-            self.totalRouteTime = orderedTimes.compactMap { $0 }.reduce(0, +)
-            self.currentWaypointIndex = 0
-            self.currentSegmentStepIndex = 0
-            self.isRouteComplete = false
-            self.completionPercentage = 0
+            // Başarısız segmentler boş placeholder alır — indeksler routePlaces
+            // ile hizalı kalmak zorunda, yoksa navigasyon yanlış durağa bağlanır.
+            routePolylines = orderedRoutes.map { $0?.polyline ?? MKPolyline() }
+            stepsPerSegment = orderedRoutes.map { $0?.steps ?? [] }
+            segmentDistances = orderedRoutes.map { $0?.distance ?? 0 }
+            totalRouteDistance = segmentDistances.reduce(0, +)
+            totalRouteTime = orderedRoutes.compactMap { $0?.expectedTravelTime }.reduce(0, +)
+            currentWaypointIndex = 0
+            currentSegmentStepIndex = 0
+            isRouteComplete = false
+            completionPercentage = 0
 
-            if let firstStep = self.stepsPerSegment.first?.first {
-                self.currentInstruction = firstStep.instructions
+            if let firstStep = stepsPerSegment.first?.first {
+                currentInstruction = firstStep.instructions
                 let fmt = MKDistanceFormatter()
-                self.remainingDistance = fmt.string(fromDistance: firstStep.distance)
+                remainingDistance = fmt.string(fromDistance: firstStep.distance)
             }
             completion()
         }
@@ -224,19 +239,16 @@ class RouteManager: ObservableObject {
         currentSegmentStepIndex = 0
 
         if currentWaypointIndex >= routePlaces.count {
-            isRouteComplete = true
-            isNavigating = false
-            completionPercentage = 1.0
-            currentInstruction = ""
-            remainingDistance = ""
-        } else if currentWaypointIndex < stepsPerSegment.count {
-            let nextSteps = stepsPerSegment[currentWaypointIndex]
-            if let first = nextSteps.first {
+            completeRoute()
+        } else {
+            if currentWaypointIndex < stepsPerSegment.count,
+               let first = stepsPerSegment[currentWaypointIndex].first {
                 currentInstruction = first.instructions
                 let fmt = MKDistanceFormatter()
                 remainingDistance = fmt.string(fromDistance: first.distance)
             }
             updateCompletionPercentage()
+            updateLiveActivity()
         }
     }
 
@@ -249,17 +261,24 @@ class RouteManager: ObservableObject {
         if nextIndex >= routePlaces.count {
             // Last stop — complete route automatically
             currentWaypointIndex = nextIndex
-            isRouteComplete = true
-            isNavigating = false
-            completionPercentage = 1.0
-            currentInstruction = ""
-            remainingDistance = ""
+            completeRoute()
         } else {
             // Intermediate stop — pause and wait for user to continue
             isPausedAtStop = true
             currentInstruction = ""
             remainingDistance = ""
+            updateLiveActivity()
         }
+    }
+
+    private func completeRoute() {
+        isRouteComplete = true
+        isNavigating = false
+        isPausedAtStop = false
+        completionPercentage = 1.0
+        currentInstruction = ""
+        remainingDistance = ""
+        endLiveActivity()
     }
 
     // MARK: - Route Deviation & Recalculation
@@ -272,6 +291,11 @@ class RouteManager: ObservableObject {
         if let lastTime = lastRecalculationTime, Date().timeIntervalSince(lastTime) < 10 { return }
 
         let polyline = routePolylines[currentWaypointIndex]
+        guard polyline.pointCount > 0 else {
+            // Segment hesaplanamamıştı (placeholder) — rotayı kullanıcı konumundan yeniden dene
+            recalculateCurrentSegment(from: userLocation)
+            return
+        }
         let minDist = minimumDistanceToPolyline(polyline, from: userLocation.coordinate)
 
         if minDist > 75 {
@@ -303,28 +327,28 @@ class RouteManager: ObservableObject {
         request.destination = MKMapItem(placemark: MKPlacemark(coordinate: targetCoord))
         request.transportType = .walking
 
-        MKDirections(request: request).calculate { [weak self] response, _ in
-            DispatchQueue.main.async {
-                guard let self = self else { return }
-                self.isRecalculating = false
-                guard let route = response?.routes.first else { return }
+        Task {
+            let route = try? await MKDirections(request: request).calculate().routes.first
+            isRecalculating = false
+            guard let route else { return }
 
-                if self.currentWaypointIndex < self.routePolylines.count {
-                    self.routePolylines[self.currentWaypointIndex] = route.polyline
-                }
-                if self.currentWaypointIndex < self.stepsPerSegment.count {
-                    self.stepsPerSegment[self.currentWaypointIndex] = route.steps
-                }
-                if self.currentWaypointIndex < self.segmentDistances.count {
-                    self.segmentDistances[self.currentWaypointIndex] = route.distance
-                }
-                self.currentSegmentStepIndex = 0
-                if let firstStep = route.steps.first {
-                    self.currentInstruction = firstStep.instructions
-                    let fmt = MKDistanceFormatter()
-                    self.remainingDistance = fmt.string(fromDistance: firstStep.distance)
-                }
+            if currentWaypointIndex < routePolylines.count {
+                routePolylines[currentWaypointIndex] = route.polyline
             }
+            if currentWaypointIndex < stepsPerSegment.count {
+                stepsPerSegment[currentWaypointIndex] = route.steps
+            }
+            if currentWaypointIndex < segmentDistances.count {
+                segmentDistances[currentWaypointIndex] = route.distance
+                totalRouteDistance = segmentDistances.reduce(0, +)
+            }
+            currentSegmentStepIndex = 0
+            if let firstStep = route.steps.first {
+                currentInstruction = firstStep.instructions
+                let fmt = MKDistanceFormatter()
+                remainingDistance = fmt.string(fromDistance: firstStep.distance)
+            }
+            updateLiveActivity()
         }
     }
 

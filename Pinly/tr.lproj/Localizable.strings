@@ -87,6 +87,176 @@
 "Hata" = "Hata";
 "Tamam" = "Tamam";
 
+// MARK: - Discover
+"Henüz mekan yok" = "Henüz mekan yok";
+"Mekanlarım ekranından mekan ekledikten sonra burada kategorilere göre görebilirsin." = "Mekanlarım ekranından mekan ekledikten sonra burada kategorilere göre görebilirsin.";
+"Keşfet" = "Keşfet";
+"Kategorilere göre mekanlarını gör" = "Kategorilere göre mekanlarını gör";
+"%lld kategori" = "%lld kategori";
+"Gözat" = "Gözat";
+
+// MARK: - Badges
+"Rozetler" = "Rozetler";
+"Görüntüle" = "Görüntüle";
+"Rozet kazanmaya başla" = "Rozet kazanmaya başla";
+"%lld/%lld rozet kazanıldı" = "%lld/%lld rozet kazanıldı";
+"Yeni Rozet!" = "Yeni Rozet!";
+
+// MARK: - Place Detail
+"Konum yok" = "Konum yok";
+"Ziyaret Edildi" = "Ziyaret Edildi";
+"Gidilecek" = "Gidilecek";
+"Düzenle" = "Düzenle";
+
+// MARK: - Route Export
+"GPX İndir" = "GPX İndir";
+"PDF İndir" = "PDF İndir";
+
+// MARK: - Saved Routes
+"Kayıtlı Rotalar" = "Kayıtlı Rotalar";
+"Önceden planladığın rotalar" = "Önceden planladığın rotalar";
+"Henüz kayıtlı rota yok" = "Henüz kayıtlı rota yok";
+"Önceden bir rota planla, istediğin zaman başlat" = "Önceden bir rota planla, istediğin zaman başlat";
+"Rotayı Başlat" = "Rotayı Başlat";
+"Başlangıç Noktası Uzakta" = "Başlangıç Noktası Uzakta";
+"Yine de Başlat" = "Yine de Başlat";
+"Rotanın başlangıç noktasına yaklaşık %@ uzaktasınız. Yine de başlatmak istiyor musunuz?" = "Rotanın başlangıç noktasına yaklaşık %@ uzaktasınız. Yine de başlatmak istiyor musunuz?";
+"Rotayı Sil" = "Rotayı Sil";
+"\"%@\" rotasını silmek istiyor musun?" = "\"%@\" rotasını silmek istiyor musun?";
+"%lld mekan" = "%lld mekan";
+"Rotayı Kaydet" = "Rotayı Kaydet";
+"Rota Kaydedildi!" = "Rota Kaydedildi!";
+"\"%@\" kayıtlı rotalarına eklendi." = "\"%@\" kayıtlı rotalarına eklendi.";
+"Rota Bilgileri" = "Rota Bilgileri";
+"Rota adı (örn: Kadıköy Turu)" = "Rota adı (örn: Kadıköy Turu)";
+"Rota Türü" = "Rota Türü";
+"Seçilen Mekanlar" = "Seçilen Mekanlar";
+"Kaydediliyor..." = "Kaydediliyor...";
+"\"%@\" rotası %lld mekanla kaydedildi." = "\"%@\" rotası %lld mekanla kaydedildi.";
+
+// MARK: - Plan Route
+"Konum Seç" = "Konum Seç";
+"Mekan Seç" = "Mekan Seç";
+"Rota Merkezi Seç" = "Rota Merkezi Seç";
+"Rota için bir nokta seç" = "Rota için bir nokta seç";
+"Rota merkezi için haritaya dokun" = "Rota merkezi için haritaya dokun";
+"Konum seçildi — devam edebilirsin" = "Konum seçildi — devam edebilirsin";
+"Rotaya eklemek istediğin mekanları seç" = "Rotaya eklemek istediğin mekanları seç";
+"Henüz mekan eklenmedi. Önce Mekanlarım'a mekan ekle." = "Henüz mekan eklenmedi. Önce Mekanlarım'a mekan ekle.";
+"Mekanlarım ekranından mekan ekledikten sonra burada görünür" = "Mekanlarım ekranından mekan ekledikten sonra burada görünür";
+"Konum seçildi" = "Konum seçildi";
+"Çevredeki mekanlar aranıyor..." = "Çevredeki mekanlar aranıyor...";
+"%lld mekan seçildi" = "%lld mekan seçildi";
+"Bu çevrede mekan bulunamadı" = "Bu çevrede mekan bulunamadı";
+"Farklı bir konum seçmeyi dene" = "Farklı bir konum seçmeyi dene";
+"Geri Dön" = "Geri Dön";
+"%lld yer bulundu" = "%lld yer bulundu";
+"Bilinmeyen" = "Bilinmeyen";
+"Rota Adı" = "Rota Adı";
+"Mekanlar" = "Mekanlar";
+
+// MARK: - Tab Bar
+"Ana" = "Ana";
+"Rotalar" = "Rotalar";
+"Daha Fazla" = "Daha Fazla";
+
+// MARK: - More Tab
+"Rota Geçmişi" = "Rota Geçmişi";
+"Tamamladığın rotalar" = "Tamamladığın rotalar";
+"Haftalık Rapor" = "Haftalık Rapor";
+"Bu haftanın özeti" = "Bu haftanın özeti";
+
+// MARK: - Route History
+"Henüz rota tamamlanmadı" = "Henüz rota tamamlanmadı";
+"Bir rota tamamladığında burada görünecek." = "Bir rota tamamladığında burada görünecek.";
+
+// MARK: - Weekly Report
+"Bu hafta henüz rota tamamlanmadı" = "Bu hafta henüz rota tamamlanmadı";
+"Bir rota tamamladığında burada istatistiklerini görebilirsin." = "Bir rota tamamladığında burada istatistiklerini görebilirsin.";
+"Adım" = "Adım";
+"Mesafe" = "Mesafe";
+"Toplam Ziyaret" = "Toplam Ziyaret";
+"Rota" = "Rota";
+"En Çok Kaydedilen" = "En Çok Kaydedilen";
+"En Çok Ziyaret Edilen Bölge" = "En Çok Ziyaret Edilen Bölge";
+
+// MARK: - Notifications
+"Haftalık Özet" = "Haftalık Özet";
+"Bu haftaki mekan maceralarına göz at!" = "Bu haftaki mekan maceralarına göz at!";
+
+// MARK: - Badge Titles
+"badge.ilkAdim.title" = "İlk Adım";
+"badge.besli.title" = "Beşli Kulüp";
+"badge.onlu.title" = "Onlu Kulüp";
+"badge.yirmili.title" = "Yirmili Kulüp";
+"badge.ellili.title" = "Elli Mekan";
+"badge.yuzlu.title" = "Yüzlük Kulüp";
+"badge.ilkZiyaret.title" = "İlk Ziyaret";
+"badge.onZiyaret.title" = "Gezgin Ruh";
+"badge.gezgin.title" = "Gezgin";
+"badge.rotaci.title" = "Rotacı";
+"badge.rotaUstasi.title" = "Rota Ustası";
+"badge.planlamaci.title" = "Planlamacı";
+"badge.kasif.title" = "Kaşif";
+"badge.parkSever.title" = "Park Sever";
+"badge.muzeSever.title" = "Müze Kurdu";
+"badge.gurme.title" = "Gurme";
+"badge.sabahciKus.title" = "Sabahçı Kuş";
+"badge.geceKusu.title" = "Gece Kuşu";
+"badge.paylasimci.title" = "Paylaşımcı";
+"badge.sosyalKelebek.title" = "Sosyal Kelebek";
+"badge.hafizalik.title" = "Hafızalık";
+
+// MARK: - Badge Descriptions
+"badge.ilkAdim.desc" = "İlk mekanını ekledin";
+"badge.besli.desc" = "5 mekan kayıtladın";
+"badge.onlu.desc" = "10 mekan kayıtladın";
+"badge.yirmili.desc" = "20 mekan kayıtladın";
+"badge.ellili.desc" = "50 mekan kayıtladın";
+"badge.yuzlu.desc" = "100 mekan kayıtladın";
+"badge.ilkZiyaret.desc" = "İlk mekanını ziyaret ettin";
+"badge.onZiyaret.desc" = "10 mekanı ziyaret ettin";
+"badge.gezgin.desc" = "İlk rotanı tamamladın";
+"badge.rotaci.desc" = "3 rota tamamladın";
+"badge.rotaUstasi.desc" = "10 rota tamamladın";
+"badge.planlamaci.desc" = "İlk kayıtlı rotanı oluşturdun";
+"badge.kasif.desc" = "5 farklı kategoride mekan keşfettin";
+"badge.parkSever.desc" = "5 park kayıtladın";
+"badge.muzeSever.desc" = "3 müze ziyaret ettin";
+"badge.gurme.desc" = "10 restoran veya kafe kayıtladın";
+"badge.sabahciKus.desc" = "Sabah 07:00–09:00 arası rota başlattın";
+"badge.geceKusu.desc" = "Gece 21:00 sonrası rota başlattın";
+"badge.paylasimci.desc" = "İlk rotanı paylaştın";
+"badge.sosyalKelebek.desc" = "5 rota paylaştın";
+"badge.hafizalik.desc" = "7 gün üst üste uygulamayı açtın";
+
+// MARK: - Places List Extra
+"Sonuç bulunamadı" = "Sonuç bulunamadı";
+"Filtreleri Temizle" = "Filtreleri Temizle";
+"Mekan veya adres ara..." = "Mekan veya adres ara...";
+"Ziyaret Edilmedi" = "Ziyaret Edilmedi";
+"%ldx ziyaret" = "%ldx ziyaret";
+"Dosya Okunamadı" = "Dosya Okunamadı";
+"Geçerli bir Swarm checkins.json dosyası seçin." = "Geçerli bir Swarm checkins.json dosyası seçin.";
+
+// MARK: - QR Scanner
+"QR kodu çerçeve içine al" = "QR kodu çerçeve içine al";
+"QR ile Mekan Ekle" = "QR ile Mekan Ekle";
+"Bu mekanı eklemek ister misin?" = "Bu mekanı eklemek ister misin?";
+"Mekan" = "Mekan";
+"Adres" = "Adres";
+"Not" = "Not";
+"Kamera İzni Gerekli" = "Kamera İzni Gerekli";
+"Ayarlar > Pinly > Kamera bölümünden izin ver." = "Ayarlar > Pinly > Kamera bölümünden izin ver.";
+
+// MARK: - Quick Add
+"Hızlı Mekan Ekle" = "Hızlı Mekan Ekle";
+"Konum hazır" = "Konum hazır";
+"Konum alınamadı" = "Konum alınamadı";
+"Mekan Bilgisi" = "Mekan Bilgisi";
+"Mekan adı" = "Mekan adı";
+"Ekle" = "Ekle";
+
 // MARK: - Categories
 "Restaurant" = "Restoran";
 "Café" = "Kafe";
@@ -96,3 +266,119 @@
 "Library" = "Kütüphane";
 "Dessert" = "Tatlı";
 "General" = "Genel";
+
+// MARK: - Route Summary
+"Varıldı!" = "Varıldı!";
+"Mevcut durak" = "Mevcut durak";
+"Sonraki durak" = "Sonraki durak";
+"Not kaydedildi" = "Not kaydedildi";
+"Bu mekan için not ekle..." = "Bu mekan için not ekle...";
+"Sonraki Durağa Git: %@" = "Sonraki Durağa Git: %@";
+"Rotayı Tamamla" = "Rotayı Tamamla";
+"Linki Paylaş" = "Linki Paylaş";
+"Durak %lld / %lld" = "Durak %lld / %lld";
+"Toplam Yürüyüş" = "Toplam Yürüyüş";
+"Tahmini Süre" = "Tahmini Süre";
+"Durak" = "Durak";
+"Nasıldı?" = "Nasıldı?";
+"Atla" = "Atla";
+"Rota Tamamlandı!" = "Rota Tamamlandı!";
+"Toplam Mesafe" = "Toplam Mesafe";
+"Ziyaret Edilen" = "Ziyaret Edilen";
+"Haritaya Dön" = "Haritaya Dön";
+
+// MARK: - Map Card
+"Bu mekanı silmek istiyor musun?" = "Bu mekanı silmek istiyor musun?";
+"Sil" = "Sil";
+"%ldx ziyaret edildi" = "%ldx ziyaret edildi";
+
+// MARK: - Place Detail
+"Ziyaret" = "Ziyaret";
+"Puan" = "Puan";
+"Paylaş" = "Paylaş";
+"Mekanı Paylaş" = "Mekanı Paylaş";
+"QR kodu okutarak veya linki paylaşarak arkadaşlarının bu mekanı eklemesini sağla." = "QR kodu okutarak veya linki paylaşarak arkadaşlarının bu mekanı eklemesini sağla.";
+"%@ mekanını Pinly'e eklemek için bu linke dokun." = "%@ mekanını Pinly'e eklemek için bu linke dokun.";
+
+// MARK: - Paywall
+"Mekan Limitine Ulaştın" = "Mekan Limitine Ulaştın";
+"Ücretsiz planda en fazla %lld mekan kaydedebilirsin.\nSınırsız mekan için Pro'ya geç." = "Ücretsiz planda en fazla %lld mekan kaydedebilirsin.\nSınırsız mekan için Pro'ya geç.";
+"Sınırsız Mekan" = "Sınırsız Mekan";
+"İstediğin kadar mekan kaydet" = "İstediğin kadar mekan kaydet";
+"Sınırsız Rota" = "Sınırsız Rota";
+"Dilediğin kadar rota oluştur" = "Dilediğin kadar rota oluştur";
+"Çevrimdışı Harita" = "Çevrimdışı Harita";
+"İnternetsiz de çalışır" = "İnternetsiz de çalışır";
+"Yakında" = "Yakında";
+"Grup Rotaları" = "Grup Rotaları";
+"Arkadaşlarınla birlikte planla" = "Arkadaşlarınla birlikte planla";
+"Yıllık" = "Yıllık";
+"%33 Tasarruf" = "%33 Tasarruf";
+"Aylık" = "Aylık";
+"Pro'ya Geç" = "Pro'ya Geç";
+"Satın Alımları Geri Yükle" = "Satın Alımları Geri Yükle";
+"Şimdi Değil" = "Şimdi Değil";
+
+// MARK: - Route Share & Import
+"%lld Duraklı Rota Paylaşıldı" = "%lld Duraklı Rota Paylaşıldı";
+"%lld benzersiz mekan import edilmeye hazır" = "%lld benzersiz mekan import edilmeye hazır";
+"+ %lld mekan daha" = "+ %lld mekan daha";
+"Kayıtlı Rotalarıma Ekle" = "Kayıtlı Rotalarıma Ekle";
+"Pinly Rotası" = "Pinly Rotası";
+"Rota Adı (isteğe bağlı)" = "Rota Adı (isteğe bağlı)";
+"Rotayı Paylaş" = "Rotayı Paylaş";
+"Swarm Geçmişin Bulundu" = "Swarm Geçmişin Bulundu";
+"Tüm mekanları listenize eklemek ister misiniz?" = "Tüm mekanları listenize eklemek ister misiniz?";
+"Tümünü Ekle" = "Tümünü Ekle";
+"Ücretsiz limitini aşıyor. Pro'ya geçerek tümünü ekle." = "Ücretsiz limitini aşıyor. Pro'ya geçerek tümünü ekle.";
+
+// MARK: - Sort Options
+"Eklenme Tarihi" = "Eklenme Tarihi";
+"Alfabetik" = "Alfabetik";
+"Mesafe" = "Mesafe";
+"Ziyaret Sayısı" = "Ziyaret Sayısı";
+
+// İyileştirme turu — yeni anahtarlar
+"İçe Aktarılan Rota" = "İçe Aktarılan Rota";
+"Tümünü Ekle (%lld)" = "Tümünü Ekle (%lld)";
+"Rotayı Güncelle" = "Rotayı Güncelle";
+
+// Faz 2 — onboarding, ana ekran, istatistik, paylaşım kartı
+"Mekanlarını Kaydet" = "Mekanlarını Kaydet";
+"Gittiğin ya da gitmek istediğin her yeri kategorilerle sakla. Swarm geçmişini tek dokunuşla içeri aktar." = "Gittiğin ya da gitmek istediğin her yeri kategorilerle sakla. Swarm geçmişini tek dokunuşla içeri aktar.";
+"Rotanı Planla, Yürü" = "Rotanı Planla, Yürü";
+"Mekanlarından yürüyüş rotası oluştur. Adım adım navigasyon kilit ekranında seni takip eder." = "Mekanlarından yürüyüş rotası oluştur. Adım adım navigasyon kilit ekranında seni takip eder.";
+"Rozet Kazan, Paylaş" = "Rozet Kazan, Paylaş";
+"22 rozet, haftalık raporlar ve arkadaşlarınla QR kod ile rota paylaşımı seni bekliyor." = "22 rozet, haftalık raporlar ve arkadaşlarınla QR kod ile rota paylaşımı seni bekliyor.";
+"Günaydın ☀️" = "Günaydın ☀️";
+"İyi günler 👋" = "İyi günler 👋";
+"İyi akşamlar 🌆" = "İyi akşamlar 🌆";
+"İyi geceler 🌙" = "İyi geceler 🌙";
+"Gün Serisi" = "Gün Serisi";
+"Rozet" = "Rozet";
+"Mekan Ekle" = "Mekan Ekle";
+"Yeni bir yer kaydet" = "Yeni bir yer kaydet";
+"QR Tara" = "QR Tara";
+"Paylaşılan mekanı al" = "Paylaşılan mekanı al";
+"Rota Tasarla" = "Rota Tasarla";
+"Sonrası için planla" = "Sonrası için planla";
+"Son Eklenenler" = "Son Eklenenler";
+"İstatistiklerim" = "İstatistiklerim";
+"Toplam km, ziyaret ve daha fazlası" = "Toplam km, ziyaret ve daha fazlası";
+"Süre" = "Süre";
+"En Sevdiğin Kategori" = "En Sevdiğin Kategori";
+"En Çok Mekan" = "En Çok Mekan";
+"Ortalama Puanın" = "Ortalama Puanın";
+"Mekan ekledikçe istatistiklerin burada birikecek" = "Mekan ekledikçe istatistiklerin burada birikecek";
+"Rotayı Tamamladım! 🎉" = "Rotayı Tamamladım! 🎉";
+"+ %lld durak daha" = "+ %lld durak daha";
+"Sen de rotanı çiz 🚶" = "Sen de rotanı çiz 🚶";
+"Başarını Paylaş" = "Başarını Paylaş";
+
+// MARK: - Haritada Pinle
+"Haritada Pinle" = "Haritada Pinle";
+"Bu Konumu Kullan" = "Bu Konumu Kullan";
+"Konumu ayarlamak için haritayı kaydır" = "Konumu ayarlamak için haritayı kaydır";
+"Konum haritadan seçildi" = "Konum haritadan seçildi";
+"Kaldır" = "Kaldır";
+"Adres bulunamadı" = "Adres bulunamadı";

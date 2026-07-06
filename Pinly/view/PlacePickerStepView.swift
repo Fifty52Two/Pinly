@@ -50,7 +50,7 @@ struct PlacePickerStepView: View {
                 if !locationManager.currentDistrict.isEmpty {
                     Label(locationManager.currentDistrict, systemImage: "mappin.fill")
                         .font(.subheadline)
-                        .foregroundColor(.blue)
+                        .foregroundColor(PinlyTheme.primary)
                 }
             }
             .padding(.bottom, 20)
@@ -61,7 +61,7 @@ struct PlacePickerStepView: View {
                     Image(systemName: "mappin.slash")
                         .font(.largeTitle)
                         .foregroundColor(.secondary)
-                    Text("Bu kategoride mekan bulunamadı")
+                    Text(NSLocalizedString("Bu kategoride mekan bulunamadı", comment: ""))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -71,13 +71,13 @@ struct PlacePickerStepView: View {
                         } label: {
                             HStack(spacing: 6) {
                                 Image(systemName: "location.magnifyingglass")
-                                Text("Arama yarıçapını genişlet (\(radiusLabel))")
+                                Text(String(format: NSLocalizedString("Arama yarıçapını genişlet (%@)", comment: ""), radiusLabel))
                                     .font(.subheadline)
                             }
-                            .foregroundColor(.blue)
+                            .foregroundColor(PinlyTheme.primary)
                         }
                     }
-                    Button("Bu adımı atla") {
+                    Button(NSLocalizedString("Bu adımı atla", comment: "")) {
                         goToNext = true
                     }
                     .foregroundColor(.secondary)
@@ -126,7 +126,7 @@ struct PlacePickerStepView: View {
                             .font(.subheadline)
                             .fontWeight(.medium)
                     }
-                    .foregroundColor(.blue)
+                    .foregroundColor(PinlyTheme.primary)
                 }
             }
         }
@@ -167,7 +167,7 @@ struct RadiusSettingsSheet: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 8) {
-                Text("Anlık konumuna göre hangi mesafedeki mekanlar gösterilsin?")
+                Text(NSLocalizedString("Anlık konumuna göre hangi mesafedeki mekanlar gösterilsin?", comment: ""))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -191,11 +191,11 @@ struct RadiusSettingsSheet: View {
                                         .fontWeight(.medium)
                                         .foregroundColor(.primary)
                                     if option.value == 0 {
-                                        Text("Tüm kayıtlı mekanları göster")
+                                        Text(NSLocalizedString("Tüm kayıtlı mekanları göster", comment: ""))
                                             .font(.caption)
                                             .foregroundColor(.secondary)
                                     } else {
-                                        Text("Konumundan \(option.label) içindeki mekanlar")
+                                        Text(String(format: NSLocalizedString("Konumundan %@ içindeki mekanlar", comment: ""), option.label))
                                             .font(.caption)
                                             .foregroundColor(.secondary)
                                     }
@@ -203,7 +203,7 @@ struct RadiusSettingsSheet: View {
                                 Spacer()
                                 if searchRadiusKm == option.value {
                                     Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(.blue)
+                                        .foregroundColor(PinlyTheme.primary)
                                         .font(.title3)
                                 }
                             }
@@ -211,11 +211,11 @@ struct RadiusSettingsSheet: View {
                             .background(
                                 RoundedRectangle(cornerRadius: 14)
                                     .fill(searchRadiusKm == option.value
-                                          ? Color.blue.opacity(0.08)
+                                          ? PinlyTheme.primary.opacity(0.08)
                                           : Color(.systemGray6))
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 14)
-                                            .stroke(searchRadiusKm == option.value ? Color.blue : .clear, lineWidth: 1.5)
+                                            .stroke(searchRadiusKm == option.value ? PinlyTheme.primary : .clear, lineWidth: 1.5)
                                     )
                             )
                         }
@@ -227,11 +227,11 @@ struct RadiusSettingsSheet: View {
 
                 Spacer()
             }
-            .navigationTitle("Arama Yarıçapı")
+            .navigationTitle(NSLocalizedString("Arama Yarıçapı", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Kapat") { dismiss() }
+                    Button(NSLocalizedString("Kapat", comment: "")) { dismiss() }
                 }
             }
         }
@@ -252,7 +252,7 @@ struct ProgressBar: View {
                     .fill(Color(.systemGray5))
                     .frame(height: 6)
                 RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.blue)
+                    .fill(PinlyTheme.primary)
                     .frame(width: geo.size.width * CGFloat(current) / CGFloat(total), height: 6)
                     .animation(.spring(), value: current)
             }
@@ -273,7 +273,7 @@ struct PlaceRow: View {
             HStack(spacing: 14) {
                 ZStack {
                     Circle()
-                        .fill(isSelected ? Color.blue : Color(.systemGray5))
+                        .fill(isSelected ? PinlyTheme.primary : Color(.systemGray5))
                         .frame(width: 28, height: 28)
                     if isSelected {
                         Image(systemName: "checkmark")
@@ -302,10 +302,10 @@ struct PlaceRow: View {
             .padding(14)
             .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(isSelected ? Color.blue.opacity(0.08) : Color(.systemGray6))
+                    .fill(isSelected ? PinlyTheme.primary.opacity(0.08) : Color(.systemGray6))
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
-                            .stroke(isSelected ? Color.blue : .clear, lineWidth: 1.5)
+                            .stroke(isSelected ? PinlyTheme.primary : .clear, lineWidth: 1.5)
                     )
             )
         }

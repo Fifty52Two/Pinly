@@ -10,6 +10,7 @@
 		0A00D6722F7C57AF0031F556 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A00D6712F7C57AF0031F556 /* WidgetKit.framework */; };
 		0A00D6742F7C57AF0031F556 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A00D6732F7C57AF0031F556 /* SwiftUI.framework */; };
 		0A00D6832F7C57AF0031F556 /* PinlyLiveActivityExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0A00D66F2F7C57AF0031F556 /* PinlyLiveActivityExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0A93820E2F8010CB00EF3C24 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 0A93820D2F8010CB00EF3C24 /* GoogleMobileAds */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A93820E2F8010CB00EF3C24 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,6 +189,7 @@
 			);
 			name = Pinly;
 			packageProductDependencies = (
+				0A93820D2F8010CB00EF3C24 /* GoogleMobileAds */,
 			);
 			productName = Pinly;
 			productReference = 0AC0FA692F2F9CE300C6C26F /* Pinly.app */;
@@ -217,9 +220,16 @@
 				en,
 				Base,
 				tr,
+				es,
+				de,
+				ru,
 			);
 			mainGroup = 0AC0FA602F2F9CE300C6C26F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				0A00DA472F7D4FA80031F556 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
+				0A93820C2F80103A00EF3C24 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0AC0FA6A2F2F9CE300C6C26F /* Products */;
 			projectDirPath = "";
@@ -455,12 +465,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = Pinly/Pinly.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J7LKGD5LY5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Pinly/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "QR kod okuyarak mekan ekleyebilmek için kamera gerekiyor.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Pinly, rotalarını tamamlarken adım sayını ve yürüme mesafeni kaydetmek için Sağlık verisine erişir.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "allow to your current location";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -487,12 +500,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = Pinly/Pinly.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J7LKGD5LY5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Pinly/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "QR kod okuyarak mekan ekleyebilmek için kamera gerekiyor.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Pinly, rotalarını tamamlarken adım sayını ve yürüme mesafeni kaydetmek için Sağlık verisine erişir.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "allow to your current location";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -544,6 +560,33 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0A00DA472F7D4FA80031F556 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.67.0;
+			};
+		};
+		0A93820C2F80103A00EF3C24 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0A93820D2F8010CB00EF3C24 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0A93820C2F80103A00EF3C24 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0AC0FA612F2F9CE300C6C26F /* Project object */;
 }
