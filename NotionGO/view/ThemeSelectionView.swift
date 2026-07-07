@@ -14,6 +14,15 @@ enum AppTheme: String {
     }
 }
 
+// MARK: - Preference Key (button frame tracking)
+
+private struct ToggleButtonFrameKey: PreferenceKey {
+    static var defaultValue: CGRect = .zero
+    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
+        value = nextValue()
+    }
+}
+
 // MARK: - Theme Selection View
 
 struct ThemeSelectionView: View {
@@ -22,10 +31,11 @@ struct ThemeSelectionView: View {
     @AppStorage("appTheme") private var storedTheme = "light"
     @State private var selectedTheme: AppTheme = .light
     @State private var routeTrim: CGFloat = 0
+    @State private var showGuide = false
+    @State private var buttonFrame: CGRect = .zero
 
     private var isLight: Bool { selectedTheme == .light }
 
-    // All colors are theme-reactive — layout never changes
     private var bgColor: Color       { isLight ? Color(hex: 0xFBF9F6) : Color(hex: 0x1A1C19) }
     private var titleColor: Color    { isLight ? Color(hex: 0x1b1c1a) : Color(hex: 0xE4E7DD) }
     private var subtitleColor: Color { isLight ? Color(hex: 0x4e453b) : Color(hex: 0xC8CCC0) }
@@ -34,97 +44,215 @@ struct ThemeSelectionView: View {
     private var primaryColor: Color  { isLight ? Color(hex: 0x735a36) : Color(hex: 0xC5C9A4) }
     private var buttonBg: Color      { isLight ? Color(hex: 0xC8A97E) : Color(hex: 0xDFE39C) }
     private var buttonText: Color    { isLight ? .white : Color(hex: 0x1A1C19) }
-    private var footerColor: Color   { (isLight ? Color(hex: 0x1b1c1a) : Color(hex: 0xE4E7DD)).opacity(isLight ? 0.3 : 0.6) }
+    private var footerColor: Color   { isLight ? Color(hex: 0x1b1c1a).opacity(0.3) : Color(hex: 0xE4E7DD).opacity(0.6) }
 
     var body: some View {
         ZStack {
             bgColor.ignoresSafeArea()
-
-            GeometryReader { geo in
-                routeBackground(size: geo.size)
-            }
-
-            VStack(spacing: 0) {
-                // Logo
-                HStack(spacing: 7) {
-                    Image(systemName: "safari.fill")
-                        .font(.system(size: 17))
-                        .foregroundColor(primaryColor)
-                    Text("CURATOR ROUTES")
-                        .font(.system(size: 13, weight: .semibold))
-                        .tracking(1.5)
-                        .foregroundColor(titleColor)
-                }
-                .padding(.top, 64)
-
-                Spacer()
-
-                // Headline & subtitle
-                VStack(alignment: .leading, spacing: 14) {
-                    Text("Your day,\nintelligently\nmapped")
-                        .font(.system(size: 38, weight: .heavy))
-                        .foregroundColor(titleColor)
-                        .tracking(-0.5)
-                        .lineSpacing(2)
-
-                    Text("From your first coffee to your last stop — seamlessly.")
-                        .font(.system(size: 15))
-                        .foregroundColor(subtitleColor)
-                        .lineSpacing(4)
-                        .frame(maxWidth: 260, alignment: .leading)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 32)
-
-                Spacer()
-
-                // Theme picker
-                VStack(spacing: 10) {
-                    Text("CHOOSE YOUR THEME")
-                        .font(.system(size: 10, weight: .medium))
-                        .tracking(2)
-                        .foregroundColor(subtitleColor.opacity(0.5))
-
-                    HStack(spacing: 12) {
-                        themeCard(.light)
-                        themeCard(.dark)
-                    }
-                }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 20)
-
-                // CTA Button — identical size & text for both themes
-                Button {
-                    storedTheme = selectedTheme.rawValue
-                    onComplete()
-                } label: {
-                    Text("Start Exploring")
-                        .font(.system(size: 17, weight: .bold))
-                        .foregroundColor(buttonText)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 56)
-                        .background(buttonBg)
-                        .clipShape(Capsule())
-                        .shadow(color: buttonBg.opacity(0.25), radius: 12, y: 6)
-                }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 16)
-
-                // Sign in link
-                Text("SIGN IN")
-                    .font(.system(size: 10, weight: .medium))
-                    .tracking(1)
-                    .foregroundColor(footerColor)
-                    .padding(.bottom, 44)
-            }
+            GeometryReader { geo in routeBackground(size: geo.size) }
+            mainContent
+            if showGuide { guideOverlay }
         }
         .ignoresSafeArea()
         .animation(.easeInOut(duration: 0.45), value: selectedTheme)
+        .onPreferenceChange(ToggleButtonFrameKey.self) { frame in
+            buttonFrame = frame
+        }
         .onAppear {
             withAnimation(.linear(duration: 3.5).repeatForever(autoreverses: false)) {
                 routeTrim = 1
             }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                withAnimation(.easeIn(duration: 0.35)) { showGuide = true }
+            }
         }
+    }
+
+    // MARK: - Main Content
+
+    private var mainContent: some View {
+        VStack(spacing: 0) {
+            headerRow
+                .padding(.top, 64)
+                .padding(.horizontal, 24)
+            Spacer()
+            headlineBlock
+            Spacer()
+            ctaButton
+            signInLink
+        }
+    }
+
+    private var headerRow: some View {
+        HStack {
+            HStack(spacing: 7) {
+                Image(systemName: "safari.fill")
+                    .font(.system(size: 17))
+                    .foregroundColor(primaryColor)
+                Text("CURATOR ROUTES")
+                    .font(.system(size: 13, weight: .semibold))
+                    .tracking(1.5)
+                    .foregroundColor(titleColor)
+            }
+            Spacer()
+            themeToggleButton
+        }
+    }
+
+    private var themeToggleButton: some View {
+        Button {
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
+                selectedTheme = isLight ? .dark : .light
+            }
+            if showGuide {
+                withAnimation(.easeOut(duration: 0.2)) { showGuide = false }
+            }
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: isLight ? "moon.fill" : "sun.max.fill")
+                    .font(.system(size: 12, weight: .medium))
+                Text(isLight ? "Dark" : "Light")
+                    .font(.system(size: 12, weight: .medium))
+                    .tracking(0.3)
+            }
+            .foregroundColor(isLight ? Color(hex: 0x735a36) : Color(hex: 0x1A1C19))
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(Capsule().fill(isLight ? Color(hex: 0xC8A97E).opacity(0.18) : Color(hex: 0xDFE39C)))
+            .overlay(Capsule().stroke(isLight ? Color(hex: 0xC8A97E).opacity(0.45) : Color(hex: 0xC5C9A4).opacity(0.5), lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+        // Track this button's frame in global coordinate space
+        .background(
+            GeometryReader { geo in
+                Color.clear.preference(key: ToggleButtonFrameKey.self,
+                                       value: geo.frame(in: .global))
+            }
+        )
+    }
+
+    private var headlineBlock: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Your day,\nintelligently\nmapped")
+                .font(.system(size: 38, weight: .heavy))
+                .foregroundColor(titleColor)
+                .tracking(-0.5)
+                .lineSpacing(2)
+            Text("From your first coffee to your last stop — seamlessly.")
+                .font(.system(size: 15))
+                .foregroundColor(subtitleColor)
+                .lineSpacing(4)
+                .frame(maxWidth: 260, alignment: .leading)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 32)
+    }
+
+    private var ctaButton: some View {
+        Button {
+            storedTheme = selectedTheme.rawValue
+            onComplete()
+        } label: {
+            Text("Start Exploring")
+                .font(.system(size: 17, weight: .bold))
+                .foregroundColor(buttonText)
+                .frame(maxWidth: .infinity)
+                .frame(height: 56)
+                .background(buttonBg)
+                .clipShape(Capsule())
+                .shadow(color: buttonBg.opacity(0.25), radius: 12, y: 6)
+        }
+        .padding(.horizontal, 24)
+        .padding(.bottom, 16)
+    }
+
+    private var signInLink: some View {
+        Text("SIGN IN")
+            .font(.system(size: 10, weight: .medium))
+            .tracking(1)
+            .foregroundColor(footerColor)
+            .padding(.bottom, 44)
+    }
+
+    // MARK: - Guide Overlay
+
+    private var guideOverlay: some View {
+        GeometryReader { geo in
+            ZStack(alignment: .topTrailing) {
+                // Spotlight: full-screen dark fill with a hole punched at the button
+                SpotlightShape(cutout: buttonFrame.insetBy(dx: -10, dy: -8), cornerRadius: 16)
+                    .fill(Color.black.opacity(0.6), style: FillStyle(eoFill: true))
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation(.easeOut(duration: 0.25)) { showGuide = false }
+                    }
+
+                // Glow ring around the button
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color.white.opacity(0.5), lineWidth: 1.5)
+                    .frame(width: buttonFrame.width + 20, height: buttonFrame.height + 16)
+                    .position(x: buttonFrame.midX, y: buttonFrame.midY)
+                    .allowsHitTesting(false)
+
+                // Callout anchored just below the spotlight hole
+                calloutColumn(screenWidth: geo.size.width)
+            }
+        }
+        .ignoresSafeArea()
+        .transition(.opacity)
+    }
+
+    private func calloutColumn(screenWidth: CGFloat) -> some View {
+        VStack(alignment: .trailing, spacing: 0) {
+            // Push down to just below the button
+            Color.clear.frame(height: buttonFrame.maxY + 4)
+
+            HStack(spacing: 0) {
+                Spacer()
+                VStack(alignment: .trailing, spacing: 0) {
+                    // Arrow tip
+                    GuideArrowTip()
+                        .fill(Color.white)
+                        .frame(width: 18, height: 11)
+                        .padding(.trailing, 28)
+                    // Bubble
+                    guideBubble
+                }
+                .padding(.trailing, 16)
+            }
+
+            Spacer()
+        }
+    }
+
+    private var guideBubble: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                Image(systemName: "paintpalette.fill")
+                    .font(.system(size: 13))
+                    .foregroundColor(Color(hex: 0xC8A97E))
+                Text("Switch your theme")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(Color(hex: 0x1b1c1a))
+            }
+            Text("Tap this button to toggle between light and dark palettes.")
+                .font(.system(size: 12))
+                .foregroundColor(Color(hex: 0x4e453b))
+                .lineSpacing(3)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("TAP ANYWHERE TO CONTINUE")
+                .font(.system(size: 9, weight: .medium))
+                .tracking(0.8)
+                .foregroundColor(Color(hex: 0x735a36).opacity(0.55))
+                .padding(.top, 2)
+        }
+        .padding(16)
+        .frame(width: 236)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.white)
+                .shadow(color: Color.black.opacity(0.18), radius: 24, y: 10)
+        )
     }
 
     // MARK: - Route Background
@@ -146,25 +274,40 @@ struct ThemeSelectionView: View {
                         style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
                 .frame(width: size.width, height: size.height)
 
-            // Right-side node — clear of the left-aligned headline
+            // Aquarium node — route start point
+            ZStack {
+                Circle().fill(bgColor).frame(width: 20, height: 20)
+                    .shadow(color: nodeColor.opacity(0.08), radius: 4)
+                Circle().fill(nodeColor).frame(width: 7, height: 7)
+            }
+            .position(x: 50 * sx, y: 650 * sy)
+
+            Text("AQUARIUM")
+                .font(.system(size: 9, weight: .medium))
+                .tracking(1.5)
+                .foregroundColor(subtitleColor.opacity(0.45))
+                .position(x: 50 * sx + 50, y: 650 * sy)
+
+            // Lunch node
             ZStack {
                 Circle().fill(bgColor).frame(width: 20, height: 20)
                     .shadow(color: nodeColor.opacity(0.08), radius: 4)
                 Circle().fill(nodeColor).frame(width: 7, height: 7)
             }
             .position(x: 350 * sx, y: 500 * sy)
+
             Text("LUNCH")
                 .font(.system(size: 9, weight: .medium))
                 .tracking(1.5)
                 .foregroundColor(subtitleColor.opacity(0.45))
                 .position(x: 350 * sx - 40, y: 500 * sy)
 
-            // Top end node — sits just below the logo
             Circle()
                 .fill(nodeColor.opacity(0.12))
                 .frame(width: 28, height: 28)
                 .overlay(Circle().fill(nodeColor).frame(width: 10, height: 10))
                 .position(x: 200 * sx, y: 100 * sy)
+
             Text("COFFEE")
                 .font(.system(size: 9, weight: .medium))
                 .tracking(1.5)
@@ -173,80 +316,32 @@ struct ThemeSelectionView: View {
         }
         .frame(width: size.width, height: size.height)
     }
+}
 
-    // MARK: - Theme Card
+// MARK: - Spotlight Shape (evenOdd hole)
 
-    @ViewBuilder
-    private func themeCard(_ theme: AppTheme) -> some View {
-        let isSelected    = selectedTheme == theme
-        let cardIsLight   = theme == .light
-        let cardBg: Color = cardIsLight ? Color(hex: 0xFBF9F6) : Color(hex: 0x1A1C19)
-        let accent: Color = cardIsLight ? Color(hex: 0xC8A97E) : Color(hex: 0xC5C9A4)
+private struct SpotlightShape: Shape {
+    let cutout: CGRect
+    let cornerRadius: CGFloat
 
-        Button {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                selectedTheme = theme
-            }
-        } label: {
-            VStack(spacing: 8) {
-                ZStack(alignment: .topTrailing) {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(cardBg)
-                        .frame(height: 70)
-                        .overlay {
-                            GeometryReader { c in
-                                ZStack {
-                                    Path { p in
-                                        p.move(to: CGPoint(x: 12, y: 52))
-                                        p.addCurve(
-                                            to: CGPoint(x: c.size.width * 0.65, y: 20),
-                                            control1: CGPoint(x: 36, y: 42),
-                                            control2: CGPoint(x: c.size.width * 0.4, y: 26)
-                                        )
-                                        p.addLine(to: CGPoint(x: c.size.width - 8, y: 10))
-                                    }
-                                    .stroke(accent.opacity(0.5),
-                                            style: StrokeStyle(lineWidth: 1.5, lineCap: .round))
+    func path(in rect: CGRect) -> Path {
+        var path = Path(rect)
+        path.addRoundedRect(in: cutout,
+                            cornerSize: CGSize(width: cornerRadius, height: cornerRadius))
+        return path
+    }
+}
 
-                                    VStack {
-                                        Spacer()
-                                        RoundedRectangle(cornerRadius: 4)
-                                            .fill(accent)
-                                            .frame(width: 68, height: 10)
-                                            .padding(.bottom, 9)
-                                    }
-                                }
-                            }
-                        }
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(isSelected ? accent : Color.gray.opacity(0.12),
-                                        lineWidth: isSelected ? 2 : 1)
-                        )
+// MARK: - Guide Arrow Tip
 
-                    if isSelected {
-                        Circle()
-                            .fill(accent)
-                            .frame(width: 18, height: 18)
-                            .overlay(
-                                Image(systemName: "checkmark")
-                                    .font(.system(size: 9, weight: .bold))
-                                    .foregroundColor(cardIsLight ? .white : Color(hex: 0x1A1C19))
-                            )
-                            .padding(5)
-                            .transition(.scale.combined(with: .opacity))
-                    }
-                }
-
-                Text(theme.displayName)
-                    .font(.system(size: 10, weight: isSelected ? .semibold : .regular))
-                    .tracking(0.3)
-                    .foregroundColor(isSelected ? primaryColor : subtitleColor.opacity(0.5))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-            }
+struct GuideArrowTip: Shape {
+    func path(in rect: CGRect) -> Path {
+        Path { p in
+            p.move(to: CGPoint(x: rect.midX, y: rect.minY))
+            p.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+            p.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+            p.closeSubpath()
         }
-        .buttonStyle(.plain)
     }
 }
 

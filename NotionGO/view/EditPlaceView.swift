@@ -10,6 +10,8 @@ struct EditPlaceView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var placeStore: PlaceStore
 
+    @AppStorage("appTheme") private var storedTheme = "light"
+
     @State private var name: String
     @State private var category: String
     @State private var address: String
@@ -18,8 +20,12 @@ struct EditPlaceView: View {
     @State private var isLoadingLocation = false
     @State private var usedCurrentLocation = false
     @State private var currentCoord: CLLocationCoordinate2D? = nil
+    @State private var showCategoryPicker = false
 
     let categories = ["Restaurant", "Café", "Park", "Museum", "Historical Site", "Library", "Tatli", "Genel"]
+
+    private var t: ThemeColors { ThemeColors.make(storedTheme) }
+    private var canSave: Bool { !name.isEmpty && !isSaving }
 
     init(place: Place) {
         self.place = place
@@ -30,78 +36,152 @@ struct EditPlaceView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section(header: Text("Mekan Bilgileri")) {
-                    TextField("Mekan Adı", text: $name)
-                    Picker("Kategori", selection: $category) {
-                        ForEach(categories, id: \.self) { cat in
-                            Text(cat).tag(cat)
-                        }
+        ZStack {
+            t.bg.ignoresSafeArea()
+
+            VStack(spacing: 0) {
+                // Header
+                HStack {
+                    Button { dismiss() } label: {
+                        Text("İptal")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(t.subtitle)
                     }
-                }
+                    .buttonStyle(.plain)
 
-                Section(header: Text("Konum")) {
-                    if usedCurrentLocation {
-                        HStack {
-                            Image(systemName: "location.fill")
-                                .foregroundColor(.blue)
-                            Text("Mevcut konum kullanılıyor")
-                                .font(.subheadline)
-                                .foregroundColor(.blue)
-                            Spacer()
-                            Button("Değiştir") {
-                                usedCurrentLocation = false
-                                currentCoord = nil
+                    Spacer()
+
+                    Text("MEKAN DÜZENLE")
+                        .font(.system(size: 12, weight: .semibold))
+                        .tracking(2)
+                        .foregroundColor(t.title)
+
+                    Spacer()
+
+                    Button { save() } label: {
+                        Group {
+                            if isSaving {
+                                ProgressView().tint(t.buttonText).scaleEffect(0.8)
+                            } else {
+                                Text("Kaydet")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(canSave ? t.buttonText : t.subtitle.opacity(0.4))
                             }
-                            .font(.caption)
-                            .foregroundColor(.red)
                         }
-                    } else {
-                        TextField("Adres (Örn: Kadıköy, İstanbul)", text: $address)
+                        .frame(width: 60)
+                        .padding(.vertical, 8)
+                        .background(canSave ? t.accent : t.card)
+                        .clipShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(!canSave)
+                }
+                .padding(.top, 60)
+                .padding(.horizontal, 24)
+                .padding(.bottom, 24)
 
-                        Button {
-                            fetchCurrentLocation()
-                        } label: {
-                            HStack {
-                                if isLoadingLocation {
-                                    ProgressView().scaleEffect(0.8)
-                                } else {
-                                    Image(systemName: "location.fill")
+                ScrollView {
+                    VStack(spacing: 20) {
+                        fieldSection(label: "MEKAN ADI") {
+                            TextField("Mekan adı", text: $name)
+                                .font(.system(size: 15))
+                                .foregroundColor(t.title)
+                        }
+
+                        fieldSection(label: "KATEGORİ") {
+                            Button { showCategoryPicker = true } label: {
+                                HStack {
+                                    Text(category)
+                                        .font(.system(size: 15))
+                                        .foregroundColor(t.title)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(t.subtitle.opacity(0.5))
                                 }
-                                Text(isLoadingLocation ? "Konum alınıyor..." : "Mevcut Konumumu Kullan")
-                                    .fontWeight(.medium)
                             }
-                            .foregroundColor(.blue)
+                            .buttonStyle(.plain)
                         }
-                        .disabled(isLoadingLocation)
-                    }
-                }
 
-                Section(header: Text("Notlar")) {
-                    TextEditor(text: $notes)
-                        .frame(height: 120)
-                }
-            }
-            .navigationTitle("Mekanı Düzenle")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("İptal") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button {
-                        save()
-                    } label: {
-                        if isSaving {
-                            ProgressView().scaleEffect(0.8)
-                        } else {
-                            Text("Kaydet")
+                        fieldSection(label: "KONUM") {
+                            if usedCurrentLocation {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "location.fill")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(t.primary)
+                                    Text("Mevcut konum kullanılıyor")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(t.primary)
+                                    Spacer()
+                                    Button("Değiştir") {
+                                        usedCurrentLocation = false
+                                        currentCoord = nil
+                                    }
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundColor(t.destructive)
+                                }
+                            } else {
+                                VStack(spacing: 12) {
+                                    TextField("Adres", text: $address)
+                                        .font(.system(size: 15))
+                                        .foregroundColor(t.title)
+
+                                    Divider().background(t.separator)
+
+                                    Button { fetchCurrentLocation() } label: {
+                                        HStack(spacing: 7) {
+                                            if isLoadingLocation {
+                                                ProgressView().tint(t.primary).scaleEffect(0.8)
+                                            } else {
+                                                Image(systemName: "location.fill")
+                                                    .font(.system(size: 12))
+                                                    .foregroundColor(t.primary)
+                                            }
+                                            Text(isLoadingLocation ? "Konum alınıyor..." : "Mevcut Konumumu Kullan")
+                                                .font(.system(size: 14, weight: .medium))
+                                                .foregroundColor(t.primary)
+                                        }
+                                    }
+                                    .buttonStyle(.plain)
+                                    .disabled(isLoadingLocation)
+                                }
+                            }
                         }
+
+                        fieldSection(label: "NOTLAR") {
+                            TextField("Notlar...", text: $notes, axis: .vertical)
+                                .font(.system(size: 15))
+                                .foregroundColor(t.title)
+                                .lineLimit(4...8)
+                        }
+
+                        Spacer().frame(height: 60)
                     }
-                    .disabled(name.isEmpty || isSaving)
+                    .padding(.horizontal, 20)
                 }
             }
+        }
+        .ignoresSafeArea()
+        .sheet(isPresented: $showCategoryPicker) {
+            CategorySheetPicker(selected: $category, categories: categories, t: t)
+        }
+    }
+
+    @ViewBuilder
+    private func fieldSection<Content: View>(label: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(label)
+                .font(.system(size: 10, weight: .medium))
+                .tracking(2)
+                .foregroundColor(t.subtitle.opacity(0.55))
+            VStack(spacing: 0) {
+                content().padding(14)
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(t.card)
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(t.cardBorder, lineWidth: 1))
+            )
         }
     }
 

@@ -37,171 +37,238 @@ struct ContentView: View {
     }
 }
 
-// MARK: - Ana Ekran
+// MARK: - Nav Tab
+
+enum NavTab: CaseIterable {
+    case explore, routes, add, saved, profile
+
+    var icon: String {
+        switch self {
+        case .explore: return "safari.fill"
+        case .routes:  return "figure.walk"
+        case .add:     return "plus"
+        case .saved:   return "bookmark.fill"
+        case .profile: return "person.fill"
+        }
+    }
+
+    var label: String {
+        switch self {
+        case .explore: return "EXPLORE"
+        case .routes:  return "ROUTES"
+        case .add:     return "ADD"
+        case .saved:   return "SAVED"
+        case .profile: return "PROFILE"
+        }
+    }
+}
+
+// MARK: - Home View
 
 struct HomeView: View {
     @EnvironmentObject var placeStore: PlaceStore
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var routeManager: RouteManager
 
-    @State private var showPlaces = false
-    @State private var showRoute = false
+    @AppStorage("appTheme") private var storedTheme = "light"
+    @State private var activeTab: NavTab? = nil   // nil = nothing selected
+    @State private var showExplore = false
+    @State private var showRouteFlow = false
+    @State private var showSaved = false
+    @State private var showAddPlace = false
+    @State private var showProfile = false
+    @State private var routeTrim: CGFloat = 0
+
+    private var t: ThemeColors { ThemeColors.make(storedTheme) }
 
     var body: some View {
-        ZStack {
-            // Arka plan gradient
-            LinearGradient(
-                colors: [Color(.systemBackground), Color(.secondarySystemBackground)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
+        ZStack(alignment: .bottom) {
+            t.bg.ignoresSafeArea()
+            GeometryReader { geo in homeRouteBackground(size: geo.size) }
 
             VStack(spacing: 0) {
-
-                // Üst başlık
-                VStack(spacing: 6) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Merhaba 👋")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                            Text("Ne yapmak istiyorsun?")
-                                .font(.title)
-                                .fontWeight(.bold)
-                        }
-                        Spacer()
-                        // Konum göstergesi
-                        if !locationManager.currentDistrict.isEmpty {
-                            Label(locationManager.currentDistrict, systemImage: "location.fill")
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .foregroundColor(.blue)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
-                                .background(Color.blue.opacity(0.1))
-                                .cornerRadius(20)
-                        }
+                // Header
+                HStack {
+                    HStack(spacing: 7) {
+                        Image(systemName: "safari.fill")
+                            .font(.system(size: 17))
+                            .foregroundColor(t.primary)
+                        Text("CURATOR ROUTES")
+                            .font(.system(size: 13, weight: .semibold))
+                            .tracking(1.5)
+                            .foregroundColor(t.title)
                     }
-                    .padding(.horizontal, 24)
-                    .padding(.top, 60)
-                    .padding(.bottom, 30)
-                }
-
-                // İki ana kart
-                VStack(spacing: 16) {
-
-                    // Mekanlarım Kartı
-                    HomeCard(
-                        icon: "mappin.and.ellipse",
-                        iconColor: .blue,
-                        title: "Mekanlarım",
-                        subtitle: placeStore.places.isEmpty
-                            ? "Henüz mekan eklenmedi"
-                            : "\(placeStore.places.count) mekan kayıtlı",
-                        actionLabel: "Görüntüle & Düzenle",
-                        backgroundColor: Color.blue.opacity(0.08)
-                    ) {
-                        showPlaces = true
-                    }
-
-                    // Rota Planla Kartı
-                    HomeCard(
-                        icon: "map.fill",
-                        iconColor: .green,
-                        title: "Rota Planla",
-                        subtitle: "Konumuna göre rota oluştur",
-                        actionLabel: "Başla",
-                        backgroundColor: Color.green.opacity(0.08)
-                    ) {
-                        showRoute = true
+                    Spacer()
+                    if !locationManager.currentDistrict.isEmpty {
+                        HStack(spacing: 5) {
+                            Image(systemName: "location.fill").font(.system(size: 10))
+                            Text(locationManager.currentDistrict)
+                                .font(.system(size: 11, weight: .medium))
+                                .tracking(0.3)
+                        }
+                        .foregroundColor(t.primary)
+                        .padding(.horizontal, 11)
+                        .padding(.vertical, 6)
+                        .background(Capsule().fill(t.accent.opacity(0.15)))
+                        .overlay(Capsule().stroke(t.accent.opacity(0.3), lineWidth: 1))
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.top, 64)
+                .padding(.horizontal, 24)
 
                 Spacer()
 
-                // Alt bilgi
-                Text("Mekanlarını ekleyip rotanı planla")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .padding(.bottom, 40)
+                // Headline
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Your day,\nintelligently\nmapped.")
+                        .font(.system(size: 36, weight: .heavy))
+                        .foregroundColor(t.title)
+                        .tracking(-0.5)
+                        .lineSpacing(2)
+                    Text("Plan your perfect route across the city.")
+                        .font(.system(size: 14))
+                        .foregroundColor(t.subtitle)
+                        .lineSpacing(3)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 28)
+
+                Spacer()
+                Spacer().frame(height: 110) // room for nav bar
+            }
+
+            // Bottom nav bar — direct callbacks, no binding
+            CuratorNavBar(active: activeTab, t: t,
+                onExplore: { showExplore = true },
+                onRoutes:  { showRouteFlow = true },
+                onAdd:     { showAddPlace = true },
+                onSaved:   { showSaved = true },
+                onProfile: { showProfile = true }
+            )
+        }
+        .ignoresSafeArea()
+        .onAppear {
+            withAnimation(.linear(duration: 4).repeatForever(autoreverses: false)) {
+                routeTrim = 1
             }
         }
-        .fullScreenCover(isPresented: $showPlaces) {
+        .fullScreenCover(isPresented: $showExplore) {
+            ExploreView()
+                .environmentObject(placeStore)
+                .environmentObject(locationManager)
+                .environmentObject(routeManager)
+        }
+        .fullScreenCover(isPresented: $showRouteFlow) {
+            CategoryPickerView()
+                .environmentObject(placeStore)
+                .environmentObject(locationManager)
+                .environmentObject(routeManager)
+                .environment(\.dismissRouteFlow, {
+                    showRouteFlow = false
+                    locationManager.stopNavigationTracking()
+                    routeManager.reset()
+                })
+        }
+        .fullScreenCover(isPresented: $showSaved) {
             PlacesListView()
                 .environmentObject(placeStore)
                 .environmentObject(locationManager)
                 .environmentObject(routeManager)
         }
-        .fullScreenCover(isPresented: $showRoute) {
-            MapView()
+        .fullScreenCover(isPresented: $showProfile) {
+            ProfileView()
                 .environmentObject(placeStore)
-                .environmentObject(locationManager)
-                .environmentObject(routeManager)
         }
+        .sheet(isPresented: $showAddPlace) {
+            AddPlaceView().environmentObject(placeStore)
+        }
+    }
+
+    @ViewBuilder
+    private func homeRouteBackground(size: CGSize) -> some View {
+        let sx = size.width  / 400
+        let sy = size.height / 800
+
+        ZStack {
+            OnboardingRoutePath()
+                .stroke(t.accent.opacity(0.10),
+                        style: StrokeStyle(lineWidth: 1.5, lineCap: .round, lineJoin: .round))
+                .frame(width: size.width, height: size.height)
+            OnboardingRoutePath()
+                .trim(from: 0, to: routeTrim)
+                .stroke(t.accent.opacity(0.35),
+                        style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+                .frame(width: size.width, height: size.height)
+            Circle()
+                .fill(t.primary.opacity(0.12))
+                .frame(width: 24, height: 24)
+                .overlay(Circle().fill(t.primary).frame(width: 8, height: 8))
+                .position(x: 200 * sx, y: 100 * sy)
+        }
+        .frame(width: size.width, height: size.height)
     }
 }
 
-// MARK: - Ana Kart Bileşeni
+// MARK: - Curator Nav Bar
 
-struct HomeCard: View {
-    let icon: String
-    let iconColor: Color
-    let title: String
-    let subtitle: String
-    let actionLabel: String
-    let backgroundColor: Color
-    let onTap: () -> Void
+struct CuratorNavBar: View {
+    let active: NavTab?
+    let t: ThemeColors
+    let onExplore: () -> Void
+    let onRoutes:  () -> Void
+    let onAdd:     () -> Void
+    let onSaved:   () -> Void
+    let onProfile: () -> Void
 
     var body: some View {
-        Button(action: onTap) {
-            HStack(spacing: 18) {
-                // İkon
-                ZStack {
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(iconColor.opacity(0.15))
-                        .frame(width: 64, height: 64)
-                    Image(systemName: icon)
-                        .font(.title)
-                        .foregroundColor(iconColor)
+        HStack(spacing: 0) {
+            navButton(.explore, action: onExplore)
+            navButton(.routes,  action: onRoutes)
+            navButton(.add,     action: onAdd)
+            navButton(.saved,   action: onSaved)
+            navButton(.profile, action: onProfile)
+        }
+        .padding(.horizontal, 8)
+        .padding(.top, 14)
+        .padding(.bottom, 28)
+        .background(t.bg.shadow(color: .black.opacity(0.06), radius: 16, y: -4))
+    }
+
+    @ViewBuilder
+    private func navButton(_ tab: NavTab, action: @escaping () -> Void) -> some View {
+        let isActive = active == tab
+        Button(action: action) {
+            VStack(spacing: 5) {
+                if isActive {
+                    // Active: no circle, icon in primary color
+                    Image(systemName: tab.icon)
+                        .font(.system(size: 24, weight: .medium))
+                        .foregroundColor(t.primary)
+                        .frame(width: 44, height: 44)
+                } else {
+                    // Inactive: gray circle with icon
+                    ZStack {
+                        Circle()
+                            .fill(t.card)
+                            .frame(width: 44, height: 44)
+                            .overlay(Circle().stroke(t.cardBorder, lineWidth: 1))
+                        Image(systemName: tab.icon)
+                            .font(.system(size: 17))
+                            .foregroundColor(t.subtitle.opacity(0.65))
+                    }
                 }
-
-                // Metin
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    Text(subtitle)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
-                }
-
-                Spacer()
-
-                // Ok
-                Image(systemName: "chevron.right")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(iconColor)
+                Text(tab.label)
+                    .font(.system(size: 9, weight: isActive ? .bold : .regular))
+                    .tracking(1.2)
+                    .foregroundColor(isActive ? t.primary : t.subtitle.opacity(0.55))
             }
-            .padding(20)
-            .background(
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(backgroundColor)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(iconColor.opacity(0.2), lineWidth: 1)
-                    )
-            )
-            .shadow(color: iconColor.opacity(0.18), radius: 18, x: 0, y: 8)
         }
         .buttonStyle(.plain)
+        .frame(maxWidth: .infinity)
     }
 }
 
-// MARK: - Mekanlar Listesi
+// MARK: - Places List View
 
 struct PlacesListView: View {
     @EnvironmentObject var placeStore: PlaceStore
@@ -210,14 +277,23 @@ struct PlacesListView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
+    @AppStorage("appTheme") private var storedTheme = "light"
     @State private var showAddPlace = false
-    @State private var showMap = false
+    @State private var selectedCategory: String? = nil
+
+    private var t: ThemeColors { ThemeColors.make(storedTheme) }
+
+    var allCategories: [String] { placeStore.allCategories }
 
     var sortedPlaces: [Place] {
-        guard let userLoc = locationManager.userLocation else {
-            return placeStore.places
+        let filtered: [Place]
+        if let cat = selectedCategory {
+            filtered = placeStore.places.filter { $0.category == cat }
+        } else {
+            filtered = placeStore.places
         }
-        return placeStore.places.sorted { a, b in
+        guard let userLoc = locationManager.userLocation else { return filtered }
+        return filtered.sorted { a, b in
             guard let coordA = a.coordinate, let coordB = b.coordinate else { return false }
             let locA = CLLocation(latitude: coordA.latitude, longitude: coordA.longitude)
             let locB = CLLocation(latitude: coordB.latitude, longitude: coordB.longitude)
@@ -226,66 +302,143 @@ struct PlacesListView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Group {
+        ZStack(alignment: .top) {
+            t.bg.ignoresSafeArea()
+
+            VStack(spacing: 0) {
+                // Custom header
+                HStack {
+                    Button { dismiss() } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(t.subtitle)
+                            .padding(10)
+                            .background(Circle().fill(t.card))
+                            .overlay(Circle().stroke(t.cardBorder, lineWidth: 1))
+                    }
+                    .buttonStyle(.plain)
+
+                    Spacer()
+
+                    Text("Mekanlarım")
+                        .font(.system(size: 16, weight: .semibold))
+                        .tracking(0.2)
+                        .foregroundColor(t.title)
+
+                    Spacer()
+
+                    Button { showAddPlace = true } label: {
+                        Image(systemName: "plus")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(t.buttonText)
+                            .padding(10)
+                            .background(Circle().fill(t.accent))
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(.top, 60)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 16)
+
                 if sortedPlaces.isEmpty {
-                    VStack(spacing: 16) {
+                    Spacer()
+                    VStack(spacing: 14) {
                         Image(systemName: "mappin.slash")
-                            .font(.system(size: 60))
-                            .foregroundColor(.secondary)
+                            .font(.system(size: 44))
+                            .foregroundColor(t.primary.opacity(0.4))
                         Text("Henüz mekan eklenmedi")
-                            .font(.title3)
-                            .fontWeight(.semibold)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(t.title)
                         Text("+ butonuna basarak mekan ekleyebilirsin")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .font(.system(size: 13))
+                            .foregroundColor(t.subtitle)
                             .multilineTextAlignment(.center)
                     }
-                    .padding()
+                    .padding(.horizontal, 40)
+                    Spacer()
                 } else {
-                    List {
-                        Section(header: Text("\(sortedPlaces.count) mekan").textCase(nil)) {
-                            ForEach(sortedPlaces) { place in
-                                PlaceListItemView(place: place, modelContext: modelContext)
-                            }
-                            .onDelete { indexSet in
-                                for index in indexSet {
-                                    placeStore.deletePlace(sortedPlaces[index], context: modelContext)
+                    Text("\(sortedPlaces.count) mekan")
+                        .font(.system(size: 10, weight: .medium))
+                        .tracking(2)
+                        .foregroundColor(t.subtitle.opacity(0.5))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 10)
+
+                    if !allCategories.isEmpty {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                // "All" chip
+                                Button {
+                                    withAnimation(.spring(response: 0.3)) { selectedCategory = nil }
+                                } label: {
+                                    Text("Tümü")
+                                        .font(.system(size: 12, weight: selectedCategory == nil ? .semibold : .regular))
+                                        .foregroundColor(selectedCategory == nil ? t.buttonText : t.subtitle)
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 7)
+                                        .background(Capsule().fill(selectedCategory == nil ? t.accent : t.card))
+                                        .overlay(Capsule().stroke(selectedCategory == nil ? Color.clear : t.cardBorder, lineWidth: 1))
                                 }
+                                .buttonStyle(.plain)
+
+                                ForEach(allCategories, id: \.self) { cat in
+                                    let isActive = selectedCategory == cat
+                                    Button {
+                                        withAnimation(.spring(response: 0.3)) {
+                                            selectedCategory = isActive ? nil : cat
+                                        }
+                                    } label: {
+                                        HStack(spacing: 5) {
+                                            Image(systemName: PlaceStyle.icon(for: cat))
+                                                .font(.system(size: 10))
+                                            Text(cat)
+                                                .font(.system(size: 12, weight: isActive ? .semibold : .regular))
+                                        }
+                                        .foregroundColor(isActive ? t.buttonText : t.subtitle)
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 7)
+                                        .background(Capsule().fill(isActive ? t.accent : t.card))
+                                        .overlay(Capsule().stroke(isActive ? Color.clear : t.cardBorder, lineWidth: 1))
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                            .padding(.horizontal, 20)
+                        }
+                        .padding(.bottom, 10)
+                    }
+
+                    List {
+                        ForEach(sortedPlaces) { place in
+                            PlaceListItemView(place: place, modelContext: modelContext, t: t)
+                                .listRowBackground(t.card)
+                                .listRowSeparatorTint(t.separator)
+                        }
+                        .onDelete { indexSet in
+                            for index in indexSet {
+                                placeStore.deletePlace(sortedPlaces[index], context: modelContext)
                             }
                         }
                     }
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
                 }
             }
-            .navigationTitle("Mekanlarım")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Kapat") { dismiss() }
-                }
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        showAddPlace = true
-                    } label: {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
-            .sheet(isPresented: $showAddPlace) {
-                AddPlaceView()
-                    .environmentObject(placeStore)
-            }
+        }
+        .sheet(isPresented: $showAddPlace) {
+            AddPlaceView().environmentObject(placeStore)
         }
     }
 }
 
-// MARK: - Mekan Liste Elemanı
+// MARK: - Place List Item
 
 struct PlaceListItemView: View {
     let place: Place
     let modelContext: ModelContext
+    let t: ThemeColors
     @EnvironmentObject var placeStore: PlaceStore
-
     @State private var showEdit = false
 
     var body: some View {
@@ -300,31 +453,30 @@ struct PlaceListItemView: View {
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(place.name)
-                    .font(.body)
-                    .fontWeight(.medium)
-                    .foregroundColor(place.isVisited ? .secondary : .primary)
-                    .strikethrough(place.isVisited, color: .secondary)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(place.isVisited ? t.subtitle : t.title)
+                    .strikethrough(place.isVisited, color: t.subtitle)
                 Text(place.category)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 11))
+                    .foregroundColor(t.subtitle.opacity(0.7))
                 if place.visitCount > 0 {
-                    Text("Visited \(place.visitCount) time\(place.visitCount == 1 ? "" : "s")")
-                        .font(.caption2)
-                        .foregroundColor(.green)
+                    Text("\(place.visitCount)x ziyaret edildi")
+                        .font(.system(size: 10))
+                        .foregroundColor(t.primary.opacity(0.7))
                 }
                 if let rating = place.userRating {
                     HStack(spacing: 2) {
                         ForEach(1...5, id: \.self) { star in
                             Image(systemName: star <= rating ? "star.fill" : "star")
                                 .font(.system(size: 9))
-                                .foregroundColor(star <= rating ? .yellow : .secondary)
+                                .foregroundColor(star <= rating ? t.accent : t.subtitle.opacity(0.3))
                         }
                     }
                 }
                 if !place.address.isEmpty {
                     Text(place.address)
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 10))
+                        .foregroundColor(t.subtitle.opacity(0.5))
                         .lineLimit(1)
                 }
             }
@@ -332,7 +484,6 @@ struct PlaceListItemView: View {
             Spacer()
 
             VStack(spacing: 8) {
-                // Ziyaret edildi butonu
                 Button {
                     withAnimation(.spring(response: 0.3)) {
                         place.isVisited.toggle()
@@ -341,82 +492,137 @@ struct PlaceListItemView: View {
                     }
                 } label: {
                     Image(systemName: place.isVisited ? "checkmark.circle.fill" : "circle")
-                        .font(.title3)
-                        .foregroundColor(place.isVisited ? .green : .secondary)
+                        .font(.system(size: 20))
+                        .foregroundColor(place.isVisited ? t.primary : t.subtitle.opacity(0.3))
                 }
                 .buttonStyle(.plain)
 
-                // Düzenle butonu
-                Button {
-                    showEdit = true
-                } label: {
+                Button { showEdit = true } label: {
                     Image(systemName: "pencil.circle")
-                        .font(.title3)
-                        .foregroundColor(.blue.opacity(0.7))
+                        .font(.system(size: 20))
+                        .foregroundColor(t.accent.opacity(0.8))
                 }
                 .buttonStyle(.plain)
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 6)
         .sheet(isPresented: $showEdit) {
-            EditPlaceView(place: place)
-                .environmentObject(placeStore)
+            EditPlaceView(place: place).environmentObject(placeStore)
         }
     }
 }
 
-// MARK: - İzin Bekleniyor
+// MARK: - Permission View
 
 struct PermissionView: View {
+    @AppStorage("appTheme") private var storedTheme = "light"
+    private var t: ThemeColors { ThemeColors.make(storedTheme) }
+
     var body: some View {
-        VStack(spacing: 24) {
-            Image(systemName: "location.circle.fill")
-                .font(.system(size: 80))
-                .foregroundColor(.blue)
-            VStack(spacing: 8) {
-                Text("Konumuna İhtiyacımız Var")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                Text("Bulunduğun semtteki mekanları göstermek için konum izni gerekiyor.")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 30)
+        ZStack {
+            t.bg.ignoresSafeArea()
+            VStack(spacing: 0) {
+                HStack(spacing: 7) {
+                    Image(systemName: "safari.fill")
+                        .font(.system(size: 17))
+                        .foregroundColor(t.primary)
+                    Text("CURATOR ROUTES")
+                        .font(.system(size: 13, weight: .semibold))
+                        .tracking(1.5)
+                        .foregroundColor(t.title)
+                }
+                .padding(.top, 64)
+
+                Spacer()
+
+                VStack(alignment: .leading, spacing: 14) {
+                    Image(systemName: "location.circle.fill")
+                        .font(.system(size: 48))
+                        .foregroundColor(t.accent)
+                        .padding(.bottom, 4)
+                    Text("Konumuna\nihtiyacımız var")
+                        .font(.system(size: 34, weight: .heavy))
+                        .foregroundColor(t.title)
+                        .tracking(-0.5)
+                        .lineSpacing(2)
+                    Text("Bulunduğun semtteki mekanları göstermek için konum izni gerekiyor.")
+                        .font(.system(size: 15))
+                        .foregroundColor(t.subtitle)
+                        .lineSpacing(4)
+                        .frame(maxWidth: 280, alignment: .leading)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 32)
+
+                Spacer()
             }
         }
+        .ignoresSafeArea()
     }
 }
 
-// MARK: - İzin Reddedildi
+// MARK: - Location Denied View
 
 struct LocationDeniedView: View {
+    @AppStorage("appTheme") private var storedTheme = "light"
+    private var t: ThemeColors { ThemeColors.make(storedTheme) }
+
     var body: some View {
-        VStack(spacing: 24) {
-            Image(systemName: "location.slash.fill")
-                .font(.system(size: 80))
-                .foregroundColor(.red)
-            VStack(spacing: 8) {
-                Text("Konum İzni Gerekli")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                Text("Ayarlar > NotionGO > Konum bölümünden izin ver.")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-            }
-            Button {
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(url)
+        ZStack {
+            t.bg.ignoresSafeArea()
+            VStack(spacing: 0) {
+                HStack(spacing: 7) {
+                    Image(systemName: "safari.fill")
+                        .font(.system(size: 17))
+                        .foregroundColor(t.primary)
+                    Text("CURATOR ROUTES")
+                        .font(.system(size: 13, weight: .semibold))
+                        .tracking(1.5)
+                        .foregroundColor(t.title)
                 }
-            } label: {
-                Text("Ayarlara Git")
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 30)
-                    .padding(.vertical, 14)
-                    .background(Color.blue)
-                    .cornerRadius(12)
+                .padding(.top, 64)
+
+                Spacer()
+
+                VStack(alignment: .leading, spacing: 14) {
+                    Image(systemName: "location.slash.fill")
+                        .font(.system(size: 48))
+                        .foregroundColor(t.destructive)
+                        .padding(.bottom, 4)
+                    Text("Konum izni\ngerekli")
+                        .font(.system(size: 34, weight: .heavy))
+                        .foregroundColor(t.title)
+                        .tracking(-0.5)
+                        .lineSpacing(2)
+                    Text("Ayarlar > NotionGO > Konum bölümünden izin ver.")
+                        .font(.system(size: 15))
+                        .foregroundColor(t.subtitle)
+                        .lineSpacing(4)
+                        .frame(maxWidth: 280, alignment: .leading)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 32)
+
+                Spacer()
+
+                Button {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                } label: {
+                    Text("Ayarlara Git")
+                        .font(.system(size: 17, weight: .bold))
+                        .foregroundColor(t.buttonText)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 56)
+                        .background(t.accent)
+                        .clipShape(Capsule())
+                        .shadow(color: t.accent.opacity(0.25), radius: 12, y: 6)
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 60)
             }
         }
+        .ignoresSafeArea()
     }
 }
