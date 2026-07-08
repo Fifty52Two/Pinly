@@ -350,10 +350,10 @@
 "Mekanlarından yürüyüş rotası oluştur. Adım adım navigasyon kilit ekranında seni takip eder." = "Mekanlarından yürüyüş rotası oluştur. Adım adım navigasyon kilit ekranında seni takip eder.";
 "Rozet Kazan, Paylaş" = "Rozet Kazan, Paylaş";
 "22 rozet, haftalık raporlar ve arkadaşlarınla QR kod ile rota paylaşımı seni bekliyor." = "22 rozet, haftalık raporlar ve arkadaşlarınla QR kod ile rota paylaşımı seni bekliyor.";
-"Günaydın ☀️" = "Günaydın ☀️";
-"İyi günler 👋" = "İyi günler 👋";
-"İyi akşamlar 🌆" = "İyi akşamlar 🌆";
-"İyi geceler 🌙" = "İyi geceler 🌙";
+"Günaydın," = "Günaydın,";
+"İyi günler," = "İyi günler,";
+"İyi akşamlar," = "İyi akşamlar,";
+"İyi geceler," = "İyi geceler,";
 "Gün Serisi" = "Gün Serisi";
 "Rozet" = "Rozet";
 "Mekan Ekle" = "Mekan Ekle";
@@ -382,3 +382,8 @@
 "Konum haritadan seçildi" = "Konum haritadan seçildi";
 "Kaldır" = "Kaldır";
 "Adres bulunamadı" = "Adres bulunamadı";
+
+"Görünüm" = "Görünüm";
+"Sistem" = "Sistem";
+"Açık" = "Açık";
+"Koyu" = "Koyu";

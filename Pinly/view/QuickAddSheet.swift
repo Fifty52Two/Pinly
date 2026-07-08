@@ -2,6 +2,9 @@ import SwiftUI
 import SwiftData
 import CoreLocation
 
+// Kart tabanlı özel form — Add/Edit ile aynı bileşenler
+// (PlaceFormComponents). Konum alma / kaydetme mantığı değişmedi.
+
 struct QuickAddSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -11,47 +14,96 @@ struct QuickAddSheet: View {
     @Environment(\.badges) private var badgeService
 
     @State private var name = ""
-    @State private var category = PlaceCategory.general
+    @State private var category = PlaceCategory.general.rawValue
     @State private var address = ""
     @State private var isLocating = true
     @State private var showPaywall = false
 
+    private var canSave: Bool {
+        !name.trimmingCharacters(in: .whitespaces).isEmpty && !isLocating
+    }
+
     var body: some View {
         NavigationStack {
-            Form {
-                Section(NSLocalizedString("Konum", comment: "")) {
-                    if isLocating {
-                        HStack(spacing: 10) {
-                            ProgressView()
-                            Text(NSLocalizedString("Konum alınıyor...", comment: ""))
-                                .foregroundStyle(.secondary)
-                        }
-                    } else if locationManager.userLocation != nil {
-                        Label(
-                            address.isEmpty
-                                ? NSLocalizedString("Konum hazır", comment: "")
-                                : address,
-                            systemImage: "location.fill"
-                        )
-                        .foregroundStyle(.green)
-                    } else {
-                        Label(NSLocalizedString("Konum alınamadı", comment: ""), systemImage: "location.slash")
-                            .foregroundStyle(.red)
-                    }
-                }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
 
-                Section(NSLocalizedString("Mekan Bilgisi", comment: "")) {
-                    TextField(NSLocalizedString("Mekan adı", comment: ""), text: $name)
-                    Picker(NSLocalizedString("Kategori", comment: ""), selection: $category) {
-                        ForEach(PlaceCategory.allCases, id: \.self) { cat in
-                            Label(cat.localizedName, systemImage: cat.icon).tag(cat)
+                    // Konum durumu
+                    VStack(alignment: .leading, spacing: 10) {
+                        PinlyFormLabel(NSLocalizedString("Konum", comment: ""))
+                        if isLocating {
+                            HStack(spacing: 10) {
+                                ProgressView()
+                                Text(NSLocalizedString("Konum alınıyor...", comment: ""))
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                Spacer()
+                            }
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 13)
+                            .background(RoundedRectangle(cornerRadius: 14).fill(PinlyTheme.surface))
+                        } else if locationManager.userLocation != nil {
+                            HStack(spacing: 10) {
+                                Image(systemName: "location.fill")
+                                    .foregroundColor(.green)
+                                Text(address.isEmpty
+                                     ? NSLocalizedString("Konum hazır", comment: "")
+                                     : address)
+                                    .font(.subheadline)
+                                    .foregroundColor(.green)
+                                    .lineLimit(2)
+                                Spacer()
+                            }
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 13)
+                            .background(RoundedRectangle(cornerRadius: 14).fill(Color.green.opacity(0.10)))
+                        } else {
+                            HStack(spacing: 10) {
+                                Image(systemName: "location.slash")
+                                    .foregroundColor(PinlyTheme.accent)
+                                Text(NSLocalizedString("Konum alınamadı", comment: ""))
+                                    .font(.subheadline)
+                                    .foregroundColor(PinlyTheme.accent)
+                                Spacer()
+                            }
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 13)
+                            .background(RoundedRectangle(cornerRadius: 14).fill(PinlyTheme.accent.opacity(0.10)))
                         }
                     }
+
+                    // Mekan bilgisi
+                    VStack(alignment: .leading, spacing: 10) {
+                        PinlyFormLabel(NSLocalizedString("Mekan Bilgisi", comment: ""))
+                        PinlyField(
+                            icon: "mappin.circle",
+                            placeholder: NSLocalizedString("Mekan adı", comment: ""),
+                            text: $name
+                        )
+                        PinlyCategoryGrid(selection: $category)
+                    }
+
+                    // Ekle
+                    Button {
+                        save()
+                    } label: {
+                        Text(NSLocalizedString("Ekle", comment: ""))
+                    }
+                    .buttonStyle(PinlyPrimaryButtonStyle())
+                    .disabled(!canSave)
+                    .opacity(canSave ? 1 : 0.5)
                 }
+                .padding(20)
             }
+            .background(PinlyTheme.groundGradient)
             .navigationTitle(NSLocalizedString("Hızlı Mekan Ekle", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar(content: toolbarContent)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(NSLocalizedString("İptal", comment: "")) { dismiss() }
+                        .tint(PinlyTheme.primary)
+                }
+            }
         }
         .onAppear { fetchLocation() }
         .sheet(isPresented: $showPaywall) { PaywallView(onDismiss: { showPaywall = false }) }
@@ -78,19 +130,6 @@ struct QuickAddSheet: View {
         }
     }
 
-    // MARK: - Toolbar
-
-    @ToolbarContentBuilder
-    private func toolbarContent() -> some ToolbarContent {
-        ToolbarItem(placement: .topBarLeading) {
-            Button(NSLocalizedString("İptal", comment: "")) { dismiss() }
-        }
-        ToolbarItem(placement: .topBarTrailing) {
-            Button(NSLocalizedString("Ekle", comment: "")) { save() }
-                .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty || isLocating)
-        }
-    }
-
     // MARK: - Kaydet
 
     private func save() {
@@ -103,7 +142,7 @@ struct QuickAddSheet: View {
 
         let place = Place(
             name: name.trimmingCharacters(in: .whitespaces),
-            category: category.rawValue,
+            category: category,
             address: address
         )
 

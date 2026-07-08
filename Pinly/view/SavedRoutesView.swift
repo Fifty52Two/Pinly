@@ -31,8 +31,12 @@ struct SavedRoutesView: View {
                     routeList
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .scrollContentBackground(.hidden)
+            .background(PinlyTheme.groundGradient)
             .navigationTitle(NSLocalizedString("Kayıtlı Rotalar", comment: ""))
             .navigationBarTitleDisplayMode(.large)
+            .toolbar(.hidden, for: .tabBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -318,7 +322,7 @@ private struct SavedRouteCard: View {
             }
         }
         .padding(14)
-        .background(Color(.secondarySystemBackground))
+        .background(PinlyTheme.surface)
         .cornerRadius(16)
     }
 

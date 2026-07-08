@@ -117,10 +117,13 @@ struct PlacesListView: View {
                                     PlaceListItemView(place: place, modelContext: modelContext)
                                 }
                             }
+                            .listRowBackground(PinlyTheme.surface)
                         }
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(PinlyTheme.groundGradient)
             .searchable(
                 text: $viewModel.searchText,
                 placement: .navigationBarDrawer(displayMode: .always),

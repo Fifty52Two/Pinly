@@ -12,6 +12,8 @@ struct MoreTab: View {
     @State private var showBadges = false
     @State private var showLanguagePicker = false
     @State private var showStats = false
+    @AppStorage("pinly.appearance") private var appearance = "system"
+    @EnvironmentObject private var themeManager: ThemeManager
 
     var body: some View {
         NavigationStack {
@@ -44,6 +46,7 @@ struct MoreTab: View {
                         showBadges = true
                     }
                 }
+                .listRowBackground(PinlyTheme.surface)
 
                 Section {
                     let current = LanguageManager.supported.first { $0.code == languageManager.currentLanguage }
@@ -55,11 +58,65 @@ struct MoreTab: View {
                     ) {
                         showLanguagePicker = true
                     }
+
+                    // Görünüm (Sistem / Açık / Koyu)
+                    HStack(spacing: 14) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(PinlyTheme.slate.opacity(0.15))
+                                .frame(width: 40, height: 40)
+                            Image(systemName: "circle.lefthalf.filled")
+                                .foregroundColor(PinlyTheme.slate)
+                                .font(.system(size: 18))
+                        }
+                        Text(NSLocalizedString("Görünüm", comment: ""))
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                        Spacer()
+                        Picker("", selection: $appearance) {
+                            Text(NSLocalizedString("Sistem", comment: "")).tag("system")
+                            Text(NSLocalizedString("Açık", comment: "")).tag("light")
+                            Text(NSLocalizedString("Koyu", comment: "")).tag("dark")
+                        }
+                        .pickerStyle(.menu)
+                        .labelsHidden()
+                        .tint(PinlyTheme.primary)
+                    }
+
+                    // Tema (Slate / Farad)
+                    HStack(spacing: 14) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(PinlyTheme.primary.opacity(0.15))
+                                .frame(width: 40, height: 40)
+                            Image(systemName: "paintpalette.fill")
+                                .foregroundColor(PinlyTheme.primary)
+                                .font(.system(size: 18))
+                        }
+                        Text(NSLocalizedString("Tema", comment: ""))
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                        Spacer()
+                        Picker("", selection: Binding(
+                            get: { themeManager.themeKey },
+                            set: { themeManager.themeKey = $0 }
+                        )) {
+                            Text("Slate").tag("slate")
+                            Text("Farad").tag("farad")
+                        }
+                        .pickerStyle(.menu)
+                        .labelsHidden()
+                        .tint(PinlyTheme.primary)
+                    }
                 }
+                .listRowBackground(PinlyTheme.surface)
             }
             .listStyle(.insetGrouped)
+            .scrollContentBackground(.hidden)
+            .background(PinlyTheme.groundGradient)
             .navigationTitle(NSLocalizedString("Daha Fazla", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .tabBar)
         }
         .sheet(isPresented: $showStats) {
             ProfileStatsView()

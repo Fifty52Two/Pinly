@@ -291,7 +291,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = J7LKGD5LY5;
+				DEVELOPMENT_TEAM = U4A62AVL84;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PinlyLiveActivity/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PinlyLiveActivity;
@@ -302,7 +302,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ferhatakkopru.Pinly.PinlyLiveActivity;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tuana.pinly.LiveActivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -318,7 +318,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = J7LKGD5LY5;
+				DEVELOPMENT_TEAM = U4A62AVL84;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PinlyLiveActivity/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PinlyLiveActivity;
@@ -329,7 +329,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ferhatakkopru.Pinly.PinlyLiveActivity;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tuana.pinly.LiveActivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -468,7 +468,7 @@
 				CODE_SIGN_ENTITLEMENTS = Pinly/Pinly.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = J7LKGD5LY5;
+				DEVELOPMENT_TEAM = U4A62AVL84;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Pinly/Info.plist;
@@ -486,7 +486,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ferhatakkopru.Pinly;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tuana.pinly;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -503,7 +503,7 @@
 				CODE_SIGN_ENTITLEMENTS = Pinly/Pinly.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = J7LKGD5LY5;
+				DEVELOPMENT_TEAM = U4A62AVL84;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Pinly/Info.plist;
@@ -521,7 +521,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ferhatakkopru.Pinly;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tuana.pinly;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

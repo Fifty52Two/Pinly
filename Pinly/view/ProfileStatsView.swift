@@ -134,7 +134,7 @@ struct ProfileStatsView: View {
                 .padding(.top, 8)
                 .padding(.bottom, 32)
             }
-            .background(PinlyTheme.ground)
+            .background(PinlyTheme.groundGradient)
             .navigationTitle(NSLocalizedString("İstatistiklerim", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

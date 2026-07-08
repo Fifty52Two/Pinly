@@ -12,8 +12,8 @@ struct RouteShareCardView: View {
     let date: Date
 
     // Kart her modda koyu — dynamic tema renkleri yerine sabit açık tonlar
-    private let mint = Color(red: 0.55, green: 0.76, blue: 0.63)   // açık çam
-    private let pine = Color(red: 0.24, green: 0.47, blue: 0.35)   // çam
+    private let mint = Color(red: 0.62, green: 0.71, blue: 0.88)   // buz mavisi (açık slate)
+    private let pine = Color(red: 0.24, green: 0.33, blue: 0.50)   // slate-indigo
 
     private var dateText: String {
         date.formatted(date: .abbreviated, time: .omitted)

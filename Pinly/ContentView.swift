@@ -18,6 +18,9 @@ struct ContentView: View {
     @State private var pendingRouteImport: RouteImport? = nil
     @State private var showRouteImportSheet = false
     @AppStorage("pinly.hasSeenOnboarding") private var hasSeenOnboarding = false
+    @AppStorage("pinly.hasSetupProfile") private var hasSetupProfile = false
+    @AppStorage("pinly.appearance") private var appearance = "system"
+    @StateObject private var themeManager = ThemeManager.shared
 
     var body: some View {
         Group {
@@ -25,6 +28,10 @@ struct ContentView: View {
                 OnboardingView {
                     hasSeenOnboarding = true
                     WeeklyReportManager.scheduleWeeklyNotification()
+                }
+            } else if !hasSetupProfile {
+                ProfileSetupView {
+                    hasSetupProfile = true
                 }
             } else {
                 switch locationManager.authorizationStatus {
@@ -39,11 +46,17 @@ struct ContentView: View {
                         .environmentObject(locationManager)
                         .environmentObject(routeManager)
                         .environmentObject(languageManager)
+                        .environmentObject(themeManager)
+                        .id(themeManager.themeKey)
                 }
             }
         }
         .onAppear {
             placeStore.load(context: modelContext)
+            applyAppearance(appearance)
+        }
+        .onChange(of: appearance) { _, newValue in
+            applyAppearance(newValue)
         }
         .onOpenURL { url in
             if url.host == "navigation" {
@@ -90,6 +103,20 @@ struct ContentView: View {
         } message: {
             Text(placeStore.lastError ?? "")
         }
+    }
+
+    /// Görünüm tercihini pencere seviyesinde uygular — sheet'ler ve
+    /// fullScreenCover'lar dahil her şey etkilenir
+    private func applyAppearance(_ raw: String) {
+        let style: UIUserInterfaceStyle = switch raw {
+        case "light": .light
+        case "dark":  .dark
+        default:      .unspecified
+        }
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .forEach { $0.overrideUserInterfaceStyle = style }
     }
 
     private func importRoute() {
@@ -175,34 +202,41 @@ struct HomeView: View {
     @State private var showNavigationFromDeepLink = false
     @State private var showQuickAdd = false
 
+    private var tabItems: [PinlyTabItem] {
+        [
+            PinlyTabItem(icon: "house", title: NSLocalizedString("Ana", comment: "")),
+            PinlyTabItem(icon: "square.grid.2x2", title: NSLocalizedString("Keşfet", comment: "")),
+            PinlyTabItem(icon: "map", title: NSLocalizedString("Rotalar", comment: "")),
+            PinlyTabItem(icon: "ellipsis.circle", title: NSLocalizedString("Daha Fazla", comment: "")),
+        ]
+    }
+
     var body: some View {
         ZStack(alignment: .top) {
             TabView(selection: $selectedTab) {
                 MainTab()
-                    .tabItem {
-                        Label(NSLocalizedString("Ana", comment: ""), systemImage: "house.fill")
-                    }
+                    .toolbar(.hidden, for: .tabBar)
                     .tag(0)
 
                 DiscoverView()
-                    .tabItem {
-                        Label(NSLocalizedString("Keşfet", comment: ""), systemImage: "square.grid.2x2.fill")
-                    }
+                    .toolbar(.hidden, for: .tabBar)
                     .tag(1)
 
                 SavedRoutesView()
-                    .tabItem {
-                        Label(NSLocalizedString("Rotalar", comment: ""), systemImage: "bookmark.map.fill")
-                    }
+                    .toolbar(.hidden, for: .tabBar)
                     .tag(2)
 
                 MoreTab()
-                    .tabItem {
-                        Label(NSLocalizedString("Daha Fazla", comment: ""), systemImage: "ellipsis.circle.fill")
-                    }
+                    .toolbar(.hidden, for: .tabBar)
                     .tag(3)
             }
             .tint(PinlyTheme.primary)
+            // Yüzen çentikli tab bar — safe area inset olduğu için
+            // listeler/scroll'lar içeriğini otomatik olarak üstünde bitirir
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                PinlyTabBar(selection: $selectedTab, items: tabItems)
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
+            }
 
             // Rozet banner — tüm sekmelerin üzerinde
             if let badge = placeStore.pendingBadges.first {

@@ -33,6 +33,7 @@ struct WeeklyReportView: View {
                 .padding(.bottom, 40)
                 .padding(.horizontal, 20)
             }
+            .background(PinlyTheme.groundGradient)
             .navigationTitle("Haftalık Rapor")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {

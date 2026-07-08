@@ -1,72 +1,153 @@
 import SwiftUI
 import UIKit
 
-// MARK: - Pinly Tasarım Sistemi — "Doğal" palet
-// Yön: AllTrails/Airbnb tarzı — ılık nötr zeminler, tek ve kısık aksan (çam yeşili),
-// gradient yok, flat yüzeyler. Tüm bileşenler renkleri BURADAN alır.
+// MARK: - Pinly Tasarım Sistemi
+// İki tema: "slate" (koyu/mavi, dinamik) ve "farad" (temiz lavanta-beyaz, indigo aksan).
+// ThemeManager.shared.themeKey hangi temayı seçtiğini tutar.
+// ContentView'daki .id(themeKey) root yeniden kurulduğunda tüm renkler taze okunur.
+
+// MARK: - Ana Tema Tokenları (PinlyTheme)
 
 enum PinlyTheme {
-    /// Ana aksan — çam yeşili (dark mode'da bir ton açılır)
+    /// Ana aksan
     static let primary = Color(uiColor: UIColor { trait in
-        trait.userInterfaceStyle == .dark
-            ? UIColor(red: 0.42, green: 0.66, blue: 0.52, alpha: 1)   // #6BA885
-            : UIColor(red: 0.20, green: 0.41, blue: 0.31, alpha: 1)   // #33684E
+        let farad = ThemeManager.shared.themeKey == "farad"
+        let dark  = trait.userInterfaceStyle == .dark
+        switch (farad, dark) {
+        case (true,  true):  return UIColor(red: 0.482, green: 0.557, blue: 0.941, alpha: 1) // #7B8EF0
+        case (true,  false): return UIColor(red: 0.290, green: 0.365, blue: 0.831, alpha: 1) // #4A5DD4
+        case (false, true):  return UIColor(red: 0.550, green: 0.640, blue: 0.820, alpha: 1) // #8CA3D1
+        case (false, false): return UIColor(red: 0.270, green: 0.350, blue: 0.540, alpha: 1) // #45598A
+        }
     })
 
-    /// Ana aksanın açık tonu (vurgu metinleri, ikincil dolgular)
+    /// Birincil aksanın açık tonu
     static let primaryWarm = Color(uiColor: UIColor { trait in
-        trait.userInterfaceStyle == .dark
-            ? UIColor(red: 0.55, green: 0.76, blue: 0.63, alpha: 1)   // #8CC2A1
-            : UIColor(red: 0.29, green: 0.53, blue: 0.41, alpha: 1)   // #4A8768
+        let farad = ThemeManager.shared.themeKey == "farad"
+        let dark  = trait.userInterfaceStyle == .dark
+        switch (farad, dark) {
+        case (true,  true):  return UIColor(red: 0.608, green: 0.667, blue: 1.000, alpha: 1) // #9BAAFF
+        case (true,  false): return UIColor(red: 0.420, green: 0.498, blue: 0.894, alpha: 1) // #6B7FE4
+        case (false, true):  return UIColor(red: 0.650, green: 0.730, blue: 0.880, alpha: 1) // #A6BAE0
+        case (false, false): return UIColor(red: 0.360, green: 0.440, blue: 0.630, alpha: 1) // #5C70A1
+        }
     })
 
-    /// İkincil aksan — kil/toprak (seri, küçük vurgular; az kullan)
+    /// İkincil aksan — kısık gül/kızıl (her iki temada aynı)
     static let accent = Color(uiColor: UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(red: 0.81, green: 0.54, blue: 0.39, alpha: 1)   // #CE8A64
-            : UIColor(red: 0.71, green: 0.42, blue: 0.28, alpha: 1)   // #B56A47
+            ? UIColor(red: 0.88, green: 0.44, blue: 0.47, alpha: 1) // #E07078
+            : UIColor(red: 0.76, green: 0.31, blue: 0.35, alpha: 1) // #C14F5A
     })
 
-    /// Nötr destek tonları — düşük doygunluk, doğal
+    /// Nötr altın tonu
     static let gold = Color(uiColor: UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(red: 0.76, green: 0.63, blue: 0.37, alpha: 1)   // #C2A05E
-            : UIColor(red: 0.64, green: 0.50, blue: 0.24, alpha: 1)   // #A3803C
-    })
-    static let slate = Color(uiColor: UIColor { trait in
-        trait.userInterfaceStyle == .dark
-            ? UIColor(red: 0.50, green: 0.64, blue: 0.71, alpha: 1)   // #7FA3B5
-            : UIColor(red: 0.31, green: 0.45, blue: 0.53, alpha: 1)   // #4E7286
+            ? UIColor(red: 0.76, green: 0.63, blue: 0.37, alpha: 1)
+            : UIColor(red: 0.61, green: 0.51, blue: 0.28, alpha: 1)
     })
 
-    /// Sayfa zemini — ılık kâğıt (dark'ta ılık is)
-    static let ground = Color(uiColor: UIColor { trait in
+    /// Slate-teal nötr tonu
+    static let slate = Color(uiColor: UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(red: 0.09, green: 0.088, blue: 0.078, alpha: 1) // #171614
-            : UIColor(red: 0.965, green: 0.955, blue: 0.935, alpha: 1) // #F6F4EF
+            ? UIColor(red: 0.50, green: 0.64, blue: 0.71, alpha: 1)
+            : UIColor(red: 0.31, green: 0.45, blue: 0.53, alpha: 1)
+    })
+
+    // MARK: - Zemin Renkleri
+
+    /// Sayfa zemini
+    static let ground = Color(uiColor: UIColor { trait in
+        let farad = ThemeManager.shared.themeKey == "farad"
+        let dark  = trait.userInterfaceStyle == .dark
+        switch (farad, dark) {
+        case (true,  true):  return UIColor(red: 0.082, green: 0.090, blue: 0.165, alpha: 1) // #151727
+        case (true,  false): return UIColor(red: 0.906, green: 0.918, blue: 0.969, alpha: 1) // #E7EAF7
+        case (false, true):  return UIColor(red: 0.075, green: 0.110, blue: 0.149, alpha: 1) // #131C26
+        case (false, false): return UIColor(red: 0.686, green: 0.792, blue: 0.890, alpha: 1) // #AFCAE3
+        }
     })
 
     /// Kart yüzeyi
     static let surface = Color(uiColor: UIColor { trait in
-        trait.userInterfaceStyle == .dark
-            ? UIColor(red: 0.132, green: 0.126, blue: 0.112, alpha: 1) // #22201D
-            : UIColor.white
+        let farad = ThemeManager.shared.themeKey == "farad"
+        let dark  = trait.userInterfaceStyle == .dark
+        switch (farad, dark) {
+        case (true,  true):  return UIColor(red: 0.145, green: 0.161, blue: 0.271, alpha: 1) // #252945
+        case (true,  false): return UIColor.white
+        case (false, true):  return UIColor(red: 0.196, green: 0.263, blue: 0.365, alpha: 1) // #32435D
+        case (false, false): return UIColor(red: 0.937, green: 0.965, blue: 0.988, alpha: 1) // #EFF6FC
+        }
     })
 
-    /// Koyu zemin (paylaşım kartı gibi her modda koyu kalan yüzeyler) — çam isi
-    static let navy = Color(red: 0.078, green: 0.106, blue: 0.090)      // #141B17
-    static let navyLight = Color(red: 0.118, green: 0.165, blue: 0.137) // #1E2A23
+    /// Gradyan üst durağı
+    static let groundTop = Color(uiColor: UIColor { trait in
+        let farad = ThemeManager.shared.themeKey == "farad"
+        let dark  = trait.userInterfaceStyle == .dark
+        switch (farad, dark) {
+        case (true,  true):  return UIColor(red: 0.145, green: 0.157, blue: 0.251, alpha: 1) // #252840
+        case (true,  false): return UIColor(red: 0.957, green: 0.961, blue: 0.992, alpha: 1) // #F5F5FD
+        case (false, true):  return UIColor(red: 0.271, green: 0.337, blue: 0.424, alpha: 1) // #45566C
+        case (false, false): return UIColor(red: 0.835, green: 0.902, blue: 0.961, alpha: 1) // #D5E6F5
+        }
+    })
 
-    /// Dolgun yüzey "gradyanı" — aslında tek ailede iki komşu ton; flat okunur
-    static var heroGradient: LinearGradient {
+    /// Gradyan orta durağı
+    static let groundMid = Color(uiColor: UIColor { trait in
+        let farad = ThemeManager.shared.themeKey == "farad"
+        let dark  = trait.userInterfaceStyle == .dark
+        switch (farad, dark) {
+        case (true,  true):  return UIColor(red: 0.098, green: 0.110, blue: 0.212, alpha: 1) // #191C36
+        case (true,  false): return UIColor(red: 0.929, green: 0.937, blue: 0.980, alpha: 1) // #EDEFFA
+        case (false, true):  return UIColor(red: 0.153, green: 0.200, blue: 0.263, alpha: 1) // #273343
+        case (false, false): return UIColor(red: 0.765, green: 0.851, blue: 0.929, alpha: 1) // #C3D9ED
+        }
+    })
+
+    /// TÜM ekran zeminleri bunu kullanır
+    static var groundGradient: LinearGradient {
         LinearGradient(
-            colors: [
-                Color(red: 0.17, green: 0.36, blue: 0.27),  // #2C5C45
-                Color(red: 0.21, green: 0.43, blue: 0.32),  // #366E52
+            stops: [
+                .init(color: groundTop, location: 0.0),
+                .init(color: groundMid, location: 0.45),
+                .init(color: ground,    location: 1.0),
             ],
             startPoint: .top,
             endPoint: .bottom
         )
+    }
+
+    // MARK: - Sabit Renkler (tema bağımsız)
+
+    static let navy      = Color(red: 0.106, green: 0.153, blue: 0.200) // #1B2733
+    static let navyLight = Color(red: 0.149, green: 0.208, blue: 0.278)
+
+    // MARK: - Hero Kart Gradyanı
+
+    private static let heroTop = Color(uiColor: UIColor { trait in
+        let farad = ThemeManager.shared.themeKey == "farad"
+        let dark  = trait.userInterfaceStyle == .dark
+        switch (farad, dark) {
+        case (true,  true):  return UIColor(red: 0.145, green: 0.161, blue: 0.271, alpha: 1) // düz #252945
+        case (true,  false): return UIColor(red: 0.220, green: 0.286, blue: 0.780, alpha: 1) // #3849C7
+        case (false, true):  return UIColor(red: 0.227, green: 0.298, blue: 0.408, alpha: 1) // #3A4C68 düz
+        case (false, false): return UIColor(red: 0.165, green: 0.227, blue: 0.322, alpha: 1) // #2A3A52
+        }
+    })
+
+    private static let heroBottom = Color(uiColor: UIColor { trait in
+        let farad = ThemeManager.shared.themeKey == "farad"
+        let dark  = trait.userInterfaceStyle == .dark
+        switch (farad, dark) {
+        case (true,  true):  return UIColor(red: 0.145, green: 0.161, blue: 0.271, alpha: 1)
+        case (true,  false): return UIColor(red: 0.290, green: 0.365, blue: 0.831, alpha: 1) // #4A5DD4
+        case (false, true):  return UIColor(red: 0.227, green: 0.298, blue: 0.408, alpha: 1)
+        case (false, false): return UIColor(red: 0.227, green: 0.298, blue: 0.408, alpha: 1)
+        }
+    })
+
+    static var heroGradient: LinearGradient {
+        LinearGradient(colors: [heroTop, heroBottom], startPoint: .top, endPoint: .bottom)
     }
 
     static var nightGradient: LinearGradient {
@@ -76,7 +157,6 @@ enum PinlyTheme {
 
 // MARK: - Buton Stilleri
 
-/// Dolgun ana buton — flat çam yeşili
 struct PinlyPrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -92,7 +172,6 @@ struct PinlyPrimaryButtonStyle: ButtonStyle {
     }
 }
 
-/// Hafif zeminli ikincil buton
 struct PinlySecondaryButtonStyle: ButtonStyle {
     var tint: Color = PinlyTheme.primary
 
@@ -110,7 +189,6 @@ struct PinlySecondaryButtonStyle: ButtonStyle {
 }
 
 // MARK: - Kart Stili
-// Gölge yerine ince kontur — kâğıt üzerinde kart hissi, daha doğal
 
 struct PinlyCardModifier: ViewModifier {
     func body(content: Content) -> some View {
@@ -131,7 +209,7 @@ extension View {
     func pinlyCard() -> some View { modifier(PinlyCardModifier()) }
 }
 
-// MARK: - İstatistik Rozeti (ana ekran şeridi + profil)
+// MARK: - İstatistik Rozeti
 
 struct StatChip: View {
     let value: String
@@ -153,7 +231,6 @@ struct StatChip: View {
             Text(label)
                 .font(.caption2)
                 .foregroundColor(.secondary)
-                .lineLimit(1)
         }
         .frame(maxWidth: .infinity)
     }

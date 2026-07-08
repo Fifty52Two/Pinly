@@ -46,8 +46,11 @@ struct DiscoverView: View {
                     }
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(PinlyTheme.groundGradient)
             .navigationTitle(NSLocalizedString("Keşfet", comment: ""))
             .navigationBarTitleDisplayMode(.large)
+            .toolbar(.hidden, for: .tabBar)
         }
     }
 
@@ -60,7 +63,7 @@ struct DiscoverView: View {
             DiscoverStatPill(value: "\(categoriesWithPlaces.count)", label: NSLocalizedString("Kategori", comment: ""))
         }
         .padding(.vertical, 14)
-        .background(Color(.systemGray6))
+        .background(PinlyTheme.surface)
         .cornerRadius(14)
         .padding(.horizontal, 20)
     }
@@ -109,7 +112,7 @@ private struct CategoryDiscoverCard: View {
         .padding(.vertical, 20)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.systemGray6))
+                .fill(PinlyTheme.surface)
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
                         .stroke(category.color.opacity(0.25), lineWidth: 1)

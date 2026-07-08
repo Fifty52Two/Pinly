@@ -15,10 +15,13 @@ struct RouteHistoryView: View {
                 } else {
                     List(histories) { history in
                         RouteHistoryRow(history: history)
+                            .listRowBackground(PinlyTheme.surface)
                     }
                     .listStyle(.insetGrouped)
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(PinlyTheme.groundGradient)
             .navigationTitle(NSLocalizedString("Rota Geçmişi", comment: ""))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {

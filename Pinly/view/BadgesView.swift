@@ -20,6 +20,7 @@ struct BadgesView: View {
                 .padding(.top, 16)
                 .padding(.bottom, 40)
             }
+            .background(PinlyTheme.groundGradient)
             .navigationTitle(NSLocalizedString("Rozetler", comment: ""))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {

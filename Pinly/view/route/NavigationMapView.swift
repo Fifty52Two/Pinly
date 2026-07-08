@@ -108,7 +108,7 @@ struct NavigationMapView: UIViewRepresentable {
                 let overlayIndex = mapView.overlays.firstIndex(where: { $0 === polyline }) ?? 0
                 renderer.strokeColor = overlayIndex < completedSegmentCount
                     ? UIColor.systemGreen
-                    : UIColor(red: 0.21, green: 0.47, blue: 0.34, alpha: 1)
+                    : UIColor(red: 0.35, green: 0.45, blue: 0.65, alpha: 1)
                 renderer.lineWidth = 5
                 renderer.lineDashPattern = [8, 4]
                 return renderer
@@ -124,14 +124,14 @@ struct NavigationMapView: UIViewRepresentable {
                 let centerDot = CALayer()
                 centerDot.frame = CGRect(x: 18, y: 18, width: 12, height: 12)
                 centerDot.cornerRadius = 6
-                centerDot.backgroundColor = UIColor(red: 0.21, green: 0.47, blue: 0.34, alpha: 1).cgColor
+                centerDot.backgroundColor = UIColor(red: 0.35, green: 0.45, blue: 0.65, alpha: 1).cgColor
                 view.layer.addSublayer(centerDot)
 
                 let pulseRing = CALayer()
                 pulseRing.frame = CGRect(x: 4, y: 4, width: 40, height: 40)
                 pulseRing.cornerRadius = 20
                 pulseRing.borderWidth = 3
-                pulseRing.borderColor = UIColor(red: 0.21, green: 0.47, blue: 0.34, alpha: 1).cgColor
+                pulseRing.borderColor = UIColor(red: 0.35, green: 0.45, blue: 0.65, alpha: 1).cgColor
                 pulseRing.opacity = 0
                 view.layer.addSublayer(pulseRing)
 
@@ -155,7 +155,7 @@ struct NavigationMapView: UIViewRepresentable {
             if let routeAnnotation = annotation as? RouteAnnotation {
                 let view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "route")
                 view.glyphText = "\(routeAnnotation.index)"
-                view.markerTintColor = UIColor(red: 0.21, green: 0.47, blue: 0.34, alpha: 1)
+                view.markerTintColor = UIColor(red: 0.35, green: 0.45, blue: 0.65, alpha: 1)
                 view.titleVisibility = .visible
                 return view
             }

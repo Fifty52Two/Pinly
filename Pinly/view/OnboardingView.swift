@@ -30,7 +30,7 @@ struct OnboardingView: View {
 
     var body: some View {
         ZStack {
-            PinlyTheme.ground
+            PinlyTheme.groundGradient
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {

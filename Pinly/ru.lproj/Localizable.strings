@@ -1,5 +1,5 @@
 // MARK: - Home
-"Merhaba 👋" = "Привет 👋";
+"Merhaba 👋" = "Привет";
 "Ne yapmak istiyorsun?" = "Что хочешь сделать?";
 "Mekanlarım" = "Мои места";
 "Henüz mekan eklenmedi" = "Места ещё не добавлены";
@@ -350,10 +350,10 @@
 "Mekanlarından yürüyüş rotası oluştur. Adım adım navigasyon kilit ekranında seni takip eder." = "Создавай пешие маршруты из своих мест. Пошаговая навигация сопровождает тебя на экране блокировки.";
 "Rozet Kazan, Paylaş" = "Получай значки, делись";
 "22 rozet, haftalık raporlar ve arkadaşlarınla QR kod ile rota paylaşımı seni bekliyor." = "Тебя ждут 22 значка, еженедельные отчёты и обмен маршрутами по QR-коду.";
-"Günaydın ☀️" = "Доброе утро ☀️";
-"İyi günler 👋" = "Добрый день 👋";
-"İyi akşamlar 🌆" = "Добрый вечер 🌆";
-"İyi geceler 🌙" = "Доброй ночи 🌙";
+"Günaydın," = "Доброе утро";
+"İyi günler," = "Добрый день";
+"İyi akşamlar," = "Добрый вечер";
+"İyi geceler," = "Доброй ночи";
 "Gün Serisi" = "Серия дней";
 "Rozet" = "Значки";
 "Mekan Ekle" = "Добавить место";
@@ -382,3 +382,8 @@
 "Konum haritadan seçildi" = "Место выбрано на карте";
 "Kaldır" = "Удалить";
 "Adres bulunamadı" = "Адрес не найден";
+
+"Görünüm" = "Внешний вид";
+"Sistem" = "Системная";
+"Açık" = "Светлая";
+"Koyu" = "Тёмная";
