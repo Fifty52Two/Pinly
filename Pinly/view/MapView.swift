@@ -23,16 +23,14 @@ struct MapView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.entitlements) private var entitlements
 
+    @StateObject private var viewModel = MapViewModel()
+
     @State private var showRouteFlow = false
-    @State private var selectedPlace: Place? = nil
     @State private var showAddPlace = false
     @State private var navigateToSinglePlace = false
-    @State private var editingPlace: Place? = nil
     @State private var showPaywall = false
 
-    var visiblePlaces: [Place] {
-        placeStore.places.filter { $0.coordinate != nil }
-    }
+    var visiblePlaces: [Place] { viewModel.visiblePlaces(placeStore.places) }
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -40,31 +38,31 @@ struct MapView: View {
             MainMapView(
                 places: visiblePlaces,
                 userLocation: locationManager.userLocation,
-                selectedPlace: $selectedPlace
+                selectedPlace: $viewModel.selectedPlace
             )
             .ignoresSafeArea()
 
             // Selected place card
-            if let place = selectedPlace {
+            if let place = viewModel.selectedPlace {
                 PlaceCard(
                     place: place,
                     onDismiss: {
                         withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                            selectedPlace = nil
+                            viewModel.selectedPlace = nil
                         }
                     },
                     onNavigate: {
                         routeManager.setRoute(places: [place], name: place.name)
-                        selectedPlace = nil
+                        viewModel.selectedPlace = nil
                         navigateToSinglePlace = true
                     },
                     onEdit: {
-                        selectedPlace = nil
-                        editingPlace = place
+                        viewModel.selectedPlace = nil
+                        viewModel.editingPlace = place
                     },
                     onDelete: {
                         withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                            selectedPlace = nil
+                            viewModel.selectedPlace = nil
                         }
                         placeStore.deletePlace(place, context: modelContext)
                     }
@@ -179,7 +177,7 @@ struct MapView: View {
                 .environmentObject(placeStore)
                 .environmentObject(locationManager)
         }
-        .sheet(item: $editingPlace) { place in
+        .sheet(item: $viewModel.editingPlace) { place in
             EditPlaceView(place: place)
                 .environmentObject(placeStore)
                 .environmentObject(locationManager)

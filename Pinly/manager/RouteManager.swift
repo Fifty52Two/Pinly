@@ -3,8 +3,59 @@ import MapKit
 import CoreLocation
 import ActivityKit
 
+// MARK: - RouteCalculating
+
+/// Yürüyüş rotası segment hesaplama (MKDirections tabanlı).
 @MainActor
-class RouteManager: ObservableObject {
+protocol RouteCalculating: AnyObject {
+    var routePolylines: [MKPolyline] { get }
+    var stepsPerSegment: [[MKRoute.Step]] { get }
+    var segmentDistances: [Double] { get }
+    var totalRouteDistance: Double { get }
+    var totalRouteTime: TimeInterval { get }
+    var isRecalculating: Bool { get }
+    func calculateRoutes(from userLocation: CLLocationCoordinate2D?, completion: @escaping () -> Void)
+    func recalculateCurrentSegment(from userLocation: CLLocation)
+}
+
+// MARK: - RouteNavigationTracking
+
+/// Rota seçimi + turn-by-turn navigasyon ilerleme durumu.
+@MainActor
+protocol RouteNavigationTracking: AnyObject {
+    var selectedCategories: [String] { get set }
+    var selectedPlaces: [String: Place] { get set }
+    var routeName: String { get set }
+    var isNavigating: Bool { get set }
+    var isPausedAtStop: Bool { get }
+    var currentWaypointIndex: Int { get }
+    var currentInstruction: String { get }
+    var remainingDistance: String { get }
+    var arrivedAtPlace: Place? { get set }
+    var isRouteComplete: Bool { get }
+    var completionPercentage: Double { get }
+    var routePlaces: [Place] { get }
+    var nextWaypointCoordinate: CLLocationCoordinate2D? { get }
+    func setRoute(places: [Place], name: String)
+    func reset()
+    func updateNavigation(userLocation: CLLocation)
+    func resumeNavigation()
+}
+
+// MARK: - RouteLiveActivityPresenting
+
+/// Kilit ekranı Live Activity (ActivityKit) yönetimi.
+@MainActor
+protocol RouteLiveActivityPresenting: AnyObject {
+    func startLiveActivity()
+    func updateLiveActivity()
+    func endLiveActivity()
+}
+
+// MARK: - RouteManager
+
+@MainActor
+class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking, RouteLiveActivityPresenting {
     @Published var selectedCategories: [String] = []
     @Published var selectedPlaces: [String: Place] = [:]
     @Published var routeName: String = ""

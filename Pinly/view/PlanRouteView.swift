@@ -14,37 +14,22 @@ private enum PlanStep {
 // MARK: - PlanRouteView
 
 struct PlanRouteView: View {
-    var editingRoute: SavedRoute? = nil
-
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var placeStore: PlaceStore
-    @Environment(\.badges) private var badgeService
+
+    @StateObject private var viewModel: PlanRouteViewModel
 
     @State private var step: PlanStep = .pickLocation
-    @State private var pinCoordinate: CLLocationCoordinate2D?
     @State private var cameraPosition: MapCameraPosition = .automatic
-    @State private var selectedPlaceIDs: Set<UUID> = []
-    @State private var routeName = ""
-    @State private var routeCategory: RouteCategory = .city
-    @State private var isSaving = false
-    @State private var savedSuccessfully = false
 
-    // Mekanları pin'e mesafeye göre sıralar
-    private var sortedPlaces: [Place] {
-        guard let pin = pinCoordinate else { return placeStore.places }
-        let pinLoc = CLLocation(latitude: pin.latitude, longitude: pin.longitude)
-        return placeStore.places.sorted { a, b in
-            let distA = a.coordinate.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude).distance(from: pinLoc) } ?? Double.infinity
-            let distB = b.coordinate.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude).distance(from: pinLoc) } ?? Double.infinity
-            return distA < distB
-        }
+    init(editingRoute: SavedRoute? = nil) {
+        _viewModel = StateObject(wrappedValue: PlanRouteViewModel(editingRoute: editingRoute))
     }
 
-    private var selectedPlaces: [Place] {
-        sortedPlaces.filter { selectedPlaceIDs.contains($0.id) }
-    }
+    private var sortedPlaces: [Place] { viewModel.sortedPlaces(placeStore.places) }
+    private var selectedPlaces: [Place] { viewModel.selectedPlaces(from: placeStore.places) }
 
     var body: some View {
         NavigationStack {
@@ -76,36 +61,19 @@ struct PlanRouteView: View {
                             step = .selectPlaces
                         }
                         .fontWeight(.semibold)
-                        .disabled(pinCoordinate == nil)
+                        .disabled(viewModel.pinCoordinate == nil)
                     } else if step == .selectPlaces {
                         Button(NSLocalizedString("Devam Et", comment: "")) {
                             step = .nameRoute
                         }
                         .fontWeight(.semibold)
-                        .disabled(selectedPlaceIDs.isEmpty)
+                        .disabled(viewModel.selectedPlaceIDs.isEmpty)
                     }
                 }
             }
             .onAppear {
-                if let route = editingRoute {
-                    // Edit modu: rota verilerini doldur
-                    let center = CLLocationCoordinate2D(
-                        latitude: route.centerLatitude,
-                        longitude: route.centerLongitude
-                    )
-                    pinCoordinate = center
-                    cameraPosition = .region(MKCoordinateRegion(
-                        center: center,
-                        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
-                    ))
-                    routeName = route.name
-                    if let catRaw = route.categoryRaw, let cat = RouteCategory(rawValue: catRaw) {
-                        routeCategory = cat
-                    }
-                    // Snapshot isimlerine göre mevcut mekanları eşleştir
-                    let snapNames = Set(route.placeSnapshots.map { $0.name })
-                    let matched = placeStore.places.filter { snapNames.contains($0.name) }
-                    selectedPlaceIDs = Set(matched.map { $0.id })
+                if let region = viewModel.hydrateIfEditing(places: placeStore.places) {
+                    cameraPosition = .region(region)
                     step = .selectPlaces
                 } else if let userLoc = locationManager.userLocation {
                     cameraPosition = .region(MKCoordinateRegion(
@@ -119,10 +87,10 @@ struct PlanRouteView: View {
                     ))
                 }
             }
-            .alert(NSLocalizedString("Rota Kaydedildi!", comment: ""), isPresented: $savedSuccessfully) {
+            .alert(NSLocalizedString("Rota Kaydedildi!", comment: ""), isPresented: $viewModel.savedSuccessfully) {
                 Button(NSLocalizedString("Tamam", comment: "")) { dismiss() }
             } message: {
-                Text(String(format: NSLocalizedString("\"%@\" rotası %lld mekanla kaydedildi.", comment: ""), routeName, selectedPlaces.count))
+                Text(String(format: NSLocalizedString("\"%@\" rotası %lld mekanla kaydedildi.", comment: ""), viewModel.routeName, selectedPlaces.count))
             }
         }
     }
@@ -133,10 +101,10 @@ struct PlanRouteView: View {
         ZStack(alignment: .bottom) {
             MapReader { proxy in
                 Map(position: $cameraPosition) {
-                    if let coord = pinCoordinate {
+                    if let coord = viewModel.pinCoordinate {
                         Annotation("", coordinate: coord, anchor: .bottom) {
                             DroppingPin()
-                                .id(pinCoordinate?.latitude)
+                                .id(viewModel.pinCoordinate?.latitude)
                         }
                     }
                     // Kayıtlı mekanları haritada göster
@@ -158,7 +126,7 @@ struct PlanRouteView: View {
                 .onTapGesture { screenPoint in
                     guard let coord = proxy.convert(screenPoint, from: .local) else { return }
                     withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
-                        pinCoordinate = coord
+                        viewModel.pinCoordinate = coord
                     }
                     withAnimation(.spring(response: 0.5, dampingFraction: 0.75)) {
                         cameraPosition = .region(MKCoordinateRegion(
@@ -173,7 +141,7 @@ struct PlanRouteView: View {
             // Alt bilgi
             VStack(spacing: 8) {
                 Group {
-                    if pinCoordinate == nil {
+                    if viewModel.pinCoordinate == nil {
                         Label(
                             NSLocalizedString("Rota merkezi için haritaya dokun", comment: ""),
                             systemImage: "hand.tap.fill"
@@ -192,7 +160,7 @@ struct PlanRouteView: View {
                 .padding(.vertical, 10)
                 .background(.regularMaterial)
                 .cornerRadius(12)
-                .animation(.spring(response: 0.3), value: pinCoordinate == nil)
+                .animation(.spring(response: 0.3), value: viewModel.pinCoordinate == nil)
 
                 if placeStore.places.isEmpty {
                     Text(NSLocalizedString("Henüz mekan eklenmedi. Önce Mekanlarım'a mekan ekle.", comment: ""))
@@ -217,22 +185,22 @@ struct PlanRouteView: View {
         VStack(spacing: 0) {
             // Seçim özeti
             HStack {
-                Image(systemName: selectedPlaceIDs.isEmpty ? "circle" : "checkmark.circle.fill")
-                    .foregroundColor(selectedPlaceIDs.isEmpty ? .secondary : .blue)
+                Image(systemName: viewModel.selectedPlaceIDs.isEmpty ? "circle" : "checkmark.circle.fill")
+                    .foregroundColor(viewModel.selectedPlaceIDs.isEmpty ? .secondary : .blue)
                 Text(
-                    selectedPlaceIDs.isEmpty
+                    viewModel.selectedPlaceIDs.isEmpty
                         ? NSLocalizedString("Rotaya eklemek istediğin mekanları seç", comment: "")
-                        : String(format: NSLocalizedString("%lld mekan seçildi", comment: ""), selectedPlaceIDs.count)
+                        : String(format: NSLocalizedString("%lld mekan seçildi", comment: ""), viewModel.selectedPlaceIDs.count)
                 )
                 .font(.subheadline)
                 .fontWeight(.medium)
-                .foregroundColor(selectedPlaceIDs.isEmpty ? .secondary : .blue)
+                .foregroundColor(viewModel.selectedPlaceIDs.isEmpty ? .secondary : .blue)
                 Spacer()
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
             .background(Color(.secondarySystemBackground))
-            .animation(.spring(response: 0.25), value: selectedPlaceIDs.count)
+            .animation(.spring(response: 0.25), value: viewModel.selectedPlaceIDs.count)
 
             if sortedPlaces.isEmpty {
                 VStack(spacing: 16) {
@@ -254,14 +222,14 @@ struct PlanRouteView: View {
                     ForEach(sortedPlaces) { place in
                         PlacePlanRow(
                             place: place,
-                            isSelected: selectedPlaceIDs.contains(place.id),
-                            distanceFromPin: distanceFromPin(place)
+                            isSelected: viewModel.selectedPlaceIDs.contains(place.id),
+                            distanceFromPin: viewModel.distanceFromPin(to: place)
                         ) {
                             withAnimation(.spring(response: 0.25)) {
-                                if selectedPlaceIDs.contains(place.id) {
-                                    selectedPlaceIDs.remove(place.id)
+                                if viewModel.selectedPlaceIDs.contains(place.id) {
+                                    viewModel.selectedPlaceIDs.remove(place.id)
                                 } else {
-                                    selectedPlaceIDs.insert(place.id)
+                                    viewModel.selectedPlaceIDs.insert(place.id)
                                 }
                             }
                             UIImpactFeedbackGenerator(style: .light).impactOccurred()
@@ -281,9 +249,9 @@ struct PlanRouteView: View {
     private var nameRouteStep: some View {
         Form {
             Section {
-                TextField(NSLocalizedString("Rota adı (örn: Kadıköy Turu)", comment: ""), text: $routeName)
+                TextField(NSLocalizedString("Rota adı (örn: Kadıköy Turu)", comment: ""), text: $viewModel.routeName)
                     .submitLabel(.done)
-                Picker(NSLocalizedString("Rota Türü", comment: ""), selection: $routeCategory) {
+                Picker(NSLocalizedString("Rota Türü", comment: ""), selection: $viewModel.routeCategory) {
                     ForEach(RouteCategory.allCases, id: \.self) { cat in
                         Label(cat.rawValue, systemImage: cat.icon).tag(cat)
                     }
@@ -312,9 +280,9 @@ struct PlanRouteView: View {
 
             Section {
                 Button {
-                    saveRoute()
+                    viewModel.saveRoute(places: placeStore.places, context: modelContext)
                 } label: {
-                    if isSaving {
+                    if viewModel.isSaving {
                         HStack {
                             ProgressView().scaleEffect(0.8)
                             Text(NSLocalizedString("Kaydediliyor...", comment: ""))
@@ -326,7 +294,7 @@ struct PlanRouteView: View {
                             .fontWeight(.semibold)
                     }
                 }
-                .disabled(routeName.trimmingCharacters(in: .whitespaces).isEmpty || isSaving)
+                .disabled(viewModel.routeName.trimmingCharacters(in: .whitespaces).isEmpty || viewModel.isSaving)
             }
         }
     }
@@ -334,7 +302,7 @@ struct PlanRouteView: View {
     // MARK: - Yardımcılar
 
     private var stepTitle: String {
-        let isEditing = editingRoute != nil
+        let isEditing = viewModel.editingRoute != nil
         switch step {
         case .pickLocation: return NSLocalizedString("Rota Merkezi Seç", comment: "")
         case .selectPlaces: return NSLocalizedString("Mekan Seç", comment: "")
@@ -342,58 +310,6 @@ struct PlanRouteView: View {
             ? NSLocalizedString("Rotayı Güncelle", comment: "")
             : NSLocalizedString("Rotayı Kaydet", comment: "")
         }
-    }
-
-    private func distanceFromPin(_ place: Place) -> String? {
-        guard let pin = pinCoordinate, let coord = place.coordinate else { return nil }
-        let dist = CLLocation(latitude: pin.latitude, longitude: pin.longitude)
-            .distance(from: CLLocation(latitude: coord.latitude, longitude: coord.longitude))
-        return dist < 1000
-            ? String(format: "%.0f m", dist)
-            : String(format: "%.1f km", dist / 1000)
-    }
-
-    private func saveRoute() {
-        let name = routeName.trimmingCharacters(in: .whitespaces)
-        guard !name.isEmpty, !selectedPlaces.isEmpty else { return }
-        guard let pin = pinCoordinate else { return }
-        isSaving = true
-
-        let snapshots = selectedPlaces.enumerated().map { index, place in
-            SavedPlaceSnapshot(
-                name: place.name,
-                category: place.category,
-                address: place.address,
-                notes: place.notes,
-                latitude: place.coordinate?.latitude ?? pin.latitude,
-                longitude: place.coordinate?.longitude ?? pin.longitude,
-                sortIndex: index
-            )
-        }
-
-        if let existing = editingRoute {
-            // Edit modu: mevcut rotayı güncelle
-            existing.name = name
-            existing.categoryRaw = routeCategory.rawValue
-            existing.centerLatitude = pin.latitude
-            existing.centerLongitude = pin.longitude
-            existing.orderedPlaceSnapshotsData = (try? JSONEncoder().encode(snapshots)) ?? Data()
-        } else {
-            // Yeni rota oluştur
-            let route = SavedRoute(
-                name: name,
-                categoryRaw: routeCategory.rawValue,
-                centerLatitude: pin.latitude,
-                centerLongitude: pin.longitude,
-                snapshots: snapshots
-            )
-            modelContext.insert(route)
-            badgeService.recordSavedRoute()
-        }
-        try? modelContext.save()
-
-        isSaving = false
-        savedSuccessfully = true
     }
 }
 

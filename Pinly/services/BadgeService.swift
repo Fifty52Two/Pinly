@@ -14,13 +14,17 @@ protocol BadgeServicing: AnyObject {
 
     /// Yeni açılan rozetleri döndürür ve unlocked set'e kaydeder.
     @MainActor @discardableResult
-    func check(placeStore: PlaceStore) -> [Badge]
+    func check(placeStore: PlaceRepository) -> [Badge]
 
     func recordRouteStarted()
     func recordRouteCompleted()
     func recordRouteShared()
     func recordSavedRoute()
     func recordAppOpen()
+
+    /// Kilitli rozet için ilerleme metni (örn. "3/5 mekan").
+    @MainActor
+    func progressText(for badge: Badge, placeStore: PlaceRepository) -> String
 }
 
 // MARK: - DefaultBadgeService
@@ -122,7 +126,7 @@ final class DefaultBadgeService: BadgeServicing {
 
     /// Yeni açılan rozetleri döndürür ve unlocked set'e kaydeder.
     @MainActor @discardableResult
-    func check(placeStore: PlaceStore) -> [Badge] {
+    func check(placeStore: PlaceRepository) -> [Badge] {
         var current = unlockedBadges
         var newlyUnlocked: [Badge] = []
 
@@ -184,5 +188,63 @@ final class DefaultBadgeService: BadgeServicing {
             unlockedBadges = current
         }
         return newlyUnlocked
+    }
+
+    // MARK: - İlerleme Metni
+
+    @MainActor
+    func progressText(for badge: Badge, placeStore: PlaceRepository) -> String {
+        switch badge {
+        case .ilkAdim:    return "\(min(placeStore.places.count, 1))/1 mekan"
+        case .besli:      return "\(min(placeStore.places.count, 5))/5 mekan"
+        case .onlu:       return "\(min(placeStore.places.count, 10))/10 mekan"
+        case .yirmili:    return "\(min(placeStore.places.count, 20))/20 mekan"
+        case .ellili:     return "\(min(placeStore.places.count, 50))/50 mekan"
+        case .yuzlu:      return "\(min(placeStore.places.count, 100))/100 mekan"
+        case .ilkZiyaret:
+            let v = placeStore.places.filter { $0.isVisited }.count
+            return "\(min(v, 1))/1 ziyaret"
+        case .onZiyaret:
+            let v = placeStore.places.filter { $0.isVisited }.count
+            return "\(min(v, 10))/10 ziyaret"
+        case .gezgin:
+            let c = completedRouteCount
+            return "\(min(c, 1))/1 rota"
+        case .rotaci:
+            let c = completedRouteCount
+            return "\(min(c, 3))/3 rota"
+        case .rotaUstasi:
+            let c = completedRouteCount
+            return "\(min(c, 10))/10 rota"
+        case .planlamaci:
+            let c = savedRouteCount
+            return "\(min(c, 1))/1 kayıtlı rota"
+        case .kasif:
+            let cats = Set(placeStore.places.map { PlaceCategory.from($0.category) }).count
+            return "\(min(cats, 5))/5 kategori"
+        case .parkSever:
+            let count = placeStore.places.filter { PlaceCategory.from($0.category) == .park }.count
+            return "\(min(count, 5))/5 park"
+        case .muzeSever:
+            let count = placeStore.places.filter { $0.isVisited && PlaceCategory.from($0.category) == .museum }.count
+            return "\(min(count, 3))/3 müze"
+        case .gurme:
+            let count = placeStore.places.filter {
+                let cat = PlaceCategory.from($0.category)
+                return cat == .restaurant || cat == .cafe
+            }.count
+            return "\(min(count, 10))/10 mekan"
+        case .sabahciKus:  return "Sabah 07:00–09:00 rota başlat"
+        case .geceKusu:    return "Gece 21:00+ rota başlat"
+        case .paylasimci:
+            let s = sharedRouteCount
+            return "\(min(s, 1))/1 paylaşım"
+        case .sosyalKelebek:
+            let s = sharedRouteCount
+            return "\(min(s, 5))/5 paylaşım"
+        case .hafizalik:
+            let d = consecutiveDays
+            return "\(min(d, 7))/7 gün"
+        }
     }
 }

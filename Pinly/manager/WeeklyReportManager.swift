@@ -25,11 +25,15 @@ struct WeeklyStats {
     }
 }
 
-// MARK: - WeeklyReportManager
+// MARK: - WeeklyStatsComputing
 
-enum WeeklyReportManager {
+/// Haftalık özet istatistiklerinin saf hesaplaması — framework bağımsız, test edilebilir.
+protocol WeeklyStatsComputing {
+    func computeStats(places: [Place], histories: [RouteHistory]) -> WeeklyStats
+}
 
-    static func computeStats(places: [Place], histories: [RouteHistory]) -> WeeklyStats {
+struct DefaultWeeklyStatsComputer: WeeklyStatsComputing {
+    func computeStats(places: [Place], histories: [RouteHistory]) -> WeeklyStats {
         let calendar  = Calendar.current
         let weekStart = calendar.date(byAdding: .day, value: -7, to: .now) ?? .now
         let weekEnd   = Date.now
@@ -58,9 +62,18 @@ enum WeeklyReportManager {
             weekEnd: weekEnd
         )
     }
+}
 
+// MARK: - NotificationScheduling
+
+/// Yerel bildirim planlama (UserNotifications).
+protocol NotificationScheduling {
     /// Pazar sabahı 09:00 tekrarlayan lokal bildirim planlar.
-    static func scheduleWeeklyNotification() {
+    func scheduleWeeklyNotification()
+}
+
+struct DefaultNotificationScheduler: NotificationScheduling {
+    func scheduleWeeklyNotification() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, _ in
             guard granted else { return }
 

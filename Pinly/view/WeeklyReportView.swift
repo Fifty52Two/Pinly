@@ -6,10 +6,11 @@ import SwiftData
 struct WeeklyReportView: View {
     @EnvironmentObject var placeStore: PlaceStore
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.weeklyStats) private var weeklyStats
     @Query(sort: \RouteHistory.date, order: .reverse) private var histories: [RouteHistory]
 
     private var stats: WeeklyStats {
-        WeeklyReportManager.computeStats(places: placeStore.places, histories: histories)
+        weeklyStats.computeStats(places: placeStore.places, histories: histories)
     }
 
     var body: some View {

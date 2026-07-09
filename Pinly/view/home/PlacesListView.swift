@@ -30,6 +30,7 @@ struct PlacesListView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(\.entitlements) private var entitlements
+    @Environment(\.swarmImporting) private var swarmImporting
 
     @StateObject private var viewModel = PlacesListViewModel()
 
@@ -205,7 +206,7 @@ struct PlacesListView: View {
                 else { return }
                 defer { url.stopAccessingSecurityScopedResource() }
                 guard let data = try? Data(contentsOf: url),
-                      let places = PlaceImporter.parseSwarm(data: data)
+                      let places = swarmImporting.parseSwarm(data: data)
                 else { swarmParseError = true; return }
                 pendingSwarmPlaces = places
                 showSwarmImport = true
@@ -231,7 +232,7 @@ struct PlacesListView: View {
         pendingSwarmPlaces = []
         Task {
             for data in toImport {
-                await PlaceImporter.save(data, placeStore: placeStore, context: modelContext)
+                await placeStore.importPlace(data, context: modelContext)
             }
         }
     }

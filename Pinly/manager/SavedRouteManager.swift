@@ -2,12 +2,24 @@ import Foundation
 import CoreLocation
 import SwiftData
 
+// MARK: - SavedRouteRepository
+
+/// Kayıtlı rotaların kalıcılığı ve uzaklık hesabı.
 @MainActor
-class SavedRouteManager: ObservableObject {
+protocol SavedRouteRepository: AnyObject {
+    func save(name: String, categoryRaw: String?, places: [Place], context: ModelContext)
+    /// Kullanıcının mevcut konumu ile rotanın merkezi arasındaki mesafe (km)
+    func distanceKm(from userLocation: CLLocation?, to route: SavedRoute) -> Double?
+    func delete(_ route: SavedRoute, context: ModelContext)
+}
+
+@MainActor
+final class DefaultSavedRouteRepository: SavedRouteRepository {
+    static let shared = DefaultSavedRouteRepository()
 
     // MARK: - Kayıtlı rotayı SwiftData'ya ekle
 
-    static func save(
+    func save(
         name: String,
         categoryRaw: String?,
         places: [Place],
@@ -48,8 +60,7 @@ class SavedRouteManager: ObservableObject {
 
     // MARK: - Uzaklık kontrolü
 
-    /// Kullanıcının mevcut konumu ile rotanın merkezi arasındaki mesafe (km)
-    static func distanceKm(from userLocation: CLLocation?, to route: SavedRoute) -> Double? {
+    func distanceKm(from userLocation: CLLocation?, to route: SavedRoute) -> Double? {
         guard let userLoc = userLocation else { return nil }
         let center = CLLocation(latitude: route.centerLatitude, longitude: route.centerLongitude)
         return userLoc.distance(from: center) / 1000
@@ -57,7 +68,7 @@ class SavedRouteManager: ObservableObject {
 
     // MARK: - Silme
 
-    static func delete(_ route: SavedRoute, context: ModelContext) {
+    func delete(_ route: SavedRoute, context: ModelContext) {
         context.delete(route)
         try? context.save()
     }

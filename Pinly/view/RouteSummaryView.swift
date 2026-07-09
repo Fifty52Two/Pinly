@@ -8,31 +8,21 @@ struct RouteSummaryView: View {
     @EnvironmentObject var routeManager: RouteManager
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismissRouteFlow) var dismissRouteFlow
-    @Environment(\.entitlements) private var entitlements
-    @Environment(\.badges) private var badgeService
-    @Environment(\.ads) private var adService
+
+    @StateObject private var viewModel = RouteSummaryViewModel()
 
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 41.015137, longitude: 28.979530),
         span: MKCoordinateSpan(latitudeDelta: 0.04, longitudeDelta: 0.04)
     )
-    @State private var isLoadingRoutes = false
     @State private var showArrivalBanner = false
-    @State private var arrivedPlaceName = ""
     @State private var showRatingSheet = false
-    @State private var pendingRatingPlace: Place? = nil
     @State private var showCompletionOverlay = false
-    @State private var stopNote = ""
     @State private var noteSaved = false
     @State private var showSharePicker = false
-    @State private var shareRouteName = ""
-    @State private var shareRouteCategory: RouteCategory = .city
     @State private var showGPXPaywall = false
     @State private var showPDFPaywall = false
-    @State private var routeStartDate: Date? = nil
     @State private var showSaveRouteSheet = false
-    @State private var saveRouteName = ""
-    @State private var saveRouteSuccess = false
 
     var routePlaces: [Place] { routeManager.routePlaces }
 
@@ -80,7 +70,7 @@ struct RouteSummaryView: View {
                 }
 
                 // Loading indicator
-                if isLoadingRoutes {
+                if viewModel.isLoadingRoutes {
                     HStack(spacing: 8) {
                         ProgressView()
                         Text(NSLocalizedString("Rota hesaplanıyor...", comment: ""))
@@ -198,7 +188,7 @@ struct RouteSummaryView: View {
 
             // Arrival banner overlay
             if showArrivalBanner {
-                ArrivalBannerView(placeName: arrivedPlaceName)
+                ArrivalBannerView(placeName: viewModel.arrivedPlaceName)
                     .transition(.move(edge: .top).combined(with: .opacity))
                     .padding(.top, 60)
                     .zIndex(10)
@@ -246,17 +236,13 @@ struct RouteSummaryView: View {
             routeManager.updateNavigation(userLocation: loc)
         }
         .onChange(of: routeManager.currentWaypointIndex) { _, _ in
-            stopNote = ""
+            viewModel.stopNote = ""
             noteSaved = false
         }
         .onChange(of: routeManager.arrivedAtPlace) { _, arrived in
             guard let place = arrived else { return }
-            place.isVisited = true
-            place.visitCount += 1
-            try? modelContext.save()
-            placeStore.load(context: modelContext)
+            viewModel.handleArrival(place: place, context: modelContext, placeStore: placeStore)
             UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-            arrivedPlaceName = place.name
             withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                 showArrivalBanner = true
             }
@@ -265,7 +251,6 @@ struct RouteSummaryView: View {
                     showArrivalBanner = false
                 }
             }
-            pendingRatingPlace = place
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 showRatingSheet = true
             }
@@ -274,37 +259,20 @@ struct RouteSummaryView: View {
         .onChange(of: routeManager.isRouteComplete) { _, isComplete in
             guard isComplete else { return }
             locationManager.stopNavigationTracking()
-            badgeService.recordRouteCompleted()
-            let newBadges = badgeService.check(placeStore: placeStore)
-            placeStore.pendingBadges.append(contentsOf: newBadges)
-            // HealthKit + RouteHistory kayıt
-            let startDate  = routeStartDate ?? Date()
-            let endDate    = Date()
-            let distance   = routeManager.totalRouteDistance
-            let duration   = routeManager.totalRouteTime
-            let name       = !routeManager.routeName.isEmpty ? routeManager.routeName
-                           : !shareRouteName.isEmpty ? shareRouteName
-                           : NSLocalizedString("Rota", comment: "")
-            let placeNames = routePlaces.map(\.name)
-            let catRaw     = shareRouteCategory.rawValue
             Task {
-                let stats = await HealthKitManager.fetchRouteStats(from: startDate, to: endDate)
-                await MainActor.run {
-                    let history = RouteHistory(
-                        routeName: name,
-                        placeNames: placeNames,
-                        totalDistanceMeters: distance,
-                        durationSeconds: duration,
-                        stepCount: stats.steps,
-                        categoryRaw: catRaw
-                    )
-                    modelContext.insert(history)
-                    try? modelContext.save()
-                }
+                let newBadges = await viewModel.handleRouteCompletion(
+                    routePlaces: routePlaces,
+                    fallbackRouteName: routeManager.routeName,
+                    totalDistance: routeManager.totalRouteDistance,
+                    totalTime: routeManager.totalRouteTime,
+                    context: modelContext,
+                    placeStore: placeStore
+                )
+                placeStore.pendingBadges.append(contentsOf: newBadges)
             }
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                adService.showInterstitialIfNeeded {
+                viewModel.showInterstitialThenProceed {
                     withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                         showCompletionOverlay = true
                     }
@@ -312,8 +280,8 @@ struct RouteSummaryView: View {
             }
         }
         .sheet(isPresented: $showRatingSheet) {
-            if let place = pendingRatingPlace {
-                RatingSheetView(place: place, modelContext: modelContext) {
+            if let place = viewModel.pendingRatingPlace {
+                RatingSheetView(place: place, placeStore: placeStore, modelContext: modelContext) {
                     showRatingSheet = false
                 }
             }
@@ -334,7 +302,7 @@ struct RouteSummaryView: View {
                             .transition(.opacity)
                         } else {
                             HStack(spacing: 8) {
-                                TextField(NSLocalizedString("Bu mekan için not ekle...", comment: ""), text: $stopNote)
+                                TextField(NSLocalizedString("Bu mekan için not ekle...", comment: ""), text: $viewModel.stopNote)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 8)
                                     .background(Color(.systemGray6))
@@ -345,9 +313,9 @@ struct RouteSummaryView: View {
                                 } label: {
                                     Text(NSLocalizedString("Ekle", comment: ""))
                                         .fontWeight(.semibold)
-                                        .foregroundColor(stopNote.trimmingCharacters(in: .whitespaces).isEmpty ? .secondary : PinlyTheme.primary)
+                                        .foregroundColor(viewModel.stopNote.trimmingCharacters(in: .whitespaces).isEmpty ? .secondary : PinlyTheme.primary)
                                 }
-                                .disabled(stopNote.trimmingCharacters(in: .whitespaces).isEmpty)
+                                .disabled(viewModel.stopNote.trimmingCharacters(in: .whitespaces).isEmpty)
                             }
                         }
                     }
@@ -401,7 +369,7 @@ struct RouteSummaryView: View {
                     }
                 } else {
                     Button {
-                        adService.showInterstitialIfNeeded { showSharePicker = true }
+                        viewModel.showInterstitialThenProceed { showSharePicker = true }
                     } label: {
                         HStack(spacing: 8) {
                             Image(systemName: "square.and.arrow.up")
@@ -417,11 +385,10 @@ struct RouteSummaryView: View {
                     .sheet(isPresented: $showSharePicker) {
                         RouteSharePickerView(
                             routePlaces: routePlaces,
-                            name: $shareRouteName,
-                            category: $shareRouteCategory,
+                            name: $viewModel.shareRouteName,
+                            category: $viewModel.shareRouteCategory,
                             onShare: {
-                                badgeService.recordRouteShared()
-                                let newBadges = badgeService.check(placeStore: placeStore)
+                                let newBadges = viewModel.recordRouteShared(placeStore: placeStore)
                                 placeStore.pendingBadges.append(contentsOf: newBadges)
                             }
                         )
@@ -429,7 +396,7 @@ struct RouteSummaryView: View {
                     }
 
                     Button {
-                        saveRouteName = exportRouteName
+                        viewModel.saveRouteName = viewModel.exportRouteName(fallbackRouteName: routeManager.routeName)
                         showSaveRouteSheet = true
                     } label: {
                         HStack(spacing: 8) {
@@ -445,33 +412,32 @@ struct RouteSummaryView: View {
                     }
                     .sheet(isPresented: $showSaveRouteSheet) {
                         SaveRouteSheet(
-                            routeName: $saveRouteName,
-                            routeCategory: $shareRouteCategory,
+                            routeName: $viewModel.saveRouteName,
+                            routeCategory: $viewModel.shareRouteCategory,
                             places: routePlaces,
                             onSave: { name, category in
-                                SavedRouteManager.save(
+                                let newBadges = viewModel.saveRoute(
                                     name: name,
-                                    categoryRaw: category.rawValue,
+                                    category: category,
                                     places: routePlaces,
-                                    context: modelContext
+                                    context: modelContext,
+                                    placeStore: placeStore
                                 )
-                                badgeService.recordSavedRoute()
-                                let newBadges = badgeService.check(placeStore: placeStore)
                                 placeStore.pendingBadges.append(contentsOf: newBadges)
                                 showSaveRouteSheet = false
-                                saveRouteSuccess = true
+                                viewModel.saveRouteSuccess = true
                             }
                         )
                         .presentationDetents([.medium])
                     }
-                    .alert(NSLocalizedString("Rota Kaydedildi!", comment: ""), isPresented: $saveRouteSuccess) {
+                    .alert(NSLocalizedString("Rota Kaydedildi!", comment: ""), isPresented: $viewModel.saveRouteSuccess) {
                         Button(NSLocalizedString("Tamam", comment: ""), role: .cancel) {}
                     } message: {
-                        Text(String(format: NSLocalizedString("\"%@\" kayıtlı rotalarına eklendi.", comment: ""), saveRouteName))
+                        Text(String(format: NSLocalizedString("\"%@\" kayıtlı rotalarına eklendi.", comment: ""), viewModel.saveRouteName))
                     }
 
                     Button {
-                        if entitlements.isPro {
+                        if viewModel.isPro {
                             shareGPX()
                         } else {
                             showGPXPaywall = true
@@ -493,7 +459,7 @@ struct RouteSummaryView: View {
                     }
 
                     Button {
-                        if entitlements.isPro {
+                        if viewModel.isPro {
                             sharePDF()
                         } else {
                             showPDFPaywall = true
@@ -515,14 +481,14 @@ struct RouteSummaryView: View {
                     }
 
                     Button {
-                        routeStartDate = Date()
-                        badgeService.recordRouteStarted()
+                        viewModel.routeStartDate = Date()
+                        viewModel.recordRouteStarted()
                         withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                             routeManager.isNavigating = true
                             locationManager.startNavigationTracking()
                             routeManager.startLiveActivity()
                         }
-                        Task { await HealthKitManager.requestAuthorization() }
+                        Task { await viewModel.requestHealthKitAuthorization() }
                     } label: {
                         HStack {
                             Image(systemName: "location.fill")
@@ -545,20 +511,13 @@ struct RouteSummaryView: View {
     }
 
     private func addNoteToCurrentStop() {
-        let trimmed = stopNote.trimmingCharacters(in: .whitespaces)
-        guard !trimmed.isEmpty else { return }
-        guard routeManager.isPausedAtStop else { return }
-        guard routeManager.currentWaypointIndex < routePlaces.count else { return }
+        guard viewModel.addNoteToCurrentStop(
+            routePlaces: routePlaces,
+            currentWaypointIndex: routeManager.currentWaypointIndex,
+            context: modelContext,
+            placeStore: placeStore
+        ) else { return }
 
-        let place = routePlaces[routeManager.currentWaypointIndex]
-        if place.notes.isEmpty {
-            place.notes = trimmed
-        } else {
-            place.notes += "\n• \(trimmed)"
-        }
-        try? modelContext.save()
-        placeStore.load(context: modelContext)
-        stopNote = ""
         withAnimation(.spring(response: 0.3)) {
             noteSaved = true
         }
@@ -570,22 +529,17 @@ struct RouteSummaryView: View {
         }
     }
 
-    private var exportRouteName: String {
-        if !shareRouteName.isEmpty { return shareRouteName }
-        if !routeManager.routeName.isEmpty { return routeManager.routeName }
-        return NSLocalizedString("Rota", comment: "")
-    }
-
     private func sharePDF() {
-        let distanceStr = routeManager.totalRouteDistance > 0
-            ? String(format: "%.1f km", routeManager.totalRouteDistance / 1000)
-            : ""
-        guard let url = PlaceImporter.buildPDFFile(for: routePlaces, name: exportRouteName, totalDistance: distanceStr) else { return }
+        guard let url = viewModel.sharePDF(
+            places: routePlaces,
+            fallbackRouteName: routeManager.routeName,
+            totalDistance: routeManager.totalRouteDistance
+        ) else { return }
         presentShareSheet(for: url)
     }
 
     private func shareGPX() {
-        guard let url = PlaceImporter.buildGPXFile(for: routePlaces, name: exportRouteName) else { return }
+        guard let url = viewModel.shareGPX(places: routePlaces, fallbackRouteName: routeManager.routeName) else { return }
         presentShareSheet(for: url)
     }
 
@@ -613,22 +567,21 @@ struct RouteSummaryView: View {
         durationFmt.allowedUnits = routeManager.totalRouteTime >= 3600 ? [.hour, .minute] : [.minute]
 
         guard let image = RouteShareCardView.makeImage(
-            routeName: exportRouteName,
+            routeName: viewModel.exportRouteName(fallbackRouteName: routeManager.routeName),
             distanceText: fmt.string(fromDistance: routeManager.totalRouteDistance),
             durationText: durationFmt.string(from: routeManager.totalRouteTime) ?? "",
             stops: routePlaces.map(\.name)
         ) else { return }
 
-        badgeService.recordRouteShared()
-        let newBadges = badgeService.check(placeStore: placeStore)
+        let newBadges = viewModel.recordRouteShared(placeStore: placeStore)
         placeStore.pendingBadges.append(contentsOf: newBadges)
         presentShareSheet(items: [image])
     }
 
     private func loadRoutes() {
-        isLoadingRoutes = true
+        viewModel.isLoadingRoutes = true
         routeManager.calculateRoutes(from: locationManager.userLocation?.coordinate) {
-            isLoadingRoutes = false
+            viewModel.isLoadingRoutes = false
         }
     }
 

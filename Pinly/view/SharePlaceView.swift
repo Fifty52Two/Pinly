@@ -1,15 +1,15 @@
 import SwiftUI
-import CoreImage
-import CoreImage.CIFilterBuiltins
 
 struct SharePlaceView: View {
     let place: Place
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.routeURLCoding) private var routeURLCoding
+    @Environment(\.qrCodeGenerator) private var qrCodeGenerator
 
-    private var shareURL: URL? { PlaceImporter.buildURL(for: place) }
+    private var shareURL: URL? { routeURLCoding.buildURL(for: place) }
     private var qrImage: UIImage? {
         guard let url = shareURL else { return nil }
-        return generateQR(from: url.absoluteString)
+        return qrCodeGenerator.generateQRCode(from: url.absoluteString)
     }
 
     var body: some View {
@@ -95,19 +95,5 @@ struct SharePlaceView: View {
                 }
             }
         }
-    }
-
-    // MARK: - QR Generation
-
-    private func generateQR(from string: String) -> UIImage? {
-        guard let data = string.data(using: .utf8) else { return nil }
-        let filter = CIFilter.qrCodeGenerator()
-        filter.setValue(data, forKey: "inputMessage")
-        filter.setValue("M", forKey: "inputCorrectionLevel")
-        guard let output = filter.outputImage else { return nil }
-        let scaled = output.transformed(by: CGAffineTransform(scaleX: 12, y: 12))
-        let context = CIContext()
-        guard let cgImage = context.createCGImage(scaled, from: scaled.extent) else { return nil }
-        return UIImage(cgImage: cgImage)
     }
 }

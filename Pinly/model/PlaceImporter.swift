@@ -36,14 +36,22 @@ struct PlaceImportData {
     let longitude: Double?
 }
 
-// MARK: - PlaceImporter
+// MARK: - RouteURLCoding
 
-enum PlaceImporter {
+/// Tek mekan / rota derin link URL'lerinin build + parse edilmesi.
+protocol RouteURLCoding {
+    func buildURL(for place: Place) -> URL?
+    func parse(url: URL) -> PlaceImportData?
+    func buildRouteURL(for places: [Place], name: String?, category: RouteCategory?) -> URL?
+    func parseRouteFull(url: URL) -> RouteImport?
+}
 
-    private static let primaryScheme = "pinly"
-    private static let legacyScheme = "notiongo"
+struct DefaultRouteURLCoder: RouteURLCoding {
 
-    static func buildURL(for place: Place) -> URL? {
+    private let primaryScheme = "pinly"
+    private let legacyScheme = "notiongo"
+
+    func buildURL(for place: Place) -> URL? {
         var components = URLComponents()
         components.scheme = primaryScheme
         components.host = "addplace"
@@ -64,7 +72,7 @@ enum PlaceImporter {
         return components.url
     }
 
-    static func parse(url: URL) -> PlaceImportData? {
+    func parse(url: URL) -> PlaceImportData? {
         guard let scheme = url.scheme,
               [primaryScheme, legacyScheme].contains(scheme),
               url.host == "addplace"
@@ -91,11 +99,11 @@ enum PlaceImporter {
         )
     }
 
-    // MARK: - Route URL (pinly://route?data=<base64JSON>)
+    // Route URL (pinly://route?data=<base64JSON>)
     // JSON format: {"places": [...], "name": "...", "category": "..."}
     // Backwards compat: plain array also accepted by parseRouteFull
 
-    static func buildRouteURL(for places: [Place], name: String? = nil, category: RouteCategory? = nil) -> URL? {
+    func buildRouteURL(for places: [Place], name: String? = nil, category: RouteCategory? = nil) -> URL? {
         let placeItems: [[String: String]] = places.map { p in
             var d: [String: String] = [
                 "name": p.name,
@@ -121,7 +129,7 @@ enum PlaceImporter {
         return c.url
     }
 
-    static func parseRouteFull(url: URL) -> RouteImport? {
+    func parseRouteFull(url: URL) -> RouteImport? {
         guard let scheme = url.scheme,
               [primaryScheme, legacyScheme].contains(scheme),
               url.host == "route"
@@ -164,10 +172,18 @@ enum PlaceImporter {
         guard !places.isEmpty else { return nil }
         return RouteImport(places: places, name: routeName, category: routeCategory)
     }
+}
 
-    // MARK: - Swarm Import (checkins.json)
+// MARK: - SwarmImporting
 
-    static func parseSwarm(data: Data) -> [PlaceImportData]? {
+/// Foursquare/Swarm `checkins.json` dışa aktarımının parse edilmesi.
+protocol SwarmImporting {
+    func parseSwarm(data: Data) -> [PlaceImportData]?
+}
+
+struct DefaultSwarmImporter: SwarmImporting {
+
+    func parseSwarm(data: Data) -> [PlaceImportData]? {
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let checkinsObj = json["checkins"] as? [String: Any],
               let items = checkinsObj["items"] as? [[String: Any]]
@@ -210,7 +226,7 @@ enum PlaceImporter {
         return result.isEmpty ? nil : result
     }
 
-    private static func swarmCategory(_ fq: String) -> String {
+    private func swarmCategory(_ fq: String) -> String {
         switch true {
         case fq.contains("restaurant") || fq.contains("food") || fq.contains("burger") ||
              fq.contains("pizza") || fq.contains("sushi") || fq.contains("grill") ||
@@ -238,10 +254,21 @@ enum PlaceImporter {
             return PlaceCategory.general.rawValue
         }
     }
+}
 
-    // MARK: - PDF Export (PDFKit)
+// MARK: - RouteExporting
 
-    static func buildPDFFile(for places: [Place], name: String, totalDistance: String = "", totalTime: String = "") -> URL? {
+/// Rota dışa aktarımı (PDF/GPX dosya üretimi).
+protocol RouteExporting {
+    func buildPDFFile(for places: [Place], name: String, totalDistance: String, totalTime: String) -> URL?
+    func buildGPXFile(for places: [Place], name: String) -> URL?
+}
+
+struct DefaultRouteExporter: RouteExporting {
+
+    // MARK: PDF Export (PDFKit)
+
+    func buildPDFFile(for places: [Place], name: String, totalDistance: String = "", totalTime: String = "") -> URL? {
         let pageWidth: CGFloat = 595   // A4 points
         let pageHeight: CGFloat = 842
         let margin: CGFloat = 48
@@ -359,14 +386,14 @@ enum PlaceImporter {
     }
 
     // Rota adındaki "/" ve ":" gibi karakterler dosya yazımını sessizce bozar
-    private static func sanitizedFileName(_ name: String) -> String {
+    private func sanitizedFileName(_ name: String) -> String {
         let invalid = CharacterSet(charactersIn: "/\\:?%*|\"<>")
         let cleaned = name.components(separatedBy: invalid).joined(separator: "-")
             .trimmingCharacters(in: .whitespaces)
         return cleaned.isEmpty ? "rota" : cleaned
     }
 
-    static func buildGPXFile(for places: [Place], name: String) -> URL? {
+    func buildGPXFile(for places: [Place], name: String) -> URL? {
         var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
         xml += "<gpx version=\"1.1\" creator=\"Pinly\" xmlns=\"http://www.topografix.com/GPX/1/1\">\n"
         xml += "  <metadata><name>\(escapeXML(name))</name></metadata>\n"
@@ -387,34 +414,10 @@ enum PlaceImporter {
         return url
     }
 
-    private static func escapeXML(_ s: String) -> String {
+    private func escapeXML(_ s: String) -> String {
         s.replacingOccurrences(of: "&", with: "&amp;")
          .replacingOccurrences(of: "<", with: "&lt;")
          .replacingOccurrences(of: ">", with: "&gt;")
          .replacingOccurrences(of: "\"", with: "&quot;")
-    }
-
-    // Shared import logic used by both QRScannerView and deep-link handler.
-    // If coordinates are present they're used directly; otherwise geocoding is performed.
-    @MainActor
-    static func save(_ data: PlaceImportData, placeStore: PlaceStore, context: ModelContext) async {
-        if let lat = data.latitude, let lon = data.longitude {
-            let place = Place(name: data.name, category: data.category, address: data.address, notes: data.notes)
-            place.latitude = lat
-            place.longitude = lon
-            place.locationName = data.address
-            context.insert(place)
-            placeStore.save(context: context)
-            placeStore.load(context: context)
-            placeStore.refreshBadges()
-        } else {
-            await placeStore.addPlace(
-                name: data.name,
-                category: data.category,
-                address: data.address,
-                notes: data.notes,
-                context: context
-            )
-        }
     }
 }

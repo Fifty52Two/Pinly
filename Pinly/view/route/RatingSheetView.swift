@@ -4,6 +4,7 @@ import SwiftData
 
 struct RatingSheetView: View {
     let place: Place
+    let placeStore: PlaceRepository
     let modelContext: ModelContext
     let onDismiss: () -> Void
 
@@ -49,7 +50,7 @@ struct RatingSheetView: View {
                 Button(NSLocalizedString("Kaydet", comment: "")) {
                     if selectedRating > 0 {
                         place.userRating = selectedRating
-                        try? modelContext.save()
+                        placeStore.save(context: modelContext)
                     }
                     onDismiss()
                 }

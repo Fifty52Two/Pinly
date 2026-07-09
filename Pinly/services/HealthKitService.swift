@@ -1,13 +1,25 @@
 import HealthKit
 
-// MARK: - HealthKit Manager
+// MARK: - HealthStatsProviding
 
-enum HealthKitManager {
-    private static let store = HKHealthStore()
+/// Gerçek adım sayısı / yürüme mesafesi sorgusu (HealthKit).
+protocol HealthStatsProviding: AnyObject {
+    var isAvailable: Bool { get }
+    func requestAuthorization() async -> Bool
+    /// Verilen zaman aralığında gerçek adım sayısı ve yürüme mesafesini HealthKit'ten sorgular.
+    func fetchRouteStats(from start: Date, to end: Date) async -> (steps: Int, distanceMeters: Double)
+}
 
-    static var isAvailable: Bool { HKHealthStore.isHealthDataAvailable() }
+// MARK: - HealthKitService
 
-    static func requestAuthorization() async -> Bool {
+final class HealthKitService: HealthStatsProviding {
+    static let shared = HealthKitService()
+
+    private let store = HKHealthStore()
+
+    var isAvailable: Bool { HKHealthStore.isHealthDataAvailable() }
+
+    func requestAuthorization() async -> Bool {
         guard isAvailable else { return false }
         let types: Set<HKQuantityType> = [
             HKQuantityType(.stepCount),
@@ -16,15 +28,14 @@ enum HealthKitManager {
         return (try? await store.requestAuthorization(toShare: [], read: types)) != nil
     }
 
-    /// Verilen zaman aralığında gerçek adım sayısı ve yürüme mesafesini HealthKit'ten sorgular.
-    static func fetchRouteStats(from start: Date, to end: Date) async -> (steps: Int, distanceMeters: Double) {
+    func fetchRouteStats(from start: Date, to end: Date) async -> (steps: Int, distanceMeters: Double) {
         async let steps    = fetchSum(.stepCount, from: start, to: end)
         async let distance = fetchSum(.distanceWalkingRunning, from: start, to: end)
         let (s, d) = await (steps, distance)
         return (Int(s), d)
     }
 
-    private static func fetchSum(
+    private func fetchSum(
         _ identifier: HKQuantityTypeIdentifier,
         from start: Date,
         to end: Date

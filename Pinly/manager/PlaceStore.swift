@@ -3,16 +3,38 @@ import CoreLocation
 import MapKit
 import SwiftData
 
+// MARK: - PlaceRepository
+
+/// Mekan kalıcılığı, sorgulama ve içe aktarma sorumluluğunun tek kaynağı.
 @MainActor
-class PlaceStore: ObservableObject {
+protocol PlaceRepository: AnyObject {
+    var places: [Place] { get }
+    var lastError: String? { get set }
+    var pendingBadges: [Badge] { get set }
+    func refreshBadges()
+    func load(context: ModelContext)
+    func addPlace(name: String, category: String, address: String, notes: String, coordinate: CLLocationCoordinate2D?, context: ModelContext) async
+    func deletePlace(_ place: Place, context: ModelContext)
+    func save(context: ModelContext)
+    func places(category: String, userLocation: CLLocation?, radiusKm: Double) -> [Place]
+    var allCategories: [String] { get }
+    /// Deep-link / QR / Swarm içe aktarımından gelen tek bir mekanı kaydeder.
+    func importPlace(_ data: PlaceImportData, context: ModelContext) async
+}
+
+@MainActor
+class PlaceStore: PlaceRepository, ObservableObject {
     @Published var places: [Place] = []
     @Published var lastError: String? = nil
     @Published var pendingBadges: [Badge] = []
 
     private let badges: BadgeServicing
+    private let geocoding: GeocodingProviding
 
-    init(badges: BadgeServicing = DefaultBadgeService.shared) {
+    init(badges: BadgeServicing = DefaultBadgeService.shared,
+         geocoding: GeocodingProviding = DefaultGeocodingService.shared) {
         self.badges = badges
+        self.geocoding = geocoding
     }
 
     /// Rozet kontrolü yapar; yeni açılan rozetleri banner kuyruğuna ekler.
@@ -65,19 +87,33 @@ class PlaceStore: ObservableObject {
     }
 
     private func resolveCoordinate(name: String, address: String) async -> CLLocationCoordinate2D? {
-        let req = MKLocalSearch.Request()
-        req.naturalLanguageQuery = "\(name), \(address)"
-        if let item = try? await MKLocalSearch(request: req).start().mapItems.first {
-            return item.placemark.coordinate
+        if let coord = await geocoding.forwardGeocode(query: "\(name), \(address)") {
+            return coord
         }
+        return await geocoding.forwardGeocode(query: address)
+    }
 
-        let req2 = MKLocalSearch.Request()
-        req2.naturalLanguageQuery = address
-        if let item = try? await MKLocalSearch(request: req2).start().mapItems.first {
-            return item.placemark.coordinate
+    /// Deep-link / QR / Swarm içe aktarımından gelen tek bir mekanı kaydeder.
+    /// Koordinat zaten mevcutsa geocode atlanır, yoksa `addPlace` üzerinden çözümlenir.
+    func importPlace(_ data: PlaceImportData, context: ModelContext) async {
+        if let lat = data.latitude, let lon = data.longitude {
+            let place = Place(name: data.name, category: data.category, address: data.address, notes: data.notes)
+            place.latitude = lat
+            place.longitude = lon
+            place.locationName = data.address
+            context.insert(place)
+            save(context: context)
+            load(context: context)
+            refreshBadges()
+        } else {
+            await addPlace(
+                name: data.name,
+                category: data.category,
+                address: data.address,
+                notes: data.notes,
+                context: context
+            )
         }
-
-        return nil
     }
 
     // radiusKm == 0 means unlimited (no distance filter)

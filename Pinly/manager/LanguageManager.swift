@@ -1,9 +1,17 @@
 import Foundation
 import ObjectiveC
 
+// MARK: - LanguagePreferenceStoring
+
+/// Uygulama dili tercihinin okunması/değiştirilmesi.
+protocol LanguagePreferenceStoring: AnyObject {
+    var currentLanguage: String { get }
+    func setLanguage(_ code: String)
+}
+
 // MARK: - LanguageManager
 
-final class LanguageManager: ObservableObject {
+final class LanguageManager: ObservableObject, LanguagePreferenceStoring {
     @Published var currentLanguage: String
     @Published var refreshID = UUID()
 

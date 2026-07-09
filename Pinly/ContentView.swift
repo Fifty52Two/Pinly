@@ -6,9 +6,11 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.entitlements) private var entitlements
     @Environment(\.badges) private var badges
-    @StateObject private var placeStore = PlaceStore()
-    @StateObject private var locationManager = LocationManager()
-    @StateObject private var routeManager = RouteManager()
+    @Environment(\.routeURLCoding) private var routeURLCoding
+    @Environment(\.notificationScheduling) private var notificationScheduling
+    @EnvironmentObject var placeStore: PlaceStore
+    @EnvironmentObject var locationManager: LocationManager
+    @EnvironmentObject var routeManager: RouteManager
     @EnvironmentObject var languageManager: LanguageManager
 
     @State private var pendingImport: PlaceImportData? = nil
@@ -27,7 +29,7 @@ struct ContentView: View {
             if !hasSeenOnboarding {
                 OnboardingView {
                     hasSeenOnboarding = true
-                    WeeklyReportManager.scheduleWeeklyNotification()
+                    notificationScheduling.scheduleWeeklyNotification()
                 }
             } else if !hasSetupProfile {
                 ProfileSetupView {
@@ -62,10 +64,10 @@ struct ContentView: View {
             if url.host == "navigation" {
                 // Live Activity butonundan gelen deep link — navigasyon zaten aktif, sadece ön plana al
                 // HomeView'deki fullScreenCover routeManager.isNavigating'i izliyor
-            } else if let data = PlaceImporter.parse(url: url) {
+            } else if let data = routeURLCoding.parse(url: url) {
                 pendingImport = data
                 showImportSheet = true
-            } else if let routeImport = PlaceImporter.parseRouteFull(url: url) {
+            } else if let routeImport = routeURLCoding.parseRouteFull(url: url) {
                 pendingRouteImport = routeImport
                 showRouteImportSheet = true
             }
@@ -133,7 +135,7 @@ struct ContentView: View {
         pendingRouteImport = nil
         Task {
             for data in toImport {
-                await PlaceImporter.save(data, placeStore: placeStore, context: modelContext)
+                await placeStore.importPlace(data, context: modelContext)
             }
         }
     }
@@ -181,7 +183,7 @@ struct ContentView: View {
         }
         isImporting = true
         Task {
-            await PlaceImporter.save(data, placeStore: placeStore, context: modelContext)
+            await placeStore.importPlace(data, context: modelContext)
             await MainActor.run {
                 isImporting = false
                 showImportSheet = false

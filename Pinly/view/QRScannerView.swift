@@ -6,12 +6,12 @@ import AVFoundation
 struct QRScannerView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var placeStore: PlaceStore
-    @Environment(\.entitlements) private var entitlements
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.routeURLCoding) private var routeURLCoding
 
-    @State private var importData: PlaceImportData? = nil
+    @StateObject private var viewModel = QRScannerViewModel()
+
     @State private var showImportConfirm = false
-    @State private var isSaving = false
     @State private var cameraPermissionDenied = false
     @State private var showPaywall = false
 
@@ -22,9 +22,9 @@ struct QRScannerView: View {
                     CameraPermissionDeniedView()
                 } else {
                     CameraPreviewView(onCodeDetected: { url in
-                        guard importData == nil else { return }
-                        if let data = PlaceImporter.parse(url: url) {
-                            importData = data
+                        guard viewModel.importData == nil else { return }
+                        if let data = routeURLCoding.parse(url: url) {
+                            viewModel.importData = data
                             showImportConfirm = true
                         }
                     }, onPermissionDenied: {
@@ -61,17 +61,17 @@ struct QRScannerView: View {
             }
             .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
             .sheet(isPresented: $showImportConfirm, onDismiss: {
-                importData = nil
+                viewModel.importData = nil
             }) {
-                if let data = importData {
+                if let data = viewModel.importData {
                     ImportConfirmView(
                         data: data,
-                        isSaving: $isSaving,
+                        isSaving: $viewModel.isSaving,
                         onConfirm: {
                             importPlace(data)
                         },
                         onCancel: {
-                            importData = nil
+                            viewModel.importData = nil
                             showImportConfirm = false
                         }
                     )
@@ -85,18 +85,15 @@ struct QRScannerView: View {
     }
 
     private func importPlace(_ data: PlaceImportData) {
-        guard entitlements.canAddPlace(currentCount: placeStore.places.count) else {
-            showImportConfirm = false
-            showPaywall = true
-            return
-        }
-        isSaving = true
         Task {
-            await PlaceImporter.save(data, placeStore: placeStore, context: modelContext)
+            let success = await viewModel.importPlace(data, placeStore: placeStore, context: modelContext)
             await MainActor.run {
-                isSaving = false
                 showImportConfirm = false
-                dismiss()
+                if success {
+                    dismiss()
+                } else {
+                    showPaywall = true
+                }
             }
         }
     }

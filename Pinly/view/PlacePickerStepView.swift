@@ -7,30 +7,32 @@ struct PlacePickerStepView: View {
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var routeManager: RouteManager
 
+    @StateObject private var viewModel = PlacePickerStepViewModel()
+
     @AppStorage("searchRadiusKm") private var searchRadiusKm: Double = 5.0
     @State private var goToNext = false
     @State private var showRadiusSettings = false
     @Environment(\.dismissRouteFlow) var dismissRouteFlow
 
     var currentCategory: String {
-        guard stepIndex < routeManager.selectedCategories.count else { return "" }
-        return routeManager.selectedCategories[stepIndex]
+        viewModel.currentCategory(stepIndex: stepIndex, tracker: routeManager)
     }
 
     var availablePlaces: [Place] {
-        placeStore.places(
+        viewModel.availablePlaces(
             category: currentCategory,
+            placeStore: placeStore,
             userLocation: locationManager.userLocation,
             radiusKm: searchRadiusKm
         )
     }
 
     var isLastStep: Bool {
-        stepIndex == routeManager.selectedCategories.count - 1
+        viewModel.isLastStep(stepIndex: stepIndex, tracker: routeManager)
     }
 
     var radiusLabel: String {
-        searchRadiusKm == 0 ? "Tümü" : "\(Int(searchRadiusKm)) km"
+        viewModel.radiusLabel(searchRadiusKm)
     }
 
     var body: some View {
@@ -91,7 +93,7 @@ struct PlacePickerStepView: View {
                                 place: place,
                                 isSelected: routeManager.selectedPlaces[currentCategory]?.id == place.id
                             ) {
-                                routeManager.selectedPlaces[currentCategory] = place
+                                viewModel.selectPlace(place, category: currentCategory, tracker: routeManager)
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                                     goToNext = true
                                 }

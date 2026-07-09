@@ -7,8 +7,10 @@ struct RouteSharePickerView: View {
     @Binding var category: RouteCategory
     var onShare: () -> Void = {}
 
+    @Environment(\.routeURLCoding) private var routeURLCoding
+
     private var shareURL: URL? {
-        PlaceImporter.buildRouteURL(
+        routeURLCoding.buildRouteURL(
             for: routePlaces,
             name: name.trimmingCharacters(in: .whitespaces).isEmpty ? nil : name,
             category: category

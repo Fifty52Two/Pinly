@@ -9,6 +9,8 @@ struct MainTab: View {
     @Environment(\.entitlements) private var entitlements
     @Environment(\.badges) private var badges
 
+    @StateObject private var viewModel = MainTabViewModel()
+
     @State private var showPlaces = false
     @State private var showRoute = false
     @State private var showAddPlace = false
@@ -17,26 +19,17 @@ struct MainTab: View {
     @State private var showPaywall = false
     @State private var detailPlace: Place? = nil
 
-    private var greeting: String {
-        switch Calendar.current.component(.hour, from: Date()) {
-        case 6..<12:  return NSLocalizedString("Günaydın,", comment: "")
-        case 12..<18: return NSLocalizedString("İyi günler,", comment: "")
-        case 18..<23: return NSLocalizedString("İyi akşamlar,", comment: "")
-        default:      return NSLocalizedString("İyi geceler,", comment: "")
-        }
-    }
+    private var greeting: String { viewModel.greeting() }
 
-    private var visitedCount: Int { placeStore.places.filter { $0.isVisited }.count }
+    private var visitedCount: Int { viewModel.visitedCount(placeStore.places) }
 
-    private var recentPlaces: [Place] {
-        Array(placeStore.places.sorted { $0.createdAt > $1.createdAt }.prefix(6))
-    }
+    private var recentPlaces: [Place] { viewModel.recentPlaces(placeStore.places) }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
-                // Üst başlık — sağda ufak gezgin illüstrasyonu (aksan)
-                HStack(alignment: .center, spacing: 8) {
+                // Üst başlık
+                HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(greeting)
                             .font(.subheadline)
@@ -44,27 +37,22 @@ struct MainTab: View {
                         Text(NSLocalizedString("Ne yapmak istiyorsun?", comment: ""))
                             .font(.title)
                             .fontWeight(.bold)
-                        if !locationManager.currentDistrict.isEmpty {
-                            Label(locationManager.currentDistrict, systemImage: "location.fill")
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .foregroundColor(PinlyTheme.primary)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
-                                .background(PinlyTheme.primary.opacity(0.1))
-                                .cornerRadius(20)
-                                .padding(.top, 4)
-                        }
                     }
-                    Spacer(minLength: 0)
-                    Image("illus_walk")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 96, height: 96)
+                    Spacer()
+                    if !locationManager.currentDistrict.isEmpty {
+                        Label(locationManager.currentDistrict, systemImage: "location.fill")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(PinlyTheme.primary)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(PinlyTheme.primary.opacity(0.1))
+                            .cornerRadius(20)
+                    }
                 }
                 .padding(.top, 12)
 
-                // İstatistik şeridi — arkasında filigran illüstrasyon
+                // İstatistik şeridi
                 HStack(spacing: 0) {
                     StatChip(value: "\(placeStore.places.count)",
                              label: NSLocalizedString("Mekan", comment: ""),
@@ -79,66 +67,37 @@ struct MainTab: View {
                              label: NSLocalizedString("Rozet", comment: ""),
                              icon: "trophy.fill", color: PinlyTheme.gold)
                 }
-                .padding(16)
-                .background(
-                    ZStack(alignment: .trailing) {
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(PinlyTheme.surface)
-                        Image("illus_camping")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 150)
-                            .opacity(0.07)
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
-                        RoundedRectangle(cornerRadius: 16)
-                            .strokeBorder(Color.primary.opacity(0.07), lineWidth: 1)
-                    }
-                )
+                .pinlyCard()
 
                 // Hero CTA — Rota Planla
                 Button {
                     showRoute = true
                 } label: {
-                    ZStack(alignment: .trailing) {
-                        // Arka plan gradyan
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(PinlyTheme.heroGradient)
-
-                        // Sağda kayan illüstrasyon
-                        Image("illus_bike")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 110)
-                            .opacity(0.22)
-                            .offset(x: 10)
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
-
-                        // Sol taraf metin + ikon
-                        HStack(spacing: 14) {
-                            ZStack {
-                                Circle()
-                                    .fill(.white.opacity(0.2))
-                                    .frame(width: 52, height: 52)
-                                Image(systemName: "map.fill")
-                                    .font(.title2)
-                                    .foregroundColor(.white)
-                            }
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(NSLocalizedString("Rota Planla", comment: ""))
-                                    .font(.title3.bold())
-                                    .foregroundColor(.white)
-                                Text(NSLocalizedString("Konumuna göre rota oluştur", comment: ""))
-                                    .font(.subheadline)
-                                    .foregroundColor(.white.opacity(0.85))
-                            }
-                            Spacer()
-                            Image(systemName: "arrow.right.circle.fill")
+                    HStack(spacing: 16) {
+                        ZStack {
+                            Circle()
+                                .fill(.white.opacity(0.2))
+                                .frame(width: 56, height: 56)
+                            Image(systemName: "map.fill")
                                 .font(.title2)
-                                .foregroundColor(.white.opacity(0.9))
+                                .foregroundColor(.white)
                         }
-                        .padding(20)
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(NSLocalizedString("Rota Planla", comment: ""))
+                                .font(.title3.bold())
+                                .foregroundColor(.white)
+                            Text(NSLocalizedString("Konumuna göre rota oluştur", comment: ""))
+                                .font(.subheadline)
+                                .foregroundColor(.white.opacity(0.85))
+                        }
+                        Spacer()
+                        Image(systemName: "arrow.right.circle.fill")
+                            .font(.title2)
+                            .foregroundColor(.white.opacity(0.9))
                     }
-                    .frame(height: 100)
+                    .padding(20)
+                    .background(PinlyTheme.heroGradient)
+                    .cornerRadius(20)
                     .shadow(color: .black.opacity(0.10), radius: 10, x: 0, y: 5)
                 }
                 .buttonStyle(.plain)
@@ -199,7 +158,7 @@ struct MainTab: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 32)
         }
-        .background(PinlyTheme.groundGradient)
+        .background(PinlyTheme.ground)
         .fullScreenCover(isPresented: $showPlaces) {
             PlacesListView()
                 .environmentObject(placeStore)
@@ -291,53 +250,43 @@ private struct RecentPlaceCard: View {
     let place: Place
     let onTap: () -> Void
 
-    private var category: PlaceCategory { PlaceCategory.from(place.category) }
-
     var body: some View {
         Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 0) {
-                // Üst: illüstrasyon
-                ZStack(alignment: .topTrailing) {
-                    Image(category.illustrationName)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 160, height: 110)
-                        .clipped()
-                        .background(category.color.opacity(0.08))
-
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(place.categoryColor.opacity(0.15))
+                            .frame(width: 36, height: 36)
+                        Image(systemName: place.categoryIcon)
+                            .font(.subheadline)
+                            .foregroundColor(place.categoryColor)
+                    }
+                    Spacer()
                     if place.isVisited {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.caption)
-                            .foregroundColor(.white)
-                            .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
-                            .padding(8)
+                            .foregroundColor(.green)
                     }
                 }
-
-                // Alt: metin
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(place.name)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundColor(.primary)
-                        .lineLimit(1)
-                    HStack(spacing: 4) {
-                        Image(systemName: category.icon)
-                            .font(.caption2)
-                            .foregroundColor(category.color)
-                        Text(category.localizedName)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .padding(10)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(PinlyTheme.surface)
+                Text(place.name)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                Text(PlaceCategory.from(place.category).localizedName)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
             }
-            .frame(width: 160)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-            .overlay(
+            .padding(12)
+            .frame(width: 150, alignment: .leading)
+            .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .strokeBorder(Color.primary.opacity(0.07), lineWidth: 1)
+                    .fill(PinlyTheme.surface)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .strokeBorder(Color.primary.opacity(0.07), lineWidth: 1)
+                    )
             )
         }
         .buttonStyle(.plain)

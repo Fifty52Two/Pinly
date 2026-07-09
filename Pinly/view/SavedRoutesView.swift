@@ -8,18 +8,15 @@ struct SavedRoutesView: View {
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var routeManager: RouteManager
     @EnvironmentObject var placeStore: PlaceStore
-    @Environment(\.badges) private var badgeService
+
+    @StateObject private var viewModel = SavedRoutesViewModel()
 
     @Query(sort: \SavedRoute.createdAt, order: .reverse) private var savedRoutes: [SavedRoute]
 
     @State private var showPlanRoute = false
     @State private var showDistanceAlert = false
-    @State private var pendingRoute: SavedRoute? = nil
-    @State private var distanceText = ""
-    @State private var routeToDelete: SavedRoute? = nil
     @State private var showDeleteAlert = false
     @State private var showRouteSummary = false
-    @State private var routeToEdit: SavedRoute? = nil
     @State private var showEditRoute = false
 
     var body: some View {
@@ -51,8 +48,8 @@ struct SavedRoutesView: View {
                     .environmentObject(locationManager)
                     .environmentObject(placeStore)
             }
-            .sheet(isPresented: $showEditRoute, onDismiss: { routeToEdit = nil }) {
-                if let route = routeToEdit {
+            .sheet(isPresented: $showEditRoute, onDismiss: { viewModel.routeToEdit = nil }) {
+                if let route = viewModel.routeToEdit {
                     PlanRouteView(editingRoute: route)
                         .environmentObject(locationManager)
                         .environmentObject(placeStore)
@@ -68,29 +65,29 @@ struct SavedRoutesView: View {
             }
             .alert(NSLocalizedString("Başlangıç Noktası Uzakta", comment: ""), isPresented: $showDistanceAlert) {
                 Button(NSLocalizedString("Yine de Başlat", comment: ""), role: .destructive) {
-                    if let route = pendingRoute {
+                    if let route = viewModel.pendingRoute {
                         loadAndStart(route)
-                        pendingRoute = nil
+                        viewModel.pendingRoute = nil
                     }
                 }
                 Button(NSLocalizedString("İptal", comment: ""), role: .cancel) {
-                    pendingRoute = nil
+                    viewModel.pendingRoute = nil
                 }
             } message: {
-                Text(distanceText)
+                Text(viewModel.distanceText)
             }
             .alert(NSLocalizedString("Rotayı Sil", comment: ""), isPresented: $showDeleteAlert) {
                 Button(NSLocalizedString("Sil", comment: ""), role: .destructive) {
-                    if let route = routeToDelete {
-                        SavedRouteManager.delete(route, context: modelContext)
-                        routeToDelete = nil
+                    if let route = viewModel.routeToDelete {
+                        viewModel.delete(route, context: modelContext)
+                        viewModel.routeToDelete = nil
                     }
                 }
                 Button(NSLocalizedString("İptal", comment: ""), role: .cancel) {
-                    routeToDelete = nil
+                    viewModel.routeToDelete = nil
                 }
             } message: {
-                if let route = routeToDelete {
+                if let route = viewModel.routeToDelete {
                     Text(String(format: NSLocalizedString("\"%@\" rotasını silmek istiyor musun?", comment: ""), route.name))
                 }
             }
@@ -134,19 +131,19 @@ struct SavedRoutesView: View {
             ForEach(savedRoutes) { route in
                 SavedRouteCard(
                     route: route,
-                    distanceKm: SavedRouteManager.distanceKm(from: locationManager.userLocation, to: route)
+                    distanceKm: viewModel.distanceKm(from: locationManager.userLocation, to: route)
                 ) {
                     handleStartRoute(route)
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                     Button(role: .destructive) {
-                        routeToDelete = route
+                        viewModel.routeToDelete = route
                         showDeleteAlert = true
                     } label: {
                         Label(NSLocalizedString("Sil", comment: ""), systemImage: "trash")
                     }
                     Button {
-                        routeToEdit = route
+                        viewModel.routeToEdit = route
                         showEditRoute = true
                     } label: {
                         Label(NSLocalizedString("Düzenle", comment: ""), systemImage: "pencil")
@@ -164,19 +161,7 @@ struct SavedRoutesView: View {
     // MARK: - Rota başlatma mantığı
 
     private func handleStartRoute(_ route: SavedRoute) {
-        if let dist = SavedRouteManager.distanceKm(from: locationManager.userLocation, to: route),
-           dist > 1 {
-            let formatted = dist >= 10
-                ? String(format: "%.0f km", dist)
-                : String(format: "%.1f km", dist)
-            distanceText = String(
-                format: NSLocalizedString(
-                    "Rotanın başlangıç noktasına yaklaşık %@ uzaktasınız. Yine de başlatmak istiyor musunuz?",
-                    comment: ""
-                ),
-                formatted
-            )
-            pendingRoute = route
+        if viewModel.handleStartRoute(route, userLocation: locationManager.userLocation) {
             showDistanceAlert = true
         } else {
             loadAndStart(route)
@@ -184,33 +169,7 @@ struct SavedRoutesView: View {
     }
 
     private func loadAndStart(_ route: SavedRoute) {
-        let snapshots = route.placeSnapshots.sorted { $0.sortIndex < $1.sortIndex }
-
-        var places: [Place] = []
-        for snap in snapshots {
-            // Önce SwiftData'dan isim ile eşleştirmeyi dene
-            let descriptor = FetchDescriptor<Place>(
-                predicate: #Predicate { place in place.name == snap.name }
-            )
-            if let existing = try? modelContext.fetch(descriptor).first {
-                places.append(existing)
-            } else {
-                // Geçici yer tutucu — koordinatları ayarla
-                let temp = Place(
-                    name: snap.name,
-                    category: snap.category,
-                    address: snap.address,
-                    notes: snap.notes
-                )
-                temp.latitude = snap.latitude
-                temp.longitude = snap.longitude
-                places.append(temp)
-            }
-        }
-
-        routeManager.setRoute(places: places, name: route.name)
-
-        badgeService.recordRouteStarted()
+        viewModel.loadAndStart(route, into: routeManager, context: modelContext)
         showRouteSummary = true
     }
 }

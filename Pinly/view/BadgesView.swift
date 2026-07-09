@@ -110,7 +110,7 @@ private struct BadgeCell: View {
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
             if !isUnlocked {
-                Text(badge.progressText(placeStore: placeStore, badges: badgeService))
+                Text(badgeService.progressText(for: badge, placeStore: placeStore))
                     .font(.system(size: 9))
                     .foregroundColor(.secondary)
             }

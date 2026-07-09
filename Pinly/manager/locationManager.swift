@@ -1,8 +1,28 @@
 import Foundation
 import CoreLocation
 
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+// MARK: - LocationProviding
+
+/// Konum izni + tek seferlik konum/adres edinimi.
+protocol LocationProviding: AnyObject {
+    var userLocation: CLLocation? { get }
+    var currentDistrict: String { get }
+    var authorizationStatus: CLAuthorizationStatus { get }
+    func requestPermission()
+    func requestLocation()
+}
+
+// MARK: - NavigationLocationTracking
+
+/// Navigasyon sırasında yüksek hassasiyetli sürekli konum takibi.
+protocol NavigationLocationTracking: AnyObject {
+    func startNavigationTracking()
+    func stopNavigationTracking()
+}
+
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate, LocationProviding, NavigationLocationTracking {
     private let manager = CLLocationManager()
+    private let geocoding: GeocodingProviding
 
     @Published var userLocation: CLLocation?
     @Published var currentDistrict: String = ""
@@ -11,7 +31,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var isNavigationTracking = false
     private var navigationTimer: Timer?
 
-    override init() {
+    init(geocoding: GeocodingProviding = DefaultGeocodingService.shared) {
+        self.geocoding = geocoding
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
@@ -81,14 +102,12 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // MARK: - Reverse Geocode
 
     private func reverseGeocode(location: CLLocation) {
-        CLGeocoder().reverseGeocodeLocation(location) { [weak self] placemarks, _ in
-            guard let placemark = placemarks?.first else { return }
-            DispatchQueue.main.async {
-                self?.currentDistrict = placemark.subLocality
-                    ?? placemark.subAdministrativeArea
-                    ?? placemark.locality
-                    ?? ""
-            }
+        Task { @MainActor in
+            guard let placemark = await geocoding.reverseGeocode(coordinate: location.coordinate) else { return }
+            currentDistrict = placemark.subLocality
+                ?? placemark.subAdministrativeArea
+                ?? placemark.locality
+                ?? ""
         }
     }
 }

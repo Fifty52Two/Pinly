@@ -16,14 +16,11 @@ struct MapPinPickerView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var locationManager: LocationManager
 
+    @StateObject private var viewModel = MapPinPickerViewModel()
+
     @State private var cameraPosition: MapCameraPosition = .automatic
     @State private var centerCoordinate: CLLocationCoordinate2D?
-    @State private var resolvedAddress = ""
-    @State private var geocodeFailed = false
-    @State private var isGeocoding = false
     @State private var isCameraMoving = false
-
-    private let geocoder = CLGeocoder()
 
     var body: some View {
         NavigationStack {
@@ -44,7 +41,7 @@ struct MapPinPickerView: View {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                         isCameraMoving = false
                     }
-                    reverseGeocode(context.camera.centerCoordinate)
+                    viewModel.reverseGeocode(context.camera.centerCoordinate)
                 }
                 .ignoresSafeArea(edges: .bottom)
 
@@ -107,17 +104,17 @@ struct MapPinPickerView: View {
             HStack(spacing: 10) {
                 Image(systemName: "mappin.and.ellipse")
                     .foregroundColor(PinlyTheme.primary)
-                if isGeocoding || isCameraMoving {
+                if viewModel.isGeocoding || isCameraMoving {
                     ProgressView()
                         .scaleEffect(0.8)
                     Text("...")
                         .foregroundColor(.secondary)
-                } else if geocodeFailed {
+                } else if viewModel.geocodeFailed {
                     Text(NSLocalizedString("Adres bulunamadı", comment: ""))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 } else {
-                    Text(resolvedAddress)
+                    Text(viewModel.resolvedAddress)
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .lineLimit(2)
@@ -132,8 +129,8 @@ struct MapPinPickerView: View {
                 Text(NSLocalizedString("Bu Konumu Kullan", comment: ""))
             }
             .buttonStyle(PinlyPrimaryButtonStyle())
-            .disabled(centerCoordinate == nil || isCameraMoving || isGeocoding)
-            .opacity(centerCoordinate == nil || isCameraMoving || isGeocoding ? 0.6 : 1)
+            .disabled(centerCoordinate == nil || isCameraMoving || viewModel.isGeocoding)
+            .opacity(centerCoordinate == nil || isCameraMoving || viewModel.isGeocoding ? 0.6 : 1)
         }
         .padding(16)
         .background(.regularMaterial)
@@ -160,70 +157,15 @@ struct MapPinPickerView: View {
             center: start,
             span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
         ))
-        reverseGeocode(start)
-    }
-
-    // MARK: - Reverse Geocode
-    // Sadece kamera durunca (.onEnd) çağrılır — doğal debounce.
-
-    private func reverseGeocode(_ coordinate: CLLocationCoordinate2D) {
-        geocoder.cancelGeocode() // önceki istek sürüyorsa iptal et
-        isGeocoding = true
-        geocodeFailed = false
-
-        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        geocoder.reverseGeocodeLocation(location) { placemarks, error in
-            // İptal edilen istekler sessizce yok sayılır
-            if let error = error as? CLError, error.code == .geocodeCanceled { return }
-
-            isGeocoding = false
-            if let placemark = placemarks?.first,
-               let formatted = Self.formatAddress(placemark) {
-                resolvedAddress = formatted
-                geocodeFailed = false
-            } else {
-                resolvedAddress = ""
-                geocodeFailed = true
-            }
-        }
-    }
-
-    /// Placemark'tan okunabilir adres üretir
-    private static func formatAddress(_ placemark: CLPlacemark) -> String? {
-        var parts: [String] = []
-
-        if let thoroughfare = placemark.thoroughfare {
-            if let subThoroughfare = placemark.subThoroughfare {
-                parts.append("\(thoroughfare) \(subThoroughfare)")
-            } else {
-                parts.append(thoroughfare)
-            }
-        } else if let name = placemark.name {
-            parts.append(name)
-        }
-        if let subLocality = placemark.subLocality, !parts.contains(subLocality) {
-            parts.append(subLocality)
-        }
-        if let locality = placemark.locality, !parts.contains(locality) {
-            parts.append(locality)
-        }
-        if let adminArea = placemark.administrativeArea, !parts.contains(adminArea) {
-            parts.append(adminArea)
-        }
-
-        return parts.isEmpty ? nil : parts.joined(separator: ", ")
+        viewModel.reverseGeocode(start)
     }
 
     // MARK: - Onayla
 
     private func confirm() {
         guard let coord = centerCoordinate else { return }
-        // Adres çözümlenemezse koordinat metni kullan — adres alanı boş kalmasın
-        let address = resolvedAddress.isEmpty
-            ? String(format: "%.5f, %.5f", coord.latitude, coord.longitude)
-            : resolvedAddress
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        onConfirm(coord, address)
+        onConfirm(coord, viewModel.confirmAddress(for: coord))
         dismiss()
     }
 }
