@@ -200,7 +200,8 @@ struct HomeView: View {
     @EnvironmentObject var routeManager: RouteManager
     @EnvironmentObject var languageManager: LanguageManager
 
-    @State private var selectedTab = 0
+    // Test/otomasyon: -pinly.selectedTabOverride N ile başlangıç sekmesi seçilebilir
+    @State private var selectedTab = UserDefaults.standard.integer(forKey: "pinly.selectedTabOverride")
     @State private var showNavigationFromDeepLink = false
     @State private var showQuickAdd = false
 
@@ -209,7 +210,7 @@ struct HomeView: View {
             PinlyTabItem(icon: "house", title: NSLocalizedString("Ana", comment: "")),
             PinlyTabItem(icon: "square.grid.2x2", title: NSLocalizedString("Keşfet", comment: "")),
             PinlyTabItem(icon: "map", title: NSLocalizedString("Rotalar", comment: "")),
-            PinlyTabItem(icon: "ellipsis.circle", title: NSLocalizedString("Daha Fazla", comment: "")),
+            PinlyTabItem(icon: "person.crop.circle", title: NSLocalizedString("Profil", comment: "")),
         ]
     }
 

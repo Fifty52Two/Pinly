@@ -387,3 +387,21 @@
 "Sistem" = "System";
 "Açık" = "Hell";
 "Koyu" = "Dunkel";
+
+// Profil
+"Profil" = "Profil";
+"Profili görüntüle" = "Profil anzeigen";
+"%lld yaşında" = "%lld Jahre alt";
+"Fotoğrafı Kaldır" = "Foto entfernen";
+"Pinly'ye Hoş Geldin" = "Willkommen bei Pinly";
+"Sana özel bir deneyim için kendini tanıt." = "Stell dich vor für ein persönliches Erlebnis.";
+"AD" = "VORNAME";
+"Adın" = "Dein Vorname";
+"SOYAD" = "NACHNAME";
+"Soyadın" = "Dein Nachname";
+"DOĞUM YILI" = "GEBURTSJAHR";
+"Örn: 1995" = "z. B. 1995";
+"Lütfen tüm alanları doldurun." = "Bitte fülle alle Felder aus.";
+"Haftalık Aktivite" = "Wöchentliche Aktivität";
+"Bu hafta henüz rota tamamlamadın." = "Diese Woche noch keine Route abgeschlossen.";
+"Profili Düzenle" = "Profil bearbeiten";

@@ -387,3 +387,12 @@
 "Sistem" = "Sistem";
 "Açık" = "Açık";
 "Koyu" = "Koyu";
+
+// Profil
+"Profil" = "Profil";
+"Profili görüntüle" = "Profili görüntüle";
+"%lld yaşında" = "%lld yaşında";
+"Fotoğrafı Kaldır" = "Fotoğrafı Kaldır";
+"Haftalık Aktivite" = "Haftalık Aktivite";
+"Bu hafta henüz rota tamamlamadın." = "Bu hafta henüz rota tamamlamadın.";
+"Profili Düzenle" = "Profili Düzenle";

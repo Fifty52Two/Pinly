@@ -387,3 +387,21 @@
 "Sistem" = "Системная";
 "Açık" = "Светлая";
 "Koyu" = "Тёмная";
+
+// Profil
+"Profil" = "Профиль";
+"Profili görüntüle" = "Посмотреть профиль";
+"%lld yaşında" = "%lld лет";
+"Fotoğrafı Kaldır" = "Удалить фото";
+"Pinly'ye Hoş Geldin" = "Добро пожаловать в Pinly";
+"Sana özel bir deneyim için kendini tanıt." = "Расскажите о себе для персонального опыта.";
+"AD" = "ИМЯ";
+"Adın" = "Ваше имя";
+"SOYAD" = "ФАМИЛИЯ";
+"Soyadın" = "Ваша фамилия";
+"DOĞUM YILI" = "ГОД РОЖДЕНИЯ";
+"Örn: 1995" = "напр. 1995";
+"Lütfen tüm alanları doldurun." = "Пожалуйста, заполните все поля.";
+"Haftalık Aktivite" = "Активность за неделю";
+"Bu hafta henüz rota tamamlamadın." = "На этой неделе вы ещё не завершили ни одного маршрута.";
+"Profili Düzenle" = "Редактировать профиль";

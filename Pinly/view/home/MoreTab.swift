@@ -1,6 +1,7 @@
 import SwiftUI
+import PhotosUI
 
-// MARK: - Daha Fazla Sekmesi
+// MARK: - Profil Sekmesi
 
 struct MoreTab: View {
     @EnvironmentObject var placeStore: PlaceStore
@@ -12,12 +13,73 @@ struct MoreTab: View {
     @State private var showBadges = false
     @State private var showLanguagePicker = false
     @State private var showStats = false
+    @State private var showEditProfile = false
+    @State private var profile: UserProfile? = UserProfile.load()
+    @State private var profilePhoto: UIImage? = UserProfile.loadPhoto()
+    @State private var pickerItem: PhotosPickerItem? = nil
+
+    private var visitedCount: Int { placeStore.places.filter { $0.isVisited }.count }
     @AppStorage("pinly.appearance") private var appearance = "system"
     @EnvironmentObject private var themeManager: ThemeManager
 
     var body: some View {
         NavigationStack {
             List {
+                // Profil başlığı — ortalanmış avatar + isim + mini istatistikler
+                Section {
+                    VStack(spacing: 14) {
+                        PhotosPicker(selection: $pickerItem, matching: .images) {
+                            ZStack(alignment: .bottomTrailing) {
+                                profileAvatar
+                                ZStack {
+                                    Circle()
+                                        .fill(PinlyTheme.primary)
+                                        .frame(width: 32, height: 32)
+                                    Image(systemName: "camera.fill")
+                                        .font(.system(size: 13))
+                                        .foregroundColor(.white)
+                                }
+                                .overlay(Circle().strokeBorder(PinlyTheme.surface, lineWidth: 3))
+                            }
+                        }
+                        .buttonStyle(.plain)
+
+                        VStack(spacing: 3) {
+                            Text(profile?.fullName ?? NSLocalizedString("Profil", comment: ""))
+                                .font(.title3.bold())
+                            if let profile {
+                                Text(String(format: NSLocalizedString("%lld yaşında", comment: ""), profile.age))
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+
+                        HStack(spacing: 36) {
+                            profileMiniStat(value: placeStore.places.count,
+                                            label: NSLocalizedString("Mekan", comment: ""))
+                            profileMiniStat(value: visitedCount,
+                                            label: NSLocalizedString("Ziyaret", comment: ""))
+                        }
+
+                        Button {
+                            showEditProfile = true
+                        } label: {
+                            Label(NSLocalizedString("Profili Düzenle", comment: ""),
+                                  systemImage: "pencil")
+                                .font(.caption.weight(.semibold))
+                                .foregroundColor(PinlyTheme.primary)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 8)
+                                .background(Capsule().fill(PinlyTheme.primary.opacity(0.12)))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
+                }
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+
                 Section {
                     MoreRow(icon: "chart.xyaxis.line", iconColor: PinlyTheme.primary,
                             title: NSLocalizedString("İstatistiklerim", comment: ""),
@@ -114,7 +176,7 @@ struct MoreTab: View {
             .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
             .background(PinlyTheme.groundGradient)
-            .navigationTitle(NSLocalizedString("Daha Fazla", comment: ""))
+            .navigationTitle(NSLocalizedString("Profil", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(.hidden, for: .tabBar)
         }
@@ -137,6 +199,64 @@ struct MoreTab: View {
             LanguagePickerSheet()
                 .environmentObject(languageManager)
         }
+        .sheet(isPresented: $showEditProfile, onDismiss: reloadProfile) {
+            ProfileEditSheet(onSaved: reloadProfile)
+                .presentationDetents([.medium, .large])
+        }
+        .onChange(of: pickerItem) { _, item in
+            guard let item else { return }
+            Task {
+                if let data = try? await item.loadTransferable(type: Data.self),
+                   let image = UIImage(data: data) {
+                    await MainActor.run {
+                        UserProfile.savePhoto(image)
+                        profilePhoto = UserProfile.loadPhoto()
+                        pickerItem = nil
+                    }
+                }
+            }
+        }
+    }
+
+    private var profileAvatar: some View {
+        Group {
+            if let profilePhoto {
+                Image(uiImage: profilePhoto)
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                ZStack {
+                    PinlyTheme.heroGradient
+                    Text(profile?.initials.isEmpty == false ? profile!.initials : "?")
+                        .font(.system(size: 36, weight: .semibold, design: .rounded))
+                        .foregroundColor(.white)
+                }
+            }
+        }
+        .frame(width: 104, height: 104)
+        .clipShape(Circle())
+        .overlay(Circle().strokeBorder(PinlyTheme.surface, lineWidth: 4))
+        .overlay(
+            Circle()
+                .strokeBorder(PinlyTheme.primary.opacity(0.25), lineWidth: 2)
+                .padding(-6)
+        )
+        .shadow(color: .black.opacity(0.10), radius: 6, x: 0, y: 3)
+    }
+
+    private func profileMiniStat(value: Int, label: String) -> some View {
+        VStack(spacing: 2) {
+            Text("\(value)")
+                .font(.title3.bold())
+            Text(label)
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+
+    private func reloadProfile() {
+        profile = UserProfile.load()
+        profilePhoto = UserProfile.loadPhoto()
     }
 }
 

@@ -398,3 +398,12 @@
 "DOĞUM YILI" = "BIRTH YEAR";
 "Örn: 1995" = "e.g. 1995";
 "Lütfen tüm alanları doldurun." = "Please fill in all fields.";
+
+// Profil
+"Profil" = "Profile";
+"Profili görüntüle" = "View profile";
+"%lld yaşında" = "%lld years old";
+"Fotoğrafı Kaldır" = "Remove Photo";
+"Haftalık Aktivite" = "Weekly Activity";
+"Bu hafta henüz rota tamamlamadın." = "You haven't completed a route this week yet.";
+"Profili Düzenle" = "Edit Profile";
