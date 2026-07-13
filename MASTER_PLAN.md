@@ -455,7 +455,7 @@ değiştirme smoke testi.
     mevcut kod main thread'de zaten güvenli çalışıyor).
   - SwiftData şema değişikliği yapılmayacak (`SavedPlaceSnapshot.placeId` bu planın
     DIŞINDA — ayrı, dikkatli bir migrasyon planı ister; CLAUDE.md'de kayıtlı kalsın).
-- [ ] **5.6 CLAUDE.md mimari bölümünü bu fazın sonuçlarıyla güncelle**
+- [x] **5.6 CLAUDE.md mimari bölümünü bu fazın sonuçlarıyla güncelle**
   (routePlaces artık stored + commitCategorySelection, RouteLiveActivityController,
   ProfileService, kategori normalizasyonu).
 
