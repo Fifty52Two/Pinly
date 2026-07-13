@@ -214,24 +214,24 @@ uygulama simülatörde açılıyor (Faz sonunda bir kez: `xcrun simctl` ile boot
 **Amaç:** `PinlyTests/` altındaki 6 test + 10 mock dosyası şu an HİÇ derlenmiyor
 (pbxproj'da test target'ı yok). Bu faz sonunda `xcodebuild test` yeşil koşacak.
 
-- [ ] **3.1 Mevcut test klasörünü kenara al** (Xcode target oluştururken çakışmasın):
+- [x] **3.1 Mevcut test klasörünü kenara al** (Xcode target oluştururken çakışmasın):
   ```bash
   mv PinlyTests PinlyTests_backup
   ```
-- [ ] **3.2 🖱 Xcode'da test target'ı oluştur** (kullanıcıdan iste, birebir tarif):
+- [x] **3.2 🖱 Xcode'da test target'ı oluştur** (kullanıcıdan iste, birebir tarif):
   1. Xcode'da `Pinly.xcodeproj` aç → menü **File → New → Target…**
   2. iOS sekmesi → **Unit Testing Bundle** → Next
   3. Product Name: **PinlyTests** · Team: (boş/kişisel) · **Testing System: XCTest**
      (Swift Testing DEĞİL — mevcut testler XCTest yazılmış) · Target to be Tested: **Pinly**
   4. Finish. Xcode `PinlyTests/` klasörünü şablon dosyayla yeniden oluşturur.
-- [ ] **3.3 Şablonu at, gerçek testleri geri koy:**
+- [x] **3.3 Şablonu at, gerçek testleri geri koy:**
   ```bash
   rm PinlyTests/PinlyTests.swift        # Xcode'un ürettiği şablon
   mv PinlyTests_backup/* PinlyTests/
   rmdir PinlyTests_backup
   ```
   Synchronized folder sayesinde dosyalar target'a otomatik girer.
-- [ ] **3.4 Testleri derle ve yeşile çek:**
+- [x] **3.4 Testleri derle ve yeşile çek:**
   ```bash
   xcodebuild test -project Pinly.xcodeproj -scheme Pinly \
     -destination 'platform=iOS Simulator,name=iPhone 16' 2>&1 | tail -40
@@ -241,10 +241,10 @@ uygulama simülatörde açılıyor (Faz sonunda bir kez: `xcrun simctl` ile boot
   İstisna: test gerçek bir bug yakalarsa (davranış hatası), uygulamayı düzelt ve commit
   mesajında belirt. Ayrıca Faz 2'deki isim değişiklikleri (ProfileTab, lavender) testlere
   yansımalı.
-- [ ] **3.5 🖱 Scheme'i paylaş (CI için şart):** Xcode → Product → Scheme → Manage Schemes →
+- [x] **3.5 🖱 Scheme'i paylaş (CI için şart):** Xcode → Product → Scheme → Manage Schemes →
   `Pinly` satırında **Shared** kutusunu işaretle. Bu,
   `Pinly.xcodeproj/xcshareddata/xcschemes/Pinly.xcscheme` dosyası üretir — commit'e dahil et.
-- [ ] **3.6 Eksik kritik testleri yaz** (ROADMAP §2.3 hedefleri; her biri ayrı dosya,
+- [x] **3.6 Eksik kritik testleri yaz** (ROADMAP §2.3 hedefleri; her biri ayrı dosya,
   mevcut test stiline — XCTest, @MainActor, in-memory ModelContainer — uy):
   1. `PlaceImporterTests.swift`: tek mekan URL round-trip (build → parse → aynı alanlar),
      rota URL round-trip (yeni `{places,name,category}` formatı + eski düz array parse),
@@ -259,7 +259,7 @@ uygulama simülatörde açılıyor (Faz sonunda bir kez: `xcrun simctl` ile boot
   4. `RouteManagerAlignmentTests.swift` (@MainActor): `setRoute(places:)` sonrası
      `routePlaces.count == places.count` ve sıra korunuyor; `reset()` sonrası her şey boş;
      `resumeNavigation()` son duraktaysa `isRouteComplete == true`.
-- [ ] **3.7 Tam test koşusu** (Kural 4) → tümü yeşil.
+- [x] **3.7 Tam test koşusu** (Kural 4) → tümü yeşil.
 
 **Doğrulama:** `xcodebuild test` çıktısında `** TEST SUCCEEDED **` ve 6+4 dosyanın tüm
 testleri listede görünüyor (0 test koşan "boş" başarıya kanma — çıktıda `Executed N tests`

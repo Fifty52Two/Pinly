@@ -21,6 +21,13 @@
 			remoteGlobalIDString = 0A00D66E2F7C57AF0031F556;
 			remoteInfo = PinlyLiveActivityExtension;
 		};
+		0A7F0B0F300585CA0003CCCD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AC0FA612F2F9CE300C6C26F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0AC0FA682F2F9CE300C6C26F;
+			remoteInfo = Pinly;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,6 +48,7 @@
 		0A00D66F2F7C57AF0031F556 /* PinlyLiveActivityExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PinlyLiveActivityExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A00D6712F7C57AF0031F556 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		0A00D6732F7C57AF0031F556 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		0A7F0B0B300585CA0003CCCD /* PinlyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PinlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AC0FA692F2F9CE300C6C26F /* Pinly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pinly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -85,6 +93,11 @@
 			path = PinlyLiveActivity;
 			sourceTree = "<group>";
 		};
+		0A7F0B0C300585CA0003CCCD /* PinlyTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PinlyTests;
+			sourceTree = "<group>";
+		};
 		0AC0FA6B2F2F9CE300C6C26F /* Pinly */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -103,6 +116,13 @@
 			files = (
 				0A00D6742F7C57AF0031F556 /* SwiftUI.framework in Frameworks */,
 				0A00D6722F7C57AF0031F556 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A7F0B08300585CA0003CCCD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +151,7 @@
 			children = (
 				0AC0FA6B2F2F9CE300C6C26F /* Pinly */,
 				0A00D6752F7C57AF0031F556 /* PinlyLiveActivity */,
+				0A7F0B0C300585CA0003CCCD /* PinlyTests */,
 				0A00D6702F7C57AF0031F556 /* Frameworks */,
 				0AC0FA6A2F2F9CE300C6C26F /* Products */,
 			);
@@ -141,6 +162,7 @@
 			children = (
 				0AC0FA692F2F9CE300C6C26F /* Pinly.app */,
 				0A00D66F2F7C57AF0031F556 /* PinlyLiveActivityExtension.appex */,
+				0A7F0B0B300585CA0003CCCD /* PinlyTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -169,6 +191,29 @@
 			productName = PinlyLiveActivityExtension;
 			productReference = 0A00D66F2F7C57AF0031F556 /* PinlyLiveActivityExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
+		};
+		0A7F0B0A300585CA0003CCCD /* PinlyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A7F0B11300585CA0003CCCD /* Build configuration list for PBXNativeTarget "PinlyTests" */;
+			buildPhases = (
+				0A7F0B07300585CA0003CCCD /* Sources */,
+				0A7F0B08300585CA0003CCCD /* Frameworks */,
+				0A7F0B09300585CA0003CCCD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0A7F0B10300585CA0003CCCD /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				0A7F0B0C300585CA0003CCCD /* PinlyTests */,
+			);
+			name = PinlyTests;
+			packageProductDependencies = (
+			);
+			productName = PinlyTests;
+			productReference = 0A7F0B0B300585CA0003CCCD /* PinlyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		0AC0FA682F2F9CE300C6C26F /* Pinly */ = {
 			isa = PBXNativeTarget;
@@ -208,6 +253,10 @@
 					0A00D66E2F7C57AF0031F556 = {
 						CreatedOnToolsVersion = 16.4;
 					};
+					0A7F0B0A300585CA0003CCCD = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 0AC0FA682F2F9CE300C6C26F;
+					};
 					0AC0FA682F2F9CE300C6C26F = {
 						CreatedOnToolsVersion = 16.4;
 					};
@@ -237,12 +286,20 @@
 			targets = (
 				0AC0FA682F2F9CE300C6C26F /* Pinly */,
 				0A00D66E2F7C57AF0031F556 /* PinlyLiveActivityExtension */,
+				0A7F0B0A300585CA0003CCCD /* PinlyTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		0A00D66D2F7C57AF0031F556 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A7F0B09300585CA0003CCCD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -266,6 +323,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0A7F0B07300585CA0003CCCD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0AC0FA652F2F9CE300C6C26F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -280,6 +344,11 @@
 			isa = PBXTargetDependency;
 			target = 0A00D66E2F7C57AF0031F556 /* PinlyLiveActivityExtension */;
 			targetProxy = 0A00D6812F7C57AF0031F556 /* PBXContainerItemProxy */;
+		};
+		0A7F0B10300585CA0003CCCD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0AC0FA682F2F9CE300C6C26F /* Pinly */;
+			targetProxy = 0A7F0B0F300585CA0003CCCD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -335,6 +404,42 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		0A7F0B12300585CA0003CCCD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J7LKGD5LY5;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ferhatakkopru.PinlyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pinly.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Pinly";
+			};
+			name = Debug;
+		};
+		0A7F0B13300585CA0003CCCD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J7LKGD5LY5;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ferhatakkopru.PinlyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pinly.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Pinly";
 			};
 			name = Release;
 		};
@@ -537,6 +642,15 @@
 			buildConfigurations = (
 				0A00D6852F7C57AF0031F556 /* Debug */,
 				0A00D6862F7C57AF0031F556 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0A7F0B11300585CA0003CCCD /* Build configuration list for PBXNativeTarget "PinlyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A7F0B12300585CA0003CCCD /* Debug */,
+				0A7F0B13300585CA0003CCCD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
