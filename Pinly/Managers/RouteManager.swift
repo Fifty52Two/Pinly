@@ -354,15 +354,29 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking,
         }
     }
 
-    private func minimumDistanceToPolyline(_ polyline: MKPolyline, from coordinate: CLLocationCoordinate2D) -> Double {
-        let userLoc = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        var minDist = Double.infinity
+    // internal (private değil) — RouteManagerDeviationTests'ten @testable erişim için.
+    func minimumDistanceToPolyline(_ polyline: MKPolyline, from coordinate: CLLocationCoordinate2D) -> Double {
+        let user = MKMapPoint(coordinate)
         let points = polyline.points()
-        for i in 0..<polyline.pointCount {
-            let loc = CLLocation(latitude: points[i].coordinate.latitude, longitude: points[i].coordinate.longitude)
-            minDist = min(minDist, userLoc.distance(from: loc))
+        let count = polyline.pointCount
+        guard count > 0 else { return .infinity }
+        guard count > 1 else { return user.distance(to: points[0]) }
+
+        var minDist = Double.infinity
+        for i in 0..<(count - 1) {
+            minDist = min(minDist, distance(from: user, toSegment: points[i], points[i + 1]))
         }
         return minDist
+    }
+
+    /// p noktasının [a,b] doğru parçasına dik izdüşüm mesafesi (metre).
+    private func distance(from p: MKMapPoint, toSegment a: MKMapPoint, _ b: MKMapPoint) -> Double {
+        let dx = b.x - a.x, dy = b.y - a.y
+        let lengthSquared = dx * dx + dy * dy
+        guard lengthSquared > 0 else { return p.distance(to: a) }
+        let t = max(0, min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / lengthSquared))
+        let projection = MKMapPoint(x: a.x + t * dx, y: a.y + t * dy)
+        return p.distance(to: projection)
     }
 
     func recalculateCurrentSegment(from userLocation: CLLocation) {

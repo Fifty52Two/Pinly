@@ -49,7 +49,6 @@ final class AdManager: NSObject, AdPresenting {
         onDismissCompletion = completion
         ad.present(from: rootVC)
         interstitial = nil
-        loadInterstitial() // sonraki gösterim için önceden yükle
     }
 }
 
@@ -57,6 +56,7 @@ extension AdManager: FullScreenContentDelegate {
     func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
         onDismissCompletion?()
         onDismissCompletion = nil
+        loadInterstitial() // sonraki gösterim için önceden yükle
     }
 
     func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {

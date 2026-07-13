@@ -12,6 +12,7 @@ struct ContentView: View {
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var routeManager: RouteManager
     @EnvironmentObject var languageManager: LanguageManager
+    @EnvironmentObject var themeManager: ThemeManager
 
     @State private var pendingImport: PlaceImportData? = nil
     @State private var showImportSheet = false
@@ -22,7 +23,6 @@ struct ContentView: View {
     @AppStorage("pinly.hasSeenOnboarding") private var hasSeenOnboarding = false
     @AppStorage("pinly.hasSetupProfile") private var hasSetupProfile = false
     @AppStorage("pinly.appearance") private var appearance = "system"
-    @StateObject private var themeManager = ThemeManager.shared
 
     var body: some View {
         Group {

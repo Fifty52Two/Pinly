@@ -5,23 +5,18 @@ enum ThemeStyle: String {
     case lavender = "lavender"
 }
 
-class ThemeManager: ObservableObject {
+final class ThemeManager: ObservableObject {
     static let shared = ThemeManager()
+    static let key = "pinly.theme"
 
-    private static let key = "pinly.theme"
+    @Published var themeKey: String {
+        didSet { UserDefaults.standard.set(themeKey, forKey: Self.key) }
+    }
 
-    var themeKey: String {
-        get {
-            // Eski "farad" değerinden migrasyon
-            if UserDefaults.standard.string(forKey: ThemeManager.key) == "farad" {
-                UserDefaults.standard.set(ThemeStyle.lavender.rawValue, forKey: ThemeManager.key)
-            }
-            return UserDefaults.standard.string(forKey: ThemeManager.key) ?? "slate"
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: ThemeManager.key)
-            objectWillChange.send()
-        }
+    private init() {
+        var stored = UserDefaults.standard.string(forKey: Self.key) ?? ThemeStyle.slate.rawValue
+        if stored == "farad" { stored = ThemeStyle.lavender.rawValue }   // eski değer migrasyonu
+        themeKey = stored
     }
 
     var style: ThemeStyle { ThemeStyle(rawValue: themeKey) ?? .slate }

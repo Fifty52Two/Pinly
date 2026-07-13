@@ -272,7 +272,7 @@ satırında N ≥ 20 olmalı).
 
 **Amaç:** İncelemede bulunan gerçek hataları, artık test güvencesi varken düzeltmek.
 
-- [ ] **4.1 Rotadan sapma algılama bug'ı (öncelikli).**
+- [x] **4.1 Rotadan sapma algılama bug'ı (öncelikli).**
   `Pinly/Managers/RouteManager.swift` → `minimumDistanceToPolyline` sadece polyline'ın
   KÖŞE noktalarına uzaklık ölçüyor; iki nokta arasındaki çizgi parçasını yok sayıyor.
   Uzun düz segmentte rotanın tam üstündeki kullanıcı "75 m saptı" sanılıp gereksiz
@@ -306,7 +306,7 @@ satırında N ≥ 20 olmalı).
   (örn. boylamda 0.005° aralıklı ≈ 400 m) kur, orta noktadan 10 m yanda bir koordinatla
   fonksiyonu çağır → sonuç < 30 m olmalı (eski kodda ~200 m çıkardı). Fonksiyon `private`
   olduğu için testte `@testable` ile erişilemiyorsa erişimi `internal` yap (yorumla belirt).
-- [ ] **4.2 Türkçe lokalizasyonda 9 eksik anahtar.** ProfileSetupView metinleri
+- [x] **4.2 Türkçe lokalizasyonda 9 eksik anahtar.** ProfileSetupView metinleri
   `tr.lproj/Localizable.strings`'te yok (anahtar Türkçe olduğu için şans eseri doğru
   görünüyor ama açık teknik borç). Eksikler tam olarak şunlar — `en.lproj`'daki sırayla
   `tr.lproj`'a ekle (anahtar = değer):
@@ -318,7 +318,7 @@ satırında N ≥ 20 olmalı).
   for f in en tr es de ru; do grep -o '^"[^"]*"' Pinly/$f.lproj/Localizable.strings | sort -u > /tmp/k_$f; done
   for f in tr es de ru; do echo "--- en vs $f:"; comm -3 /tmp/k_en /tmp/k_$f; done
   ```
-- [ ] **4.3 ThemeManager'ı düzelt.** İki sorun: (a) `objectWillChange.send()` değer
+- [x] **4.3 ThemeManager'ı düzelt.** İki sorun: (a) `objectWillChange.send()` değer
   yazıldıktan SONRA çağrılıyor (SwiftUI "will change" bekler), (b) singleton'ın
   `@StateObject`'e sarılması sahiplik semantiğini bozuyor. Yeni hali:
   ```swift
@@ -345,7 +345,7 @@ satırında N ≥ 20 olmalı).
   mekanizması aynen kalır (tema değişince kökü yeniden kurmak bilinçli tasarım).
   Tema seçimini yazan view'ı bul (`grep -rn "themeKey =" Pinly/Views`) ve hâlâ çalıştığını
   simülatörde tema değiştirerek doğrula.
-- [ ] **4.4 `AdManager` yarış koşulu küçük düzeltme:** `showInterstitialIfNeeded` içinde
+- [x] **4.4 `AdManager` yarış koşulu küçük düzeltme:** `showInterstitialIfNeeded` içinde
   `interstitial = nil` + `loadInterstitial()` present'ten ÖNCE çağrılıyor; present başarısız
   olursa (`didFailToPresent`) zaten `loadInterstitial()` tekrar çağrılıyor → çifte istek.
   `loadInterstitial()` çağrısını `adDidDismissFullScreenContent`'e taşı; `didFail`'dekini bırak.
