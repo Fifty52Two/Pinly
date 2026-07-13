@@ -1,7 +1,6 @@
 import Foundation
 import MapKit
 import CoreLocation
-import ActivityKit
 
 // MARK: - RouteCalculating
 
@@ -42,20 +41,10 @@ protocol RouteNavigationTracking: AnyObject {
     func resumeNavigation()
 }
 
-// MARK: - RouteLiveActivityPresenting
-
-/// Kilit ekranı Live Activity (ActivityKit) yönetimi.
-@MainActor
-protocol RouteLiveActivityPresenting: AnyObject {
-    func startLiveActivity()
-    func updateLiveActivity()
-    func endLiveActivity()
-}
-
 // MARK: - RouteManager
 
 @MainActor
-class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking, RouteLiveActivityPresenting {
+class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking {
     @Published var selectedCategories: [String] = []
     @Published var selectedPlaces: [String: Place] = [:]
     @Published var routeName: String = ""
@@ -82,7 +71,7 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking,
     @Published var completionPercentage: Double = 0.0
 
     private var lastRecalculationTime: Date? = nil
-    private var liveActivity: Activity<PinlyActivityAttributes>?
+    private let liveActivityController = RouteLiveActivityController()
 
     /// Navigasyonun/özetin okuduğu TEK gerçek kaynak. Kategori seçim akışı
     /// (CategoryPickerView/PlacePickerStepView) bunu doldurmak için
@@ -135,54 +124,33 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking,
 
     // MARK: - Live Activity
 
-    func startLiveActivity() {
-        guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
-        guard !routePlaces.isEmpty else { return }
-
+    private func makeLiveActivitySnapshot(stopIndex: Int) -> LiveActivitySnapshot {
         let nextPlace = currentWaypointIndex < routePlaces.count
             ? routePlaces[currentWaypointIndex].name : ""
-
-        let state = PinlyActivityAttributes.ContentState(
-            instruction: currentInstruction.isEmpty ? "Navigasyon başlıyor..." : currentInstruction,
-            remainingDistance: remainingDistance,
-            stopIndex: currentWaypointIndex + 1,
-            totalStops: routePlaces.count,
-            nextPlaceName: nextPlace,
-            completionPercentage: completionPercentage
-        )
-
         let title = routeName.isEmpty
             ? routePlaces.map(\.name).joined(separator: " → ")
             : routeName
-        let attributes = PinlyActivityAttributes(routeName: title)
-
-        liveActivity = try? Activity.request(
-            attributes: attributes,
-            content: .init(state: state, staleDate: nil),
-            pushType: nil
-        )
-    }
-
-    func updateLiveActivity() {
-        guard let activity = liveActivity else { return }
-        let nextPlace = currentWaypointIndex < routePlaces.count
-            ? routePlaces[currentWaypointIndex].name : ""
-
-        let state = PinlyActivityAttributes.ContentState(
+        return LiveActivitySnapshot(
+            title: title,
             instruction: currentInstruction,
             remainingDistance: remainingDistance,
-            stopIndex: min(currentWaypointIndex + 1, routePlaces.count),
+            stopIndex: stopIndex,
             totalStops: routePlaces.count,
             nextPlaceName: nextPlace,
             completionPercentage: completionPercentage
         )
-        Task { await activity.update(.init(state: state, staleDate: nil)) }
+    }
+
+    func startLiveActivity() {
+        liveActivityController.start(snapshot: makeLiveActivitySnapshot(stopIndex: currentWaypointIndex + 1))
+    }
+
+    func updateLiveActivity() {
+        liveActivityController.update(snapshot: makeLiveActivitySnapshot(stopIndex: min(currentWaypointIndex + 1, routePlaces.count)))
     }
 
     func endLiveActivity() {
-        guard let activity = liveActivity else { return }
-        Task { await activity.end(.init(state: activity.content.state, staleDate: nil), dismissalPolicy: .immediate) }
-        liveActivity = nil
+        liveActivityController.end()
     }
 
     // MARK: - Route Calculation

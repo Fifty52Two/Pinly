@@ -396,7 +396,7 @@ değiştirme smoke testi.
   **Risk / dikkat:** En riskli görev. Simülatörde İKİ akışı da uçtan uca dene:
   (a) MapView → kategori seç → rota → navigasyon başlat, (b) kayıtlı rotayı başlat.
   `\.dismissRouteFlow` davranışının (bug B5) bozulmadığını X butonuyla doğrula.
-- [ ] **5.2 Live Activity'yi RouteManager'dan ayır.** `RouteLiveActivityPresenting`
+- [x] **5.2 Live Activity'yi RouteManager'dan ayır.** `RouteLiveActivityPresenting`
   protokolü zaten var; implementasyonu ayrı sınıfa taşı:
   1. Yeni dosya `Pinly/Managers/RouteLiveActivityController.swift`:
      `@MainActor final class RouteLiveActivityController: RouteLiveActivityPresenting`.

@@ -3,10 +3,13 @@ import MapKit
 import CoreLocation
 @testable import Pinly
 
-/// Gerçek `RouteManager`'ın 3 protokole (RouteCalculating/RouteNavigationTracking/
-/// RouteLiveActivityPresenting) tek sınıf olarak conform olma desenini tekrar eder.
+/// Gerçek `RouteManager`'ın 2 protokole (RouteCalculating/RouteNavigationTracking)
+/// tek sınıf olarak conform olma desenini tekrar eder. Live Activity yönetimi
+/// RouteLiveActivityController'a ayrıldığı için RouteManager (ve bu mock) artık
+/// RouteLiveActivityPresenting'e conform olmuyor — startLiveActivity() vb.
+/// çağrı sayaçları düz metod olarak kalıyor.
 @MainActor
-final class MockRouteManager: RouteCalculating, RouteNavigationTracking, RouteLiveActivityPresenting {
+final class MockRouteManager: RouteCalculating, RouteNavigationTracking {
     // RouteCalculating
     var routePolylines: [MKPolyline] = []
     var stepsPerSegment: [[MKRoute.Step]] = []
@@ -62,7 +65,7 @@ final class MockRouteManager: RouteCalculating, RouteNavigationTracking, RouteLi
     func updateNavigation(userLocation: CLLocation) { }
     func resumeNavigation() { }
 
-    // RouteLiveActivityPresenting
+    // Live Activity çağrı sayaçları (RouteManager'daki forwarding metodların taklidi)
     var startLiveActivityCallCount = 0
     var updateLiveActivityCallCount = 0
     var endLiveActivityCallCount = 0
