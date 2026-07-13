@@ -3,7 +3,7 @@ import PhotosUI
 
 // MARK: - Profil Sekmesi
 
-struct MoreTab: View {
+struct ProfileTab: View {
     @EnvironmentObject var placeStore: PlaceStore
     @EnvironmentObject var languageManager: LanguageManager
     @Environment(\.badges) private var badges
@@ -163,8 +163,8 @@ struct MoreTab: View {
                             get: { themeManager.themeKey },
                             set: { themeManager.themeKey = $0 }
                         )) {
-                            Text("Slate").tag("slate")
-                            Text("Farad").tag("farad")
+                            Text(NSLocalizedString("Slate", comment: "")).tag("slate")
+                            Text(NSLocalizedString("Lavanta", comment: "")).tag("lavender")
                         }
                         .pickerStyle(.menu)
                         .labelsHidden()

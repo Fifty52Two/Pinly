@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 
 // MARK: - Pinly Tasarım Sistemi
-// İki tema: "slate" (koyu/mavi, dinamik) ve "farad" (temiz lavanta-beyaz, indigo aksan).
+// İki tema: "slate" (koyu/mavi, dinamik) ve "lavender" (temiz lavanta-beyaz, indigo aksan).
 // ThemeManager.shared.themeKey hangi temayı seçtiğini tutar.
 // ContentView'daki .id(themeKey) root yeniden kurulduğunda tüm renkler taze okunur.
 
@@ -11,9 +11,9 @@ import UIKit
 enum PinlyTheme {
     /// Ana aksan
     static let primary = Color(uiColor: UIColor { trait in
-        let farad = ThemeManager.shared.themeKey == "farad"
+        let lavender = ThemeManager.shared.style == .lavender
         let dark  = trait.userInterfaceStyle == .dark
-        switch (farad, dark) {
+        switch (lavender, dark) {
         case (true,  true):  return UIColor(red: 0.482, green: 0.557, blue: 0.941, alpha: 1) // #7B8EF0
         case (true,  false): return UIColor(red: 0.290, green: 0.365, blue: 0.831, alpha: 1) // #4A5DD4
         case (false, true):  return UIColor(red: 0.550, green: 0.640, blue: 0.820, alpha: 1) // #8CA3D1
@@ -23,9 +23,9 @@ enum PinlyTheme {
 
     /// Birincil aksanın açık tonu
     static let primaryWarm = Color(uiColor: UIColor { trait in
-        let farad = ThemeManager.shared.themeKey == "farad"
+        let lavender = ThemeManager.shared.style == .lavender
         let dark  = trait.userInterfaceStyle == .dark
-        switch (farad, dark) {
+        switch (lavender, dark) {
         case (true,  true):  return UIColor(red: 0.608, green: 0.667, blue: 1.000, alpha: 1) // #9BAAFF
         case (true,  false): return UIColor(red: 0.420, green: 0.498, blue: 0.894, alpha: 1) // #6B7FE4
         case (false, true):  return UIColor(red: 0.650, green: 0.730, blue: 0.880, alpha: 1) // #A6BAE0
@@ -58,9 +58,9 @@ enum PinlyTheme {
 
     /// Sayfa zemini
     static let ground = Color(uiColor: UIColor { trait in
-        let farad = ThemeManager.shared.themeKey == "farad"
+        let lavender = ThemeManager.shared.style == .lavender
         let dark  = trait.userInterfaceStyle == .dark
-        switch (farad, dark) {
+        switch (lavender, dark) {
         case (true,  true):  return UIColor(red: 0.082, green: 0.090, blue: 0.165, alpha: 1) // #151727
         case (true,  false): return UIColor(red: 0.906, green: 0.918, blue: 0.969, alpha: 1) // #E7EAF7
         case (false, true):  return UIColor(red: 0.075, green: 0.110, blue: 0.149, alpha: 1) // #131C26
@@ -70,9 +70,9 @@ enum PinlyTheme {
 
     /// Kart yüzeyi
     static let surface = Color(uiColor: UIColor { trait in
-        let farad = ThemeManager.shared.themeKey == "farad"
+        let lavender = ThemeManager.shared.style == .lavender
         let dark  = trait.userInterfaceStyle == .dark
-        switch (farad, dark) {
+        switch (lavender, dark) {
         case (true,  true):  return UIColor(red: 0.145, green: 0.161, blue: 0.271, alpha: 1) // #252945
         case (true,  false): return UIColor.white
         case (false, true):  return UIColor(red: 0.196, green: 0.263, blue: 0.365, alpha: 1) // #32435D
@@ -82,9 +82,9 @@ enum PinlyTheme {
 
     /// Gradyan üst durağı
     static let groundTop = Color(uiColor: UIColor { trait in
-        let farad = ThemeManager.shared.themeKey == "farad"
+        let lavender = ThemeManager.shared.style == .lavender
         let dark  = trait.userInterfaceStyle == .dark
-        switch (farad, dark) {
+        switch (lavender, dark) {
         case (true,  true):  return UIColor(red: 0.145, green: 0.157, blue: 0.251, alpha: 1) // #252840
         case (true,  false): return UIColor(red: 0.957, green: 0.961, blue: 0.992, alpha: 1) // #F5F5FD
         case (false, true):  return UIColor(red: 0.271, green: 0.337, blue: 0.424, alpha: 1) // #45566C
@@ -94,9 +94,9 @@ enum PinlyTheme {
 
     /// Gradyan orta durağı
     static let groundMid = Color(uiColor: UIColor { trait in
-        let farad = ThemeManager.shared.themeKey == "farad"
+        let lavender = ThemeManager.shared.style == .lavender
         let dark  = trait.userInterfaceStyle == .dark
-        switch (farad, dark) {
+        switch (lavender, dark) {
         case (true,  true):  return UIColor(red: 0.098, green: 0.110, blue: 0.212, alpha: 1) // #191C36
         case (true,  false): return UIColor(red: 0.929, green: 0.937, blue: 0.980, alpha: 1) // #EDEFFA
         case (false, true):  return UIColor(red: 0.153, green: 0.200, blue: 0.263, alpha: 1) // #273343
@@ -125,9 +125,9 @@ enum PinlyTheme {
     // MARK: - Hero Kart Gradyanı
 
     private static let heroTop = Color(uiColor: UIColor { trait in
-        let farad = ThemeManager.shared.themeKey == "farad"
+        let lavender = ThemeManager.shared.style == .lavender
         let dark  = trait.userInterfaceStyle == .dark
-        switch (farad, dark) {
+        switch (lavender, dark) {
         case (true,  true):  return UIColor(red: 0.145, green: 0.161, blue: 0.271, alpha: 1) // düz #252945
         case (true,  false): return UIColor(red: 0.220, green: 0.286, blue: 0.780, alpha: 1) // #3849C7
         case (false, true):  return UIColor(red: 0.227, green: 0.298, blue: 0.408, alpha: 1) // #3A4C68 düz
@@ -136,9 +136,9 @@ enum PinlyTheme {
     })
 
     private static let heroBottom = Color(uiColor: UIColor { trait in
-        let farad = ThemeManager.shared.themeKey == "farad"
+        let lavender = ThemeManager.shared.style == .lavender
         let dark  = trait.userInterfaceStyle == .dark
-        switch (farad, dark) {
+        switch (lavender, dark) {
         case (true,  true):  return UIColor(red: 0.145, green: 0.161, blue: 0.271, alpha: 1)
         case (true,  false): return UIColor(red: 0.290, green: 0.365, blue: 0.831, alpha: 1) // #4A5DD4
         case (false, true):  return UIColor(red: 0.227, green: 0.298, blue: 0.408, alpha: 1)

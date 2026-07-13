@@ -114,7 +114,7 @@
 > `model/` klasörünü yeniden adlandırınca bu yol kırılır → Live Activity extension
 > derlenemez. Adım 2.2'de bu satır elle güncellenecek.
 
-- [ ] **2.1 Dosya adı düzeltmeleri** (git mv büyük/küçük harf için iki aşamalı olmalı,
+- [x] **2.1 Dosya adı düzeltmeleri** (git mv büyük/küçük harf için iki aşamalı olmalı,
   macOS dosya sistemi case-insensitive):
   ```bash
   git mv Pinly/manager/locationManager.swift Pinly/manager/LocationManager_tmp.swift
@@ -124,7 +124,15 @@
   Sonra `ProfileTab.swift` içinde tip adını değiştir: `struct MoreTab` → `struct ProfileTab`.
   Referansı güncelle — tek kullanım yeri `Pinly/ContentView.swift:232`'deki `MoreTab()`
   çağrısı: `ProfileTab()` yap. Kontrol: `grep -rn "MoreTab" Pinly --include="*.swift"` → boş olmalı.
-- [ ] **2.2 Klasörleri konvansiyona getir:**
+- [x] **2.2 Klasörleri konvansiyona getir:** ⚠️ Uygulama notu: bu Mac'te proje `/System/Volumes/Data`
+  (case-INSENSITIVE APFS) üzerinde ve repo'da `core.ignorecase=true` — case-only rename'ler
+  (`design→Design` vb.) `git mv` ile TEK adımda başarısız olur ("Invalid argument"). Çözüm
+  `locationManager.swift` adımındaki gibi ara-isim üzerinden iki adımlı `git mv` (`git mv X X_tmp`
+  sonra `git mv X_tmp Y`). Plain shell `mv` kullanmayın — git index'i case-only fark için
+  güncellemiyor, sonraki `git status` klasörü hâlâ eski adıyla "değişti" gösterir ve içerik
+  kaybı riski doğurur (bu oturumda yaşandı, `git checkout --` ile kurtarıldı). Ayrıca Xcode
+  açıkken senkron klasör rename'i pbxproj'u canlı yeniden yazabilir — rename'den önce Xcode'u
+  kapatın.
   ```bash
   git mv Pinly/manager  Pinly/Managers
   git mv Pinly/model    Pinly/Models
@@ -138,11 +146,11 @@
   `model/PinlyActivityAttributes.swift,` → `Models/PinlyActivityAttributes.swift,`
   Sonra build al (Kural 3). Extension target'ı da derlendiğinden emin olmak için
   `xcodebuild build ... -target` değil scheme build'i yeterli (extension app'e gömülü).
-- [ ] **2.3 HomeView'i kendi dosyasına taşı.** `Pinly/ContentView.swift` şu an iki büyük
+- [x] **2.3 HomeView'i kendi dosyasına taşı.** `Pinly/ContentView.swift` şu an iki büyük
   view içeriyor. 195. satırdan itibaren (`// MARK: - Tab Bar Ana Yapısı` + `struct HomeView`)
   sonuna kadar kes, yeni dosya `Pinly/Views/home/HomeView.swift`'e taşı
   (import'lar: `SwiftUI`). ContentView.swift'te sadece ContentView kalsın.
-- [ ] **2.4 "farad" temasını yeniden adlandır.** `ThemeStyle.farad` kişisel kod adı;
+- [x] **2.4 "farad" temasını yeniden adlandır.** `ThemeStyle.farad` kişisel kod adı;
   yayınlanacak koda uygun değil. Yeni ad: **`lavender`** (tema zaten "temiz lavanta-beyaz").
   - `Pinly/Design/ThemeManager.swift`: `case farad = "farad"` → `case lavender = "lavender"`
   - `Pinly/Design/Theme.swift`: tüm `ThemeManager.shared.themeKey == "farad"`
@@ -159,7 +167,10 @@
     ```
   - Tema seçim UI'sında ("farad" seçeneğini gösteren yer — `grep -rn "farad\|lavender" Pinly/Views`)
     görünen etiketi de güncelle ve 5 dile lokalize et.
-- [ ] **2.5 Kök klasör + GitHub repo adı.** Bu adım terminal + kullanıcı işbirliği ister:
+- [ ] **2.5 Kök klasör + GitHub repo adı.** ⏸️ **KULLANICI TERCİHİYLE PLAN SONUNA ERTELENDİ**
+  (2026-07-13) — `gh` CLI kurulu değil, klasör rename'i çalışma dizinini etkiliyor. Faz 3-6
+  şu an `/Users/ferhatakkopru/Desktop/Projects/NotionGO` yolunda tamamlanacak (fonksiyonel
+  fark yok), bu adım en son tek seferde yapılacak. Bu adım terminal + kullanıcı işbirliği ister:
   1. Kullanıcıya söyle: **Xcode'u tamamen kapat.**
   2. ```bash
      cd /Users/ferhatakkopru/Desktop/Projects
@@ -175,7 +186,7 @@
      `/Users/ferhatakkopru/Desktop/Projects/Pinly` içinden başlatsın
      (proje hafızası yol bazlı olduğu için ilk oturumda bağlam yeniden oturur; CLAUDE.md
      repoda olduğundan bilgi kaybı olmaz).
-- [ ] **2.6 CLAUDE.md'yi gerçekle eşitle.** Şu düzeltmeler yapılacak (bu fazın parçası):
+- [x] **2.6 CLAUDE.md'yi gerçekle eşitle.** Şu düzeltmeler yapılacak (bu fazın parçası):
   - Klasör yolları: `Pinly/manager/` → `Pinly/Managers/` (tüm tablo başlıkları), vb.
   - `locationManager.swift (dosya adı küçük harf!)` notunu kaldır → `LocationManager.swift`
   - 4. sekme: "Daha Fazla (ellipsis) — MoreTab" → "Profil (person.crop.circle) — ProfileTab"
