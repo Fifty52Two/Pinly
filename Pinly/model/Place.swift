@@ -121,4 +121,7 @@ class Place {
 
     @Transient
     var categoryIcon: String { placeCategory.icon }
+
+    @Transient
+    var categoryIllustration: String { placeCategory.illustrationName }
 }

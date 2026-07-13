@@ -252,41 +252,49 @@ private struct RecentPlaceCard: View {
 
     var body: some View {
         Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(place.categoryColor.opacity(0.15))
-                            .frame(width: 36, height: 36)
-                        Image(systemName: place.categoryIcon)
-                            .font(.subheadline)
-                            .foregroundColor(place.categoryColor)
-                    }
-                    Spacer()
+            VStack(alignment: .leading, spacing: 0) {
+                // Üst: illüstrasyon
+                ZStack(alignment: .topTrailing) {
+                    Image(place.categoryIllustration)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 160, height: 110)
+                        .clipped()
+                        .background(place.categoryColor.opacity(0.08))
+
                     if place.isVisited {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.caption)
-                            .foregroundColor(.green)
+                            .foregroundColor(.white)
+                            .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
+                            .padding(8)
                     }
                 }
-                Text(place.name)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundColor(.primary)
-                    .lineLimit(1)
-                Text(PlaceCategory.from(place.category).localizedName)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(1)
+
+                // Alt: metin
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(place.name)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(.primary)
+                        .lineLimit(1)
+                    HStack(spacing: 4) {
+                        Image(systemName: place.categoryIcon)
+                            .font(.caption2)
+                            .foregroundColor(place.categoryColor)
+                        Text(PlaceCategory.from(place.category).localizedName)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(10)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(PinlyTheme.surface)
             }
-            .padding(12)
-            .frame(width: 150, alignment: .leading)
-            .background(
+            .frame(width: 160)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(PinlyTheme.surface)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14)
-                            .strokeBorder(Color.primary.opacity(0.07), lineWidth: 1)
-                    )
+                    .strokeBorder(Color.primary.opacity(0.07), lineWidth: 1)
             )
         }
         .buttonStyle(.plain)

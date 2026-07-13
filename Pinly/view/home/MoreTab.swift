@@ -175,6 +175,7 @@ struct MoreTab: View {
             }
             .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
+            .contentMargins(.bottom, 32, for: .scrollContent)
             .background(PinlyTheme.groundGradient)
             .navigationTitle(NSLocalizedString("Profil", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
