@@ -432,7 +432,7 @@ değiştirme smoke testi.
   3. Çağrı yerlerini bul ve geçir: `grep -rn "UserProfile\.\(load\|save\|loadPhoto\|savePhoto\|deletePhoto\)" Pinly --include="*.swift"`
      (beklenen: ProfileSetupView, ProfileView, MainTab selamlaması). Hepsi environment'tan alır.
   4. UserProfile'daki static metodları sil; struct yalnızca alanlar + `age/fullName/initials` kalır.
-- [ ] **5.4 Kategori verisini kanonikleştir (tek seferlik migrasyon).** DB'de eski Türkçe
+- [x] **5.4 Kategori verisini kanonikleştir (tek seferlik migrasyon).** DB'de eski Türkçe
   kategori string'leri var ("restoran", "müze"...); her okuma `PlaceCategory.from(_:)`
   ile tolere ediliyor. Kalıcı düzeltme: `PlaceStore.load(context:)` sonuna bir defalık
   normalizasyon ekle:

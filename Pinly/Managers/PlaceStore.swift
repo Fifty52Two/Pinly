@@ -47,9 +47,22 @@ class PlaceStore: PlaceRepository, ObservableObject {
         do {
             let descriptor = FetchDescriptor<Place>()
             places = try context.fetch(descriptor)
+            migrateLegacyCategoriesIfNeeded(context: context)
         } catch {
             lastError = error.localizedDescription
         }
+    }
+
+    /// Eski TR kategori string'lerini kanonik rawValue'ya çevirir (tek seferlik, idempotent).
+    /// `PlaceCategory.from(_:)` toleransı deep link/QR/Swarm gibi serbest metin getiren
+    /// importlar için kalıcı olarak gerekli — bu yalnızca DB'de zaten duran eski kayıtları temizler.
+    private func migrateLegacyCategoriesIfNeeded(context: ModelContext) {
+        var didMigrate = false
+        for place in places where PlaceCategory(rawValue: place.category) == nil {
+            place.category = PlaceCategory.from(place.category).rawValue
+            didMigrate = true
+        }
+        if didMigrate { save(context: context) }
     }
 
     func addPlace(name: String, category: String, address: String, notes: String, coordinate: CLLocationCoordinate2D? = nil, context: ModelContext) async {
