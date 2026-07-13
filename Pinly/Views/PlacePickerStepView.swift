@@ -35,6 +35,17 @@ struct PlacePickerStepView: View {
         viewModel.radiusLabel(searchRadiusKm)
     }
 
+    /// routePlaces'i RouteSummaryView oluşmadan ÖNCE, kesin sırayla mühürleyip
+    /// geçişi tetikler — onAppear sıralamasına güvenmek riskli (RouteSummaryView'in
+    /// kendi onAppear'ı routePlaces'i henüz boşken okuyup rota hesaplamasını
+    /// başlatabilirdi).
+    private func advanceToNext() {
+        if isLastStep {
+            routeManager.commitCategorySelection()
+        }
+        goToNext = true
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             ProgressBar(current: stepIndex + 1, total: routeManager.selectedCategories.count)
@@ -80,7 +91,7 @@ struct PlacePickerStepView: View {
                         }
                     }
                     Button(NSLocalizedString("Bu adımı atla", comment: "")) {
-                        goToNext = true
+                        advanceToNext()
                     }
                     .foregroundColor(.secondary)
                 }
@@ -95,7 +106,7 @@ struct PlacePickerStepView: View {
                             ) {
                                 viewModel.selectPlace(place, category: currentCategory, tracker: routeManager)
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                                    goToNext = true
+                                    advanceToNext()
                                 }
                             }
                         }

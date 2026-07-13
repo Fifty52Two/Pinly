@@ -91,4 +91,32 @@ final class RouteManagerAlignmentTests: XCTestCase {
 
         XCTAssertEqual(manager.currentWaypointIndex, 0)
     }
+
+    // MARK: - commitCategorySelection (kategori seçim akışı)
+
+    func test_commitCategorySelection_preservesSelectedCategoriesOrder() {
+        let manager = RouteManager()
+        let cafe = Place(name: "Kahve Durağı")
+        let museum = Place(name: "Müze Durağı")
+        let park = Place(name: "Park Durağı")
+
+        manager.selectedCategories = ["Café", "Museum", "Park"]
+        manager.selectedPlaces = ["Museum": museum, "Café": cafe, "Park": park]
+
+        manager.commitCategorySelection()
+
+        XCTAssertEqual(manager.routePlaces.map(\.name), ["Kahve Durağı", "Müze Durağı", "Park Durağı"])
+    }
+
+    func test_commitCategorySelection_categoryWithoutSelection_isDropped() {
+        let manager = RouteManager()
+        let cafe = Place(name: "Kahve Durağı")
+
+        manager.selectedCategories = ["Café", "Museum"]
+        manager.selectedPlaces = ["Café": cafe]   // "Museum" için henüz seçim yok
+
+        manager.commitCategorySelection()
+
+        XCTAssertEqual(manager.routePlaces.map(\.name), ["Kahve Durağı"])
+    }
 }

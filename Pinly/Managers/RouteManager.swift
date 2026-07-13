@@ -84,9 +84,11 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking,
     private var lastRecalculationTime: Date? = nil
     private var liveActivity: Activity<PinlyActivityAttributes>?
 
-    var routePlaces: [Place] {
-        selectedCategories.compactMap { selectedPlaces[$0] }
-    }
+    /// Navigasyonun/özetin okuduğu TEK gerçek kaynak. Kategori seçim akışı
+    /// (CategoryPickerView/PlacePickerStepView) bunu doldurmak için
+    /// `selectedCategories`/`selectedPlaces`'i geçici çalışma alanı olarak
+    /// kullanır, akış bitince `commitCategorySelection()` çağırır.
+    @Published private(set) var routePlaces: [Place] = []
 
     var nextWaypointCoordinate: CLLocationCoordinate2D? {
         guard isNavigating, currentWaypointIndex < routePlaces.count else { return nil }
@@ -97,16 +99,14 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking,
     /// kayıtlı rota başlatma vb. — kategori seçim akışını atlayan çağıranlar için).
     func setRoute(places: [Place], name: String = "") {
         reset()
-        var categories: [String] = []
-        var dict: [String: Place] = [:]
-        for (i, place) in places.enumerated() {
-            let key = "\(i)_\(place.id.uuidString)"
-            categories.append(key)
-            dict[key] = place
-        }
-        selectedCategories = categories
-        selectedPlaces = dict
+        routePlaces = places
         routeName = name
+    }
+
+    /// Kategori seçim akışı (CategoryPickerView → PlacePickerStepView) bitince
+    /// çağrılır; `selectedCategories` sırasına göre seçilen mekanları `routePlaces`'e mühürler.
+    func commitCategorySelection() {
+        routePlaces = selectedCategories.compactMap { selectedPlaces[$0] }
     }
 
     func reset() {
@@ -114,6 +114,7 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking,
         selectedCategories = []
         selectedPlaces = [:]
         routeName = ""
+        routePlaces = []
         routePolylines = []
         stepsPerSegment = []
         segmentDistances = []

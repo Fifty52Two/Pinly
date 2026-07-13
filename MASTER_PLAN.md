@@ -361,7 +361,7 @@ değiştirme smoke testi.
 **Amaç:** Kod artık davranışı bozmadan sadeleştirilebilir; testler Faz 3'te kuruldu.
 **Her görev ayrı commit. Her commit öncesi tam test koşusu.**
 
-- [ ] **5.1 `RouteManager.setRoute` sentetik key hack'ini kaldır.**
+- [x] **5.1 `RouteManager.setRoute` sentetik key hack'ini kaldır.**
   Bugün `selectedCategories` alanı iki anlam taşıyor: kategori akışında gerçek kategori
   adları, `setRoute`'ta `"0_<uuid>"` uydurma anahtarlar. `routePlaces` ise computed.
   Hedef durum: `routePlaces` GERÇEK kaynak olsun.
