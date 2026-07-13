@@ -461,6 +461,14 @@ değiştirme smoke testi.
 
 **Doğrulama:** tam test + simülatörde uçtan uca akış: onboarding→profil→mekan ekle→
 kategori akışıyla rota→navigasyon başlat→Live Activity göründü→durakta duraklat→tamamla.
+> ⚠️ **2026-07-14 kullanıcı kararı:** Tap-driven E2E (Accessibility izni gerektiriyor —
+> bu oturumda verilmedi) BİLİNÇLİ OLARAK ATLANDI, kullanıcı riski kabul etti. Yerine
+> geçen doğrulama: 67 unit test (routePlaces/commitCategorySelection/deviation dahil
+> özel regresyon testleri) + build yeşil + kısmi simülatör smoke screenshot'ları
+> (Faz 2 onboarding render, Faz 4 MainTab render, Faz 5 ProfileTab gerçek veriyle
+> render). **Sonraki oturumda gerçek dokunuşlu E2E hâlâ yapılmadı — ilk fırsatta
+> (Accessibility izni verilirse) yapılmalı, özellikle routePlaces refactor'ünün
+> gerçek cihaz/simülatör navigasyon akışında hiç doğrulanmadığını unutma.**
 **Commit'ler:** `refactor: routePlaces tek kaynak, sentetik key kaldırıldı` ·
 `refactor: Live Activity RouteLiveActivityController'a ayrıldı` ·
 `refactor: ProfileService — UserProfile IO'su servis katmanına` ·
