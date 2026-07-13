@@ -480,7 +480,15 @@ kategori akışıyla rota→navigasyon başlat→Live Activity göründü→dura
 
 **Amaç:** Yeşil testler bir daha asla sessizce bozulmasın.
 
-- [ ] **6.1 GitHub Actions workflow'u:** `.github/workflows/ci.yml`:
+- [x] **6.1 GitHub Actions workflow'u yazıldı** (`.github/workflows/ci.yml`) — AMA
+  ⚠️ **çalışmıyor**: paylaşılan scheme (`Pinly.xcodeproj/xcshareddata/xcschemes/`)
+  bu oturumda oluşturulamadı (Xcode → Manage Schemes'te "Shared" kutusu işaretliydi
+  ama pencere kapatılmadan/kaydedilmeden bırakıldı, kullanıcı devam etmeyi tercih
+  etti — 2026-07-14). **Sonraki oturumda önce bunu tamamla:** Xcode'da Pinly.xcodeproj
+  aç → Product → Scheme → Manage Schemes… → Pinly satırının Shared kutusu zaten işaretli
+  görünüyorsa bile pencereyi **Close** ile kapat, `ls Pinly.xcodeproj/xcshareddata/xcschemes/`
+  ile `Pinly.xcscheme` dosyasının gerçekten diske yazıldığını doğrula, sonra commit'le.
+  Scheme olmadan hem CI hem `xcodebuild test` clone'lardan asla çalışmaz.
   ```yaml
   name: CI
   on:
@@ -503,10 +511,7 @@ kategori akışıyla rota→navigasyon başlat→Live Activity göründü→dura
               -destination 'platform=iOS Simulator,name=iPhone 16' \
               CODE_SIGNING_ALLOWED=NO
   ```
-  Not: Faz 3.5'teki paylaşılan scheme olmadan CI koşamaz — commit'lendiğini doğrula:
-  `ls Pinly.xcodeproj/xcshareddata/xcschemes/`. İlk push'ta işlem başarısız olursa
-  runner'daki simülatör adına bak (teşhis adımı bunun için) ve destination'ı uyarla.
-- [ ] **6.2 Commit disiplinini CLAUDE.md'ye yaz** (kullanıcının "hi", "." geçmişine son):
+- [x] **6.2 Commit disiplinini CLAUDE.md'ye yaz** (kullanıcının "hi", "." geçmişine son):
   CLAUDE.md'ye kısa bölüm ekle:
   > **Commit kuralı:** `tip: açıklama` formatı (`feat:`, `fix:`, `refactor:`, `chore:`,
   > `test:`, `docs:`). Tek satır, Türkçe, ne yapıldığını söyler. "hi", "." gibi mesaj yasak.

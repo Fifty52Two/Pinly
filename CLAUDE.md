@@ -192,3 +192,7 @@ TabView (HomeView)
 - Hazır mahalle rotaları: influencer'lar Rota Paylaşımı özelliğiyle kendi rotalarını paylaşır
 - AI Agent API key güvenliği: Supabase Edge Function proxy (client-side key kabul edilemez)
 - `landing/index.html` web varlığı olarak repoda duruyor; uygulama içi tanıtım rolü OnboardingView'de
+
+## Commit Kuralı
+`tip: açıklama` formatı (`feat:`, `fix:`, `refactor:`, `chore:`, `test:`, `docs:`).
+Tek satır, Türkçe, ne yapıldığını söyler. "hi", "." gibi anlamsız mesajlar yasak.
