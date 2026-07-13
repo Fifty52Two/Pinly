@@ -447,7 +447,7 @@ değiştirme smoke testi.
   ```
   `PlaceCategory.from(_:)` SİLİNMEZ (deep link/QR/Swarm importları hâlâ serbest metin
   getirebilir) — CLAUDE.md'deki "daima from kullan" kuralı da kalır.
-- [ ] **5.5 Bilinçli olarak YAPILMAYACAKLAR** (yürütücü bunlara girişmesin):
+- [x] **5.5 Bilinçli olarak YAPILMAYACAKLAR** (yürütücü bunlara girişmesin):
   - ViewModel'lerdeki `init(x: X = Default.shared)` deseni environment-DI'a çevrilMEYECEK.
     İki mekanizma (view→environment, VM→ctor default) kabul edilmiş pragmatik denge;
     testler mock enjekte edebiliyor, yeterli. Büyük churn, sıfır kullanıcı değeri.
