@@ -96,7 +96,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate, Lo
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         // requestLocation() hata verirse (örn. simülatörde) sessizce geç
-        print("❌ Konum hatası: \(error.localizedDescription)")
     }
 
     // MARK: - Reverse Geocode

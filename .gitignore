@@ -107,3 +107,6 @@ APIKeys.swift
 
 # OS generated files
 .Trashes
+
+__pycache__/
+*.pyc

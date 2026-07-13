@@ -43,16 +43,16 @@
 
 **Amaç:** Mevcut çalışır durumu kayıt altına almak; sonraki her şey buna göre ölçülür.
 
-- [ ] **0.1 Bekleyen değişiklikleri commit'le.** Şu an working tree'de 3 dosya değişik:
+- [x] **0.1 Bekleyen değişiklikleri commit'le.** Şu an working tree'de 3 dosya değişik:
   `Pinly/model/Place.swift`, `Pinly/view/home/MainTab.swift`, `Pinly/view/home/MoreTab.swift`.
   Önce `git diff` ile bak, UI düzenlemesi olduklarını doğrula, sonra:
   ```bash
   git add -A && git commit -m "chore: bekleyen UI düzenlemeleri (MainTab/MoreTab/Place)"
   ```
-- [ ] **0.2 Baseline build al.** Kural 3'teki build komutunu çalıştır. `BUILD SUCCEEDED`
+- [x] **0.2 Baseline build al.** Kural 3'teki build komutunu çalıştır. `BUILD SUCCEEDED`
   görmeden Faz 1'e geçme. Başarısızsa önce onu düzelt (bu plana başlamadan proje kırıksa
   kullanıcıya bildir).
-- [ ] **0.3 Çalışma dalı aç:**
+- [x] **0.3 Çalışma dalı aç:**
   ```bash
   git checkout -b tidy/master-plan
   ```
@@ -66,16 +66,16 @@
 
 **Amaç:** Repoda ne varsa gerçek; ölü dosya, artık, şablon kalıntısı yok.
 
-- [ ] **1.1 Eski proje artığını sil:**
+- [x] **1.1 Eski proje artığını sil:**
   ```bash
   git rm -r NotionGO.xcodeproj
   ```
-- [ ] **1.2 Python artığını sil ve bir daha gelmesini engelle:**
+- [x] **1.2 Python artığını sil ve bir daha gelmesini engelle:**
   ```bash
   git rm -r --cached __pycache__ 2>/dev/null; rm -rf __pycache__
   printf '\n__pycache__/\n*.pyc\n' >> .gitignore
   ```
-- [ ] **1.3 LiveActivity şablon artıklarını sil.** Bu 3 dosya Xcode şablonundan kalma,
+- [x] **1.3 LiveActivity şablon artıklarını sil.** Bu 3 dosya Xcode şablonundan kalma,
   bundle'a kayıtlı değiller ama synchronized folder yüzünden her build'de derleniyorlar:
   - `PinlyLiveActivity/PinlyLiveActivity.swift`
   - `PinlyLiveActivity/PinlyLiveActivityLiveActivity.swift`
@@ -89,7 +89,7 @@
   ```
   Çıktı boşsa sil: `git rm PinlyLiveActivity/PinlyLiveActivity.swift PinlyLiveActivity/PinlyLiveActivityLiveActivity.swift PinlyLiveActivity/PinlyLiveActivityControl.swift`
   Çıktı boş DEĞİLSE referansı incele ve önce onu çöz.
-- [ ] **1.4 Tek kalan `print(` çağrısını bul ve kaldır** (locationManager.swift:99'daki
+- [x] **1.4 Tek kalan `print(` çağrısını bul ve kaldır** (locationManager.swift:99'daki
   konum hatası logu). Sessiz geçmek yerine `lastError`'a benzer bir yol yoksa sadece
   yorum bırak; `print` release build'de kalmamalı.
 
