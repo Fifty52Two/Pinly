@@ -7,6 +7,7 @@ struct ProfileTab: View {
     @EnvironmentObject var placeStore: PlaceStore
     @EnvironmentObject var languageManager: LanguageManager
     @Environment(\.badges) private var badges
+    @Environment(\.profile) private var profileService
 
     @State private var showHistory = false
     @State private var showWeeklyReport = false
@@ -14,8 +15,8 @@ struct ProfileTab: View {
     @State private var showLanguagePicker = false
     @State private var showStats = false
     @State private var showEditProfile = false
-    @State private var profile: UserProfile? = UserProfile.load()
-    @State private var profilePhoto: UIImage? = UserProfile.loadPhoto()
+    @State private var profile: UserProfile? = nil
+    @State private var profilePhoto: UIImage? = nil
     @State private var pickerItem: PhotosPickerItem? = nil
 
     private var visitedCount: Int { placeStore.places.filter { $0.isVisited }.count }
@@ -210,13 +211,14 @@ struct ProfileTab: View {
                 if let data = try? await item.loadTransferable(type: Data.self),
                    let image = UIImage(data: data) {
                     await MainActor.run {
-                        UserProfile.savePhoto(image)
-                        profilePhoto = UserProfile.loadPhoto()
+                        profileService.savePhoto(image)
+                        profilePhoto = profileService.loadPhoto()
                         pickerItem = nil
                     }
                 }
             }
         }
+        .onAppear { reloadProfile() }
     }
 
     private var profileAvatar: some View {
@@ -256,8 +258,8 @@ struct ProfileTab: View {
     }
 
     private func reloadProfile() {
-        profile = UserProfile.load()
-        profilePhoto = UserProfile.loadPhoto()
+        profile = profileService.load()
+        profilePhoto = profileService.loadPhoto()
     }
 }
 

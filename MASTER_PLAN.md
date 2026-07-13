@@ -412,7 +412,7 @@ değiştirme smoke testi.
   3. RouteManager artık `RouteLiveActivityPresenting`'e conform olmaz; protokolü
      controller taşır. `grep -rn "RouteLiveActivityPresenting" Pinly` ile başka conform
      bekleyen yer olmadığını doğrula.
-- [ ] **5.3 UserProfile'ı servis katmanına hizala.** `UserProfile` struct'ı veri modeli
+- [x] **5.3 UserProfile'ı servis katmanına hizala.** `UserProfile` struct'ı veri modeli
   olarak kalır ama UserDefaults/dosya IO'su servise taşınır:
   1. Yeni dosya `Pinly/Services/ProfileService.swift`:
      ```swift

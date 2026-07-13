@@ -6,6 +6,7 @@ struct ProfileEditSheet: View {
     var onSaved: () -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.profile) private var profileService
 
     @State private var firstName = ""
     @State private var lastName  = ""
@@ -82,11 +83,11 @@ struct ProfileEditSheet: View {
 
                     Button {
                         guard let year = validBirthYear else { return }
-                        UserProfile(
+                        profileService.save(UserProfile(
                             firstName: firstName.trimmingCharacters(in: .whitespaces),
                             lastName:  lastName.trimmingCharacters(in: .whitespaces),
                             birthYear: year
-                        ).save()
+                        ))
                         onSaved()
                         dismiss()
                     } label: {
@@ -109,7 +110,7 @@ struct ProfileEditSheet: View {
             }
         }
         .onAppear {
-            guard let profile = UserProfile.load() else { return }
+            guard let profile = profileService.load() else { return }
             firstName = profile.firstName
             lastName = profile.lastName
             birthYearText = String(profile.birthYear)

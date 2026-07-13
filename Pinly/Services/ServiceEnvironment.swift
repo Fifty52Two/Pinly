@@ -54,6 +54,10 @@ private struct QRCodeGeneratingKey: EnvironmentKey {
     static let defaultValue: QRCodeGenerating = DefaultQRCodeGenerator()
 }
 
+private struct ProfileKey: EnvironmentKey {
+    static let defaultValue: ProfileProviding = DefaultProfileService.shared
+}
+
 extension EnvironmentValues {
     var entitlements: EntitlementProviding {
         get { self[EntitlementsKey.self] }
@@ -113,5 +117,10 @@ extension EnvironmentValues {
     var qrCodeGenerator: QRCodeGenerating {
         get { self[QRCodeGeneratingKey.self] }
         set { self[QRCodeGeneratingKey.self] = newValue }
+    }
+
+    var profile: ProfileProviding {
+        get { self[ProfileKey.self] }
+        set { self[ProfileKey.self] = newValue }
     }
 }

@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileSetupView: View {
     let onComplete: () -> Void
 
+    @Environment(\.profile) private var profileService
     @State private var firstName = ""
     @State private var lastName  = ""
     @State private var birthYearText = ""
@@ -122,7 +123,7 @@ struct ProfileSetupView: View {
                             lastName:  lastName.trimmingCharacters(in: .whitespaces),
                             birthYear: year
                         )
-                        profile.save()
+                        profileService.save(profile)
                         onComplete()
                     } label: {
                         Text(NSLocalizedString("Başla", comment: ""))
