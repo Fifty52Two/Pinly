@@ -141,7 +141,7 @@ struct PlaceDetailView: View {
                 )
                 if place.latitude != nil {
                     Divider().frame(height: 32)
-                    DetailStatPill(value: "📍", label: NSLocalizedString("Konum", comment: ""))
+                    DetailStatPill(systemImage: "mappin.and.ellipse", label: NSLocalizedString("Konum", comment: ""))
                 }
             }
             .padding(.vertical, 12)
@@ -228,14 +228,21 @@ private struct DetailRow: View {
 }
 
 private struct DetailStatPill: View {
-    let value: String
+    var value: String? = nil
+    var systemImage: String? = nil
     let label: String
 
     var body: some View {
         VStack(spacing: 2) {
-            Text(value)
-                .font(.headline)
-                .fontWeight(.bold)
+            if let systemImage {
+                Image(systemName: systemImage)
+                    .font(.headline)
+                    .foregroundColor(PinlyTheme.primary)
+            } else {
+                Text(value ?? "—")
+                    .font(.headline)
+                    .fontWeight(.bold)
+            }
             Text(label)
                 .font(.caption2)
                 .foregroundColor(.secondary)

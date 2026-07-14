@@ -7,8 +7,9 @@ struct ArrivalBannerView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Text("🎉")
+            Image(systemName: "checkmark.seal.fill")
                 .font(.title2)
+                .foregroundColor(.white)
             VStack(alignment: .leading, spacing: 2) {
                 Text(NSLocalizedString("Varıldı!", comment: ""))
                     .font(.caption)
@@ -24,9 +25,8 @@ struct ArrivalBannerView: View {
         .padding(.vertical, 14)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color.green)
+                .fill(PinlyTheme.success)
         )
-        .shadow(color: .green.opacity(0.4), radius: 12, x: 0, y: 4)
         .padding(.horizontal, 16)
     }
 }
@@ -53,8 +53,10 @@ struct RouteCompletionOverlay: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 24) {
-                Text("🎉")
+                Image(systemName: "flag.pattern.checkered.circle.fill")
                     .font(.system(size: 64))
+                    .foregroundStyle(PinlyTheme.primary)
+                    .symbolRenderingMode(.hierarchical)
                 Text(NSLocalizedString("Rota Tamamlandı!", comment: ""))
                     .font(.title)
                     .fontWeight(.bold)

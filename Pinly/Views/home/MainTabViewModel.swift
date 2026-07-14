@@ -8,12 +8,14 @@ import Foundation
 
 @MainActor
 final class MainTabViewModel: ObservableObject {
-    func greeting() -> String {
+    /// Saate göre selamlama metni + eşlik eden SF Symbol adı.
+    /// Emoji yerine sembol dönmesi bilinçli — arayüzde emoji kullanılmaz (tasarım kuralı).
+    func greeting() -> (text: String, symbol: String) {
         switch Calendar.current.component(.hour, from: Date()) {
-        case 6..<12:  return NSLocalizedString("Günaydın ☀️", comment: "")
-        case 12..<18: return NSLocalizedString("İyi günler 👋", comment: "")
-        case 18..<23: return NSLocalizedString("İyi akşamlar 🌆", comment: "")
-        default:      return NSLocalizedString("İyi geceler 🌙", comment: "")
+        case 6..<12:  return (NSLocalizedString("Günaydın", comment: ""), "sun.max.fill")
+        case 12..<18: return (NSLocalizedString("İyi günler", comment: ""), "hand.wave.fill")
+        case 18..<23: return (NSLocalizedString("İyi akşamlar", comment: ""), "sunset.fill")
+        default:      return (NSLocalizedString("İyi geceler", comment: ""), "moon.stars.fill")
         }
     }
 

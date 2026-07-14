@@ -1,5 +1,4 @@
 // MARK: - Home
-"Merhaba 👋" = "Merhaba 👋";
 "Ne yapmak istiyorsun?" = "Ne yapmak istiyorsun?";
 "Mekanlarım" = "Mekanlarım";
 "Henüz mekan eklenmedi" = "Henüz mekan eklenmedi";
@@ -54,14 +53,13 @@
 // MARK: - Route Summary
 "Rotanız" = "Rotanız";
 "Navigasyon" = "Navigasyon";
-"Rota Hazır! 🎉" = "Rota Hazır! 🎉";
+"Rota Hazır" = "Rota Hazır";
 "Rota hesaplanıyor..." = "Rota hesaplanıyor...";
 "Navigasyonu Durdur" = "Navigasyonu Durdur";
 "Navigasyonu Başlat" = "Navigasyonu Başlat";
 "Devam edin" = "Devam edin";
 "Rota yeniden hesaplanıyor..." = "Rota yeniden hesaplanıyor...";
 "Sonraki Durağa Devam Et" = "Sonraki Durağa Devam Et";
-"Rota Tamamlandı! 🎉" = "Rota Tamamlandı! 🎉";
 "Tüm mekanları ziyaret ettin" = "Tüm mekanları ziyaret ettin";
 "Navigasyona Dön" = "Navigasyona Dön";
 "Yeni Rota" = "Yeni Rota";
@@ -350,10 +348,10 @@
 "Mekanlarından yürüyüş rotası oluştur. Adım adım navigasyon kilit ekranında seni takip eder." = "Mekanlarından yürüyüş rotası oluştur. Adım adım navigasyon kilit ekranında seni takip eder.";
 "Rozet Kazan, Paylaş" = "Rozet Kazan, Paylaş";
 "22 rozet, haftalık raporlar ve arkadaşlarınla QR kod ile rota paylaşımı seni bekliyor." = "22 rozet, haftalık raporlar ve arkadaşlarınla QR kod ile rota paylaşımı seni bekliyor.";
-"Günaydın," = "Günaydın,";
-"İyi günler," = "İyi günler,";
-"İyi akşamlar," = "İyi akşamlar,";
-"İyi geceler," = "İyi geceler,";
+"Günaydın" = "Günaydın";
+"İyi günler" = "İyi günler";
+"İyi akşamlar" = "İyi akşamlar";
+"İyi geceler" = "İyi geceler";
 "Gün Serisi" = "Gün Serisi";
 "Rozet" = "Rozet";
 "Mekan Ekle" = "Mekan Ekle";
@@ -370,9 +368,9 @@
 "En Çok Mekan" = "En Çok Mekan";
 "Ortalama Puanın" = "Ortalama Puanın";
 "Mekan ekledikçe istatistiklerin burada birikecek" = "Mekan ekledikçe istatistiklerin burada birikecek";
-"Rotayı Tamamladım! 🎉" = "Rotayı Tamamladım! 🎉";
+"Rotayı Tamamladım!" = "Rotayı Tamamladım!";
 "+ %lld durak daha" = "+ %lld durak daha";
-"Sen de rotanı çiz 🚶" = "Sen de rotanı çiz 🚶";
+"Sen de rotanı çiz" = "Sen de rotanı çiz";
 "Başarını Paylaş" = "Başarını Paylaş";
 
 // MARK: - Haritada Pinle

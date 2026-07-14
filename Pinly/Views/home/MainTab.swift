@@ -19,7 +19,7 @@ struct MainTab: View {
     @State private var showPaywall = false
     @State private var detailPlace: Place? = nil
 
-    private var greeting: String { viewModel.greeting() }
+    private var greeting: (text: String, symbol: String) { viewModel.greeting() }
 
     private var visitedCount: Int { viewModel.visitedCount(placeStore.places) }
 
@@ -31,9 +31,14 @@ struct MainTab: View {
                 // Üst başlık
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(greeting)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                        HStack(spacing: 6) {
+                            Image(systemName: greeting.symbol)
+                                .font(.caption)
+                                .foregroundColor(PinlyTheme.gold)
+                            Text(greeting.text)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
                         Text(NSLocalizedString("Ne yapmak istiyorsun?", comment: ""))
                             .font(.title)
                             .fontWeight(.bold)

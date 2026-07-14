@@ -1,5 +1,4 @@
 // MARK: - Home
-"Merhaba 👋" = "Привет";
 "Ne yapmak istiyorsun?" = "Что хочешь сделать?";
 "Mekanlarım" = "Мои места";
 "Henüz mekan eklenmedi" = "Места ещё не добавлены";
@@ -54,14 +53,13 @@
 // MARK: - Route Summary
 "Rotanız" = "Твой маршрут";
 "Navigasyon" = "Навигация";
-"Rota Hazır! 🎉" = "Маршрут готов! 🎉";
+"Rota Hazır" = "Маршрут готов";
 "Rota hesaplanıyor..." = "Маршрут рассчитывается...";
 "Navigasyonu Durdur" = "Остановить навигацию";
 "Navigasyonu Başlat" = "Начать навигацию";
 "Devam edin" = "Продолжайте прямо";
 "Rota yeniden hesaplanıyor..." = "Маршрут пересчитывается...";
 "Sonraki Durağa Devam Et" = "К следующей остановке";
-"Rota Tamamlandı! 🎉" = "Маршрут завершён! 🎉";
 "Tüm mekanları ziyaret ettin" = "Ты посетил все места";
 "Navigasyona Dön" = "Вернуться к навигации";
 "Yeni Rota" = "Новый маршрут";
@@ -350,10 +348,10 @@
 "Mekanlarından yürüyüş rotası oluştur. Adım adım navigasyon kilit ekranında seni takip eder." = "Создавай пешие маршруты из своих мест. Пошаговая навигация сопровождает тебя на экране блокировки.";
 "Rozet Kazan, Paylaş" = "Получай значки, делись";
 "22 rozet, haftalık raporlar ve arkadaşlarınla QR kod ile rota paylaşımı seni bekliyor." = "Тебя ждут 22 значка, еженедельные отчёты и обмен маршрутами по QR-коду.";
-"Günaydın," = "Доброе утро";
-"İyi günler," = "Добрый день";
-"İyi akşamlar," = "Добрый вечер";
-"İyi geceler," = "Доброй ночи";
+"Günaydın" = "Доброе утро";
+"İyi günler" = "Добрый день";
+"İyi akşamlar" = "Добрый вечер";
+"İyi geceler" = "Доброй ночи";
 "Gün Serisi" = "Серия дней";
 "Rozet" = "Значки";
 "Mekan Ekle" = "Добавить место";
@@ -370,9 +368,9 @@
 "En Çok Mekan" = "Больше всего мест";
 "Ortalama Puanın" = "Средняя оценка";
 "Mekan ekledikçe istatistiklerin burada birikecek" = "Статистика будет накапливаться здесь по мере добавления мест";
-"Rotayı Tamamladım! 🎉" = "Маршрут завершён! 🎉";
+"Rotayı Tamamladım!" = "Маршрут завершён!";
 "+ %lld durak daha" = "+ ещё %lld остановок";
-"Sen de rotanı çiz 🚶" = "Проложи свой маршрут 🚶";
+"Sen de rotanı çiz" = "Проложи свой маршрут";
 "Başarını Paylaş" = "Поделись достижением";
 
 // MARK: - Haritada Pinle

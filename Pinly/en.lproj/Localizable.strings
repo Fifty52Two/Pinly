@@ -1,5 +1,4 @@
 // MARK: - Home
-"Merhaba 👋" = "Hello 👋";
 "Ne yapmak istiyorsun?" = "What do you want to do?";
 "Mekanlarım" = "My Places";
 "Henüz mekan eklenmedi" = "No places added yet";
@@ -54,14 +53,13 @@
 // MARK: - Route Summary
 "Rotanız" = "Your Route";
 "Navigasyon" = "Navigation";
-"Rota Hazır! 🎉" = "Route Ready! 🎉";
+"Rota Hazır" = "Route Ready";
 "Rota hesaplanıyor..." = "Calculating route...";
 "Navigasyonu Durdur" = "Stop Navigation";
 "Navigasyonu Başlat" = "Start Navigation";
 "Devam edin" = "Continue ahead";
 "Rota yeniden hesaplanıyor..." = "Recalculating route...";
 "Sonraki Durağa Devam Et" = "Continue to Next Stop";
-"Rota Tamamlandı! 🎉" = "Route Completed! 🎉";
 "Tüm mekanları ziyaret ettin" = "You visited all places";
 "Navigasyona Dön" = "Back to Navigation";
 "Yeni Rota" = "New Route";
@@ -350,10 +348,10 @@
 "Mekanlarından yürüyüş rotası oluştur. Adım adım navigasyon kilit ekranında seni takip eder." = "Build walking routes from your places. Turn-by-turn navigation follows you on the lock screen.";
 "Rozet Kazan, Paylaş" = "Earn Badges, Share";
 "22 rozet, haftalık raporlar ve arkadaşlarınla QR kod ile rota paylaşımı seni bekliyor." = "22 badges, weekly reports and route sharing with friends via QR code await you.";
-"Günaydın," = "Good morning,";
-"İyi günler," = "Good afternoon,";
-"İyi akşamlar," = "Good evening,";
-"İyi geceler," = "Good night,";
+"Günaydın" = "Good morning";
+"İyi günler" = "Good afternoon";
+"İyi akşamlar" = "Good evening";
+"İyi geceler" = "Good night";
 "Gün Serisi" = "Day Streak";
 "Rozet" = "Badges";
 "Mekan Ekle" = "Add Place";
@@ -370,9 +368,9 @@
 "En Çok Mekan" = "Most Places In";
 "Ortalama Puanın" = "Average Rating";
 "Mekan ekledikçe istatistiklerin burada birikecek" = "Your stats will build up here as you add places";
-"Rotayı Tamamladım! 🎉" = "Route Completed! 🎉";
+"Rotayı Tamamladım!" = "Route Completed!";
 "+ %lld durak daha" = "+ %lld more stops";
-"Sen de rotanı çiz 🚶" = "Draw your own route 🚶";
+"Sen de rotanı çiz" = "Draw your own route";
 "Başarını Paylaş" = "Share Your Achievement";
 
 // MARK: - Haritada Pinle

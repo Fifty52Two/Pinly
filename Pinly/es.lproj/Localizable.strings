@@ -1,5 +1,4 @@
 // MARK: - Home
-"Merhaba 👋" = "Hola";
 "Ne yapmak istiyorsun?" = "¿Qué quieres hacer?";
 "Mekanlarım" = "Mis lugares";
 "Henüz mekan eklenmedi" = "Aún no hay lugares";
@@ -54,14 +53,13 @@
 // MARK: - Route Summary
 "Rotanız" = "Tu ruta";
 "Navigasyon" = "Navegación";
-"Rota Hazır! 🎉" = "¡Ruta lista! 🎉";
+"Rota Hazır" = "Ruta lista";
 "Rota hesaplanıyor..." = "Calculando ruta...";
 "Navigasyonu Durdur" = "Detener navegación";
 "Navigasyonu Başlat" = "Iniciar navegación";
 "Devam edin" = "Continúa";
 "Rota yeniden hesaplanıyor..." = "Recalculando ruta...";
 "Sonraki Durağa Devam Et" = "Continuar a la siguiente parada";
-"Rota Tamamlandı! 🎉" = "¡Ruta completada! 🎉";
 "Tüm mekanları ziyaret ettin" = "Visitaste todos los lugares";
 "Navigasyona Dön" = "Volver a la navegación";
 "Yeni Rota" = "Nueva ruta";
@@ -350,10 +348,10 @@
 "Mekanlarından yürüyüş rotası oluştur. Adım adım navigasyon kilit ekranında seni takip eder." = "Crea rutas a pie con tus lugares. La navegación paso a paso te acompaña en la pantalla de bloqueo.";
 "Rozet Kazan, Paylaş" = "Gana insignias, comparte";
 "22 rozet, haftalık raporlar ve arkadaşlarınla QR kod ile rota paylaşımı seni bekliyor." = "Te esperan 22 insignias, informes semanales y rutas compartidas por código QR.";
-"Günaydın," = "Buenos días";
-"İyi günler," = "Buenas tardes";
-"İyi akşamlar," = "Buenas noches";
-"İyi geceler," = "Buenas noches";
+"Günaydın" = "Buenos días";
+"İyi günler" = "Buenas tardes";
+"İyi akşamlar" = "Buenas noches";
+"İyi geceler" = "Buenas noches";
 "Gün Serisi" = "Racha de días";
 "Rozet" = "Insignias";
 "Mekan Ekle" = "Añadir lugar";
@@ -370,9 +368,9 @@
 "En Çok Mekan" = "Más lugares en";
 "Ortalama Puanın" = "Valoración media";
 "Mekan ekledikçe istatistiklerin burada birikecek" = "Tus estadísticas se acumularán aquí a medida que añadas lugares";
-"Rotayı Tamamladım! 🎉" = "¡Ruta completada! 🎉";
+"Rotayı Tamamladım!" = "¡Ruta completada!";
 "+ %lld durak daha" = "+ %lld paradas más";
-"Sen de rotanı çiz 🚶" = "Traza tu propia ruta 🚶";
+"Sen de rotanı çiz" = "Traza tu propia ruta";
 "Başarını Paylaş" = "Comparte tu logro";
 
 // MARK: - Haritada Pinle

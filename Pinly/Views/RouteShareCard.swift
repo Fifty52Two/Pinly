@@ -38,9 +38,13 @@ struct RouteShareCardView: View {
             Spacer()
 
             // Rota adı + ana metrik
-            Text(NSLocalizedString("Rotayı Tamamladım! 🎉", comment: ""))
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundColor(mint)
+            HStack(spacing: 6) {
+                Image(systemName: "flag.checkered")
+                    .font(.system(size: 14, weight: .semibold))
+                Text(NSLocalizedString("Rotayı Tamamladım!", comment: ""))
+                    .font(.system(size: 15, weight: .semibold))
+            }
+            .foregroundColor(mint)
             Text(routeName)
                 .font(.system(size: 34, weight: .bold, design: .rounded))
                 .foregroundColor(.white)
@@ -97,9 +101,13 @@ struct RouteShareCardView: View {
 
             // Alt: çağrı
             HStack {
-                Text(NSLocalizedString("Sen de rotanı çiz 🚶", comment: ""))
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(.white.opacity(0.75))
+                HStack(spacing: 6) {
+                    Image(systemName: "figure.walk")
+                        .font(.system(size: 14, weight: .semibold))
+                    Text(NSLocalizedString("Sen de rotanı çiz", comment: ""))
+                        .font(.system(size: 15, weight: .semibold))
+                }
+                .foregroundColor(.white.opacity(0.75))
                 Spacer()
                 Text("pinly.app")
                     .font(.system(size: 15, weight: .bold, design: .rounded))
