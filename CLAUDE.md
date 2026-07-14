@@ -1,3 +1,33 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+---
+
+## Komutlar
+
+```bash
+# Derleme (simülatör)
+xcodebuild -scheme Pinly -destination 'platform=iOS Simulator,name=iPhone 16' build
+
+# Tüm testleri koştur
+xcodebuild -scheme Pinly -destination 'platform=iOS Simulator,name=iPhone 16' test
+
+# Tek test sınıfı veya metodu
+xcodebuild -scheme Pinly -destination 'platform=iOS Simulator,name=iPhone 16' \
+  test -only-testing:PinlyTests/RouteManagerDeviationTests
+
+# App icon yeniden üret (macOS'ta çalışır, AppKit gerekir)
+swift scripts/generate_icon.swift
+```
+
+> Test target'ı `PinlyTests` pbxproj'a eklenmiş durumda (MASTER_PLAN.md Faz 3 tamamlandı).
+> Testler XCTest + in-memory `ModelContainer` kullanıyor; `PinlyTests/Mocks/` altında 10 mock var.
+> `SPRINT_PLAN.md` büyüme sprinti (2026-07-14) tamamlandı — FAZ 1-7 (arka plan nav, hazır rotalar,
+> Swarm onboarding, rota optimize, seri bildirimi, Yakınımda, MetricKit). Tüm kutucuklar `[x]`.
+
+---
+
 # Pinly — Proje Bağlamı
 
 ## Proje Nedir
@@ -17,7 +47,7 @@ Freemium model, $4.99/ay Pro. 18 ayda 100K kullanıcı → $8-15K/ay gelir.
 - HealthKit (adım + mesafe), AVFoundation (QR tarama), CoreImage (QR üretme)
 - GoogleMobileAds (interstitial — şu an TEST ID'leri)
 - Deep link: `pinly://` scheme (eski `notiongo://` backwards compat)
-- Xcode projesi: `Pinly.xcodeproj` — target'lar: `Pinly` (app), `PinlyLiveActivityExtension` (widget extension, kaynak klasörü `PinlyLiveActivity/`), `PinlyTests` (unit test bundle, `MASTER_PLAN.md` Faz 3)
+- Xcode projesi: `Pinly.xcodeproj` — target'lar: `Pinly` (app), `PinlyLiveActivityExtension` (widget extension, kaynak klasörü `PinlyLiveActivity/`), `PinlyTests` (unit test bundle — target pbxproj'a eklenmiş, testler koşuyor)
 
 ## SourceKit Uyarıları Hakkında
 SourceKit "Cannot find X in scope" hataları FALSE POSITIVE'dir.
