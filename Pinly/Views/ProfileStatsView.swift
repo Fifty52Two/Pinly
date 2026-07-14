@@ -76,7 +76,6 @@ struct ProfileStatsView: View {
                     .padding(22)
                     .background(PinlyTheme.heroGradient)
                     .cornerRadius(20)
-                    .shadow(color: .black.opacity(0.10), radius: 10, x: 0, y: 5)
 
                     // Mekan istatistikleri
                     HStack(spacing: 0) {
@@ -181,7 +180,7 @@ private struct HighlightRow: View {
                     .fill(color.opacity(0.14))
                     .frame(width: 40, height: 40)
                 Image(systemName: icon)
-                    .font(.system(size: 17))
+                    .font(.body)
                     .foregroundColor(color)
             }
             Text(title)

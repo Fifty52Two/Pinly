@@ -36,17 +36,17 @@ struct EditPlaceView: View {
                     if viewModel.usedCurrentLocation {
                         HStack {
                             Image(systemName: "location.fill")
-                                .foregroundColor(.blue)
+                                .foregroundColor(PinlyTheme.primary)
                             Text(NSLocalizedString("Mevcut konum kullanılıyor", comment: ""))
                                 .font(.subheadline)
-                                .foregroundColor(.blue)
+                                .foregroundColor(PinlyTheme.primary)
                             Spacer()
                             Button(NSLocalizedString("Değiştir", comment: "")) {
                                 viewModel.usedCurrentLocation = false
                                 viewModel.currentCoord = nil
                             }
                             .font(.caption)
-                            .foregroundColor(.red)
+                            .foregroundColor(PinlyTheme.danger)
                         }
                     } else {
                         TextField(NSLocalizedString("Adres (Örn: Kadıköy, İstanbul)", comment: ""), text: $viewModel.address)
@@ -57,10 +57,10 @@ struct EditPlaceView: View {
                         if viewModel.pinnedCoord != nil {
                             HStack {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.green)
+                                    .foregroundColor(PinlyTheme.success)
                                 Text(NSLocalizedString("Konum haritadan seçildi", comment: ""))
                                     .font(.subheadline)
-                                    .foregroundColor(.green)
+                                    .foregroundColor(PinlyTheme.success)
                                 Spacer()
                                 Button(NSLocalizedString("Kaldır", comment: "")) {
                                     viewModel.pinnedCoord = nil
@@ -68,7 +68,7 @@ struct EditPlaceView: View {
                                     viewModel.address = place.address
                                 }
                                 .font(.caption)
-                                .foregroundColor(.red)
+                                .foregroundColor(PinlyTheme.danger)
                             }
                         }
 
@@ -80,7 +80,7 @@ struct EditPlaceView: View {
                                 Text(NSLocalizedString("Mevcut Konumumu Kullan", comment: ""))
                                     .fontWeight(.medium)
                             }
-                            .foregroundColor(.blue)
+                            .foregroundColor(PinlyTheme.primary)
                         }
 
                         Button {

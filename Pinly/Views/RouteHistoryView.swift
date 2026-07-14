@@ -78,13 +78,13 @@ private struct RouteHistoryRow: View {
 
             // İstatistikler
             HStack(spacing: 0) {
-                HistoryStatPill(icon: "figure.walk", value: history.formattedDistance, color: .blue)
-                HistoryStatPill(icon: "clock", value: history.formattedDuration, color: .green)
+                HistoryStatPill(icon: "figure.walk", value: history.formattedDistance, color: PinlyTheme.primary)
+                HistoryStatPill(icon: "clock", value: history.formattedDuration, color: PinlyTheme.success)
                 if history.stepCount > 0 {
-                    HistoryStatPill(icon: "shoeprints.fill", value: "\(history.stepCount) adım", color: .orange)
+                    HistoryStatPill(icon: "shoeprints.fill", value: "\(history.stepCount) adım", color: PinlyTheme.warning)
                 }
                 if history.averageSpeedKmh > 0 {
-                    HistoryStatPill(icon: "speedometer", value: String(format: "%.1f km/s", history.averageSpeedKmh), color: .purple)
+                    HistoryStatPill(icon: "speedometer", value: String(format: "%.1f km/s", history.averageSpeedKmh), color: PinlyTheme.primaryWarm)
                 }
             }
         }
@@ -100,7 +100,7 @@ private struct HistoryStatPill: View {
     var body: some View {
         HStack(spacing: 4) {
             Image(systemName: icon)
-                .font(.system(size: 11))
+                .font(.caption2)
                 .foregroundColor(color)
             Text(value)
                 .font(.caption2)

@@ -32,7 +32,7 @@ struct RouteSharePickerView: View {
                 TextField("örn. Kadıköy Kahvaltı Turu", text: $name)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 10)
-                    .background(Color(.systemGray6))
+                    .background(PinlyTheme.fillMuted)
                     .cornerRadius(10)
                     .padding(.horizontal, 20)
             }
@@ -57,7 +57,7 @@ struct RouteSharePickerView: View {
                             .foregroundColor(category == cat ? .white : .primary)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 8)
-                            .background(category == cat ? PinlyTheme.primary : Color(.systemGray5))
+                            .background(category == cat ? PinlyTheme.primary : PinlyTheme.fillMuted)
                             .cornerRadius(10)
                         }
                         .buttonStyle(.plain)

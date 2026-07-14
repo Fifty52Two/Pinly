@@ -225,7 +225,7 @@ struct RadiusSettingsSheet: View {
                                 RoundedRectangle(cornerRadius: 14)
                                     .fill(searchRadiusKm == option.value
                                           ? PinlyTheme.primary.opacity(0.08)
-                                          : Color(.systemGray6))
+                                          : PinlyTheme.fillMuted)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 14)
                                             .stroke(searchRadiusKm == option.value ? PinlyTheme.primary : .clear, lineWidth: 1.5)
@@ -262,7 +262,7 @@ struct ProgressBar: View {
         GeometryReader { geo in
             ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 4)
-                    .fill(Color(.systemGray5))
+                    .fill(PinlyTheme.fillMuted)
                     .frame(height: 6)
                 RoundedRectangle(cornerRadius: 4)
                     .fill(PinlyTheme.primary)
@@ -286,7 +286,7 @@ struct PlaceRow: View {
             HStack(spacing: 14) {
                 ZStack {
                     Circle()
-                        .fill(isSelected ? PinlyTheme.primary : Color(.systemGray5))
+                        .fill(isSelected ? PinlyTheme.primary : PinlyTheme.fillMuted)
                         .frame(width: 28, height: 28)
                     if isSelected {
                         Image(systemName: "checkmark")
@@ -315,7 +315,7 @@ struct PlaceRow: View {
             .padding(14)
             .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(isSelected ? PinlyTheme.primary.opacity(0.08) : Color(.systemGray6))
+                    .fill(isSelected ? PinlyTheme.primary.opacity(0.08) : PinlyTheme.fillMuted)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(isSelected ? PinlyTheme.primary : .clear, lineWidth: 1.5)

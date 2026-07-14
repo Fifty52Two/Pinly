@@ -45,11 +45,14 @@ struct SharePlaceView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 20)
                                 .fill(Color.white)
-                                .shadow(color: .black.opacity(0.1), radius: 16, x: 0, y: 6)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .strokeBorder(PinlyTheme.hairline, lineWidth: 1)
+                                )
                         )
                 } else {
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(Color(.systemGray5))
+                        .fill(PinlyTheme.fillMuted)
                         .frame(width: 220, height: 220)
                         .overlay(
                             Image(systemName: "qrcode")

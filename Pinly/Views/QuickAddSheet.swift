@@ -28,7 +28,7 @@ struct QuickAddSheet: View {
                                 : viewModel.address,
                             systemImage: "location.fill"
                         )
-                        .foregroundStyle(.green)
+                        .foregroundStyle(PinlyTheme.success)
                     } else {
                         Label(NSLocalizedString("Konum alınamadı", comment: ""), systemImage: "location.slash")
                             .foregroundStyle(.red)

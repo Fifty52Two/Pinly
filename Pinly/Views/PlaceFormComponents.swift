@@ -47,7 +47,7 @@ struct PinlyField: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.system(size: 17))
+                .font(.body)
                 .foregroundColor(PinlyTheme.primary)
                 .frame(width: 22)
             TextField(placeholder, text: $text)
@@ -106,11 +106,11 @@ struct PinlyCategoryGrid: View {
                                 .fill(isSelected ? cat.color : cat.color.opacity(0.14))
                                 .frame(width: 40, height: 40)
                             Image(systemName: cat.icon)
-                                .font(.system(size: 16))
+                                .font(.body)
                                 .foregroundColor(isSelected ? .white : cat.color)
                         }
                         Text(cat.localizedName)
-                            .font(.system(size: 10, weight: .medium))
+                            .font(.caption2.weight(.medium))
                             .foregroundColor(isSelected ? .primary : .secondary)
                             .lineLimit(1)
                             .minimumScaleFactor(0.8)
@@ -150,7 +150,7 @@ struct PinlyLocationOption: View {
                         .fill(isActive ? PinlyTheme.primary : PinlyTheme.primary.opacity(0.12))
                         .frame(width: 42, height: 42)
                     Image(systemName: icon)
-                        .font(.system(size: 17))
+                        .font(.body)
                         .foregroundColor(isActive ? .white : PinlyTheme.primary)
                 }
                 Text(title)

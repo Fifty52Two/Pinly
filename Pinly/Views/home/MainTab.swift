@@ -103,7 +103,6 @@ struct MainTab: View {
                     .padding(20)
                     .background(PinlyTheme.heroGradient)
                     .cornerRadius(20)
-                    .shadow(color: .black.opacity(0.10), radius: 10, x: 0, y: 5)
                 }
                 .buttonStyle(.plain)
 
@@ -220,7 +219,7 @@ private struct QuickActionCard: View {
                         .fill(color.opacity(0.14))
                         .frame(width: 42, height: 42)
                     Image(systemName: icon)
-                        .font(.system(size: 19))
+                        .font(.headline)
                         .foregroundColor(color)
                 }
                 VStack(alignment: .leading, spacing: 2) {

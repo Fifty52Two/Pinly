@@ -137,7 +137,7 @@ struct CategoryCard: View {
             .padding(.vertical, 18)
             .background(
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(isSelected ? categoryColor.opacity(0.12) : Color(.systemGray6))
+                    .fill(isSelected ? categoryColor.opacity(0.12) : PinlyTheme.fillMuted)
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
                             .stroke(isSelected ? categoryColor : .clear, lineWidth: 2)

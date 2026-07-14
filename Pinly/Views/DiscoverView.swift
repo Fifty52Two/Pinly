@@ -180,8 +180,8 @@ private struct CategoryPlaceRow: View {
                     HStack(spacing: 2) {
                         ForEach(1...5, id: \.self) { star in
                             Image(systemName: star <= rating ? "star.fill" : "star")
-                                .font(.system(size: 9))
-                                .foregroundColor(star <= rating ? .yellow : .secondary)
+                                .font(.caption2)
+                                .foregroundColor(star <= rating ? PinlyTheme.ratingStar : .secondary)
                         }
                     }
                 }
@@ -189,7 +189,7 @@ private struct CategoryPlaceRow: View {
             Spacer()
             if place.isVisited {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.green)
+                    .foregroundColor(PinlyTheme.success)
                     .font(.subheadline)
             }
         }

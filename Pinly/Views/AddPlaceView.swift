@@ -30,10 +30,10 @@ struct AddPlaceView: View {
                     if viewModel.usedCurrentLocation {
                         HStack {
                             Image(systemName: "location.fill")
-                                .foregroundColor(.blue)
+                                .foregroundColor(PinlyTheme.primary)
                             Text(NSLocalizedString("Mevcut konum kullanılıyor", comment: ""))
                                 .font(.subheadline)
-                                .foregroundColor(.blue)
+                                .foregroundColor(PinlyTheme.primary)
                             Spacer()
                             Button(NSLocalizedString("Değiştir", comment: "")) {
                                 viewModel.usedCurrentLocation = false
@@ -41,7 +41,7 @@ struct AddPlaceView: View {
                                 viewModel.address = ""
                             }
                             .font(.caption)
-                            .foregroundColor(.red)
+                            .foregroundColor(PinlyTheme.danger)
                         }
                     } else {
                         TextField(NSLocalizedString("Adres (Örn: Kadıköy, İstanbul)", comment: ""), text: $viewModel.address)
@@ -52,10 +52,10 @@ struct AddPlaceView: View {
                         if viewModel.pinnedCoord != nil {
                             HStack {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.green)
+                                    .foregroundColor(PinlyTheme.success)
                                 Text(NSLocalizedString("Konum haritadan seçildi", comment: ""))
                                     .font(.subheadline)
-                                    .foregroundColor(.green)
+                                    .foregroundColor(PinlyTheme.success)
                                 Spacer()
                                 Button(NSLocalizedString("Kaldır", comment: "")) {
                                     viewModel.pinnedCoord = nil
@@ -63,7 +63,7 @@ struct AddPlaceView: View {
                                     viewModel.address = ""
                                 }
                                 .font(.caption)
-                                .foregroundColor(.red)
+                                .foregroundColor(PinlyTheme.danger)
                             }
                         }
 
@@ -75,7 +75,7 @@ struct AddPlaceView: View {
                                 Text(NSLocalizedString("Mevcut Konumumu Kullan", comment: ""))
                                     .fontWeight(.medium)
                             }
-                            .foregroundColor(.blue)
+                            .foregroundColor(PinlyTheme.primary)
                         }
 
                         Button {

@@ -69,7 +69,7 @@ struct RouteCompletionOverlay: View {
                 .padding(.vertical, 16)
                 .background(
                     RoundedRectangle(cornerRadius: 16)
-                        .fill(Color(.systemGray6))
+                        .fill(PinlyTheme.fillMuted)
                 )
 
                 VStack(spacing: 10) {
@@ -90,7 +90,7 @@ struct RouteCompletionOverlay: View {
                             .foregroundColor(.secondary)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
-                            .background(Color(.systemGray6))
+                            .background(PinlyTheme.fillMuted)
                             .cornerRadius(14)
                     }
                 }
@@ -98,7 +98,7 @@ struct RouteCompletionOverlay: View {
             .padding(30)
             .background(
                 RoundedRectangle(cornerRadius: 24)
-                    .fill(Color(.systemBackground))
+                    .fill(PinlyTheme.surface)
             )
             .padding(.horizontal, 24)
         }

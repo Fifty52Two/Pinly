@@ -72,7 +72,7 @@ struct PlacesListView: View {
                                 HStack(spacing: 8) {
                                     CategoryChip(
                                         title: NSLocalizedString("Tümü", comment: ""),
-                                        color: .blue,
+                                        color: PinlyTheme.primary,
                                         isSelected: viewModel.selectedCategory == nil
                                     ) { viewModel.selectedCategory = nil }
                                     ForEach(PlaceCategory.allCases, id: \.self) { cat in
@@ -271,14 +271,14 @@ struct PlaceListItemView: View {
                 if place.visitCount > 0 {
                     Text(String(format: NSLocalizedString("%ldx ziyaret", comment: ""), place.visitCount))
                         .font(.caption2)
-                        .foregroundColor(.green)
+                        .foregroundColor(PinlyTheme.success)
                 }
                 if let rating = place.userRating {
                     HStack(spacing: 2) {
                         ForEach(1...5, id: \.self) { star in
                             Image(systemName: star <= rating ? "star.fill" : "star")
-                                .font(.system(size: 9))
-                                .foregroundColor(star <= rating ? .yellow : .secondary)
+                                .font(.caption2)
+                                .foregroundColor(star <= rating ? PinlyTheme.ratingStar : .secondary)
                         }
                     }
                 }
@@ -295,7 +295,7 @@ struct PlaceListItemView: View {
             // Ziyaret göstergesi (sadece görsel, interactive değil)
             if place.isVisited {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.green)
+                    .foregroundColor(PinlyTheme.success)
                     .font(.subheadline)
             }
         }
@@ -314,7 +314,7 @@ struct PlaceListItemView: View {
             } label: {
                 Label(NSLocalizedString("Paylaş", comment: ""), systemImage: "square.and.arrow.up")
             }
-            .tint(.orange)
+            .tint(PinlyTheme.warning)
         }
         // Sağa kaydır: Ziyaret toggle
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
@@ -330,7 +330,7 @@ struct PlaceListItemView: View {
                     systemImage: place.isVisited ? "xmark.circle" : "checkmark.circle"
                 )
             }
-            .tint(place.isVisited ? .gray : .green)
+            .tint(place.isVisited ? Color.gray : PinlyTheme.success)
         }
         .sheet(isPresented: $showDetail) {
             NavigationStack {

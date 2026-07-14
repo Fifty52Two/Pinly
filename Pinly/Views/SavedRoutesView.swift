@@ -249,7 +249,7 @@ private struct SavedRouteCard: View {
                 if let km = distanceKm {
                     Label(distanceLabel(km: km), systemImage: "location.fill")
                         .font(.caption)
-                        .foregroundColor(km > 5 ? .orange : .green)
+                        .foregroundColor(km > 5 ? PinlyTheme.warning : PinlyTheme.success)
                 }
 
                 Spacer()

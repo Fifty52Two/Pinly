@@ -21,7 +21,7 @@ enum PlaceCategory: String, CaseIterable, Codable {
         switch self {
         case .restaurant: return .red
         case .cafe:       return .brown
-        case .park:       return .green
+        case .park:       return .teal   // yeşil yasak — doğa tonu olarak teal
         case .museum:     return .purple
         case .historical: return .orange
         case .library:    return .blue

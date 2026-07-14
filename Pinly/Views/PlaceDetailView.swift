@@ -66,7 +66,7 @@ struct PlaceDetailView: View {
                                 .fill(category.color)
                                 .frame(width: 36, height: 36)
                             Image(systemName: category.icon)
-                                .font(.system(size: 16))
+                                .font(.body)
                                 .foregroundColor(.white)
                         }
                     }
@@ -76,7 +76,7 @@ struct PlaceDetailView: View {
                 .allowsHitTesting(false)
             } else {
                 ZStack {
-                    Color(.systemGray6)
+                    PinlyTheme.fillMuted
                     VStack(spacing: 8) {
                         Image(systemName: "map")
                             .font(.system(size: 36))
@@ -104,7 +104,7 @@ struct PlaceDetailView: View {
                             .fill(category.color.opacity(0.15))
                             .frame(width: 32, height: 32)
                         Image(systemName: category.icon)
-                            .font(.system(size: 14))
+                            .font(.subheadline)
                             .foregroundColor(category.color)
                     }
                     Text(category.localizedName)
@@ -116,7 +116,7 @@ struct PlaceDetailView: View {
                 if place.isVisited {
                     Label(NSLocalizedString("Ziyaret Edildi", comment: ""), systemImage: "checkmark.circle.fill")
                         .font(.caption)
-                        .foregroundColor(.green)
+                        .foregroundColor(PinlyTheme.success)
                 } else {
                     Label(NSLocalizedString("Gidilecek", comment: ""), systemImage: "bookmark")
                         .font(.caption)
@@ -145,7 +145,7 @@ struct PlaceDetailView: View {
                 }
             }
             .padding(.vertical, 12)
-            .background(Color(.systemGray6))
+            .background(PinlyTheme.fillMuted)
             .cornerRadius(12)
 
             // Puan yıldızları
@@ -153,20 +153,20 @@ struct PlaceDetailView: View {
                 HStack(spacing: 4) {
                     ForEach(1...5, id: \.self) { star in
                         Image(systemName: star <= rating ? "star.fill" : "star")
-                            .font(.system(size: 18))
-                            .foregroundColor(star <= rating ? .yellow : Color(.systemGray4))
+                            .font(.headline)
+                            .foregroundColor(star <= rating ? PinlyTheme.ratingStar : PinlyTheme.fillMuted)
                     }
                 }
             }
 
             // Adres
             if !place.address.isEmpty {
-                DetailRow(icon: "mappin.and.ellipse", color: .red, text: place.address)
+                DetailRow(icon: "mappin.and.ellipse", color: PinlyTheme.primary, text: place.address)
             }
 
             // Notlar
             if !place.notes.isEmpty {
-                DetailRow(icon: "note.text", color: .orange, text: place.notes)
+                DetailRow(icon: "note.text", color: PinlyTheme.warning, text: place.notes)
             }
 
             // Düzenle + Paylaş butonları
@@ -196,8 +196,8 @@ struct PlaceDetailView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(Color.green.opacity(0.1))
-                    .foregroundColor(.green)
+                    .background(PinlyTheme.success.opacity(0.1))
+                    .foregroundColor(PinlyTheme.success)
                     .cornerRadius(14)
                 }
             }
@@ -216,7 +216,7 @@ private struct DetailRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
             Image(systemName: icon)
-                .font(.system(size: 14))
+                .font(.subheadline)
                 .foregroundColor(color)
                 .frame(width: 20)
                 .padding(.top, 1)

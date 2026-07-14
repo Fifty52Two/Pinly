@@ -38,7 +38,7 @@ struct QRScannerView: View {
                         RoundedRectangle(cornerRadius: 20)
                             .stroke(Color.white.opacity(0.8), lineWidth: 3)
                             .frame(width: 240, height: 240)
-                            .shadow(color: .white.opacity(0.3), radius: 8)
+                            .shadow(color: .white.opacity(0.3), radius: 8) // bilinçli: kamera görüntüsü üzerinde odak parlaması
                         Text(NSLocalizedString("QR kodu çerçeve içine al", comment: ""))
                             .font(.subheadline)
                             .foregroundColor(.white)
@@ -142,7 +142,7 @@ struct ImportConfirmView: View {
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
-                    .background(Color(.systemGray6))
+                    .background(PinlyTheme.fillMuted)
                     .cornerRadius(12)
 
                 Button {

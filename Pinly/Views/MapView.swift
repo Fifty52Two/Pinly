@@ -87,7 +87,7 @@ struct MapView: View {
                     .padding(.vertical, 16)
                     .background(PinlyTheme.primary)
                     .cornerRadius(14)
-                    .shadow(color: .black.opacity(0.18), radius: 10, x: 0, y: 5)
+                    .shadow(color: .black.opacity(0.18), radius: 10, x: 0, y: 5) // bilinçli: canlı harita üzerinde yüzen CTA
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 40)
@@ -107,7 +107,7 @@ struct MapView: View {
                             .padding(12)
                             .background(.ultraThinMaterial)
                             .clipShape(Circle())
-                            .shadow(radius: 4)
+                            .shadow(radius: 4) // bilinçli: canlı harita üzerinde yüzen buton
                     }
                     .padding(.top, 60)
                     .padding(.leading, 16)
@@ -138,7 +138,7 @@ struct MapView: View {
                             .padding(12)
                             .background(PinlyTheme.primary)
                             .clipShape(Circle())
-                            .shadow(radius: 4)
+                            .shadow(radius: 4) // bilinçli: canlı harita üzerinde yüzen buton
                     }
                     .padding(.top, 60)
                     .padding(.trailing, 16)
@@ -358,7 +358,7 @@ struct PlaceCard: View {
                         .font(.subheadline)
                         .foregroundColor(.orange.opacity(0.9))
                         .padding(6)
-                        .background(Color.orange.opacity(0.08))
+                        .background(PinlyTheme.warning.opacity(0.08))
                         .clipShape(Circle())
                 }
                 .buttonStyle(.plain)
@@ -385,7 +385,7 @@ struct PlaceCard: View {
                             .font(.subheadline)
                             .foregroundColor(.red.opacity(0.7))
                             .padding(6)
-                            .background(Color.red.opacity(0.08))
+                            .background(PinlyTheme.danger.opacity(0.08))
                             .clipShape(Circle())
                     }
                     .buttonStyle(.plain)
@@ -409,8 +409,8 @@ struct PlaceCard: View {
                     HStack(spacing: 2) {
                         ForEach(1...5, id: \.self) { star in
                             Image(systemName: star <= rating ? "star.fill" : "star")
-                                .font(.system(size: 11))
-                                .foregroundColor(star <= rating ? .yellow : .secondary)
+                                .font(.caption2)
+                                .foregroundColor(star <= rating ? PinlyTheme.ratingStar : .secondary)
                         }
                     }
                 }
@@ -419,15 +419,15 @@ struct PlaceCard: View {
                     HStack(spacing: 3) {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.caption2)
-                            .foregroundColor(.green)
+                            .foregroundColor(PinlyTheme.success)
                         Text(String(format: NSLocalizedString("%ldx ziyaret edildi", comment: ""), place.visitCount))
                             .font(.caption2)
                             .fontWeight(.medium)
-                            .foregroundColor(.green)
+                            .foregroundColor(PinlyTheme.success)
                     }
                     .padding(.horizontal, 6)
                     .padding(.vertical, 3)
-                    .background(Color.green.opacity(0.1))
+                    .background(PinlyTheme.success.opacity(0.1))
                     .cornerRadius(6)
                 }
                 Spacer()
@@ -453,7 +453,7 @@ struct PlaceCard: View {
         .padding(16)
         .background(.regularMaterial)
         .cornerRadius(20)
-        .shadow(color: .black.opacity(0.12), radius: 16, x: 0, y: 6)
+        .shadow(color: .black.opacity(0.12), radius: 16, x: 0, y: 6) // bilinçli: canlı harita üzerinde yüzen kart
         .padding(.horizontal, 16)
         .confirmationDialog(NSLocalizedString("Bu mekanı silmek istiyor musun?", comment: ""), isPresented: $showDeleteConfirm, titleVisibility: .visible) {
             Button(NSLocalizedString("Sil", comment: ""), role: .destructive) {

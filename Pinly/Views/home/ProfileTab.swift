@@ -36,7 +36,7 @@ struct ProfileTab: View {
                                         .fill(PinlyTheme.primary)
                                         .frame(width: 32, height: 32)
                                     Image(systemName: "camera.fill")
-                                        .font(.system(size: 13))
+                                        .font(.footnote)
                                         .foregroundColor(.white)
                                 }
                                 .overlay(Circle().strokeBorder(PinlyTheme.surface, lineWidth: 3))
@@ -94,17 +94,17 @@ struct ProfileTab: View {
                             subtitle: NSLocalizedString("Toplam km, ziyaret ve daha fazlası", comment: "")) {
                         showStats = true
                     }
-                    MoreRow(icon: "clock.arrow.circlepath", iconColor: .teal,
+                    MoreRow(icon: "clock.arrow.circlepath", iconColor: PinlyTheme.slate,
                             title: NSLocalizedString("Rota Geçmişi", comment: ""),
                             subtitle: NSLocalizedString("Tamamladığın rotalar", comment: "")) {
                         showHistory = true
                     }
-                    MoreRow(icon: "chart.bar.fill", iconColor: .orange,
+                    MoreRow(icon: "chart.bar.fill", iconColor: PinlyTheme.warning,
                             title: NSLocalizedString("Haftalık Rapor", comment: ""),
                             subtitle: NSLocalizedString("Bu haftanın özeti", comment: "")) {
                         showWeeklyReport = true
                     }
-                    MoreRow(icon: "trophy.fill", iconColor: .yellow,
+                    MoreRow(icon: "trophy.fill", iconColor: PinlyTheme.gold,
                             title: NSLocalizedString("Rozetler", comment: ""),
                             subtitle: {
                                 let earned = badges.unlockedBadges.count
@@ -122,7 +122,7 @@ struct ProfileTab: View {
                     let current = LanguageManager.supported.first { $0.code == languageManager.currentLanguage }
                     MoreRow(
                         icon: "globe",
-                        iconColor: .indigo,
+                        iconColor: PinlyTheme.primary,
                         title: "Dil / Language",
                         subtitle: current.map { "\($0.flag) \($0.name)" } ?? "Türkçe"
                     ) {
@@ -137,7 +137,7 @@ struct ProfileTab: View {
                                 .frame(width: 40, height: 40)
                             Image(systemName: "circle.lefthalf.filled")
                                 .foregroundColor(PinlyTheme.slate)
-                                .font(.system(size: 18))
+                                .font(.headline)
                         }
                         Text(NSLocalizedString("Görünüm", comment: ""))
                             .font(.subheadline)
@@ -225,7 +225,6 @@ struct ProfileTab: View {
                 .strokeBorder(PinlyTheme.primary.opacity(0.25), lineWidth: 2)
                 .padding(-6)
         )
-        .shadow(color: .black.opacity(0.10), radius: 6, x: 0, y: 3)
     }
 
     private func profileMiniStat(value: Int, label: String) -> some View {
@@ -262,7 +261,7 @@ private struct MoreRow: View {
                         .frame(width: 40, height: 40)
                     Image(systemName: icon)
                         .foregroundColor(iconColor)
-                        .font(.system(size: 18))
+                        .font(.headline)
                 }
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)

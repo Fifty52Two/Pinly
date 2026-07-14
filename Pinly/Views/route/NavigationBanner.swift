@@ -43,7 +43,7 @@ struct NavigationBanner: View {
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     Rectangle()
-                        .fill(Color(.systemGray5))
+                        .fill(PinlyTheme.fillMuted)
                         .frame(height: 3)
                     Rectangle()
                         .fill(PinlyTheme.primary)
@@ -91,7 +91,7 @@ struct RouteOverviewPanel: View {
         .padding(.vertical, 14)
         .background(
             RoundedRectangle(cornerRadius: 14)
-                .fill(Color(.systemGray6))
+                .fill(PinlyTheme.fillMuted)
         )
     }
 }

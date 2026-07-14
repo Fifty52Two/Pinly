@@ -74,7 +74,7 @@ struct PinlyTabBar: View {
                     )
                     .stroke(Color.primary.opacity(0.08), lineWidth: 1)
                 )
-                .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 5)
+                .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 5) // bilinçli: yüzen tab bar'ın tek elevasyon gölgesi
 
                 // Yüzen baloncuk (halo + disk) — ikonların ALTINDA, yatayda kayar
                 ZStack {

@@ -54,7 +54,7 @@ struct BadgesView: View {
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(Color(.systemGray5))
+                        .fill(PinlyTheme.fillMuted)
                         .frame(height: 8)
                     RoundedRectangle(cornerRadius: 4)
                         .fill(Color.yellow)
@@ -91,15 +91,15 @@ private struct BadgeCell: View {
         VStack(spacing: 8) {
             ZStack {
                 Circle()
-                    .fill(isUnlocked ? badgeColor.opacity(0.15) : Color(.systemGray5))
+                    .fill(isUnlocked ? badgeColor.opacity(0.15) : PinlyTheme.fillMuted)
                     .frame(width: 60, height: 60)
                 if isUnlocked {
                     Image(systemName: badge.icon)
-                        .font(.system(size: 26))
+                        .font(.title)
                         .foregroundColor(badgeColor)
                 } else {
                     Image(systemName: "lock.fill")
-                        .font(.system(size: 22))
+                        .font(.title2)
                         .foregroundColor(Color(.systemGray3))
                 }
             }
@@ -111,7 +111,7 @@ private struct BadgeCell: View {
                 .lineLimit(2)
             if !isUnlocked {
                 Text(badgeService.progressText(for: badge, placeStore: placeStore))
-                    .font(.system(size: 9))
+                    .font(.caption2)
                     .foregroundColor(.secondary)
             }
         }
@@ -120,7 +120,7 @@ private struct BadgeCell: View {
         .padding(.horizontal, 4)
         .background(
             RoundedRectangle(cornerRadius: 14)
-                .fill(isUnlocked ? badgeColor.opacity(0.06) : Color(.systemGray6))
+                .fill(isUnlocked ? badgeColor.opacity(0.06) : PinlyTheme.fillMuted)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14)
                         .stroke(isUnlocked ? badgeColor.opacity(0.3) : Color.clear, lineWidth: 1)
@@ -134,7 +134,7 @@ private struct BadgeCell: View {
         case "orange":  return .orange
         case "purple":  return .purple
         case "red":     return .red
-        case "green":   return .green
+        case "green":   return PinlyTheme.success
         case "teal":    return .teal
         case "indigo":  return .indigo
         case "pink":    return .pink
@@ -158,7 +158,7 @@ struct BadgeBannerView: View {
         case "orange":  return .orange
         case "purple":  return .purple
         case "red":     return .red
-        case "green":   return .green
+        case "green":   return PinlyTheme.success
         case "teal":    return .teal
         case "indigo":  return .indigo
         case "pink":    return .pink
@@ -174,7 +174,7 @@ struct BadgeBannerView: View {
                     .fill(badgeColor.opacity(0.2))
                     .frame(width: 44, height: 44)
                 Image(systemName: badge.icon)
-                    .font(.system(size: 20))
+                    .font(.title3)
                     .foregroundColor(badgeColor)
             }
             VStack(alignment: .leading, spacing: 2) {
@@ -201,7 +201,6 @@ struct BadgeBannerView: View {
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(.regularMaterial)
-                .shadow(color: .black.opacity(0.12), radius: 12, y: 4)
         )
         .padding(.horizontal, 16)
         .offset(y: visible ? 0 : -120)

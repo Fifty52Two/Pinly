@@ -86,19 +86,19 @@ struct WeeklyReportView: View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
             WeeklyStatCard(
                 icon: "figure.walk.circle.fill",
-                color: .blue,
+                color: PinlyTheme.primary,
                 value: stats.totalSteps > 0 ? "\(stats.totalSteps)" : "—",
                 label: NSLocalizedString("Adım", comment: "")
             )
             WeeklyStatCard(
                 icon: "arrow.triangle.turn.up.right.circle.fill",
-                color: .green,
+                color: PinlyTheme.success,
                 value: stats.totalDistanceMeters > 0 ? stats.formattedDistance : "—",
                 label: NSLocalizedString("Mesafe", comment: "")
             )
             WeeklyStatCard(
                 icon: "mappin.circle.fill",
-                color: .purple,
+                color: PinlyTheme.primaryWarm,
                 value: "\(placeStore.places.filter { $0.isVisited }.count)",
                 label: NSLocalizedString("Toplam Ziyaret", comment: "")
             )
@@ -136,7 +136,7 @@ struct WeeklyReportView: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 14)
-                .fill(Color(.systemGray6))
+                .fill(PinlyTheme.fillMuted)
         )
     }
 
@@ -146,11 +146,11 @@ struct WeeklyReportView: View {
         HStack(spacing: 14) {
             ZStack {
                 Circle()
-                    .fill(Color.orange.opacity(0.15))
+                    .fill(PinlyTheme.warning.opacity(0.15))
                     .frame(width: 48, height: 48)
                 Image(systemName: "building.2.fill")
                     .font(.title2)
-                    .foregroundColor(.orange)
+                    .foregroundColor(PinlyTheme.warning)
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(NSLocalizedString("En Çok Ziyaret Edilen Bölge", comment: ""))
@@ -165,7 +165,7 @@ struct WeeklyReportView: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 14)
-                .fill(Color(.systemGray6))
+                .fill(PinlyTheme.fillMuted)
         )
     }
 }
@@ -181,7 +181,7 @@ private struct WeeklyStatCard: View {
     var body: some View {
         VStack(spacing: 10) {
             Image(systemName: icon)
-                .font(.system(size: 28))
+                .font(.title)
                 .foregroundColor(color)
             Text(value)
                 .font(.title2)

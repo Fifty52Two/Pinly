@@ -16,11 +16,11 @@ struct RouteImportView: View {
             VStack(spacing: 8) {
                 ZStack {
                     Circle()
-                        .fill(Color.green.opacity(0.12))
+                        .fill(PinlyTheme.success.opacity(0.12))
                         .frame(width: 60, height: 60)
                     Image(systemName: routeImport.category.map { $0.icon } ?? "map.fill")
                         .font(.title2)
-                        .foregroundColor(.green)
+                        .foregroundColor(PinlyTheme.success)
                 }
                 .padding(.top, 24)
 
@@ -34,7 +34,7 @@ struct RouteImportView: View {
                             .foregroundColor(.secondary)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 4)
-                            .background(Color(.systemGray5))
+                            .background(PinlyTheme.fillMuted)
                             .cornerRadius(8)
                     }
                 } else {
@@ -47,7 +47,7 @@ struct RouteImportView: View {
                             .foregroundColor(.secondary)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 4)
-                            .background(Color(.systemGray5))
+                            .background(PinlyTheme.fillMuted)
                             .cornerRadius(8)
                     }
                 }
@@ -69,7 +69,7 @@ struct RouteImportView: View {
                                     .fill(PlaceCategory.from(place.category).color.opacity(0.15))
                                     .frame(width: 36, height: 36)
                                 Image(systemName: PlaceCategory.from(place.category).icon)
-                                    .font(.system(size: 16))
+                                    .font(.body)
                                     .foregroundColor(PlaceCategory.from(place.category).color)
                             }
                             VStack(alignment: .leading, spacing: 2) {
@@ -105,7 +105,7 @@ struct RouteImportView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(Color.green)
+                        .background(PinlyTheme.success)
                         .cornerRadius(14)
                 }
                 if let saveAction = onSaveToSavedRoutes {
@@ -154,11 +154,11 @@ struct SwarmImportView: View {
             VStack(spacing: 8) {
                 ZStack {
                     Circle()
-                        .fill(Color.orange.opacity(0.12))
+                        .fill(PinlyTheme.warning.opacity(0.12))
                         .frame(width: 60, height: 60)
                     Image(systemName: "square.and.arrow.down")
                         .font(.title2)
-                        .foregroundColor(.orange)
+                        .foregroundColor(PinlyTheme.warning)
                 }
                 .padding(.top, 24)
 
@@ -182,7 +182,7 @@ struct SwarmImportView: View {
                                     .fill(PlaceCategory.from(place.category).color.opacity(0.15))
                                     .frame(width: 36, height: 36)
                                 Image(systemName: PlaceCategory.from(place.category).icon)
-                                    .font(.system(size: 16))
+                                    .font(.body)
                                     .foregroundColor(PlaceCategory.from(place.category).color)
                             }
                             VStack(alignment: .leading, spacing: 2) {
@@ -233,7 +233,7 @@ struct SwarmImportView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(Color.orange)
+                        .background(PinlyTheme.warning)
                         .cornerRadius(14)
                 }
                 Button(action: onCancel) {

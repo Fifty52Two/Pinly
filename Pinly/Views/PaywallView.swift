@@ -136,10 +136,10 @@ private struct PlanOptionButton: View {
                             Text(badge)
                                 .font(.caption2)
                                 .fontWeight(.bold)
-                                .foregroundColor(.green)
+                                .foregroundColor(PinlyTheme.gold)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
-                                .background(Color.green.opacity(0.12))
+                                .background(PinlyTheme.gold.opacity(0.12))
                                 .cornerRadius(6)
                         }
                     }
@@ -158,7 +158,7 @@ private struct PlanOptionButton: View {
                     .fill(isSelected ? PinlyTheme.primary.opacity(0.06) : Color.clear)
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(isSelected ? PinlyTheme.primary : Color(.systemGray4), lineWidth: isSelected ? 2 : 1)
+                            .stroke(isSelected ? PinlyTheme.primary : PinlyTheme.fillMuted, lineWidth: isSelected ? 2 : 1)
                     )
             )
         }
@@ -182,7 +182,7 @@ private struct ProFeatureRow: View {
                     .fill(color.opacity(0.12))
                     .frame(width: 40, height: 40)
                 Image(systemName: icon)
-                    .font(.system(size: 18))
+                    .font(.headline)
                     .foregroundColor(color)
             }
 
@@ -195,10 +195,10 @@ private struct ProFeatureRow: View {
                         Text(badge)
                             .font(.caption2)
                             .fontWeight(.semibold)
-                            .foregroundColor(.orange)
+                            .foregroundColor(PinlyTheme.warning)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(Color.orange.opacity(0.12))
+                            .background(PinlyTheme.warning.opacity(0.12))
                             .cornerRadius(6)
                     }
                 }

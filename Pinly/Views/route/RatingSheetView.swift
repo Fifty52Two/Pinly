@@ -29,7 +29,7 @@ struct RatingSheetView: View {
                     } label: {
                         Image(systemName: star <= selectedRating ? "star.fill" : "star")
                             .font(.system(size: 36))
-                            .foregroundColor(star <= selectedRating ? .yellow : .secondary)
+                            .foregroundColor(star <= selectedRating ? PinlyTheme.ratingStar : .secondary)
                             .scaleEffect(star <= selectedRating ? 1.15 : 1.0)
                             .animation(.spring(response: 0.3, dampingFraction: 0.6), value: selectedRating)
                     }
@@ -44,7 +44,7 @@ struct RatingSheetView: View {
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(Color(.systemGray6))
+                .background(PinlyTheme.fillMuted)
                 .cornerRadius(12)
 
                 Button(NSLocalizedString("Kaydet", comment: "")) {

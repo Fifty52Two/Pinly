@@ -114,7 +114,7 @@ struct RouteSummaryView: View {
                                 ZStack {
                                     Circle()
                                         .fill(
-                                            isCompleted ? Color.green :
+                                            isCompleted ? PinlyTheme.routeCompleted :
                                             isCurrentStop ? PinlyTheme.primary :
                                             isNextAfterPause ? PinlyTheme.primary :
                                             PinlyTheme.primary.opacity(0.35)
@@ -146,7 +146,7 @@ struct RouteSummaryView: View {
                                         Text(NSLocalizedString("Varıldı!", comment: ""))
                                             .font(.caption2)
                                             .fontWeight(.semibold)
-                                            .foregroundColor(.green)
+                                            .foregroundColor(PinlyTheme.success)
                                     } else if isCurrentStop {
                                         Text(NSLocalizedString("Mevcut durak", comment: ""))
                                             .font(.caption2)
@@ -174,7 +174,7 @@ struct RouteSummaryView: View {
                                 HStack {
                                     Spacer().frame(width: 34)
                                     Rectangle()
-                                        .fill(isCompleted ? Color.green.opacity(0.4) : PinlyTheme.primary.opacity(0.3))
+                                        .fill(isCompleted ? PinlyTheme.routeCompleted.opacity(0.4) : PinlyTheme.primary.opacity(0.3))
                                         .frame(width: 2, height: 16)
                                         .padding(.horizontal, 14)
                                     Spacer()
@@ -294,10 +294,10 @@ struct RouteSummaryView: View {
                         if noteSaved {
                             HStack(spacing: 6) {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.green)
+                                    .foregroundColor(PinlyTheme.success)
                                 Text(NSLocalizedString("Not kaydedildi", comment: ""))
                                     .font(.caption)
-                                    .foregroundColor(.green)
+                                    .foregroundColor(PinlyTheme.success)
                             }
                             .transition(.opacity)
                         } else {
@@ -305,7 +305,7 @@ struct RouteSummaryView: View {
                                 TextField(NSLocalizedString("Bu mekan için not ekle...", comment: ""), text: $viewModel.stopNote)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 8)
-                                    .background(Color(.systemGray6))
+                                    .background(PinlyTheme.fillMuted)
                                     .cornerRadius(10)
 
                                 Button {
@@ -364,7 +364,7 @@ struct RouteSummaryView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(Color.red)
+                        .background(PinlyTheme.danger)
                         .cornerRadius(14)
                     }
                 } else {

@@ -152,7 +152,7 @@ struct PlanRouteView: View {
                             NSLocalizedString("Konum seçildi — devam edebilirsin", comment: ""),
                             systemImage: "checkmark.circle.fill"
                         )
-                        .foregroundColor(.green)
+                        .foregroundColor(PinlyTheme.success)
                     }
                 }
                 .font(.subheadline)
@@ -169,7 +169,7 @@ struct PlanRouteView: View {
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
-                        .background(Color.orange.opacity(0.12))
+                        .background(PinlyTheme.warning.opacity(0.12))
                         .cornerRadius(10)
                 }
             }
@@ -327,7 +327,7 @@ private struct PlacePlanRow: View {
                 // Seçim indikatörü
                 ZStack {
                     Circle()
-                        .fill(isSelected ? PinlyTheme.primary : Color(.systemGray5))
+                        .fill(isSelected ? PinlyTheme.primary : PinlyTheme.fillMuted)
                         .frame(width: 32, height: 32)
                     Image(systemName: isSelected ? "checkmark" : place.placeCategory.icon)
                         .font(.caption)
@@ -386,8 +386,8 @@ private struct DroppingPin: View {
 
                 Image(systemName: "mappin.circle.fill")
                     .font(.system(size: 36))
-                    .foregroundStyle(.white, Color.red)
-                    .shadow(color: .black.opacity(0.25), radius: 4, x: 0, y: 2)
+                    .foregroundStyle(.white, PinlyTheme.accent)
+                    .shadow(color: .black.opacity(0.25), radius: 4, x: 0, y: 2) // bilinçli: canlı harita üzerinde yüzen pin
                     .offset(y: appeared ? 0 : -20)
                     .scaleEffect(appeared ? 1 : 0.7)
             }

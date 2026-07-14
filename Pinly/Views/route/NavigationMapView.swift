@@ -107,7 +107,7 @@ struct NavigationMapView: UIViewRepresentable {
                 let renderer = MKPolylineRenderer(polyline: polyline)
                 let overlayIndex = mapView.overlays.firstIndex(where: { $0 === polyline }) ?? 0
                 renderer.strokeColor = overlayIndex < completedSegmentCount
-                    ? UIColor.systemGreen
+                    ? UIColor(PinlyTheme.routeCompleted)
                     : UIColor(red: 0.35, green: 0.45, blue: 0.65, alpha: 1)
                 renderer.lineWidth = 5
                 renderer.lineDashPattern = [8, 4]

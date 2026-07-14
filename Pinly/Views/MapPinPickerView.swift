@@ -73,7 +73,7 @@ struct MapPinPickerView: View {
             Image(systemName: "mappin.circle.fill")
                 .font(.system(size: 40))
                 .foregroundStyle(.white, PinlyTheme.primary)
-                .shadow(color: .black.opacity(0.25), radius: 4, x: 0, y: 2)
+                .shadow(color: .black.opacity(0.25), radius: 4, x: 0, y: 2) // bilinçli: canlı harita üzerinde yüzen pin
 
             // Pin çubuğu
             Rectangle()
@@ -135,7 +135,7 @@ struct MapPinPickerView: View {
         .padding(16)
         .background(.regularMaterial)
         .cornerRadius(20)
-        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
+        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4) // bilinçli: canlı harita üzerinde yüzen panel
         .padding(.horizontal, 16)
         .padding(.bottom, 16)
     }

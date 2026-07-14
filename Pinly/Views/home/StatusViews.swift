@@ -29,7 +29,7 @@ struct LocationDeniedView: View {
         VStack(spacing: 24) {
             Image(systemName: "location.slash.fill")
                 .font(.system(size: 80))
-                .foregroundColor(.red)
+                .foregroundColor(PinlyTheme.danger)
             VStack(spacing: 8) {
                 Text(NSLocalizedString("Konum İzni Gerekli", comment: ""))
                     .font(.title2)
