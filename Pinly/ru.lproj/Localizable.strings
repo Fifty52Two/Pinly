@@ -434,6 +434,14 @@
 // MARK: - Faz 4: Оптимизация маршрута
 "Sırayı Optimize Et" = "Оптимизировать порядок";
 
+// MARK: - Faz 7: Диагностика MetricKit
+"Tanılama Günlüğü" = "Журнал диагностики";
+"Crash ve performans kayıtları" = "Записи сбоев и производительности";
+"Tanılama günlüğü boş" = "Журнал диагностики пуст";
+"Crash veya takılma tespit edilmedi." = "Сбои или зависания не обнаружены.";
+"Tüm tanılama kayıtları silinecek." = "Все записи диагностики будут удалены.";
+"Günlüğü Temizle" = "Очистить журнал";
+
 // MARK: - Faz 6: Рядом
 "Yakınımda" = "Рядом со мной";
 "Çevrendeki mekanları keşfet ve ekle" = "Исследуйте и добавляйте места вокруг вас";

@@ -18,6 +18,7 @@ struct ProfileTab: View {
     @State private var showStats = false
     @State private var showEditProfile = false
     @State private var showDeleteAllConfirm = false
+    @State private var showDiagnostics = false
     @State private var profile: UserProfile? = nil
     @State private var profilePhoto: UIImage? = nil
     @State private var pickerItem: PhotosPickerItem? = nil
@@ -222,6 +223,12 @@ struct ProfileTab: View {
                     }
                     .buttonStyle(.plain)
 
+                    MoreRow(icon: "stethoscope", iconColor: PinlyTheme.slate,
+                            title: NSLocalizedString("Tanılama Günlüğü", comment: ""),
+                            subtitle: NSLocalizedString("Crash ve performans kayıtları", comment: "")) {
+                        showDiagnostics = true
+                    }
+
                     Button(role: .destructive) {
                         showDeleteAllConfirm = true
                     } label: {
@@ -264,6 +271,9 @@ struct ProfileTab: View {
         .sheet(isPresented: $showLanguagePicker) {
             LanguagePickerSheet()
                 .environmentObject(languageManager)
+        }
+        .sheet(isPresented: $showDiagnostics) {
+            DiagnosticsView()
         }
         .sheet(isPresented: $showEditProfile, onDismiss: reloadProfile) {
             ProfileEditSheet(onSaved: reloadProfile)

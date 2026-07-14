@@ -436,6 +436,14 @@
 // MARK: - Faz 4: Route Optimization
 "Sırayı Optimize Et" = "Optimize Order";
 
+// MARK: - Faz 7: MetricKit Diagnostics
+"Tanılama Günlüğü" = "Diagnostics Log";
+"Crash ve performans kayıtları" = "Crash and performance records";
+"Tanılama günlüğü boş" = "Diagnostics log is empty";
+"Crash veya takılma tespit edilmedi." = "No crashes or hangs detected.";
+"Tüm tanılama kayıtları silinecek." = "All diagnostic records will be deleted.";
+"Günlüğü Temizle" = "Clear Log";
+
 // MARK: - Faz 6: Nearby
 "Yakınımda" = "Nearby";
 "Çevrendeki mekanları keşfet ve ekle" = "Discover and add places around you";

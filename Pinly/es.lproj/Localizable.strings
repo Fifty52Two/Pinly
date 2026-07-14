@@ -434,6 +434,14 @@
 // MARK: - Faz 4: Optimización de ruta
 "Sırayı Optimize Et" = "Optimizar orden";
 
+// MARK: - Faz 7: Diagnósticos MetricKit
+"Tanılama Günlüğü" = "Registro de diagnóstico";
+"Crash ve performans kayıtları" = "Registros de fallos y rendimiento";
+"Tanılama günlüğü boş" = "El registro de diagnóstico está vacío";
+"Crash veya takılma tespit edilmedi." = "No se detectaron fallos ni bloqueos.";
+"Tüm tanılama kayıtları silinecek." = "Se eliminarán todos los registros de diagnóstico.";
+"Günlüğü Temizle" = "Borrar registro";
+
 // MARK: - Faz 6: Cercanos
 "Yakınımda" = "Cerca de mí";
 "Çevrendeki mekanları keşfet ve ekle" = "Descubre y añade lugares a tu alrededor";

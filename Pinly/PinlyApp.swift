@@ -29,6 +29,7 @@ struct PinlyApp: App {
     private let nearbySearchService = DefaultNearbySearchService.shared
 
     init() {
+        DiagnosticsCollector.shared.register()
         MobileAds.shared.start { _ in }
         // Bildirim izni ilk açılışta onboarding'in üstüne düşmesin —
         // yeni kullanıcıda onboarding bitince (ContentView) tetiklenir

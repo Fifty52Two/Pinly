@@ -435,6 +435,14 @@
 // MARK: - Faz 4: Rota Optimize
 "Sırayı Optimize Et" = "Sırayı Optimize Et";
 
+// MARK: - Faz 7: MetricKit Tanılama
+"Tanılama Günlüğü" = "Tanılama Günlüğü";
+"Crash ve performans kayıtları" = "Crash ve performans kayıtları";
+"Tanılama günlüğü boş" = "Tanılama günlüğü boş";
+"Crash veya takılma tespit edilmedi." = "Crash veya takılma tespit edilmedi.";
+"Tüm tanılama kayıtları silinecek." = "Tüm tanılama kayıtları silinecek.";
+"Günlüğü Temizle" = "Günlüğü Temizle";
+
 // MARK: - Faz 6: Yakınımda
 "Yakınımda" = "Yakınımda";
 "Çevrendeki mekanları keşfet ve ekle" = "Çevrendeki mekanları keşfet ve ekle";
