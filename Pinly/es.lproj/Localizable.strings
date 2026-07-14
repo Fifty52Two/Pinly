@@ -415,3 +415,10 @@
 "Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin." = "Lugar guardado sin ubicación — no se pudo resolver la dirección. Puedes añadir una ubicación desde Editar.";
 "Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir." = "Algunos segmentos no se pudieron calcular — la distancia y el tiempo pueden estar incompletos.";
 "Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var." = "Se necesita el permiso de Salud en Ajustes para los datos de pasos.";
+
+// MARK: - Fase 2: Rutas listas
+"Hazır Rotalar" = "Rutas listas";
+"Rotalarıma Ekle" = "Añadir a mis rutas";
+"Hazır İstanbul rotalarını dene" = "Prueba rutas de Estambul listas";
+"Küratörlü yürüyüş rotaları — tek dokunuşla rotalarına ekle." = "Rutas a pie seleccionadas: añádelas con un toque.";
+"Keşfetmeye Başla" = "Empezar a explorar";

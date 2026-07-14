@@ -415,3 +415,10 @@
 "Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin." = "Ort ohne Standort gespeichert — die Adresse konnte nicht aufgelöst werden. Du kannst im Bearbeiten-Bildschirm einen Standort hinzufügen.";
 "Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir." = "Einige Abschnitte konnten nicht berechnet werden — Distanz und Zeit können unvollständig sein.";
 "Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var." = "Für Schrittdaten wird die Health-Berechtigung in den Einstellungen benötigt.";
+
+// MARK: - Phase 2: Fertige Routen
+"Hazır Rotalar" = "Fertige Routen";
+"Rotalarıma Ekle" = "Zu meinen Routen";
+"Hazır İstanbul rotalarını dene" = "Fertige Istanbul-Routen ausprobieren";
+"Küratörlü yürüyüş rotaları — tek dokunuşla rotalarına ekle." = "Kuratierte Spazierrouten – mit einem Tipp hinzufügen.";
+"Keşfetmeye Başla" = "Jetzt entdecken";

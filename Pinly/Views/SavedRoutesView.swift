@@ -12,6 +12,12 @@ struct SavedRoutesView: View {
     @StateObject private var viewModel = SavedRoutesViewModel()
 
     @Query(sort: \SavedRoute.createdAt, order: .reverse) private var savedRoutes: [SavedRoute]
+    @Environment(\.starterRoutes) private var starterRoutes
+
+    private var availableStarters: [StarterRouteDefinition] {
+        let existing = Set(savedRoutes.map(\.name))
+        return starterRoutes.loadAll().filter { !existing.contains($0.name) }
+    }
 
     @State private var showPlanRoute = false
     @State private var showDistanceAlert = false
@@ -97,31 +103,55 @@ struct SavedRoutesView: View {
     // MARK: - Boş durum
 
     private var emptyState: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "map.fill")
-                .font(.system(size: 56))
-                .foregroundColor(.secondary)
-            Text(NSLocalizedString("Henüz kayıtlı rota yok", comment: ""))
-                .font(.title3)
-                .fontWeight(.semibold)
-            Text(NSLocalizedString("Önceden bir rota planla, istediğin zaman başlat", comment: ""))
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 40)
-            Button {
-                showPlanRoute = true
-            } label: {
-                Label(NSLocalizedString("Rota Planla", comment: ""), systemImage: "plus.circle.fill")
+        ScrollView {
+            VStack(spacing: 20) {
+                Image(systemName: "map.fill")
+                    .font(.system(size: 56))
+                    .foregroundColor(.secondary)
+                Text(NSLocalizedString("Henüz kayıtlı rota yok", comment: ""))
+                    .font(.title3)
                     .fontWeight(.semibold)
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 12)
-                    .background(PinlyTheme.primary)
-                    .foregroundColor(.white)
-                    .cornerRadius(14)
+                Text(NSLocalizedString("Önceden bir rota planla, istediğin zaman başlat", comment: ""))
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 40)
+                Button {
+                    showPlanRoute = true
+                } label: {
+                    Label(NSLocalizedString("Rota Planla", comment: ""), systemImage: "plus.circle.fill")
+                        .fontWeight(.semibold)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 12)
+                        .background(PinlyTheme.primary)
+                        .foregroundColor(.white)
+                        .cornerRadius(14)
+                }
+            }
+            .padding(.top, 60)
+
+            starterSection
+                .padding(.top, 28)
+        }
+    }
+
+    // MARK: - Hazır rotalar
+
+    @ViewBuilder
+    private var starterSection: some View {
+        if !availableStarters.isEmpty {
+            VStack(alignment: .leading, spacing: 12) {
+                Text(NSLocalizedString("Hazır Rotalar", comment: ""))
+                    .font(.headline)
+                    .padding(.horizontal, 20)
+                ForEach(availableStarters) { definition in
+                    StarterRouteCard(definition: definition) {
+                        modelContext.insert(starterRoutes.makeSavedRoute(from: definition))
+                    }
+                    .padding(.horizontal, 20)
+                }
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     // MARK: - Liste
@@ -154,6 +184,10 @@ struct SavedRoutesView: View {
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
             }
+            starterSection
+                .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
         }
         .listStyle(.plain)
     }
@@ -293,5 +327,51 @@ private struct SavedRouteCard: View {
         } else {
             return String(format: "%.0f km uzakta", km)
         }
+    }
+}
+
+// MARK: - StarterRouteCard
+
+private struct StarterRouteCard: View {
+    let definition: StarterRouteDefinition
+    let onAdd: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(definition.name)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                Spacer()
+                Label(
+                    String(format: NSLocalizedString("%lld mekan", comment: ""), definition.places.count),
+                    systemImage: "mappin.circle.fill"
+                )
+                .font(.caption)
+                .foregroundColor(PinlyTheme.primary)
+            }
+
+            Text(definition.places.prefix(3).map(\.name).joined(separator: " → ")
+                 + (definition.places.count > 3 ? " +\(definition.places.count - 3)" : ""))
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .lineLimit(1)
+
+            Button(action: onAdd) {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                    Text(NSLocalizedString("Rotalarıma Ekle", comment: ""))
+                        .fontWeight(.semibold)
+                }
+                .foregroundColor(PinlyTheme.slate)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 10)
+                .background(PinlyTheme.slate.opacity(0.10))
+                .cornerRadius(10)
+            }
+        }
+        .padding(14)
+        .background(PinlyTheme.surface)
+        .cornerRadius(16)
     }
 }

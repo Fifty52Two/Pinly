@@ -415,3 +415,10 @@
 "Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin." = "Место сохранено без координат — адрес не удалось определить. Добавьте координаты на экране редактирования.";
 "Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir." = "Некоторые сегменты не удалось рассчитать — расстояние и время могут быть неполными.";
 "Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var." = "Для данных о шагах нужно разрешение Здоровья в Настройках.";
+
+// MARK: - Фаза 2: Готовые маршруты
+"Hazır Rotalar" = "Готовые маршруты";
+"Rotalarıma Ekle" = "Добавить в мои маршруты";
+"Hazır İstanbul rotalarını dene" = "Попробуйте готовые маршруты по Стамбулу";
+"Küratörlü yürüyüş rotaları — tek dokunuşla rotalarına ekle." = "Подобранные пешие маршруты — добавьте одним касанием.";
+"Keşfetmeye Başla" = "Начать открывать";

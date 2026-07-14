@@ -416,3 +416,10 @@
 "Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin." = "Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin.";
 "Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir." = "Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir.";
 "Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var." = "Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var.";
+
+// MARK: - Faz 2: Hazır Rotalar
+"Hazır Rotalar" = "Hazır Rotalar";
+"Rotalarıma Ekle" = "Rotalarıma Ekle";
+"Hazır İstanbul rotalarını dene" = "Hazır İstanbul rotalarını dene";
+"Küratörlü yürüyüş rotaları — tek dokunuşla rotalarına ekle." = "Küratörlü yürüyüş rotaları — tek dokunuşla rotalarına ekle.";
+"Keşfetmeye Başla" = "Keşfetmeye Başla";

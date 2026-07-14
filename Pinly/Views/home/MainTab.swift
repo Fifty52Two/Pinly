@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Ana Sekme
 
 struct MainTab: View {
+    @Binding var selectedTab: Int
     @EnvironmentObject var placeStore: PlaceStore
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var routeManager: RouteManager
@@ -134,6 +135,11 @@ struct MainTab: View {
                     }
                 }
 
+                // Boş kullanıcıya hazır rota teaser
+                if placeStore.places.isEmpty {
+                    starterRoutesTeaser
+                }
+
                 // Son eklenenler
                 if !recentPlaces.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
@@ -199,6 +205,37 @@ struct MainTab: View {
                     .environmentObject(locationManager)
             }
         }
+    }
+
+    // MARK: - Hazır rota yönlendirme kartı (boş uygulama problemi)
+
+    private var starterRoutesTeaser: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 10) {
+                Image(systemName: "map.fill")
+                    .font(.title3)
+                    .foregroundColor(PinlyTheme.primary)
+                Text(NSLocalizedString("Hazır İstanbul rotalarını dene", comment: ""))
+                    .font(.headline)
+            }
+            Text(NSLocalizedString("Küratörlü yürüyüş rotaları — tek dokunuşla rotalarına ekle.", comment: ""))
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            Button {
+                selectedTab = 2
+            } label: {
+                Text(NSLocalizedString("Keşfetmeye Başla", comment: ""))
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(PinlyTheme.primary)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            }
+        }
+        .padding(16)
+        .pinlyCard()
+        .padding(.horizontal, 20)
     }
 }
 

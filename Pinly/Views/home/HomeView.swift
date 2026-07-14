@@ -25,7 +25,7 @@ struct HomeView: View {
     var body: some View {
         ZStack(alignment: .top) {
             TabView(selection: $selectedTab) {
-                MainTab()
+                MainTab(selectedTab: $selectedTab)
                     .toolbar(.hidden, for: .tabBar)
                     .tag(0)
 

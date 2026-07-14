@@ -417,3 +417,10 @@
 "Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin." = "Place saved without a location — the address could not be resolved. You can add a location from the Edit screen.";
 "Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir." = "Some segments could not be calculated — distance and time may be incomplete.";
 "Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var." = "Health permission is needed in Settings for step data.";
+
+// MARK: - Phase 2: Starter Routes
+"Hazır Rotalar" = "Starter Routes";
+"Rotalarıma Ekle" = "Add to My Routes";
+"Hazır İstanbul rotalarını dene" = "Try ready-made Istanbul routes";
+"Küratörlü yürüyüş rotaları — tek dokunuşla rotalarına ekle." = "Curated walking routes — add them with one tap.";
+"Keşfetmeye Başla" = "Start Exploring";

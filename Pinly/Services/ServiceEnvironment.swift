@@ -62,6 +62,10 @@ private struct ReviewPromptKey: EnvironmentKey {
     static let defaultValue: ReviewPromptDeciding = DefaultReviewPromptService.shared
 }
 
+private struct StarterRoutesKey: EnvironmentKey {
+    static let defaultValue: StarterRoutesProviding = DefaultStarterRoutesProvider()
+}
+
 extension EnvironmentValues {
     var entitlements: EntitlementProviding {
         get { self[EntitlementsKey.self] }
@@ -131,5 +135,10 @@ extension EnvironmentValues {
     var reviewPrompt: ReviewPromptDeciding {
         get { self[ReviewPromptKey.self] }
         set { self[ReviewPromptKey.self] = newValue }
+    }
+
+    var starterRoutes: StarterRoutesProviding {
+        get { self[StarterRoutesKey.self] }
+        set { self[StarterRoutesKey.self] = newValue }
     }
 }

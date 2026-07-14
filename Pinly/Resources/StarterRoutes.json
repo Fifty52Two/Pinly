@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Tarihî Yarımada Klasikleri",
+    "routeCategory": "Şehir İçi",
+    "places": [
+      {"name": "Ayasofya", "category": "Historical Site", "address": "Sultan Ahmet, Ayasofya Meydanı No:1, Fatih/İstanbul", "latitude": 41.008583, "longitude": 28.980175},
+      {"name": "Yerebatan Sarnıcı", "category": "Historical Site", "address": "Alemdar, Yerebatan Cd. 1/3, Fatih/İstanbul", "latitude": 41.008418, "longitude": 28.977908},
+      {"name": "Sultanahmet Camii", "category": "Historical Site", "address": "Sultan Ahmet, Atmeydanı Cd. No:7, Fatih/İstanbul", "latitude": 41.005270, "longitude": 28.976960},
+      {"name": "Gülhane Parkı", "category": "Park", "address": "Cankurtaran, Kennedy Cd., Fatih/İstanbul", "latitude": 41.013262, "longitude": 28.981478},
+      {"name": "Mısır Çarşısı", "category": "General", "address": "Rüstem Paşa, Erzak Ambarı Sok. No:92, Fatih/İstanbul", "latitude": 41.016568, "longitude": 28.970483}
+    ]
+  },
+  {
+    "name": "Karaköy–Galata Keyfi",
+    "routeCategory": "Şehir İçi",
+    "places": [
+      {"name": "Karaköy Güllüoğlu", "category": "Dessert", "address": "Kemankeş Karamustafa Paşa, Rıhtım Cd. No:3, Beyoğlu/İstanbul", "latitude": 41.022970, "longitude": 28.977860},
+      {"name": "Salt Galata", "category": "Library", "address": "Azapkapı, Bankalar Cd. No:11, Beyoğlu/İstanbul", "latitude": 41.021111, "longitude": 28.973889},
+      {"name": "Kamondo Merdivenleri", "category": "Historical Site", "address": "Bereketzade, Bankalar Cd., Beyoğlu/İstanbul", "latitude": 41.023889, "longitude": 28.973056},
+      {"name": "Galata Kulesi", "category": "Historical Site", "address": "Bereketzade, Galata Kulesi Sok., Beyoğlu/İstanbul", "latitude": 41.025658, "longitude": 28.974183}
+    ]
+  },
+  {
+    "name": "Kadıköy–Moda Turu",
+    "routeCategory": "Şehir İçi",
+    "places": [
+      {"name": "Kadıköy Tarihî Çarşı", "category": "General", "address": "Caferağa, Güneşli Bahçe Sok., Kadıköy/İstanbul", "latitude": 40.990278, "longitude": 29.023889},
+      {"name": "Süreyya Operası", "category": "Historical Site", "address": "Caferağa, Gen. Asım Gündüz Cd. No:29, Kadıköy/İstanbul", "latitude": 40.987500, "longitude": 29.030400},
+      {"name": "Moda Sahili", "category": "Park", "address": "Caferağa, Moda Cd., Kadıköy/İstanbul", "latitude": 40.980700, "longitude": 29.024900}
+    ]
+  }
+]
