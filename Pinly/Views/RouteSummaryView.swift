@@ -473,6 +473,29 @@ struct RouteSummaryView: View {
                         Text(String(format: NSLocalizedString("\"%@\" kayıtlı rotalarına eklendi.", comment: ""), viewModel.saveRouteName))
                     }
 
+                    if routeManager.routePlaces.count >= 3 {
+                        Button {
+                            let optimized = RouteOrderOptimizer.nearestNeighborOrder(
+                                places: routeManager.routePlaces,
+                                start: locationManager.userLocation?.coordinate
+                            )
+                            let changed = optimized.map(\.name) != routeManager.routePlaces.map(\.name)
+                            routeManager.applyRouteOrder(optimized)
+                            if changed { loadRoutes() }
+                        } label: {
+                            HStack(spacing: 8) {
+                                Image(systemName: "wand.and.stars")
+                                Text(NSLocalizedString("Sırayı Optimize Et", comment: ""))
+                                    .fontWeight(.semibold)
+                            }
+                            .foregroundColor(PinlyTheme.gold)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(PinlyTheme.gold.opacity(0.10))
+                            .cornerRadius(14)
+                        }
+                    }
+
                     Button {
                         if viewModel.isPro {
                             shareGPX()

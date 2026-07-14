@@ -103,6 +103,13 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking 
         routePlaces = selectedCategories.compactMap { selectedPlaces[$0] }
     }
 
+    /// Durak sırasını aynı mekan kümesiyle değiştirir — yalnızca navigasyon
+    /// başlamadan önce (rota verileri çağıran tarafından yeniden hesaplanmalı).
+    func applyRouteOrder(_ ordered: [Place]) {
+        guard !isNavigating, ordered.count == routePlaces.count else { return }
+        routePlaces = ordered
+    }
+
     func reset() {
         endLiveActivity()
         selectedCategories = []

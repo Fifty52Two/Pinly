@@ -431,3 +431,6 @@
 "%lld mekan içe aktarıldı" = "%lld mekan içe aktarıldı";
 "Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin." = "Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin.";
 "İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir" = "İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir";
+
+// MARK: - Faz 4: Rota Optimize
+"Sırayı Optimize Et" = "Sırayı Optimize Et";

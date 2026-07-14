@@ -430,3 +430,6 @@
 "%lld mekan içe aktarıldı" = "%lld lugares importados";
 "Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin." = "El plan gratuito se limita a 20 lugares; desbloquea el resto con Pro.";
 "İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir" = "Consejo: Swarm → Perfil → Ajustes → Descargar mis datos";
+
+// MARK: - Faz 4: Optimización de ruta
+"Sırayı Optimize Et" = "Optimizar orden";

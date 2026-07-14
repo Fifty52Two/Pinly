@@ -430,3 +430,6 @@
 "%lld mekan içe aktarıldı" = "Импортировано мест: %lld";
 "Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin." = "Бесплатная версия ограничена 20 местами — остальное доступно в Pro.";
 "İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir" = "Подсказка: Swarm → Профиль → Настройки → Скачать мои данные";
+
+// MARK: - Faz 4: Оптимизация маршрута
+"Sırayı Optimize Et" = "Оптимизировать порядок";
