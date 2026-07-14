@@ -23,6 +23,7 @@ struct RatingSheetView: View {
             HStack(spacing: 12) {
                 ForEach(1...5, id: \.self) { star in
                     Button {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                             selectedRating = star
                         }

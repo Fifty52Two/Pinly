@@ -41,10 +41,16 @@ struct RouteCompletionOverlay: View {
     var onShareCard: (() -> Void)? = nil
     let onDismiss: () -> Void
 
+    // Kutlama animasyon durumu: kart spring ile girer, istatistikler
+    // 0'dan gerçek değere sayarak dolar (numericText geçişi).
+    @State private var appeared = false
+    @State private var displayedDistance: Double = 0
+    @State private var displayedVisited: Int = 0
+
     var formattedDistance: String {
         let formatter = MKDistanceFormatter()
         formatter.unitStyle = .full
-        return formatter.string(fromDistance: totalDistance)
+        return formatter.string(fromDistance: displayedDistance)
     }
 
     var body: some View {
@@ -52,18 +58,24 @@ struct RouteCompletionOverlay: View {
             Color.black.opacity(0.55)
                 .ignoresSafeArea()
 
+            // Konfeti — dimmer üstünde, kartın altında
+            if appeared {
+                ConfettiView()
+            }
+
             VStack(spacing: 24) {
                 Image(systemName: "flag.pattern.checkered.circle.fill")
                     .font(.system(size: 64))
                     .foregroundStyle(PinlyTheme.primary)
                     .symbolRenderingMode(.hierarchical)
+                    .symbolEffect(.bounce, value: appeared)
                 Text(NSLocalizedString("Rota Tamamlandı!", comment: ""))
                     .font(.title)
                     .fontWeight(.bold)
 
                 VStack(spacing: 14) {
                     CompletionStatRow(icon: "figure.walk", label: NSLocalizedString("Toplam Mesafe", comment: ""), value: formattedDistance)
-                    CompletionStatRow(icon: "checkmark.circle.fill", label: NSLocalizedString("Ziyaret Edilen", comment: ""), value: "\(stopsVisited) / \(totalStops)")
+                    CompletionStatRow(icon: "checkmark.circle.fill", label: NSLocalizedString("Ziyaret Edilen", comment: ""), value: "\(displayedVisited) / \(totalStops)")
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 16)
@@ -101,6 +113,21 @@ struct RouteCompletionOverlay: View {
                     .fill(PinlyTheme.surface)
             )
             .padding(.horizontal, 24)
+            .scaleEffect(appeared ? 1 : 0.85)
+            .opacity(appeared ? 1 : 0)
+        }
+        .onAppear {
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            withAnimation(.spring(response: 0.45, dampingFraction: 0.72)) {
+                appeared = true
+            }
+            // Sayaç animasyonu — kart oturduktan hemen sonra
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                withAnimation(.easeOut(duration: 0.8)) {
+                    displayedDistance = totalDistance
+                    displayedVisited = stopsVisited
+                }
+            }
         }
     }
 }
@@ -120,6 +147,8 @@ struct CompletionStatRow: View {
             Spacer()
             Text(value)
                 .fontWeight(.semibold)
+                .monospacedDigit()
+                .contentTransition(.numericText())
         }
     }
 }

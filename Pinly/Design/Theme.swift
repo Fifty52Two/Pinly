@@ -148,6 +148,20 @@ enum PinlyTheme {
 
 // MARK: - Buton Stilleri
 
+/// ButtonStyle'ın yaşam döngüsü olmadığı için basma haptic'i bu küçük
+/// modifier üzerinden verilir — tüm birincil CTA'lar otomatik kazanır.
+private struct HapticPressModifier: ViewModifier {
+    let isPressed: Bool
+
+    func body(content: Content) -> some View {
+        content.onChange(of: isPressed) { _, pressed in
+            if pressed {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            }
+        }
+    }
+}
+
 struct PinlyPrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -160,6 +174,7 @@ struct PinlyPrimaryButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
             .opacity(configuration.isPressed ? 0.9 : 1.0)
             .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
+            .modifier(HapticPressModifier(isPressed: configuration.isPressed))
     }
 }
 
@@ -217,6 +232,7 @@ struct StatChip: View {
                 .font(.headline)
                 .fontWeight(.bold)
                 .monospacedDigit()
+                .contentTransition(.numericText())
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             Text(label)
