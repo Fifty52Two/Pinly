@@ -55,6 +55,11 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate, Lo
         // kCLLocationAccuracyBest yerine NearestTenMeters — yürüyüş için yeterli, %30+ pil tasarrufu
         manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         manager.distanceFilter = 10
+        // Telefon cebe girince de takip sürsün — UIBackgroundModes/location gerektirir.
+        // "While Using" izniyle çalışır; sistem mavi göstergeyi gösterir.
+        manager.allowsBackgroundLocationUpdates = true
+        manager.pausesLocationUpdatesAutomatically = false
+        manager.showsBackgroundLocationIndicator = true
         manager.startUpdatingLocation()
 
         // 2 saat sonra otomatik durdur (kullanıcı uygulamayı kapatıp unutursa)
@@ -68,6 +73,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate, Lo
         isNavigationTracking = false
         navigationTimer?.invalidate()
         navigationTimer = nil
+        manager.allowsBackgroundLocationUpdates = false
+        manager.pausesLocationUpdatesAutomatically = true
         manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         manager.distanceFilter = kCLDistanceFilterNone
         manager.stopUpdatingLocation()
