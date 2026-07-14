@@ -11,7 +11,6 @@ struct PinlyApp: App {
     @StateObject private var placeStore = PlaceStore()
     @StateObject private var locationManager = LocationManager()
     @StateObject private var routeManager = RouteManager()
-    @StateObject private var themeManager = ThemeManager.shared
 
     private let entitlementService = LocalEntitlementService.shared
     private let badgeService = DefaultBadgeService.shared
@@ -35,6 +34,8 @@ struct PinlyApp: App {
             notificationScheduler.scheduleWeeklyNotification()
         }
         DefaultBadgeService.shared.recordAppOpen()
+        // Emekli edilen çoklu tema tercihinin temizliği (tek slate temaya geçildi)
+        UserDefaults.standard.removeObject(forKey: "pinly.theme")
     }
 
     var body: some Scene {
@@ -45,7 +46,6 @@ struct PinlyApp: App {
                 .environmentObject(placeStore)
                 .environmentObject(locationManager)
                 .environmentObject(routeManager)
-                .environmentObject(themeManager)
                 .environment(\.entitlements, entitlementService)
                 .environment(\.badges, badgeService)
                 .environment(\.ads, adService)

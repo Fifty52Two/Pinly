@@ -12,7 +12,6 @@ struct ContentView: View {
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var routeManager: RouteManager
     @EnvironmentObject var languageManager: LanguageManager
-    @EnvironmentObject var themeManager: ThemeManager
 
     @State private var pendingImport: PlaceImportData? = nil
     @State private var showImportSheet = false
@@ -48,8 +47,6 @@ struct ContentView: View {
                         .environmentObject(locationManager)
                         .environmentObject(routeManager)
                         .environmentObject(languageManager)
-                        .environmentObject(themeManager)
-                        .id(themeManager.themeKey)
                 }
             }
         }

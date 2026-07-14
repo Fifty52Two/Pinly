@@ -21,7 +21,6 @@ struct ProfileTab: View {
 
     private var visitedCount: Int { placeStore.places.filter { $0.isVisited }.count }
     @AppStorage("pinly.appearance") private var appearance = "system"
-    @EnvironmentObject private var themeManager: ThemeManager
 
     var body: some View {
         NavigationStack {
@@ -140,32 +139,6 @@ struct ProfileTab: View {
                             Text(NSLocalizedString("Sistem", comment: "")).tag("system")
                             Text(NSLocalizedString("Açık", comment: "")).tag("light")
                             Text(NSLocalizedString("Koyu", comment: "")).tag("dark")
-                        }
-                        .pickerStyle(.menu)
-                        .labelsHidden()
-                        .tint(PinlyTheme.primary)
-                    }
-
-                    // Tema (Slate / Farad)
-                    HStack(spacing: 14) {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(PinlyTheme.primary.opacity(0.15))
-                                .frame(width: 40, height: 40)
-                            Image(systemName: "paintpalette.fill")
-                                .foregroundColor(PinlyTheme.primary)
-                                .font(.system(size: 18))
-                        }
-                        Text(NSLocalizedString("Tema", comment: ""))
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                        Spacer()
-                        Picker("", selection: Binding(
-                            get: { themeManager.themeKey },
-                            set: { themeManager.themeKey = $0 }
-                        )) {
-                            Text(NSLocalizedString("Slate", comment: "")).tag("slate")
-                            Text(NSLocalizedString("Lavanta", comment: "")).tag("lavender")
                         }
                         .pickerStyle(.menu)
                         .labelsHidden()
