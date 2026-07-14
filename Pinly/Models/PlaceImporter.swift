@@ -36,6 +36,35 @@ struct PlaceImportData {
     let longitude: Double?
 }
 
+// MARK: - Girdi Doğrulama Sınırları
+
+/// Derin link / QR / dosya içe aktarımı GÜVENSİZ dış girdidir (MASVS-CODE-4).
+/// Bu sınırlar bellek DoS'unu ve bozuk verinin (NaN koordinat vb.) SwiftData +
+/// MapKit'e sızmasını engeller.
+enum ImportLimits {
+    /// Tek rota linkinde kabul edilen en fazla mekan — aşarsa link REDDEDİLİR
+    /// (sessiz kırpma rotayı yalancı yapar).
+    static let maxPlacesPerRoute = 50
+    /// base64 rota payload'ının üst boyutu (QR kapasitesinin çok üstü; elle
+    /// üretilmiş dev deep link'lere karşı).
+    static let maxPayloadBytes = 64 * 1024
+    /// Swarm içe aktarımında işlenecek en fazla check-in — kullanıcının kendi
+    /// dosyası olduğundan kırpma kabul edilebilir (bellek koruması).
+    static let maxSwarmItems = 500
+}
+
+/// Koordinat çifti ancak ikisi de sonlu ve dünya sınırları içindeyse geçerli.
+/// Geçersizse (nil, nil) döner — mekan koordinatsız (adresli) içe aktarılır,
+/// mevcut optional-koordinat tasarımıyla uyumlu.
+func validatedCoordinate(lat: Double?, lon: Double?) -> (lat: Double?, lon: Double?) {
+    guard let lat, let lon,
+          lat.isFinite, lon.isFinite,
+          (-90.0...90.0).contains(lat),
+          (-180.0...180.0).contains(lon)
+    else { return (nil, nil) }
+    return (lat, lon)
+}
+
 // MARK: - RouteURLCoding
 
 /// Tek mekan / rota derin link URL'lerinin build + parse edilmesi.
@@ -86,16 +115,17 @@ struct DefaultRouteURLCoder: RouteURLCoding {
         let name = value("name")
         guard !name.isEmpty else { return nil }
 
-        let lat = query.first(where: { $0.name == "lat" }).flatMap { Double($0.value ?? "") }
-        let lon = query.first(where: { $0.name == "lon" }).flatMap { Double($0.value ?? "") }
+        let rawLat = query.first(where: { $0.name == "lat" }).flatMap { Double($0.value ?? "") }
+        let rawLon = query.first(where: { $0.name == "lon" }).flatMap { Double($0.value ?? "") }
+        let coord = validatedCoordinate(lat: rawLat, lon: rawLon)
 
         return PlaceImportData(
             name: name,
             category: value("category").isEmpty ? PlaceCategory.general.rawValue : value("category"),
             address: value("address"),
             notes: value("notes"),
-            latitude: lat,
-            longitude: lon
+            latitude: coord.lat,
+            longitude: coord.lon
         )
     }
 
@@ -136,6 +166,7 @@ struct DefaultRouteURLCoder: RouteURLCoding {
         else { return nil }
         let comps = URLComponents(url: url, resolvingAgainstBaseURL: false)
         guard let b64  = comps?.queryItems?.first(where: { $0.name == "data" })?.value,
+              b64.utf8.count <= ImportLimits.maxPayloadBytes,
               let data = Data(base64Encoded: b64),
               let json = try? JSONSerialization.jsonObject(with: data)
         else { return nil }
@@ -160,16 +191,22 @@ struct DefaultRouteURLCoder: RouteURLCoding {
 
         let places = rawPlaces.compactMap { d -> PlaceImportData? in
             guard let name = d["name"], !name.isEmpty else { return nil }
+            let coord = validatedCoordinate(
+                lat: d["lat"].flatMap(Double.init),
+                lon: d["lon"].flatMap(Double.init)
+            )
             return PlaceImportData(
                 name: name,
                 category: d["category"] ?? PlaceCategory.general.rawValue,
                 address: d["address"] ?? "",
                 notes: d["notes"] ?? "",
-                latitude:  d["lat"].flatMap(Double.init),
-                longitude: d["lon"].flatMap(Double.init)
+                latitude:  coord.lat,
+                longitude: coord.lon
             )
         }
-        guard !places.isEmpty else { return nil }
+        // Aşırı kalabalık rota REDDEDİLİR (kırpılmaz) — kırpılmış rota kullanıcıya
+        // eksiksizmiş gibi görünür, yanıltıcıdır.
+        guard !places.isEmpty, places.count <= ImportLimits.maxPlacesPerRoute else { return nil }
         return RouteImport(places: places, name: routeName, category: routeCategory)
     }
 }
@@ -192,7 +229,8 @@ struct DefaultSwarmImporter: SwarmImporting {
         var seen = Set<String>()
         var result: [PlaceImportData] = []
 
-        for item in items {
+        // Kullanıcının kendi dosyası — kırpma kabul edilebilir (bellek koruması)
+        for item in items.prefix(ImportLimits.maxSwarmItems) {
             guard let venue = item["venue"] as? [String: Any],
                   let name = venue["name"] as? String, !name.isEmpty
             else { continue }
@@ -202,8 +240,12 @@ struct DefaultSwarmImporter: SwarmImporting {
             seen.insert(venueId)
 
             let location = venue["location"] as? [String: Any] ?? [:]
-            let lat = location["lat"] as? Double
-            let lon = location["lng"] as? Double
+            let coord = validatedCoordinate(
+                lat: location["lat"] as? Double,
+                lon: location["lng"] as? Double
+            )
+            let lat = coord.lat
+            let lon = coord.lon
             let street = location["address"] as? String ?? ""
             let city   = location["city"] as? String ?? ""
             let address = [street, city].filter { !$0.isEmpty }.joined(separator: ", ")

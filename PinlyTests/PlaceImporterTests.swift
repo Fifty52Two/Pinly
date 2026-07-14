@@ -84,6 +84,92 @@ final class PlaceImporterTests: XCTestCase {
         XCTAssertNil(coder.parseRouteFull(url: url))
     }
 
+    // MARK: - Girdi doğrulama (MASVS — güvensiz deep link/QR girdisi)
+
+    func test_parse_outOfRangeLatitude_dropsCoordinatesButKeepsPlace() {
+        let coder = DefaultRouteURLCoder()
+        let url = URL(string: "pinly://addplace?name=Mekan&lat=91.0&lon=29.0")!
+        let parsed = coder.parse(url: url)
+        XCTAssertEqual(parsed?.name, "Mekan")
+        XCTAssertNil(parsed?.latitude)
+        XCTAssertNil(parsed?.longitude)
+    }
+
+    func test_parse_infiniteCoordinate_dropsCoordinates() {
+        let coder = DefaultRouteURLCoder()
+        // "inf" ve "1e999" Double.init'te sonsuza çözülür — ikisi de reddedilmeli
+        for latValue in ["inf", "1e999"] {
+            let url = URL(string: "pinly://addplace?name=Mekan&lat=\(latValue)&lon=29.0")!
+            let parsed = coder.parse(url: url)
+            XCTAssertNil(parsed?.latitude, "lat=\(latValue) koordinatı düşürülmeliydi")
+        }
+    }
+
+    func test_parse_outOfRangeLongitude_dropsCoordinates() {
+        let coder = DefaultRouteURLCoder()
+        let url = URL(string: "pinly://addplace?name=Mekan&lat=41.0&lon=181.0")!
+        let parsed = coder.parse(url: url)
+        XCTAssertNil(parsed?.longitude)
+    }
+
+    func test_parseRouteFull_oversizedPayload_returnsNil() {
+        let coder = DefaultRouteURLCoder()
+        // 64KB sınırının üstünde base64 — parse edilmeden reddedilmeli
+        let hugeB64 = String(repeating: "QUJDRA==", count: (ImportLimits.maxPayloadBytes / 8) + 100)
+        let url = URL(string: "pinly://route?data=\(hugeB64)")!
+        XCTAssertNil(coder.parseRouteFull(url: url))
+    }
+
+    func test_parseRouteFull_tooManyPlaces_returnsNil() {
+        let coder = DefaultRouteURLCoder()
+        let rawPlaces = (0...(ImportLimits.maxPlacesPerRoute)).map { i in
+            ["name": "Durak \(i)"]
+        } // limit + 1 adet
+        let json = try! JSONSerialization.data(withJSONObject: ["places": rawPlaces])
+        let url = URL(string: "pinly://route?data=\(json.base64EncodedString())")!
+        XCTAssertNil(coder.parseRouteFull(url: url))
+    }
+
+    func test_parseRouteFull_atPlaceLimit_parses() {
+        let coder = DefaultRouteURLCoder()
+        let rawPlaces = (1...ImportLimits.maxPlacesPerRoute).map { i in
+            ["name": "Durak \(i)"]
+        }
+        let json = try! JSONSerialization.data(withJSONObject: ["places": rawPlaces])
+        let url = URL(string: "pinly://route?data=\(json.base64EncodedString())")!
+        XCTAssertEqual(coder.parseRouteFull(url: url)?.places.count, ImportLimits.maxPlacesPerRoute)
+    }
+
+    func test_parseRouteFull_invalidCoordinateInPlace_dropsCoordinateKeepsPlace() {
+        let coder = DefaultRouteURLCoder()
+        let rawPlaces = [["name": "Durak", "lat": "95.0", "lon": "29.0"]]
+        let json = try! JSONSerialization.data(withJSONObject: ["places": rawPlaces])
+        let url = URL(string: "pinly://route?data=\(json.base64EncodedString())")!
+        let imported = coder.parseRouteFull(url: url)
+        XCTAssertEqual(imported?.places.first?.name, "Durak")
+        XCTAssertNil(imported?.places.first?.latitude)
+    }
+
+    func test_swarmImport_capsItemCount() {
+        let importer = DefaultSwarmImporter()
+        let items = (0..<(ImportLimits.maxSwarmItems + 1)).map { i in
+            ["venue": ["id": "v\(i)", "name": "Mekan \(i)"]]
+        }
+        let json = try! JSONSerialization.data(withJSONObject: ["checkins": ["items": items]])
+        let result = importer.parseSwarm(data: json)
+        XCTAssertEqual(result?.count, ImportLimits.maxSwarmItems)
+    }
+
+    func test_swarmImport_invalidCoordinate_dropsCoordinateKeepsVenue() {
+        let importer = DefaultSwarmImporter()
+        let items = [["venue": ["id": "v1", "name": "Mekan",
+                                "location": ["lat": 200.0, "lng": 29.0]]]]
+        let json = try! JSONSerialization.data(withJSONObject: ["checkins": ["items": items]])
+        let result = importer.parseSwarm(data: json)
+        XCTAssertEqual(result?.first?.name, "Mekan")
+        XCTAssertNil(result?.first?.latitude)
+    }
+
     // MARK: - Export filename sanitization (bug B9 regression)
 
     func test_buildGPXFile_sanitizesSlashesInRouteName() {
