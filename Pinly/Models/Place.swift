@@ -43,19 +43,6 @@ enum PlaceCategory: String, CaseIterable, Codable {
         }
     }
 
-    var illustrationName: String {
-        switch self {
-        case .restaurant: return "illus_trip_pana"
-        case .cafe:       return "illus_walk"
-        case .park:       return "illus_camping"
-        case .museum:     return "illus_bridge"
-        case .historical: return "illus_vintage"
-        case .library:    return "illus_vintage"
-        case .dessert:    return "illus_trip_pana"
-        case .general:    return "illus_location"
-        }
-    }
-
     // Mevcut veritabanındaki eski TR string'leri de tanı
     static func from(_ raw: String) -> PlaceCategory {
         switch raw.lowercased() {
@@ -121,7 +108,4 @@ class Place {
 
     @Transient
     var categoryIcon: String { placeCategory.icon }
-
-    @Transient
-    var categoryIllustration: String { placeCategory.illustrationName }
 }

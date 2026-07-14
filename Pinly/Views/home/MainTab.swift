@@ -258,20 +258,27 @@ private struct RecentPlaceCard: View {
     var body: some View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 0) {
-                // Üst: illüstrasyon
+                // Üst: kategori renginde yumuşak zemin üzerinde büyük kategori sembolü
+                // (eski illüstrasyonlar 3 farklı sanat stilinden geliyordu ve
+                // .fill+clipped kırpması öngörülemezdi — SF Symbol tutarlı ve net)
                 ZStack(alignment: .topTrailing) {
-                    Image(place.categoryIllustration)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 160, height: 110)
-                        .clipped()
-                        .background(place.categoryColor.opacity(0.08))
+                    RoundedRectangle(cornerRadius: 0)
+                        .fill(LinearGradient(
+                            colors: [place.categoryColor.opacity(0.18), place.categoryColor.opacity(0.08)],
+                            startPoint: .topLeading, endPoint: .bottomTrailing))
+                        .frame(width: 160, height: 96)
+                        .overlay(
+                            // Dekoratif büyük sembol — sabit boyut bilinçli (Dynamic Type kapsamı dışı)
+                            Image(systemName: place.categoryIcon)
+                                .font(.system(size: 34, weight: .regular))
+                                .foregroundStyle(place.categoryColor.opacity(0.85))
+                        )
 
                     if place.isVisited {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.caption)
-                            .foregroundColor(.white)
-                            .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.white, PinlyTheme.success)
                             .padding(8)
                     }
                 }
@@ -299,7 +306,7 @@ private struct RecentPlaceCard: View {
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .overlay(
                 RoundedRectangle(cornerRadius: 14)
-                    .strokeBorder(Color.primary.opacity(0.07), lineWidth: 1)
+                    .strokeBorder(PinlyTheme.hairline, lineWidth: 1)
             )
         }
         .buttonStyle(.plain)

@@ -28,16 +28,21 @@ struct ProfileSetupView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                // Hero illüstrasyon
+                // Hero — tema gradyanlı daire içinde pin sembolü
                 ZStack {
-                    Image("illus_trip_cuate")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 260)
-                        .clipped()
+                    Circle()
+                        .strokeBorder(PinlyTheme.primary.opacity(0.20), lineWidth: 1)
+                        .frame(width: 168, height: 168)
+                    Circle()
+                        .fill(PinlyTheme.heroGradient)
+                        .frame(width: 140, height: 140)
+                    Image(systemName: "mappin.and.ellipse")
+                        .font(.system(size: 56, weight: .medium))
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(.white)
                 }
                 .frame(maxWidth: .infinity)
+                .padding(.vertical, 44)
 
                 VStack(alignment: .leading, spacing: 28) {
                     // Başlık
@@ -131,6 +136,19 @@ struct ProfileSetupView: View {
                     .buttonStyle(PinlyPrimaryButtonStyle())
                     .disabled(!isValid)
                     .opacity(isValid ? 1 : 0.5)
+
+                    // Kişisel bilgi zorunlu değil — kullanıcı değeri görmeden
+                    // PII istemek sürtünme yaratır; profil sonradan Profil
+                    // sekmesinden tamamlanabilir.
+                    Button {
+                        onComplete()
+                    } label: {
+                        Text(NSLocalizedString("Şimdilik Atla", comment: ""))
+                            .font(.subheadline.weight(.medium))
+                            .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .padding(.top, -12)
                 }
                 .padding(24)
             }

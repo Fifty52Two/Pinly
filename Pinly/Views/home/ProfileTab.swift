@@ -45,10 +45,18 @@ struct ProfileTab: View {
                         .buttonStyle(.plain)
 
                         VStack(spacing: 3) {
-                            Text(profile?.fullName ?? NSLocalizedString("Profil", comment: ""))
-                                .font(.title3.bold())
                             if let profile {
+                                Text(profile.fullName)
+                                    .font(.title3.bold())
                                 Text(String(format: NSLocalizedString("%lld yaşında", comment: ""), profile.age))
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            } else {
+                                // Kurulumda "Şimdilik Atla" seçildiyse profil boş —
+                                // nazikçe tamamlamaya davet et
+                                Text(NSLocalizedString("Profilini tamamla", comment: ""))
+                                    .font(.title3.bold())
+                                Text(NSLocalizedString("Adını ekleyerek deneyimini kişiselleştir.", comment: ""))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
