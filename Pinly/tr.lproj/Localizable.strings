@@ -423,3 +423,11 @@
 "Hazır İstanbul rotalarını dene" = "Hazır İstanbul rotalarını dene";
 "Küratörlü yürüyüş rotaları — tek dokunuşla rotalarına ekle." = "Küratörlü yürüyüş rotaları — tek dokunuşla rotalarına ekle.";
 "Keşfetmeye Başla" = "Keşfetmeye Başla";
+
+// MARK: - Faz 3: Swarm Onboarding
+"Swarm'dan Taşın" = "Swarm'dan Taşın";
+"Foursquare/Swarm geçmişin mi var? checkins.json dosyanı seç, mekanların saniyeler içinde Pinly'de olsun." = "Foursquare/Swarm geçmişin mi var? checkins.json dosyanı seç, mekanların saniyeler içinde Pinly'de olsun.";
+"Swarm Dosyası Seç" = "Swarm Dosyası Seç";
+"%lld mekan içe aktarıldı" = "%lld mekan içe aktarıldı";
+"Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin." = "Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin.";
+"İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir" = "İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir";

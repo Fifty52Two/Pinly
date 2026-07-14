@@ -422,3 +422,11 @@
 "Hazır İstanbul rotalarını dene" = "Попробуйте готовые маршруты по Стамбулу";
 "Küratörlü yürüyüş rotaları — tek dokunuşla rotalarına ekle." = "Подобранные пешие маршруты — добавьте одним касанием.";
 "Keşfetmeye Başla" = "Начать открывать";
+
+// MARK: - Фаза 3: Swarm Onboarding
+"Swarm'dan Taşın" = "Перенос из Swarm";
+"Foursquare/Swarm geçmişin mi var? checkins.json dosyanı seç, mekanların saniyeler içinde Pinly'de olsun." = "Есть история Foursquare/Swarm? Выберите файл checkins.json — и ваши места окажутся в Pinly за секунды.";
+"Swarm Dosyası Seç" = "Выбрать файл Swarm";
+"%lld mekan içe aktarıldı" = "Импортировано мест: %lld";
+"Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin." = "Бесплатная версия ограничена 20 местами — остальное доступно в Pro.";
+"İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir" = "Подсказка: Swarm → Профиль → Настройки → Скачать мои данные";
