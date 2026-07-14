@@ -26,6 +26,7 @@ struct PinlyApp: App {
     private let qrCodeGenerator = DefaultQRCodeGenerator()
     private let profileService = DefaultProfileService.shared
     private let starterRoutesProvider = DefaultStarterRoutesProvider()
+    private let nearbySearchService = DefaultNearbySearchService.shared
 
     init() {
         MobileAds.shared.start { _ in }
@@ -64,6 +65,7 @@ struct PinlyApp: App {
                 .environment(\.qrCodeGenerator, qrCodeGenerator)
                 .environment(\.profile, profileService)
                 .environment(\.starterRoutes, starterRoutesProvider)
+                .environment(\.nearbySearch, nearbySearchService)
         }
     }
 }

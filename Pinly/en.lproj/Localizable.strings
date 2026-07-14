@@ -436,6 +436,15 @@
 // MARK: - Faz 4: Route Optimization
 "Sırayı Optimize Et" = "Optimize Order";
 
+// MARK: - Faz 6: Nearby
+"Yakınımda" = "Nearby";
+"Çevrendeki mekanları keşfet ve ekle" = "Discover and add places around you";
+"Yakındaki Mekanları Keşfet" = "Discover Nearby Places";
+"Kategori seç ve çevrendeki mekanları bul." = "Pick a category and find places around you.";
+"Aranıyor…" = "Searching…";
+"Yakında sonuç bulunamadı." = "No results found nearby.";
+"Konum bilgisi alınamadı." = "Location unavailable.";
+
 // MARK: - Faz 5: Streak Reminder
 "Serinizi Kaybetmeyin!" = "Don't Lose Your Streak!";
 "%lld günlük serinizi korumak için bugün bir rota yürüyün." = "Walk a route today to keep your %lld-day streak.";

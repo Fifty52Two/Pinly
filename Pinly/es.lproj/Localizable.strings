@@ -434,6 +434,15 @@
 // MARK: - Faz 4: Optimización de ruta
 "Sırayı Optimize Et" = "Optimizar orden";
 
+// MARK: - Faz 6: Cercanos
+"Yakınımda" = "Cerca de mí";
+"Çevrendeki mekanları keşfet ve ekle" = "Descubre y añade lugares a tu alrededor";
+"Yakındaki Mekanları Keşfet" = "Descubrir lugares cercanos";
+"Kategori seç ve çevrendeki mekanları bul." = "Elige una categoría y encuentra lugares a tu alrededor.";
+"Aranıyor…" = "Buscando…";
+"Yakında sonuç bulunamadı." = "No se encontraron resultados cercanos.";
+"Konum bilgisi alınamadı." = "Ubicación no disponible.";
+
 // MARK: - Faz 5: Recordatorio de racha
 "Serinizi Kaybetmeyin!" = "¡No pierdas tu racha!";
 "%lld günlük serinizi korumak için bugün bir rota yürüyün." = "Haz una ruta hoy para mantener tu racha de %lld días.";

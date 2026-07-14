@@ -435,6 +435,15 @@
 // MARK: - Faz 4: Rota Optimize
 "Sırayı Optimize Et" = "Sırayı Optimize Et";
 
+// MARK: - Faz 6: Yakınımda
+"Yakınımda" = "Yakınımda";
+"Çevrendeki mekanları keşfet ve ekle" = "Çevrendeki mekanları keşfet ve ekle";
+"Yakındaki Mekanları Keşfet" = "Yakındaki Mekanları Keşfet";
+"Kategori seç ve çevrendeki mekanları bul." = "Kategori seç ve çevrendeki mekanları bul.";
+"Aranıyor…" = "Aranıyor…";
+"Yakında sonuç bulunamadı." = "Yakında sonuç bulunamadı.";
+"Konum bilgisi alınamadı." = "Konum bilgisi alınamadı.";
+
 // MARK: - Faz 5: Seri Hatırlatıcı
 "Serinizi Kaybetmeyin!" = "Serinizi Kaybetmeyin!";
 "%lld günlük serinizi korumak için bugün bir rota yürüyün." = "%lld günlük serinizi korumak için bugün bir rota yürüyün.";

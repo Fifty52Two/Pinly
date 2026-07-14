@@ -434,6 +434,15 @@
 // MARK: - Faz 4: Оптимизация маршрута
 "Sırayı Optimize Et" = "Оптимизировать порядок";
 
+// MARK: - Faz 6: Рядом
+"Yakınımda" = "Рядом со мной";
+"Çevrendeki mekanları keşfet ve ekle" = "Исследуйте и добавляйте места вокруг вас";
+"Yakındaki Mekanları Keşfet" = "Найти места рядом";
+"Kategori seç ve çevrendeki mekanları bul." = "Выберите категорию и найдите места рядом.";
+"Aranıyor…" = "Поиск…";
+"Yakında sonuç bulunamadı." = "Рядом ничего не найдено.";
+"Konum bilgisi alınamadı." = "Местоположение недоступно.";
+
 // MARK: - Faz 5: Напоминание о серии
 "Serinizi Kaybetmeyin!" = "Не теряйте серию!";
 "%lld günlük serinizi korumak için bugün bir rota yürüyün." = "Пройдите маршрут сегодня, чтобы сохранить серию в %lld дней.";

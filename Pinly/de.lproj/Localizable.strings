@@ -434,6 +434,15 @@
 // MARK: - Faz 4: Routen-Optimierung
 "Sırayı Optimize Et" = "Reihenfolge optimieren";
 
+// MARK: - Faz 6: In der Nähe
+"Yakınımda" = "In der Nähe";
+"Çevrendeki mekanları keşfet ve ekle" = "Entdecke und füge Orte in deiner Umgebung hinzu";
+"Yakındaki Mekanları Keşfet" = "Orte in der Nähe entdecken";
+"Kategori seç ve çevrendeki mekanları bul." = "Wähle eine Kategorie und finde Orte in deiner Nähe.";
+"Aranıyor…" = "Wird gesucht…";
+"Yakında sonuç bulunamadı." = "In der Nähe wurden keine Ergebnisse gefunden.";
+"Konum bilgisi alınamadı." = "Standort nicht verfügbar.";
+
 // MARK: - Faz 5: Streak-Erinnerung
 "Serinizi Kaybetmeyin!" = "Verliere deine Serie nicht!";
 "%lld günlük serinizi korumak için bugün bir rota yürüyün." = "Lauf heute eine Route, um deine %lld-Tage-Serie zu halten.";

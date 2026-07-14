@@ -39,6 +39,7 @@ struct DiscoverView: View {
                     ScrollView {
                         VStack(spacing: 20) {
                             statsBar
+                            nearbyCard
                             categoryGrid
                         }
                         .padding(.top, 16)
@@ -65,6 +66,43 @@ struct DiscoverView: View {
         .padding(.vertical, 14)
         .background(PinlyTheme.surface)
         .cornerRadius(14)
+        .padding(.horizontal, 20)
+    }
+
+    private var nearbyCard: some View {
+        NavigationLink {
+            NearbyPlacesView()
+                .environmentObject(locationManager)
+                .environmentObject(placeStore)
+        } label: {
+            HStack(spacing: 14) {
+                ZStack {
+                    Circle()
+                        .fill(PinlyTheme.primary.opacity(0.12))
+                        .frame(width: 48, height: 48)
+                    Image(systemName: "location.magnifyingglass")
+                        .font(.title3)
+                        .foregroundColor(PinlyTheme.primary)
+                }
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(NSLocalizedString("Yakınımda", comment: ""))
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                    Text(NSLocalizedString("Çevrendeki mekanları keşfet ve ekle", comment: ""))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .padding(14)
+            .background(PinlyTheme.surface)
+            .cornerRadius(14)
+        }
+        .buttonStyle(.plain)
         .padding(.horizontal, 20)
     }
 

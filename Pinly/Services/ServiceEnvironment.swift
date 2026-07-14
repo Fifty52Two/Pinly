@@ -66,6 +66,10 @@ private struct StarterRoutesKey: EnvironmentKey {
     static let defaultValue: StarterRoutesProviding = DefaultStarterRoutesProvider()
 }
 
+private struct NearbySearchKey: EnvironmentKey {
+    static let defaultValue: NearbySearching = DefaultNearbySearchService.shared
+}
+
 extension EnvironmentValues {
     var entitlements: EntitlementProviding {
         get { self[EntitlementsKey.self] }
@@ -140,5 +144,10 @@ extension EnvironmentValues {
     var starterRoutes: StarterRoutesProviding {
         get { self[StarterRoutesKey.self] }
         set { self[StarterRoutesKey.self] = newValue }
+    }
+
+    var nearbySearch: NearbySearching {
+        get { self[NearbySearchKey.self] }
+        set { self[NearbySearchKey.self] = newValue }
     }
 }

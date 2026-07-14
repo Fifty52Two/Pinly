@@ -14,6 +14,56 @@ protocol GeocodingProviding: AnyObject {
     func reverseGeocode(coordinate: CLLocationCoordinate2D) async -> CLPlacemark?
 }
 
+// MARK: - NearbySearching
+
+struct NearbyPlace: Identifiable {
+    let id = UUID()
+    let name: String
+    let address: String
+    let coordinate: CLLocationCoordinate2D
+    let category: PlaceCategory
+}
+
+protocol NearbySearching {
+    func searchNearby(
+        coordinate: CLLocationCoordinate2D,
+        category: PlaceCategory,
+        radiusMeters: Double
+    ) async -> [NearbyPlace]
+}
+
+final class DefaultNearbySearchService: NearbySearching {
+    static let shared = DefaultNearbySearchService()
+
+    func searchNearby(
+        coordinate: CLLocationCoordinate2D,
+        category: PlaceCategory,
+        radiusMeters: Double
+    ) async -> [NearbyPlace] {
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = category.localizedName
+        request.region = MKCoordinateRegion(
+            center: coordinate,
+            latitudinalMeters: radiusMeters,
+            longitudinalMeters: radiusMeters
+        )
+        let items = (try? await MKLocalSearch(request: request).start().mapItems) ?? []
+        return items.prefix(10).compactMap { item in
+            guard let name = item.name, !name.isEmpty else { return nil }
+            let address = [
+                item.placemark.thoroughfare,
+                item.placemark.subLocality ?? item.placemark.locality
+            ].compactMap { $0 }.joined(separator: ", ")
+            return NearbyPlace(
+                name: name,
+                address: address,
+                coordinate: item.placemark.coordinate,
+                category: category
+            )
+        }
+    }
+}
+
 // MARK: - DefaultGeocodingService
 
 final class DefaultGeocodingService: GeocodingProviding {
