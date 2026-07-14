@@ -70,9 +70,38 @@ struct DefaultWeeklyStatsComputer: WeeklyStatsComputing {
 protocol NotificationScheduling {
     /// Pazar sabahı 09:00 tekrarlayan lokal bildirim planlar.
     func scheduleWeeklyNotification()
+    /// `consecutiveDays > 0` ise bugün 20:00'de tek seferlik hatırlatıcı planlar.
+    func scheduleStreakReminder(consecutiveDays: Int)
 }
 
 struct DefaultNotificationScheduler: NotificationScheduling {
+    func scheduleStreakReminder(consecutiveDays: Int) {
+        guard consecutiveDays > 0 else { return }
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            guard settings.authorizationStatus == .authorized else { return }
+
+            let content   = UNMutableNotificationContent()
+            content.title = NSLocalizedString("Serinizi Kaybetmeyin!", comment: "")
+            content.body  = String(
+                format: NSLocalizedString("%lld günlük serinizi korumak için bugün bir rota yürüyün.", comment: ""),
+                consecutiveDays
+            )
+            content.sound = .default
+
+            var comps   = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+            comps.hour  = 20
+            comps.minute = 0
+
+            let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+            let request = UNNotificationRequest(
+                identifier: "pinly.streakReminder",
+                content: content,
+                trigger: trigger
+            )
+            UNUserNotificationCenter.current().add(request)
+        }
+    }
+
     func scheduleWeeklyNotification() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, _ in
             guard granted else { return }

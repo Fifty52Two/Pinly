@@ -35,6 +35,9 @@ struct PinlyApp: App {
             notificationScheduler.scheduleWeeklyNotification()
         }
         DefaultBadgeService.shared.recordAppOpen()
+        notificationScheduler.scheduleStreakReminder(
+            consecutiveDays: DefaultBadgeService.shared.consecutiveDays
+        )
         // Emekli edilen çoklu tema tercihinin temizliği (tek slate temaya geçildi)
         UserDefaults.standard.removeObject(forKey: "pinly.theme")
     }

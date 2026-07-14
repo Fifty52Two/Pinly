@@ -434,3 +434,7 @@
 
 // MARK: - Faz 4: Rota Optimize
 "Sırayı Optimize Et" = "Sırayı Optimize Et";
+
+// MARK: - Faz 5: Seri Hatırlatıcı
+"Serinizi Kaybetmeyin!" = "Serinizi Kaybetmeyin!";
+"%lld günlük serinizi korumak için bugün bir rota yürüyün." = "%lld günlük serinizi korumak için bugün bir rota yürüyün.";

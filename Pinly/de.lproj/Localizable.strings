@@ -433,3 +433,7 @@
 
 // MARK: - Faz 4: Routen-Optimierung
 "Sırayı Optimize Et" = "Reihenfolge optimieren";
+
+// MARK: - Faz 5: Streak-Erinnerung
+"Serinizi Kaybetmeyin!" = "Verliere deine Serie nicht!";
+"%lld günlük serinizi korumak için bugün bir rota yürüyün." = "Lauf heute eine Route, um deine %lld-Tage-Serie zu halten.";

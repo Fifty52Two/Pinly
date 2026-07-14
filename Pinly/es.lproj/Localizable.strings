@@ -433,3 +433,7 @@
 
 // MARK: - Faz 4: Optimización de ruta
 "Sırayı Optimize Et" = "Optimizar orden";
+
+// MARK: - Faz 5: Recordatorio de racha
+"Serinizi Kaybetmeyin!" = "¡No pierdas tu racha!";
+"%lld günlük serinizi korumak için bugün bir rota yürüyün." = "Haz una ruta hoy para mantener tu racha de %lld días.";

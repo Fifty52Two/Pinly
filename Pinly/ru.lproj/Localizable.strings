@@ -433,3 +433,7 @@
 
 // MARK: - Faz 4: Оптимизация маршрута
 "Sırayı Optimize Et" = "Оптимизировать порядок";
+
+// MARK: - Faz 5: Напоминание о серии
+"Serinizi Kaybetmeyin!" = "Не теряйте серию!";
+"%lld günlük serinizi korumak için bugün bir rota yürüyün." = "Пройдите маршрут сегодня, чтобы сохранить серию в %lld дней.";
