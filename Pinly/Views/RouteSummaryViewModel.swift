@@ -89,8 +89,12 @@ final class RouteSummaryViewModel: ObservableObject {
         badges.recordRouteStarted()
     }
 
+    /// Sağlık izni reddedildiyse true — adım/mesafe istatistiklerinin neden boş
+    /// kalacağını kullanıcıya açıklamak için (eskiden sonuç sessizce atılıyordu).
+    @Published var healthKitDenied = false
+
     func requestHealthKitAuthorization() async {
-        _ = await healthStats.requestAuthorization()
+        healthKitDenied = !(await healthStats.requestAuthorization())
     }
 
     /// Rota tamamlanınca HealthKit istatistiklerini çeker, RouteHistory kaydeder,

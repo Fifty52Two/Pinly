@@ -70,6 +70,11 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking 
     @Published var isRouteComplete: Bool = false
     @Published var completionPercentage: Double = 0.0
 
+    /// Hesaplanamayan segment sayısı (offline/erişilemeyen durak vb.).
+    /// Eskiden sessizce boş placeholder kalıyordu; RouteSummaryView >0 ise
+    /// kullanıcıya uyarı satırı gösterir.
+    @Published var failedLegCount: Int = 0
+
     private var lastRecalculationTime: Date? = nil
     private let liveActivityController = RouteLiveActivityController()
 
@@ -119,6 +124,7 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking 
         arrivedAtPlace = nil
         isRouteComplete = false
         completionPercentage = 0
+        failedLegCount = 0
         lastRecalculationTime = nil
     }
 
@@ -191,6 +197,7 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking 
             routePolylines = orderedRoutes.map { $0?.polyline ?? MKPolyline() }
             stepsPerSegment = orderedRoutes.map { $0?.steps ?? [] }
             segmentDistances = orderedRoutes.map { $0?.distance ?? 0 }
+            failedLegCount = orderedRoutes.filter { $0 == nil }.count
             totalRouteDistance = segmentDistances.reduce(0, +)
             totalRouteTime = orderedRoutes.compactMap { $0?.expectedTravelTime }.reduce(0, +)
             currentWaypointIndex = 0

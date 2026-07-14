@@ -8,6 +8,8 @@ struct ProfileTab: View {
     @EnvironmentObject var languageManager: LanguageManager
     @Environment(\.badges) private var badges
     @Environment(\.profile) private var profileService
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.openURL) private var openURL
 
     @State private var showHistory = false
     @State private var showWeeklyReport = false
@@ -15,12 +17,47 @@ struct ProfileTab: View {
     @State private var showLanguagePicker = false
     @State private var showStats = false
     @State private var showEditProfile = false
+    @State private var showDeleteAllConfirm = false
     @State private var profile: UserProfile? = nil
     @State private var profilePhoto: UIImage? = nil
     @State private var pickerItem: PhotosPickerItem? = nil
 
     private var visitedCount: Int { placeStore.places.filter { $0.isVisited }.count }
     @AppStorage("pinly.appearance") private var appearance = "system"
+
+    private var appVersionText: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        return "\(version) (\(build))"
+    }
+
+    private func settingsIcon(_ name: String, color: Color) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 10)
+                .fill(color.opacity(0.15))
+                .frame(width: 40, height: 40)
+            Image(systemName: name)
+                .foregroundColor(color)
+                .font(.headline)
+        }
+    }
+
+    /// TAM sıfırlama: SwiftData modelleri + tüm UserDefaults (onboarding, isPro,
+    /// rozetler dahil) + profil fotoğrafı. Kullanıcı onboarding'e döner —
+    /// KVKK/GDPR "verilerimi sil" talebinin yerel karşılığı.
+    private func deleteAllData() {
+        try? modelContext.delete(model: Place.self)
+        try? modelContext.delete(model: RouteHistory.self)
+        try? modelContext.delete(model: SavedRoute.self)
+        try? modelContext.save()
+        if let bundleID = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: bundleID)
+        }
+        profileService.deletePhoto()
+        placeStore.load(context: modelContext)
+        profile = nil
+        profilePhoto = nil
+    }
 
     var body: some View {
         NavigationStack {
@@ -154,6 +191,52 @@ struct ProfileTab: View {
                     }
                 }
                 .listRowBackground(PinlyTheme.surface)
+
+                // Hakkında / Destek / Veri
+                Section {
+                    HStack(spacing: 14) {
+                        settingsIcon("info.circle.fill", color: PinlyTheme.primaryWarm)
+                        Text(NSLocalizedString("Sürüm", comment: ""))
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                        Spacer()
+                        Text(appVersionText)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+
+                    Button {
+                        openURL(URL(string: "mailto:akkopru_ferhat65@outlook.com?subject=Pinly%20Destek")!)
+                    } label: {
+                        HStack(spacing: 14) {
+                            settingsIcon("envelope.fill", color: PinlyTheme.slate)
+                            Text(NSLocalizedString("Destek", comment: ""))
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Image(systemName: "arrow.up.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .buttonStyle(.plain)
+
+                    Button(role: .destructive) {
+                        showDeleteAllConfirm = true
+                    } label: {
+                        HStack(spacing: 14) {
+                            settingsIcon("trash.fill", color: PinlyTheme.danger)
+                            Text(NSLocalizedString("Tüm Verilerimi Sil", comment: ""))
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(PinlyTheme.danger)
+                            Spacer()
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+                .listRowBackground(PinlyTheme.surface)
             }
             .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
@@ -185,6 +268,16 @@ struct ProfileTab: View {
         .sheet(isPresented: $showEditProfile, onDismiss: reloadProfile) {
             ProfileEditSheet(onSaved: reloadProfile)
                 .presentationDetents([.medium, .large])
+        }
+        .confirmationDialog(
+            NSLocalizedString("Tüm verilerin kalıcı olarak silinecek — mekanlar, rotalar, rozetler ve profil. Uygulama ilk kurulum durumuna döner. Bu işlem geri alınamaz.", comment: ""),
+            isPresented: $showDeleteAllConfirm,
+            titleVisibility: .visible
+        ) {
+            Button(NSLocalizedString("Tüm Verilerimi Sil", comment: ""), role: .destructive) {
+                deleteAllData()
+            }
+            Button(NSLocalizedString("Vazgeç", comment: ""), role: .cancel) {}
         }
         .onChange(of: pickerItem) { _, item in
             guard let item else { return }

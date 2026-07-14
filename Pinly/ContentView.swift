@@ -102,6 +102,15 @@ struct ContentView: View {
         } message: {
             Text(placeStore.lastError ?? "")
         }
+        // Hata olmayan bilgilendirmeler (örn. geocode başarısız, mekan konumsuz kaydedildi)
+        .alert(NSLocalizedString("Bilgi", comment: ""), isPresented: Binding(
+            get: { placeStore.lastNotice != nil },
+            set: { if !$0 { placeStore.lastNotice = nil } }
+        )) {
+            Button(NSLocalizedString("Tamam", comment: ""), role: .cancel) { placeStore.lastNotice = nil }
+        } message: {
+            Text(placeStore.lastNotice ?? "")
+        }
     }
 
     /// Görünüm tercihini pencere seviyesinde uygular — sheet'ler ve

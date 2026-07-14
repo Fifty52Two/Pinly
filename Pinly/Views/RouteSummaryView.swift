@@ -1,6 +1,7 @@
 import SwiftUI
 import MapKit
 import SwiftData
+import StoreKit
 
 struct RouteSummaryView: View {
     @EnvironmentObject var placeStore: PlaceStore
@@ -8,6 +9,8 @@ struct RouteSummaryView: View {
     @EnvironmentObject var routeManager: RouteManager
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismissRouteFlow) var dismissRouteFlow
+    @Environment(\.reviewPrompt) private var reviewPrompt
+    @Environment(\.requestReview) private var requestReview
 
     @StateObject private var viewModel = RouteSummaryViewModel()
 
@@ -89,6 +92,30 @@ struct RouteSummaryView: View {
                     )
                     .padding(.horizontal, 20)
                     .padding(.vertical, 10)
+                }
+
+                // Hesaplanamayan segment uyarısı — eskiden sessizce yutulurdu
+                if routeManager.failedLegCount > 0 {
+                    Label(
+                        NSLocalizedString("Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir.", comment: ""),
+                        systemImage: "exclamationmark.triangle.fill"
+                    )
+                    .font(.caption)
+                    .foregroundColor(PinlyTheme.warning)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 4)
+                }
+
+                // Sağlık izni reddi bilgisi — hata değil, açıklama
+                if viewModel.healthKitDenied && routeManager.isNavigating {
+                    Label(
+                        NSLocalizedString("Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var.", comment: ""),
+                        systemImage: "heart.slash"
+                    )
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 4)
                 }
 
                 // Stop list
@@ -207,6 +234,16 @@ struct RouteSummaryView: View {
                     }
                     routeManager.reset()
                     dismissRouteFlow()
+                    // App Store istemi kutlama KAPANDIKTAN sonra — konfetinin
+                    // üstüne sistem dialogu bindirilmez
+                    reviewPrompt.recordRouteCompletion()
+                    let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+                    if reviewPrompt.shouldPromptForReview(currentVersion: version) {
+                        reviewPrompt.markPrompted(version: version)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                            requestReview()
+                        }
+                    }
                 }
                 .transition(.opacity)
                 .zIndex(20)

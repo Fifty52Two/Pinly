@@ -406,3 +406,12 @@
 "Şimdilik Atla" = "Vorerst überspringen";
 "Profilini tamamla" = "Vervollständige dein Profil";
 "Adını ekleyerek deneyimini kişiselleştir." = "Füge deinen Namen hinzu, um dein Erlebnis zu personalisieren.";
+"Sürüm" = "Version";
+"Destek" = "Support";
+"Tüm Verilerimi Sil" = "Alle meine Daten löschen";
+"Vazgeç" = "Abbrechen";
+"Bilgi" = "Info";
+"Tüm verilerin kalıcı olarak silinecek — mekanlar, rotalar, rozetler ve profil. Uygulama ilk kurulum durumuna döner. Bu işlem geri alınamaz." = "Alle deine Daten werden dauerhaft gelöscht — Orte, Routen, Abzeichen und Profil. Die App kehrt in den Ausgangszustand zurück. Dies kann nicht rückgängig gemacht werden.";
+"Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin." = "Ort ohne Standort gespeichert — die Adresse konnte nicht aufgelöst werden. Du kannst im Bearbeiten-Bildschirm einen Standort hinzufügen.";
+"Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir." = "Einige Abschnitte konnten nicht berechnet werden — Distanz und Zeit können unvollständig sein.";
+"Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var." = "Für Schrittdaten wird die Health-Berechtigung in den Einstellungen benötigt.";

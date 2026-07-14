@@ -58,6 +58,10 @@ private struct ProfileKey: EnvironmentKey {
     static let defaultValue: ProfileProviding = DefaultProfileService.shared
 }
 
+private struct ReviewPromptKey: EnvironmentKey {
+    static let defaultValue: ReviewPromptDeciding = DefaultReviewPromptService.shared
+}
+
 extension EnvironmentValues {
     var entitlements: EntitlementProviding {
         get { self[EntitlementsKey.self] }
@@ -122,5 +126,10 @@ extension EnvironmentValues {
     var profile: ProfileProviding {
         get { self[ProfileKey.self] }
         set { self[ProfileKey.self] = newValue }
+    }
+
+    var reviewPrompt: ReviewPromptDeciding {
+        get { self[ReviewPromptKey.self] }
+        set { self[ReviewPromptKey.self] = newValue }
     }
 }

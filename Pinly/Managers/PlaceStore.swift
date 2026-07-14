@@ -26,6 +26,9 @@ protocol PlaceRepository: AnyObject {
 class PlaceStore: PlaceRepository, ObservableObject {
     @Published var places: [Place] = []
     @Published var lastError: String? = nil
+    /// Hata olmayan ama kullanıcının bilmesi gereken durumlar (örn. geocode
+    /// başarısız — mekan konumsuz kaydedildi). ContentView bilgi alert'i gösterir.
+    @Published var lastNotice: String? = nil
     @Published var pendingBadges: [Badge] = []
 
     private let badges: BadgeServicing
@@ -77,6 +80,10 @@ class PlaceStore: PlaceRepository, ObservableObject {
             place.latitude = coord.latitude
             place.longitude = coord.longitude
             place.locationName = address
+        } else if !address.isEmpty {
+            // Geocode başarısız — eskiden sessizce yutuluyordu; mekan haritada/
+            // rotalarda görünmeyecek, kullanıcı bunu bilmeli
+            lastNotice = NSLocalizedString("Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin.", comment: "")
         }
 
         context.insert(place)

@@ -406,3 +406,12 @@
 "Şimdilik Atla" = "Пропустить пока";
 "Profilini tamamla" = "Заполните профиль";
 "Adını ekleyerek deneyimini kişiselleştir." = "Добавьте имя, чтобы персонализировать опыт.";
+"Sürüm" = "Версия";
+"Destek" = "Поддержка";
+"Tüm Verilerimi Sil" = "Удалить все мои данные";
+"Vazgeç" = "Отмена";
+"Bilgi" = "Информация";
+"Tüm verilerin kalıcı olarak silinecek — mekanlar, rotalar, rozetler ve profil. Uygulama ilk kurulum durumuna döner. Bu işlem geri alınamaz." = "Все ваши данные будут удалены навсегда — места, маршруты, значки и профиль. Приложение вернётся в исходное состояние. Это действие необратимо.";
+"Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin." = "Место сохранено без координат — адрес не удалось определить. Добавьте координаты на экране редактирования.";
+"Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir." = "Некоторые сегменты не удалось рассчитать — расстояние и время могут быть неполными.";
+"Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var." = "Для данных о шагах нужно разрешение Здоровья в Настройках.";

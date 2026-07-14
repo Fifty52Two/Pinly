@@ -408,3 +408,12 @@
 "Şimdilik Atla" = "Skip for Now";
 "Profilini tamamla" = "Complete your profile";
 "Adını ekleyerek deneyimini kişiselleştir." = "Add your name to personalize your experience.";
+"Sürüm" = "Version";
+"Destek" = "Support";
+"Tüm Verilerimi Sil" = "Delete All My Data";
+"Vazgeç" = "Cancel";
+"Bilgi" = "Info";
+"Tüm verilerin kalıcı olarak silinecek — mekanlar, rotalar, rozetler ve profil. Uygulama ilk kurulum durumuna döner. Bu işlem geri alınamaz." = "All your data will be permanently deleted — places, routes, badges and profile. The app returns to its initial state. This cannot be undone.";
+"Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin." = "Place saved without a location — the address could not be resolved. You can add a location from the Edit screen.";
+"Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir." = "Some segments could not be calculated — distance and time may be incomplete.";
+"Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var." = "Health permission is needed in Settings for step data.";
