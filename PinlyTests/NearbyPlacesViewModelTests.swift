@@ -30,7 +30,8 @@ final class NearbyPlacesViewModelTests: XCTestCase {
                 name: "Test Kafe",
                 address: "Test Sokak",
                 coordinate: coord,
-                category: .cafe
+                category: .cafe,
+                distanceMeters: 120
             )
         ]
         let vm = NearbyPlacesViewModel(nearbySearch: mock)
@@ -52,7 +53,7 @@ final class NearbyPlacesViewModelTests: XCTestCase {
     func test_reset_stateTemizlenir() async {
         let mock = MockNearbySearchService()
         mock.stubbedResults = [
-            NearbyPlace(name: "A", address: "", coordinate: coord, category: .park)
+            NearbyPlace(name: "A", address: "", coordinate: coord, category: .park, distanceMeters: 40)
         ]
         let vm = NearbyPlacesViewModel(nearbySearch: mock)
         await vm.search(coordinate: coord)

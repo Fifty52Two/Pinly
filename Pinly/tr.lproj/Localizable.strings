@@ -442,6 +442,7 @@
 "Crash veya takılma tespit edilmedi." = "Crash veya takılma tespit edilmedi.";
 "Tüm tanılama kayıtları silinecek." = "Tüm tanılama kayıtları silinecek.";
 "Günlüğü Temizle" = "Günlüğü Temizle";
+"Temizle" = "Temizle";
 
 // MARK: - Faz 6: Yakınımda
 "Yakınımda" = "Yakınımda";
@@ -450,6 +451,7 @@
 "Kategori seç ve çevrendeki mekanları bul." = "Kategori seç ve çevrendeki mekanları bul.";
 "Aranıyor…" = "Aranıyor…";
 "Yakında sonuç bulunamadı." = "Yakında sonuç bulunamadı.";
+"Arama Yarıçapı" = "Arama Yarıçapı";
 "Konum bilgisi alınamadı." = "Konum bilgisi alınamadı.";
 
 // MARK: - Faz 5: Seri Hatırlatıcı

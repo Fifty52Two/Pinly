@@ -1,14 +1,21 @@
 import SwiftUI
 import CoreLocation
+import MapKit
 
 struct NearbyPlacesView: View {
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var placeStore: PlaceStore
     @Environment(\.nearbySearch) private var nearbySearch
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.entitlements) private var entitlements
 
     @StateObject private var viewModel = NearbyPlacesViewModel()
     @State private var addedIDs: Set<UUID> = []
+    @State private var showPaywall = false
+    @State private var showMap = false
+    @AppStorage("pinly.nearbyRadiusMeters") private var radiusMeters = 1000.0
+
+    private static let radiusOptions: [Double] = [500, 1000, 2000, 5000]
 
     var body: some View {
         NavigationStack {
@@ -43,6 +50,8 @@ struct NearbyPlacesView: View {
                             .padding(.horizontal, 40)
                     }
                     Spacer()
+                } else if showMap {
+                    resultsMap
                 } else {
                     List(viewModel.results) { place in
                         NearbyPlaceRow(
@@ -63,7 +72,22 @@ struct NearbyPlacesView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar(.hidden, for: .tabBar)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Menu {
+                        Picker(NSLocalizedString("Arama Yarıçapı", comment: ""), selection: $radiusMeters) {
+                            ForEach(Self.radiusOptions, id: \.self) { radius in
+                                Text(radiusLabel(radius)).tag(radius)
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "circle.dashed")
+                    }
+                    Button {
+                        withAnimation { showMap.toggle() }
+                    } label: {
+                        Image(systemName: showMap ? "list.bullet" : "map")
+                    }
+                    .disabled(viewModel.results.isEmpty)
                     Button {
                         Task { await runSearch() }
                     } label: {
@@ -75,6 +99,12 @@ struct NearbyPlacesView: View {
             .task { await runSearch() }
             .onChange(of: viewModel.selectedCategory) { _ in
                 Task { await runSearch() }
+            }
+            .onChange(of: radiusMeters) { _ in
+                Task { await runSearch() }
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView { showPaywall = false }
             }
         }
     }
@@ -110,15 +140,34 @@ struct NearbyPlacesView: View {
         }
     }
 
+    private var resultsMap: some View {
+        Map {
+            UserAnnotation()
+            ForEach(viewModel.results) { place in
+                Marker(place.name, systemImage: place.category.icon, coordinate: place.coordinate)
+                    .tint(place.category.color)
+            }
+        }
+        .mapControlVisibility(.hidden)
+    }
+
+    private func radiusLabel(_ radius: Double) -> String {
+        radius < 1000 ? "\(Int(radius)) m" : "\(Int(radius / 1000)) km"
+    }
+
     private func runSearch() async {
         guard let coord = locationManager.userLocation?.coordinate else {
             viewModel.errorMessage = NSLocalizedString("Konum bilgisi alınamadı.", comment: "")
             return
         }
-        await viewModel.search(coordinate: coord)
+        await viewModel.search(coordinate: coord, radiusMeters: radiusMeters)
     }
 
     private func addPlace(_ nearby: NearbyPlace) {
+        guard entitlements.canAddPlace(currentCount: placeStore.places.count) else {
+            showPaywall = true
+            return
+        }
         Task {
             await placeStore.addPlace(
                 name: nearby.name,
@@ -162,6 +211,10 @@ private struct NearbyPlaceRow: View {
                         .foregroundColor(.secondary)
                         .lineLimit(1)
                 }
+                Text(place.formattedDistance)
+                    .font(.caption2)
+                    .fontWeight(.medium)
+                    .foregroundColor(place.category.color)
             }
 
             Spacer()

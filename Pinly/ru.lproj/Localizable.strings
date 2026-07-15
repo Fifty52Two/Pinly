@@ -441,6 +441,7 @@
 "Crash veya takılma tespit edilmedi." = "Сбои или зависания не обнаружены.";
 "Tüm tanılama kayıtları silinecek." = "Все записи диагностики будут удалены.";
 "Günlüğü Temizle" = "Очистить журнал";
+"Temizle" = "Очистить";
 
 // MARK: - Faz 6: Рядом
 "Yakınımda" = "Рядом со мной";
@@ -449,6 +450,7 @@
 "Kategori seç ve çevrendeki mekanları bul." = "Выберите категорию и найдите места рядом.";
 "Aranıyor…" = "Поиск…";
 "Yakında sonuç bulunamadı." = "Рядом ничего не найдено.";
+"Arama Yarıçapı" = "Радиус поиска";
 "Konum bilgisi alınamadı." = "Местоположение недоступно.";
 
 // MARK: - Faz 5: Напоминание о серии

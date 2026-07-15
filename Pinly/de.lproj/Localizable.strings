@@ -441,6 +441,7 @@
 "Crash veya takılma tespit edilmedi." = "Keine Abstürze oder Einfrierungen erkannt.";
 "Tüm tanılama kayıtları silinecek." = "Alle Diagnoseaufzeichnungen werden gelöscht.";
 "Günlüğü Temizle" = "Protokoll löschen";
+"Temizle" = "Löschen";
 
 // MARK: - Faz 6: In der Nähe
 "Yakınımda" = "In der Nähe";
@@ -449,6 +450,7 @@
 "Kategori seç ve çevrendeki mekanları bul." = "Wähle eine Kategorie und finde Orte in deiner Nähe.";
 "Aranıyor…" = "Wird gesucht…";
 "Yakında sonuç bulunamadı." = "In der Nähe wurden keine Ergebnisse gefunden.";
+"Arama Yarıçapı" = "Suchradius";
 "Konum bilgisi alınamadı." = "Standort nicht verfügbar.";
 
 // MARK: - Faz 5: Streak-Erinnerung

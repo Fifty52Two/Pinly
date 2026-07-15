@@ -443,6 +443,7 @@
 "Crash veya takılma tespit edilmedi." = "No crashes or hangs detected.";
 "Tüm tanılama kayıtları silinecek." = "All diagnostic records will be deleted.";
 "Günlüğü Temizle" = "Clear Log";
+"Temizle" = "Clear";
 
 // MARK: - Faz 6: Nearby
 "Yakınımda" = "Nearby";
@@ -451,6 +452,7 @@
 "Kategori seç ve çevrendeki mekanları bul." = "Pick a category and find places around you.";
 "Aranıyor…" = "Searching…";
 "Yakında sonuç bulunamadı." = "No results found nearby.";
+"Arama Yarıçapı" = "Search Radius";
 "Konum bilgisi alınamadı." = "Location unavailable.";
 
 // MARK: - Faz 5: Streak Reminder

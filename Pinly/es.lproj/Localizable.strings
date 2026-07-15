@@ -441,6 +441,7 @@
 "Crash veya takılma tespit edilmedi." = "No se detectaron fallos ni bloqueos.";
 "Tüm tanılama kayıtları silinecek." = "Se eliminarán todos los registros de diagnóstico.";
 "Günlüğü Temizle" = "Borrar registro";
+"Temizle" = "Borrar";
 
 // MARK: - Faz 6: Cercanos
 "Yakınımda" = "Cerca de mí";
@@ -449,6 +450,7 @@
 "Kategori seç ve çevrendeki mekanları bul." = "Elige una categoría y encuentra lugares a tu alrededor.";
 "Aranıyor…" = "Buscando…";
 "Yakında sonuç bulunamadı." = "No se encontraron resultados cercanos.";
+"Arama Yarıçapı" = "Radio de búsqueda";
 "Konum bilgisi alınamadı." = "Ubicación no disponible.";
 
 // MARK: - Faz 5: Recordatorio de racha
