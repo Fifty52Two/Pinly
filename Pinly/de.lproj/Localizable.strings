@@ -461,3 +461,14 @@
 "Fotoğraf" = "Foto";
 "Fotoğraf Ekle" = "Foto hinzufügen";
 "Fotoğraf Çek" = "Foto aufnehmen";
+
+// Toplu silme (FAZ 5)
+"Mekanları Seç" = "Orte auswählen";
+"Sil (%lld)" = "Löschen (%lld)";
+"%lld mekan silinsin mi?" = "%lld Orte löschen?";
+"Bu işlem geri alınamaz. Fotoğraflar da silinir." = "Dies kann nicht rückgängig gemacht werden. Fotos werden ebenfalls gelöscht.";
+
+// Haftalık bildirim CTA (FAZ 5.4)
+"Haftalık özetini kaçırma" = "Verpasse deine Wochenübersicht nicht";
+"Her Pazar 09:00'da bildirim al." = "Erhalte jeden Sonntag um 9 Uhr eine Benachrichtigung.";
+"Aç" = "Aktivieren";

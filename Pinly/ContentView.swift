@@ -30,7 +30,8 @@ struct ContentView: View {
             if !hasSeenOnboarding {
                 OnboardingView {
                     hasSeenOnboarding = true
-                    notificationScheduling.scheduleWeeklyNotification()
+                    // Bildirim izni artık burada İSTENMEZ — izin isteme anı değere bağlı,
+                    // Haftalık Rapor ekranındaki CTA'dan istenir (FAZ 5.4)
                 }
             } else if !hasSetupProfile {
                 ProfileSetupView {

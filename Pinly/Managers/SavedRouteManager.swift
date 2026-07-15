@@ -42,7 +42,8 @@ final class DefaultSavedRouteRepository: SavedRouteRepository {
                 notes: place.notes,
                 latitude: place.coordinate?.latitude ?? centerLat,
                 longitude: place.coordinate?.longitude ?? centerLon,
-                sortIndex: index
+                sortIndex: index,
+                placeId: place.id
             )
         }
 

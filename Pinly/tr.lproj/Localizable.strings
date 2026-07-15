@@ -462,3 +462,14 @@
 "Fotoğraf" = "Fotoğraf";
 "Fotoğraf Ekle" = "Fotoğraf Ekle";
 "Fotoğraf Çek" = "Fotoğraf Çek";
+
+// Toplu silme (FAZ 5)
+"Mekanları Seç" = "Mekanları Seç";
+"Sil (%lld)" = "Sil (%lld)";
+"%lld mekan silinsin mi?" = "%lld mekan silinsin mi?";
+"Bu işlem geri alınamaz. Fotoğraflar da silinir." = "Bu işlem geri alınamaz. Fotoğraflar da silinir.";
+
+// Haftalık bildirim CTA (FAZ 5.4)
+"Haftalık özetini kaçırma" = "Haftalık özetini kaçırma";
+"Her Pazar 09:00'da bildirim al." = "Her Pazar 09:00'da bildirim al.";
+"Aç" = "Aç";

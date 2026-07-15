@@ -69,7 +69,11 @@ struct DefaultWeeklyStatsComputer: WeeklyStatsComputing {
 /// Yerel bildirim planlama (UserNotifications).
 protocol NotificationScheduling {
     /// Pazar sabahı 09:00 tekrarlayan lokal bildirim planlar.
+    /// İzin İSTEMEZ — yalnızca izin zaten verilmişse planlar (launch'ta güvenle çağrılır).
     func scheduleWeeklyNotification()
+    /// Bildirim iznini ister, verilirse haftalık bildirimi planlar.
+    /// İzin isteme anı değere bağlı: Haftalık Rapor ekranındaki CTA'dan çağrılır (FAZ 5.4).
+    func requestWeeklyNotification()
     /// `consecutiveDays > 0` ise yarın 20:00'de tek seferlik hatırlatıcı planlar.
     func scheduleStreakReminder(consecutiveDays: Int)
 }
@@ -104,26 +108,36 @@ struct DefaultNotificationScheduler: NotificationScheduling {
     }
 
     func scheduleWeeklyNotification() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            guard settings.authorizationStatus == .authorized else { return }
+            Self.addWeeklyRequest()
+        }
+    }
+
+    func requestWeeklyNotification() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, _ in
             guard granted else { return }
-
-            let content      = UNMutableNotificationContent()
-            content.title    = NSLocalizedString("Haftalık Özet", comment: "")
-            content.body     = NSLocalizedString("Bu haftaki mekan maceralarına göz at!", comment: "")
-            content.sound    = .default
-
-            var comps        = DateComponents()
-            comps.weekday    = 1   // Pazar
-            comps.hour       = 9
-            comps.minute     = 0
-
-            let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: true)
-            let request = UNNotificationRequest(
-                identifier: "pinly.weeklyReport",
-                content: content,
-                trigger: trigger
-            )
-            UNUserNotificationCenter.current().add(request)
+            Self.addWeeklyRequest()
         }
+    }
+
+    private static func addWeeklyRequest() {
+        let content      = UNMutableNotificationContent()
+        content.title    = NSLocalizedString("Haftalık Özet", comment: "")
+        content.body     = NSLocalizedString("Bu haftaki mekan maceralarına göz at!", comment: "")
+        content.sound    = .default
+
+        var comps        = DateComponents()
+        comps.weekday    = 1   // Pazar
+        comps.hour       = 9
+        comps.minute     = 0
+
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: true)
+        let request = UNNotificationRequest(
+            identifier: "pinly.weeklyReport",
+            content: content,
+            trigger: trigger
+        )
+        UNUserNotificationCenter.current().add(request)
     }
 }

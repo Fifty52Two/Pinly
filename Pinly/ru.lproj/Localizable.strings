@@ -461,3 +461,14 @@
 "Fotoğraf" = "Фото";
 "Fotoğraf Ekle" = "Добавить фото";
 "Fotoğraf Çek" = "Сделать фото";
+
+// Toplu silme (FAZ 5)
+"Mekanları Seç" = "Выбрать места";
+"Sil (%lld)" = "Удалить (%lld)";
+"%lld mekan silinsin mi?" = "Удалить места (%lld)?";
+"Bu işlem geri alınamaz. Fotoğraflar da silinir." = "Это действие нельзя отменить. Фотографии также будут удалены.";
+
+// Haftalık bildirim CTA (FAZ 5.4)
+"Haftalık özetini kaçırma" = "Не пропустите еженедельную сводку";
+"Her Pazar 09:00'da bildirim al." = "Получайте уведомление каждое воскресенье в 9:00.";
+"Aç" = "Включить";

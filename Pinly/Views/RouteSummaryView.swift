@@ -430,7 +430,7 @@ struct RouteSummaryView: View {
                                 placeStore.pendingBadges.append(contentsOf: newBadges)
                             }
                         )
-                        .presentationDetents([.medium])
+                        .presentationDetents([.medium, .large])
                     }
 
                     Button {

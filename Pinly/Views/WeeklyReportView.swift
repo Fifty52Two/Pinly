@@ -7,7 +7,11 @@ struct WeeklyReportView: View {
     @EnvironmentObject var placeStore: PlaceStore
     @Environment(\.dismiss) private var dismiss
     @Environment(\.weeklyStats) private var weeklyStats
+    @Environment(\.notificationScheduling) private var notificationScheduling
     @Query(sort: \RouteHistory.date, order: .reverse) private var histories: [RouteHistory]
+
+    /// Kullanıcı haftalık bildirim CTA'sına dokundu mu (izin isteme anı — FAZ 5.4)
+    @AppStorage("pinly.weeklyNotifOptIn") private var weeklyNotifOptIn = false
 
     private var stats: WeeklyStats {
         weeklyStats.computeStats(places: placeStore.places, histories: histories)
@@ -18,6 +22,9 @@ struct WeeklyReportView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     dateHeader
+                    if !weeklyNotifOptIn {
+                        notificationCTACard
+                    }
                     if stats.isEmpty {
                         emptyState
                     } else {
@@ -59,6 +66,46 @@ struct WeeklyReportView: View {
             .font(.subheadline)
             .foregroundColor(.secondary)
             .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    // MARK: - Bildirim CTA (izin isteme anı — FAZ 5.4)
+
+    private var notificationCTACard: some View {
+        HStack(spacing: 14) {
+            ZStack {
+                Circle()
+                    .fill(PinlyTheme.primary.opacity(0.15))
+                    .frame(width: 48, height: 48)
+                Image(systemName: "bell.badge.fill")
+                    .font(.title2)
+                    .foregroundColor(PinlyTheme.primary)
+            }
+            VStack(alignment: .leading, spacing: 2) {
+                Text(NSLocalizedString("Haftalık özetini kaçırma", comment: ""))
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                Text(NSLocalizedString("Her Pazar 09:00'da bildirim al.", comment: ""))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            Spacer()
+            Button {
+                notificationScheduling.requestWeeklyNotification()
+                weeklyNotifOptIn = true
+            } label: {
+                Text(NSLocalizedString("Aç", comment: ""))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Capsule().fill(PinlyTheme.primary))
+            }
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(PinlyTheme.fillMuted)
+        )
     }
 
     // MARK: - Boş durum

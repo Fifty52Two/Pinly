@@ -43,6 +43,11 @@ struct PlacesListView: View {
     @State private var showSwarmImport = false
     @State private var swarmParseError = false
 
+    // Toplu silme (edit modu)
+    @State private var editMode: EditMode = .inactive
+    @State private var selectedIDs = Set<UUID>()
+    @State private var showBulkDeleteConfirm = false
+
     var filteredPlaces: [Place] {
         viewModel.filteredPlaces(placeStore.places, userLocation: locationManager.userLocation)
     }
@@ -65,7 +70,7 @@ struct PlacesListView: View {
                     }
                     .padding()
                 } else {
-                    List {
+                    List(selection: $selectedIDs) {
                         // Kategori filtre chip'leri
                         Section {
                             ScrollView(.horizontal, showsIndicators: false) {
@@ -116,6 +121,7 @@ struct PlacesListView: View {
                             Section(header: Text(String(format: NSLocalizedString("%lld mekan kayıtlı", comment: ""), filteredPlaces.count)).textCase(nil)) {
                                 ForEach(filteredPlaces) { place in
                                     PlaceListItemView(place: place, modelContext: modelContext)
+                                        .tag(place.id)
                                 }
                             }
                             .listRowBackground(PinlyTheme.surface)
@@ -134,46 +140,82 @@ struct PlacesListView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(NSLocalizedString("Kapat", comment: "")) { dismiss() }
+                    if editMode.isEditing {
+                        Button(NSLocalizedString("Vazgeç", comment: "")) {
+                            editMode = .inactive
+                            selectedIDs.removeAll()
+                        }
+                    } else {
+                        Button(NSLocalizedString("Kapat", comment: "")) { dismiss() }
+                    }
                 }
                 ToolbarItem(placement: .primaryAction) {
-                    HStack(spacing: 4) {
-                        Menu {
-                            ForEach(PlaceSortOption.allCases, id: \.self) { option in
-                                Button {
-                                    viewModel.setSortOption(option)
-                                } label: {
-                                    if viewModel.sortOption == option {
-                                        Label(option.localizedName, systemImage: "checkmark")
-                                    } else {
-                                        Text(option.localizedName)
+                    if editMode.isEditing {
+                        Button(role: .destructive) {
+                            showBulkDeleteConfirm = true
+                        } label: {
+                            Text(String(format: NSLocalizedString("Sil (%lld)", comment: ""), selectedIDs.count))
+                                .fontWeight(.semibold)
+                        }
+                        .disabled(selectedIDs.isEmpty)
+                    } else {
+                        HStack(spacing: 4) {
+                            Menu {
+                                ForEach(PlaceSortOption.allCases, id: \.self) { option in
+                                    Button {
+                                        viewModel.setSortOption(option)
+                                    } label: {
+                                        if viewModel.sortOption == option {
+                                            Label(option.localizedName, systemImage: "checkmark")
+                                        } else {
+                                            Text(option.localizedName)
+                                        }
                                     }
                                 }
+                                Divider()
+                                Button {
+                                    editMode = .active
+                                } label: {
+                                    Label(NSLocalizedString("Mekanları Seç", comment: ""), systemImage: "checkmark.circle")
+                                }
+                            } label: {
+                                Image(systemName: "arrow.up.arrow.down")
                             }
-                        } label: {
-                            Image(systemName: "arrow.up.arrow.down")
-                        }
-                        Button {
-                            showSwarmPicker = true
-                        } label: {
-                            Image(systemName: "square.and.arrow.down")
-                        }
-                        Button {
-                            showQRScanner = true
-                        } label: {
-                            Image(systemName: "qrcode.viewfinder")
-                        }
-                        Button {
-                            if entitlements.canAddPlace(currentCount: placeStore.places.count) {
-                                showAddPlace = true
-                            } else {
-                                showPaywall = true
+                            Button {
+                                showSwarmPicker = true
+                            } label: {
+                                Image(systemName: "square.and.arrow.down")
                             }
-                        } label: {
-                            Image(systemName: "plus")
+                            Button {
+                                showQRScanner = true
+                            } label: {
+                                Image(systemName: "qrcode.viewfinder")
+                            }
+                            Button {
+                                if entitlements.canAddPlace(currentCount: placeStore.places.count) {
+                                    showAddPlace = true
+                                } else {
+                                    showPaywall = true
+                                }
+                            } label: {
+                                Image(systemName: "plus")
+                            }
                         }
                     }
                 }
+            }
+            .environment(\.editMode, $editMode)
+            .confirmationDialog(
+                String(format: NSLocalizedString("%lld mekan silinsin mi?", comment: ""), selectedIDs.count),
+                isPresented: $showBulkDeleteConfirm,
+                titleVisibility: .visible
+            ) {
+                Button(NSLocalizedString("Sil", comment: ""), role: .destructive) {
+                    deleteSelectedPlaces()
+                }
+                Button(NSLocalizedString("Vazgeç", comment: ""), role: .cancel) {}
+            } message: {
+                Text(NSLocalizedString("Bu işlem geri alınamaz. Fotoğraflar da silinir.", comment: ""))
             }
             .sheet(isPresented: $showAddPlace) {
                 AddPlaceView()
@@ -219,6 +261,14 @@ struct PlacesListView: View {
         }
     }
 
+    private func deleteSelectedPlaces() {
+        for place in placeStore.places where selectedIDs.contains(place.id) {
+            placeStore.deletePlace(place, context: modelContext)
+        }
+        selectedIDs.removeAll()
+        editMode = .inactive
+    }
+
     private func importSwarm() {
         guard entitlements.canAddPlace(
             currentCount: placeStore.places.count + pendingSwarmPlaces.count - 1
@@ -246,6 +296,7 @@ struct PlaceListItemView: View {
     @EnvironmentObject var placeStore: PlaceStore
     @EnvironmentObject var locationManager: LocationManager
     @Environment(\.placePhotos) private var placePhotos
+    @Environment(\.editMode) private var editMode
 
     @State private var showDetail = false
     @State private var showShare = false
@@ -311,7 +362,11 @@ struct PlaceListItemView: View {
         }
         .padding(.vertical, 4)
         .contentShape(Rectangle())
-        .onTapGesture { showDetail = true }
+        // simultaneousGesture: edit modunda List'in seçim dokunuşunu bloklamaz
+        .simultaneousGesture(TapGesture().onEnded {
+            guard editMode?.wrappedValue.isEditing != true else { return }
+            showDetail = true
+        })
         .onAppear { reloadThumbnail() }
         .onChange(of: place.photoFileName) { reloadThumbnail() }
         // Sola kaydır: Paylaş + Sil

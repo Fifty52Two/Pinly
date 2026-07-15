@@ -71,12 +71,16 @@
       kod yazılmaz (AskUserQuestion ile seçenek sun)
 
 ## FAZ 5 — Liste/işlem kolaylıkları (birikmiş küçük işler)
-- [ ] 5.1 Toplu mekan silme: PlacesListView edit modu + multi-select + onay diyaloğu
-- [ ] 5.2 `SavedPlaceSnapshot.placeId: UUID?` — isimle eşleşme kırılganlığının kalıcı çözümü
-      (nil ise eski davranış: isimle eşleş; migration gerekmez, Codable optional alan)
-- [ ] 5.3 Rota paylaşım önizlemesi: linki paylaşmadan önce özet kart (durak listesi + harita)
-- [ ] 5.4 Bildirim iznini onboarding'den Haftalık Rapor ekranına taşı (CLAUDE.md'de değerlendirme
-      notu vardı — izin isteme anını değere bağla)
+- [x] 5.1 Toplu mekan silme: PlacesListView edit modu + multi-select + onay diyaloğu
+      (sıralama menüsünde "Mekanları Seç", toplu silmede fotoğraflar da temizlenir)
+- [x] 5.2 `SavedPlaceSnapshot.placeId: UUID?` — isimle eşleşme kırılganlığının kalıcı çözümü
+      (nil ise eski davranış: isimle eşleş; migration gerekmez, Codable optional alan.
+      Yazan yerler: SavedRouteManager + PlanRouteViewModel; okuyanlar: SavedRoutesViewModel
+      loadAndStart + PlanRouteViewModel hydrateIfEditing. İçe aktarılan/hazır rotalarda nil kalır)
+- [x] 5.3 Rota paylaşım önizlemesi: RouteSharePickerView'e mini harita + numaralı durak listesi
+- [x] 5.4 Bildirim izni onboarding'den Haftalık Rapor ekranına taşındı: `scheduleWeeklyNotification`
+      artık izin istemez (verilmişse planlar), yeni `requestWeeklyNotification` CTA kartından
+      (`pinly.weeklyNotifOptIn`) izni ister
 
 ## FAZ 6 — TestFlight beta
 - [ ] 6.1 Pro/paywall gizleme feature flag'i: `EntitlementProviding`'e dokunmadan,

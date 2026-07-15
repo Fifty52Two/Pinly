@@ -33,11 +33,9 @@ struct PinlyApp: App {
         // AdMob SDK'sı burada BAŞLATILMIYOR — UMP rızası + ATT izni alınmadan
         // reklam isteği atılamaz (bkz. ConsentManager). Gerçek başlatma
         // ContentView'in ilk onAppear'ında, rıza akışı tamamlanınca yapılır.
-        // Bildirim izni ilk açılışta onboarding'in üstüne düşmesin —
-        // yeni kullanıcıda onboarding bitince (ContentView) tetiklenir
-        if UserDefaults.standard.bool(forKey: "pinly.hasSeenOnboarding") {
-            notificationScheduler.scheduleWeeklyNotification()
-        }
+        // İzin İSTEMEZ — yalnızca izin zaten verilmişse haftalık bildirimi yeniden planlar.
+        // İzin isteme anı Haftalık Rapor ekranındaki CTA'da (FAZ 5.4).
+        notificationScheduler.scheduleWeeklyNotification()
         DefaultBadgeService.shared.recordAppOpen()
         notificationScheduler.scheduleStreakReminder(
             consecutiveDays: DefaultBadgeService.shared.consecutiveDays

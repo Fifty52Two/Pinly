@@ -12,6 +12,10 @@ final class MockNotificationScheduler: NotificationScheduling {
         weeklyNotificationScheduled = true
     }
 
+    func requestWeeklyNotification() {
+        weeklyNotificationScheduled = true
+    }
+
     func scheduleStreakReminder(consecutiveDays: Int) {
         streakReminderDays = consecutiveDays
     }

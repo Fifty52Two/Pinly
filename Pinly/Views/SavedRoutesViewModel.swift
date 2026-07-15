@@ -57,11 +57,8 @@ final class SavedRoutesViewModel: ObservableObject {
 
         var places: [Place] = []
         for snap in snapshots {
-            // Önce SwiftData'dan isim ile eşleştirmeyi dene
-            let descriptor = FetchDescriptor<Place>(
-                predicate: #Predicate { place in place.name == snap.name }
-            )
-            if let existing = try? context.fetch(descriptor).first {
+            // Önce placeId ile eşleştir (kalıcı), yoksa isimle (eski kayıtlar/dış rotalar)
+            if let existing = fetchPlace(for: snap, context: context) {
                 places.append(existing)
             } else {
                 // Geçici yer tutucu — koordinatları ayarla
@@ -79,6 +76,22 @@ final class SavedRoutesViewModel: ObservableObject {
 
         tracker.setRoute(places: places, name: route.name)
         badges.recordRouteStarted()
+    }
+
+    private func fetchPlace(for snap: SavedPlaceSnapshot, context: ModelContext) -> Place? {
+        if let placeId = snap.placeId {
+            let byId = FetchDescriptor<Place>(
+                predicate: #Predicate { place in place.id == placeId }
+            )
+            if let match = try? context.fetch(byId).first {
+                return match
+            }
+        }
+        let snapName = snap.name
+        let byName = FetchDescriptor<Place>(
+            predicate: #Predicate { place in place.name == snapName }
+        )
+        return try? context.fetch(byName).first
     }
 
     func delete(_ route: SavedRoute, context: ModelContext) {

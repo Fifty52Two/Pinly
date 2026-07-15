@@ -11,6 +11,9 @@ struct SavedPlaceSnapshot: Codable {
     let latitude: Double
     let longitude: Double
     let sortIndex: Int
+    /// Kaynak Place'in kimliği — isimle eşleşme kırılganlığının kalıcı çözümü (FAZ 5.2).
+    /// Eski kayıtlarda ve dışarıdan gelen rotalarda nil; o zaman isimle eşleşmeye düşülür.
+    var placeId: UUID? = nil
 }
 
 // MARK: - SavedRoute Model

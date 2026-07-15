@@ -62,8 +62,10 @@ final class PlanRouteViewModel: ObservableObject {
         if let catRaw = route.categoryRaw, let cat = RouteCategory(rawValue: catRaw) {
             routeCategory = cat
         }
-        let snapNames = Set(route.placeSnapshots.map { $0.name })
-        let matched = places.filter { snapNames.contains($0.name) }
+        // placeId varsa onunla eşleş (kalıcı), yoksa isimle (eski kayıtlar)
+        let snapIds = Set(route.placeSnapshots.compactMap { $0.placeId })
+        let snapNames = Set(route.placeSnapshots.filter { $0.placeId == nil }.map { $0.name })
+        let matched = places.filter { snapIds.contains($0.id) || snapNames.contains($0.name) }
         selectedPlaceIDs = Set(matched.map { $0.id })
         return MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
     }
@@ -83,7 +85,8 @@ final class PlanRouteViewModel: ObservableObject {
                 notes: place.notes,
                 latitude: place.coordinate?.latitude ?? pin.latitude,
                 longitude: place.coordinate?.longitude ?? pin.longitude,
-                sortIndex: index
+                sortIndex: index,
+                placeId: place.id
             )
         }
 
