@@ -63,14 +63,15 @@
 ## FAZ 4 — Keşfet'i gerçek keşfe çevir
 > Şu an "Keşfet" sadece kendi eklediğin mekanları kategori grid'inde gösteriyor —
 > keşif değil, koleksiyon. Yakınımda tek gerçek keşif aracı ve bir kart arkasında gömülü.
-- [ ] 4.1 Bilgi mimarisi: Keşfet'in ana içeriği harita olsun — tüm mekanlar pin,
-      "gitmediklerim" filtresi, kategori filtresi (CLAUDE.md'deki "Haritada Keşfet modu" işi)
-- [ ] 4.2 Yakınımda'yı Keşfet'in üst bölümüne taşı (kart değil, yatay öneri şeridi:
-      konuma göre 5 öneri + "tümünü gör")
-- [ ] 4.3 Mevcut kategori grid'i "Koleksiyonum" bölümü olarak aşağı iner
-- [ ] 4.4 Hazır İstanbul rotaları Keşfet'te de görünür (şu an sadece boş ekran kartları)
-- [ ] 4.5 **Tasarım kararı kullanıcıyla:** yeni Keşfet düzeninin mockup'ı onaylanmadan
-      kod yazılmaz (AskUserQuestion ile seçenek sun)
+- [x] 4.1 Bilgi mimarisi: Keşfet'in ana içeriği harita — tüm mekanlar pin (ziyaret edilenler
+      soluk), "Gitmediklerim" + kategori filtre chip'leri üstte, pin'e dokun → PlaceDetailView
+- [x] 4.2 Yakınımda yatay öneri şeridi panelin en üstünde (konuma göre 5 öneri, seçili
+      kategoriye duyarlı, "Tümünü Gör" → NearbyPlacesView, Ekle butonu freemium gate'li)
+- [x] 4.3 Kategori grid'i "Koleksiyonum" bölümü olarak panelde aşağıda
+- [x] 4.4 Hazır rotalar Keşfet panelinde yatay mini kartlar ("Rotalarıma Ekle";
+      SavedRoutesView boş ekran kartları da yerinde duruyor)
+- [x] 4.5 Tasarım kararı kullanıcıyla alındı (2026-07-15): tam ekran harita + çekilebilir
+      alt panel (Apple Maps deseni; collapsed/half/expanded üç durak, custom drag)
 
 ## FAZ 5 — Liste/işlem kolaylıkları (birikmiş küçük işler)
 - [x] 5.1 Toplu mekan silme: PlacesListView edit modu + multi-select + onay diyaloğu

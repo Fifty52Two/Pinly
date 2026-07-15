@@ -474,3 +474,11 @@
 "Haftalık özetini kaçırma" = "Don't miss your weekly summary";
 "Her Pazar 09:00'da bildirim al." = "Get a notification every Sunday at 9 AM.";
 "Aç" = "Enable";
+
+// Keşfet yeniden tasarım (FAZ 4)
+"Gitmediklerim" = "Not Visited";
+"Koleksiyonum" = "My Collection";
+"Tümünü Gör" = "See All";
+"Eklendi" = "Added";
+"Çevrende öneri bulunamadı." = "No suggestions found nearby.";
+"Henüz mekan yok. Yakınımda önerilerinden veya Mekanlarım ekranından ekleyebilirsin." = "No places yet. Add some from Nearby suggestions or the My Places screen.";
