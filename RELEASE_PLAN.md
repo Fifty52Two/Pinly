@@ -15,11 +15,19 @@
       interstitial geliyor (gerçek ID'de "no fill" olabilir — hata değil)
 
 ## FAZ 1 — Firebase Crashlytics + Analytics
-- [ ] 1.1 Firebase Console'da proje oluştur (kullanıcı) → `GoogleService-Info.plist` repo'ya
-- [ ] 1.2 SPM: `firebase-ios-sdk` → FirebaseCrashlytics + FirebaseAnalytics ürünleri Pinly target'ına
-- [ ] 1.3 `PinlyApp.init()`: `FirebaseApp.configure()` (ConsentManager akışıyla uyumlu —
-      Analytics rıza gerektirmez ama ATT sonrası IDFA erişimi otomatik düzelir)
-- [ ] 1.4 Crashlytics dSYM upload build phase (Xcode'da run script)
+- [x] 1.1 **(Kullanıcı)** Firebase Console'da proje oluşturuldu (`pinly-5aa6e`) →
+      `GoogleService-Info.plist` `Pinly/` klasörüne kondu (bundle ID `com.farad.pinly` doğrulandı)
+- [x] 1.2 **(Kullanıcı, Xcode)** SPM: `firebase-ios-sdk` eklendi, FirebaseAnalytics + FirebaseCrashlytics
+      ürünleri Pinly target'ına linklendi
+- [x] 1.3 `PinlyApp.init()`: `FirebaseApp.configure()` en erken noktada (ConsentManager/AdMob akışını
+      beklemez — Analytics rıza gerektirmez, ATT sonrası IDFA erişimi otomatik düzelir).
+      `FirebaseAnalyticsService: AnalyticsTracking` yazıldı, composition root artık bunu kullanıyor
+      (`NoOpAnalyticsService` sadece testlerde/preview'larda kalıyor — ViewModel default'ları değişmedi)
+- [x] 1.4 **(Kullanıcı, Xcode)** Crashlytics dSYM upload Run Script fazı eklendi. Script ilk çalıştırmada
+      "Could not get GOOGLE_APP_ID" hatası verdi — kök neden Xcode 15+'ın **User Script Sandboxing**'i
+      (`ENABLE_USER_SCRIPT_SANDBOXING`), script'in `GoogleService-Info.plist`'e erişimini engelliyordu.
+      Firebase'in bilinen/dokümante ettiği sorun; proje genelinde (PBXProject Debug+Release) bu ayar
+      `NO`'ya çekildi, build+testler tekrar yeşil.
 - [x] 1.5 Temel event seti (protokol arkasında, `AnalyticsTracking` + `\.analytics` environment key):
       `place_added` (kaynak: manual/qr/deeplink/swarm/nearby/quick_add/route_import), `route_started`,
       `route_completed`, `route_shared`, `paywall_shown`, `nearby_search`.

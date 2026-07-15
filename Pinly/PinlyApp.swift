@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import FirebaseCore
 
 @main
 struct PinlyApp: App {
@@ -27,13 +28,16 @@ struct PinlyApp: App {
     private let starterRoutesProvider = DefaultStarterRoutesProvider()
     private let nearbySearchService = DefaultNearbySearchService.shared
     private let placePhotoStore = DefaultPlacePhotoStore.shared
-    private let analyticsService = NoOpAnalyticsService.shared
+    private let analyticsService = FirebaseAnalyticsService.shared
 
     init() {
-        DiagnosticsCollector.shared.register()
-        // AdMob SDK'sı burada BAŞLATILMIYOR — UMP rızası + ATT izni alınmadan
-        // reklam isteği atılamaz (bkz. ConsentManager). Gerçek başlatma
+        // Crashlytics + Analytics: rıza gerektirmez (ATT sonrası IDFA erişimi otomatik
+        // düzelir), o yüzden ConsentManager/AdMob akışını beklemeden en erken noktada
+        // başlatılır. AdMob SDK'sı ise burada BAŞLATILMIYOR — UMP rızası + ATT izni
+        // alınmadan reklam isteği atılamaz (bkz. ConsentManager); gerçek başlatma
         // ContentView'in ilk onAppear'ında, rıza akışı tamamlanınca yapılır.
+        FirebaseApp.configure()
+        DiagnosticsCollector.shared.register()
         // İzin İSTEMEZ — yalnızca izin zaten verilmişse haftalık bildirimi yeniden planlar.
         // İzin isteme anı Haftalık Rapor ekranındaki CTA'da (FAZ 5.4).
         notificationScheduler.scheduleWeeklyNotification()

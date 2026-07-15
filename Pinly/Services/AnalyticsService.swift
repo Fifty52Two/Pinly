@@ -1,4 +1,5 @@
 import Foundation
+import FirebaseAnalytics
 
 // MARK: - AnalyticsTracking
 
@@ -52,12 +53,29 @@ protocol AnalyticsTracking {
 
 // MARK: - NoOpAnalyticsService
 
-/// Firebase eklenene kadar varsayılan implementasyon: hiçbir yere göndermez,
-/// DEBUG derlemede konsola yazar (event akışını geliştirirken doğrulamak için).
+/// Firebase eklenmeden önceki varsayılan implementasyon: hiçbir yere göndermez,
+/// DEBUG derlemede konsola yazar. Artık sadece testlerde/preview'larda kullanılır —
+/// gerçek uygulama composition root'ta `FirebaseAnalyticsService` kullanır.
 final class NoOpAnalyticsService: AnalyticsTracking {
     static let shared = NoOpAnalyticsService()
 
     func track(_ event: AnalyticsEvent) {
+        #if DEBUG
+        let params = event.parameters.isEmpty ? "" : " \(event.parameters)"
+        print("📊 analytics: \(event.name)\(params)")
+        #endif
+    }
+}
+
+// MARK: - FirebaseAnalyticsService
+
+/// Firebase Analytics'e loglayan gerçek implementasyon (FAZ 1.2-1.3).
+/// `FirebaseApp.configure()` `PinlyApp.init()`'te çağrılmış olmalı.
+final class FirebaseAnalyticsService: AnalyticsTracking {
+    static let shared = FirebaseAnalyticsService()
+
+    func track(_ event: AnalyticsEvent) {
+        Analytics.logEvent(event.name, parameters: event.parameters.isEmpty ? nil : event.parameters)
         #if DEBUG
         let params = event.parameters.isEmpty ? "" : " \(event.parameters)"
         print("📊 analytics: \(event.name)\(params)")

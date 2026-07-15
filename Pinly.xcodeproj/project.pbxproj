@@ -12,6 +12,8 @@
 		0A00D6832F7C57AF0031F556 /* PinlyLiveActivityExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0A00D66F2F7C57AF0031F556 /* PinlyLiveActivityExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0A93820E2F8010CB00EF3C24 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 0A93820D2F8010CB00EF3C24 /* GoogleMobileAds */; };
 		0A963A143006882E001B1587 /* GoogleUserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = 0A963A133006882E001B1587 /* GoogleUserMessagingPlatform */; };
+		0AAC824C30082E5D005FE580 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0AAC824B30082E5D005FE580 /* FirebaseAnalytics */; };
+		0AAC824E30082E5D005FE580 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0AAC824D30082E5D005FE580 /* FirebaseCrashlytics */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,7 +134,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A963A143006882E001B1587 /* GoogleUserMessagingPlatform in Frameworks */,
+				0AAC824E30082E5D005FE580 /* FirebaseCrashlytics in Frameworks */,
 				0A93820E2F8010CB00EF3C24 /* GoogleMobileAds in Frameworks */,
+				0AAC824C30082E5D005FE580 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,6 +229,7 @@
 				0AC0FA662F2F9CE300C6C26F /* Frameworks */,
 				0AC0FA672F2F9CE300C6C26F /* Resources */,
 				0A00D6882F7C57AF0031F556 /* Embed Foundation Extensions */,
+				0AAC824F30082F78005FE580 /* Crashlytics dSYM Upload */,
 			);
 			buildRules = (
 			);
@@ -238,6 +243,8 @@
 			packageProductDependencies = (
 				0A93820D2F8010CB00EF3C24 /* GoogleMobileAds */,
 				0A963A133006882E001B1587 /* GoogleUserMessagingPlatform */,
+				0AAC824B30082E5D005FE580 /* FirebaseAnalytics */,
+				0AAC824D30082E5D005FE580 /* FirebaseCrashlytics */,
 			);
 			productName = Pinly;
 			productReference = 0AC0FA692F2F9CE300C6C26F /* Pinly.app */;
@@ -282,6 +289,7 @@
 				0A00DA472F7D4FA80031F556 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
 				0A93820C2F80103A00EF3C24 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 				0A963A1230068647001B1587 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */,
+				0AAC824A30082E5D005FE580 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0AC0FA6A2F2F9CE300C6C26F /* Products */;
@@ -318,6 +326,29 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0AAC824F30082F78005FE580 /* Crashlytics dSYM Upload */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "Crashlytics dSYM Upload";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0A00D66B2F7C57AF0031F556 /* Sources */ = {
@@ -485,7 +516,7 @@
 				DEVELOPMENT_TEAM = J7LKGD5LY5;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -549,7 +580,7 @@
 				DEVELOPMENT_TEAM = J7LKGD5LY5;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -706,6 +737,14 @@
 				minimumVersion = 3.1.0;
 			};
 		};
+		0AAC824A30082E5D005FE580 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.16.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -718,6 +757,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0A963A1230068647001B1587 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */;
 			productName = GoogleUserMessagingPlatform;
+		};
+		0AAC824B30082E5D005FE580 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0AAC824A30082E5D005FE580 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		0AAC824D30082E5D005FE580 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0AAC824A30082E5D005FE580 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
