@@ -11,8 +11,7 @@
 ## FAZ 0 — Build'i yeşile çek (yarım kalan AdMob/UMP işi)
 - [x] 0.1 **(Kullanıcı, Xcode)** `GoogleUserMessagingPlatform` ürünü Pinly target'ına linklendi
 - [x] 0.2 Simülatör build yeşil — `ConsentManager.swift` derleniyor (2026-07-15)
-- [ ] 0.3 Gerçek cihazda smoke test: açılışta ATT diyaloğu çıkıyor, rota tamamlayınca
-      interstitial geliyor (gerçek ID'de "no fill" olabilir — hata değil)
+- [x] 0.3 **(Kullanıcı)** Gerçek cihazda smoke test yapıldı (2026-07-16) — büyük bir sorun yok
 
 ## FAZ 1 — Firebase Crashlytics + Analytics
 - [x] 1.1 **(Kullanıcı)** Firebase Console'da proje oluşturuldu (`pinly-5aa6e`) →
@@ -33,7 +32,7 @@
       `route_completed`, `route_shared`, `paywall_shown`, `nearby_search`.
       Şimdilik `NoOpAnalyticsService` (DEBUG'da konsola yazar) — Firebase gelince (1.2-1.3)
       sadece somut sınıf değişir, çağıran yerler sabit
-- [ ] 1.6 MetricKit tanılama ekranı kalıyor (yerinde duruyor, çakışma yok)
+- [x] 1.6 MetricKit tanılama ekranı kalıyor (yerinde duruyor, Firebase ile çakışma yok — ek iş gerekmedi)
 
 ## FAZ 2 — Yakınımda: kategori bug'ı fix + güçlendirme
 > **Kök neden** (`GeocodingService.swift:44,61`): MKLocalSearch'e sadece
