@@ -85,9 +85,10 @@
       (`pinly.weeklyNotifOptIn`) izni ister
 
 ## FAZ 6 — TestFlight beta
-- [ ] 6.1 Pro/paywall gizleme feature flag'i: `EntitlementProviding`'e dokunmadan,
-      paywall tetikleyen 7 gate noktası beta'da limiti uygulamaz VEYA paywall yerine
-      "beta'da sınırsız" mesajı (karar: en basiti — beta build'de freeLimit=Int.max)
+- [x] 6.1 Pro/paywall gizleme feature flag'i: `FeatureFlags.unlimitedPlacesInBeta` —
+      Release + sandbox receipt (gerçek TestFlight) build'inde `canAddPlace` hep true,
+      7 gate noktası hiç tetiklenmez. DEBUG'da bilinçli olarak kapalı (geliştirme +
+      unit testlerde freemium normal çalışır). Protokol imzası değişmedi.
 - [ ] 6.2 App Store Connect: app kaydı, bundle ID, App Privacy formu (konum, foto,
       AdMob/Firebase veri bildirimleri — ATT'yi beyan et)
 - [ ] 6.3 Archive + upload, internal test grubu, beta davetleri

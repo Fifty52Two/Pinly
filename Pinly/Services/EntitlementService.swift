@@ -51,6 +51,9 @@ final class LocalEntitlementService: EntitlementProviding, ObservableObject {
     }
 
     func canAddPlace(currentCount: Int) -> Bool {
-        isPro || currentCount < freeLimit
+        // TestFlight betasında limit uygulanmaz — paywall gate'leri hiç tetiklenmez
+        // (FAZ 6.1; RevenueCat gelince kaldırılacak)
+        if FeatureFlags.unlimitedPlacesInBeta { return true }
+        return isPro || currentCount < freeLimit
     }
 }
