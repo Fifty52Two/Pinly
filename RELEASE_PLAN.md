@@ -97,8 +97,10 @@
       Release + sandbox receipt (gerçek TestFlight) build'inde `canAddPlace` hep true,
       7 gate noktası hiç tetiklenmez. DEBUG'da bilinçli olarak kapalı (geliştirme +
       unit testlerde freemium normal çalışır). Protokol imzası değişmedi.
-- [ ] 6.2 App Store Connect: app kaydı, bundle ID, App Privacy formu (konum, foto,
-      AdMob/Firebase veri bildirimleri — ATT'yi beyan et)
+- [x] 6.2 **(Kullanıcı)** App Store Connect: app kaydı + App Privacy formu dolduruldu ve
+      yayınlandı (2026-07-16). Not: Privacy "Publish" butonu SADECE gizlilik etiketini
+      kesinleştirir — App Store'a submit/yayın ANLAMINA GELMEZ, o ayrı bir adım
+      (App Store sekmesi → Submit for Review, henüz basılmadı)
 - [ ] 6.3 Archive + upload, internal test grubu, beta davetleri
 - [ ] 6.4 Beta sırasında paralel: RevenueCat entegrasyonu (App Store Connect ürünleri
       `pinly_pro_monthly` $4.99 / `pinly_pro_yearly` $39.99 + `RevenueCatEntitlementService`
