@@ -64,6 +64,21 @@ final class PlanRouteViewModelTests: XCTestCase {
         XCTAssertEqual(vm.selectedPlaceIDs, [existingPlace.id])
     }
 
+    /// FAZ 5.2: isim değişmiş olsa bile placeId ile eşleşme önceliklidir.
+    func test_editingRoute_hydratesByPlaceId_evenWhenNameChanged() {
+        let existingPlace = Place(name: "Yeni İsim", category: PlaceCategory.cafe.rawValue)
+        let snapshot = SavedPlaceSnapshot(
+            name: "Eski İsim", category: PlaceCategory.cafe.rawValue, address: "", notes: "",
+            latitude: 41.0, longitude: 29.0, sortIndex: 0, placeId: existingPlace.id
+        )
+        let route = SavedRoute(name: "My Route", centerLatitude: 41.0, centerLongitude: 29.0, snapshots: [snapshot])
+
+        let vm = PlanRouteViewModel(editingRoute: route)
+        _ = vm.hydrateIfEditing(places: [existingPlace])
+
+        XCTAssertEqual(vm.selectedPlaceIDs, [existingPlace.id])
+    }
+
     func test_saveRoute_requiresNameAndSelection() {
         let vm = PlanRouteViewModel(badges: MockBadgeServicing())
         let context = makeInMemoryContext()

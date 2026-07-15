@@ -54,7 +54,11 @@ final class DefaultProfileService: ProfileProviding {
         let scale = min(1, maxSide / max(image.size.width, image.size.height))
         let newSize = CGSize(width: image.size.width * scale,
                              height: image.size.height * scale)
-        let renderer = UIGraphicsImageRenderer(size: newSize)
+        // format.scale = 1 ŞART: aksi halde ana ekranın scale'i (2x/3x) kullanılır,
+        // "800px sınırı" gerçek cihazda sessizce 1600-2400px'e çıkar.
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let renderer = UIGraphicsImageRenderer(size: newSize, format: format)
         let resized = renderer.image { _ in
             image.draw(in: CGRect(origin: .zero, size: newSize))
         }

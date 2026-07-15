@@ -4,7 +4,7 @@ import FirebaseAnalytics
 // MARK: - AnalyticsTracking
 
 /// Mekan ekleme kaynağı — `place_added` event'inin `source` parametresi.
-enum PlaceAddSource: String {
+enum PlaceAddSource: String, Equatable {
     case manual
     case qr
     case deeplink
@@ -16,7 +16,7 @@ enum PlaceAddSource: String {
 
 /// Temel analytics event seti (RELEASE_PLAN FAZ 1.5).
 /// İsim/parametreler Firebase `logEvent` sözleşmesine uygun (snake_case).
-enum AnalyticsEvent {
+enum AnalyticsEvent: Equatable {
     case placeAdded(source: PlaceAddSource)
     case routeStarted
     case routeCompleted
