@@ -458,3 +458,8 @@
 // MARK: - Faz 5: Streak Reminder
 "Serinizi Kaybetmeyin!" = "Don't Lose Your Streak!";
 "%lld günlük serinizi korumak için bugün bir rota yürüyün." = "Walk a route today to keep your %lld-day streak.";
+
+// Mekan fotoğrafı (FAZ 3)
+"Fotoğraf" = "Photo";
+"Fotoğraf Ekle" = "Add Photo";
+"Fotoğraf Çek" = "Take Photo";

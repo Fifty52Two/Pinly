@@ -7,15 +7,20 @@ import SwiftData
 final class EditPlaceViewModel: PlaceFormViewModel {
     let place: Place
 
-    init(place: Place, geocoding: GeocodingProviding = DefaultGeocodingService.shared) {
+    init(place: Place,
+         geocoding: GeocodingProviding = DefaultGeocodingService.shared,
+         photoStore: PlacePhotoStoring = DefaultPlacePhotoStore.shared) {
         self.place = place
         super.init(
             name: place.name,
             category: place.category,
             address: place.address,
             notes: place.notes,
-            geocoding: geocoding
+            geocoding: geocoding,
+            photoStore: photoStore
         )
+        // Mevcut fotoğrafı forma yükle (photoChanged false kalır)
+        photoImage = place.photoFileName.flatMap { photoStore.load(fileName: $0) }
     }
 
     func save(placeStore: PlaceRepository, context: ModelContext) async {
@@ -45,6 +50,7 @@ final class EditPlaceViewModel: PlaceFormViewModel {
             }
         }
 
+        persistPhoto(to: place)
         placeStore.save(context: context)
         placeStore.load(context: context)
         isSaving = false

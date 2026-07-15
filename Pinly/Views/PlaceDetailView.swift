@@ -1,5 +1,6 @@
 import SwiftUI
 import MapKit
+import UIKit
 
 // MARK: - Mekan Detay (Salt Okunur)
 
@@ -9,19 +10,24 @@ struct PlaceDetailView: View {
     @EnvironmentObject var locationManager: LocationManager
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.placePhotos) private var placePhotos
 
     @State private var showEdit = false
     @State private var showShare = false
+    @State private var photo: UIImage? = nil
 
     private var category: PlaceCategory { PlaceCategory.from(place.category) }
 
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
+                photoHeader
                 mapPreview
                 infoCard
             }
         }
+        .onAppear { reloadPhoto() }
+        .onChange(of: place.photoFileName) { reloadPhoto() }
         .navigationTitle(place.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -47,6 +53,24 @@ struct PlaceDetailView: View {
         }
         .sheet(isPresented: $showShare) {
             SharePlaceView(place: place)
+        }
+    }
+
+    private func reloadPhoto() {
+        photo = place.photoFileName.flatMap { placePhotos.load(fileName: $0) }
+    }
+
+    // MARK: - Fotoğraf
+
+    @ViewBuilder
+    private var photoHeader: some View {
+        if let photo {
+            Image(uiImage: photo)
+                .resizable()
+                .scaledToFill()
+                .frame(maxWidth: .infinity)
+                .frame(height: 240)
+                .clipped()
         }
     }
 

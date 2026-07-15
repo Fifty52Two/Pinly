@@ -456,3 +456,8 @@
 // MARK: - Faz 5: Напоминание о серии
 "Serinizi Kaybetmeyin!" = "Не теряйте серию!";
 "%lld günlük serinizi korumak için bugün bir rota yürüyün." = "Пройдите маршрут сегодня, чтобы сохранить серию в %lld дней.";
+
+// Mekan fotoğrafı (FAZ 3)
+"Fotoğraf" = "Фото";
+"Fotoğraf Ekle" = "Добавить фото";
+"Fotoğraf Çek" = "Сделать фото";

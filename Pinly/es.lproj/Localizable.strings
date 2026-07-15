@@ -456,3 +456,8 @@
 // MARK: - Faz 5: Recordatorio de racha
 "Serinizi Kaybetmeyin!" = "¡No pierdas tu racha!";
 "%lld günlük serinizi korumak için bugün bir rota yürüyün." = "Haz una ruta hoy para mantener tu racha de %lld días.";
+
+// Mekan fotoğrafı (FAZ 3)
+"Fotoğraf" = "Foto";
+"Fotoğraf Ekle" = "Añadir foto";
+"Fotoğraf Çek" = "Tomar foto";

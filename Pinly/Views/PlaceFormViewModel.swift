@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import SwiftData
+import UIKit
 
 // MARK: - PlaceFormViewModel
 //
@@ -20,21 +21,47 @@ class PlaceFormViewModel: ObservableObject {
     @Published var currentCoord: CLLocationCoordinate2D? = nil
     @Published var pinnedCoord: CLLocationCoordinate2D? = nil
     @Published var pinnedAddress = ""
+    /// Formda gösterilen fotoğraf (yeni seçilen veya düzenlemede mevcut olan).
+    @Published var photoImage: UIImage? = nil
+    /// Kullanıcı fotoğrafı değiştirdi/kaldırdı — kaydetme sırasında diske yansıtılır.
+    @Published var photoChanged = false
 
     let geocoding: GeocodingProviding
+    let photoStore: PlacePhotoStoring
 
     init(
         name: String = "",
         category: String = PlaceCategory.general.rawValue,
         address: String = "",
         notes: String = "",
-        geocoding: GeocodingProviding = DefaultGeocodingService.shared
+        geocoding: GeocodingProviding = DefaultGeocodingService.shared,
+        photoStore: PlacePhotoStoring = DefaultPlacePhotoStore.shared
     ) {
         self.name = name
         self.category = category
         self.address = address
         self.notes = notes
         self.geocoding = geocoding
+        self.photoStore = photoStore
+    }
+
+    func setPhoto(_ image: UIImage) {
+        photoImage = image
+        photoChanged = true
+    }
+
+    func removePhoto() {
+        photoImage = nil
+        photoChanged = true
+    }
+
+    /// Fotoğraf değişikliğini place'e ve diske uygular (değişiklik yoksa no-op).
+    func persistPhoto(to place: Place) {
+        guard photoChanged else { return }
+        if let old = place.photoFileName {
+            photoStore.delete(fileName: old)
+        }
+        place.photoFileName = photoImage.flatMap { photoStore.save($0) }
     }
 
     func fetchCurrentLocation(from location: LocationProviding) {

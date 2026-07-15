@@ -13,7 +13,8 @@ protocol PlaceRepository: AnyObject {
     var pendingBadges: [Badge] { get set }
     func refreshBadges()
     func load(context: ModelContext)
-    func addPlace(name: String, category: String, address: String, notes: String, coordinate: CLLocationCoordinate2D?, context: ModelContext) async
+    @discardableResult
+    func addPlace(name: String, category: String, address: String, notes: String, coordinate: CLLocationCoordinate2D?, context: ModelContext) async -> Place
     func deletePlace(_ place: Place, context: ModelContext)
     func save(context: ModelContext)
     func places(category: String, userLocation: CLLocation?, radiusKm: Double) -> [Place]
@@ -33,11 +34,14 @@ class PlaceStore: PlaceRepository, ObservableObject {
 
     private let badges: BadgeServicing
     private let geocoding: GeocodingProviding
+    private let photoStore: PlacePhotoStoring
 
     init(badges: BadgeServicing = DefaultBadgeService.shared,
-         geocoding: GeocodingProviding = DefaultGeocodingService.shared) {
+         geocoding: GeocodingProviding = DefaultGeocodingService.shared,
+         photoStore: PlacePhotoStoring = DefaultPlacePhotoStore.shared) {
         self.badges = badges
         self.geocoding = geocoding
+        self.photoStore = photoStore
     }
 
     /// Rozet kontrolü yapar; yeni açılan rozetleri banner kuyruğuna ekler.
@@ -68,7 +72,8 @@ class PlaceStore: PlaceRepository, ObservableObject {
         if didMigrate { save(context: context) }
     }
 
-    func addPlace(name: String, category: String, address: String, notes: String, coordinate: CLLocationCoordinate2D? = nil, context: ModelContext) async {
+    @discardableResult
+    func addPlace(name: String, category: String, address: String, notes: String, coordinate: CLLocationCoordinate2D? = nil, context: ModelContext) async -> Place {
         let place = Place(name: name, category: category, address: address, notes: notes)
 
         if let coord = coordinate {
@@ -90,9 +95,13 @@ class PlaceStore: PlaceRepository, ObservableObject {
         save(context: context)
         load(context: context)
         refreshBadges()
+        return place
     }
 
     func deletePlace(_ place: Place, context: ModelContext) {
+        if let fileName = place.photoFileName {
+            photoStore.delete(fileName: fileName)
+        }
         context.delete(place)
         save(context: context)
         load(context: context)

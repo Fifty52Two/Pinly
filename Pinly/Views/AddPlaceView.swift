@@ -91,6 +91,14 @@ struct AddPlaceView: View {
                     }
                 }
 
+                Section(header: Text(NSLocalizedString("Fotoğraf", comment: ""))) {
+                    PlacePhotoPickerRow(
+                        image: viewModel.photoImage,
+                        onPicked: { viewModel.setPhoto($0) },
+                        onRemove: { viewModel.removePhoto() }
+                    )
+                }
+
                 Section(header: Text(NSLocalizedString("Notlar", comment: ""))) {
                     TextEditor(text: $viewModel.notes)
                         .frame(height: 100)

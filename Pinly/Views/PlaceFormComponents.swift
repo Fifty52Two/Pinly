@@ -1,4 +1,5 @@
 import SwiftUI
+import PhotosUI
 
 // MARK: - Mekan Formu Bileşenleri
 //
@@ -173,6 +174,136 @@ struct PinlyLocationOption: View {
             )
         }
         .buttonStyle(.plain)
+    }
+}
+
+// MARK: Fotoğraf seçici (Add/Edit form Section içeriği)
+
+/// Mekan fotoğrafı ekleme/değiştirme/kaldırma — sistem Form'un Section'ı
+/// içinde kullanılır. Galeri (PhotosPicker) + kamera (UIImagePickerController)
+/// seçenekleri sunar. Seçilen görsel `onPicked` ile ViewModel'e iletilir;
+/// disk IO burada YAPILMAZ (PlacePhotoStoring kaydetme anında devreye girer).
+struct PlacePhotoPickerRow: View {
+    let image: UIImage?
+    let onPicked: (UIImage) -> Void
+    let onRemove: () -> Void
+
+    @State private var pickerItem: PhotosPickerItem? = nil
+    @State private var showCamera = false
+
+    private var cameraAvailable: Bool {
+        UIImagePickerController.isSourceTypeAvailable(.camera)
+    }
+
+    var body: some View {
+        Group {
+            if let image {
+                VStack(spacing: 10) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 160)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    HStack(spacing: 16) {
+                        PhotosPicker(selection: $pickerItem, matching: .images) {
+                            Label(NSLocalizedString("Değiştir", comment: ""), systemImage: "photo")
+                                .font(.subheadline.weight(.medium))
+                                .foregroundColor(PinlyTheme.primary)
+                        }
+                        if cameraAvailable {
+                            cameraButton
+                        }
+                        Spacer()
+                        Button(role: .destructive, action: onRemove) {
+                            Label(NSLocalizedString("Kaldır", comment: ""), systemImage: "trash")
+                                .font(.subheadline.weight(.medium))
+                        }
+                    }
+                }
+                .padding(.vertical, 4)
+            } else {
+                PhotosPicker(selection: $pickerItem, matching: .images) {
+                    HStack {
+                        Image(systemName: "photo.badge.plus")
+                        Text(NSLocalizedString("Fotoğraf Ekle", comment: ""))
+                            .fontWeight(.medium)
+                    }
+                    .foregroundColor(PinlyTheme.primary)
+                }
+                if cameraAvailable {
+                    cameraButton
+                }
+            }
+        }
+        .onChange(of: pickerItem) { _, item in
+            guard let item else { return }
+            Task {
+                if let data = try? await item.loadTransferable(type: Data.self),
+                   let picked = UIImage(data: data) {
+                    await MainActor.run {
+                        onPicked(picked)
+                        pickerItem = nil
+                    }
+                }
+            }
+        }
+        .fullScreenCover(isPresented: $showCamera) {
+            CameraPicker { picked in
+                onPicked(picked)
+            }
+            .ignoresSafeArea()
+        }
+    }
+
+    private var cameraButton: some View {
+        Button {
+            showCamera = true
+        } label: {
+            HStack {
+                Image(systemName: "camera")
+                Text(NSLocalizedString("Fotoğraf Çek", comment: ""))
+                    .fontWeight(.medium)
+            }
+            .font(image == nil ? .body : .subheadline.weight(.medium))
+            .foregroundColor(PinlyTheme.primary)
+        }
+    }
+}
+
+// MARK: Kamera (UIImagePickerController sarmalayıcısı)
+
+struct CameraPicker: UIViewControllerRepresentable {
+    let onCapture: (UIImage) -> Void
+    @Environment(\.dismiss) private var dismiss
+
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.sourceType = .camera
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
+
+    final class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        private let parent: CameraPicker
+
+        init(_ parent: CameraPicker) { self.parent = parent }
+
+        func imagePickerController(_ picker: UIImagePickerController,
+                                   didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+            if let image = info[.originalImage] as? UIImage {
+                parent.onCapture(image)
+            }
+            parent.dismiss()
+        }
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            parent.dismiss()
+        }
     }
 }
 

@@ -74,6 +74,8 @@ class Place {
     var latitude: Double?
     var longitude: Double?
     var createdAt: Date = Date()
+    /// `Documents/PlacePhotos/` altındaki dosya adı; IO `PlacePhotoStoring` üzerinden.
+    var photoFileName: String? = nil
 
     init(name: String, category: String = PlaceCategory.general.rawValue, address: String = "", notes: String = "", isVisited: Bool = false) {
         self.id = UUID()

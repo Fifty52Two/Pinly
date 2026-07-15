@@ -457,3 +457,8 @@
 // MARK: - Faz 5: Seri Hatırlatıcı
 "Serinizi Kaybetmeyin!" = "Serinizi Kaybetmeyin!";
 "%lld günlük serinizi korumak için bugün bir rota yürüyün." = "%lld günlük serinizi korumak için bugün bir rota yürüyün.";
+
+// Mekan fotoğrafı (FAZ 3)
+"Fotoğraf" = "Fotoğraf";
+"Fotoğraf Ekle" = "Fotoğraf Ekle";
+"Fotoğraf Çek" = "Fotoğraf Çek";

@@ -10,6 +10,8 @@ struct RouteShareCardView: View {
     let durationText: String
     let stops: [String]
     let date: Date
+    /// Durak fotoğrafları (varsa) — en fazla 3'ü kolaj şeridi olarak gösterilir.
+    var photos: [UIImage] = []
 
     // Kart her modda koyu — dynamic tema renkleri yerine sabit açık tonlar
     private let mint = Color(red: 0.62, green: 0.71, blue: 0.88)   // buz mavisi (açık slate)
@@ -59,6 +61,24 @@ struct RouteShareCardView: View {
                 ShareCardStat(value: "\(stops.count)", label: NSLocalizedString("Durak", comment: ""))
             }
             .padding(.top, 20)
+
+            // Durak fotoğrafları kolajı
+            if !photos.isEmpty {
+                HStack(spacing: 10) {
+                    ForEach(Array(photos.prefix(3).enumerated()), id: \.offset) { _, photo in
+                        Image(uiImage: photo)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 148, height: 100)
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 14)
+                                    .strokeBorder(Color.white.opacity(0.25), lineWidth: 1)
+                            )
+                    }
+                }
+                .padding(.top, 22)
+            }
 
             // Duraklar
             VStack(alignment: .leading, spacing: 0) {
@@ -141,14 +161,16 @@ struct RouteShareCardView: View {
         distanceText: String,
         durationText: String,
         stops: [String],
-        date: Date = Date()
+        date: Date = Date(),
+        photos: [UIImage] = []
     ) -> UIImage? {
         let view = RouteShareCardView(
             routeName: routeName,
             distanceText: distanceText,
             durationText: durationText,
             stops: stops,
-            date: date
+            date: date,
+            photos: photos
         )
         let renderer = ImageRenderer(content: view)
         renderer.scale = 2

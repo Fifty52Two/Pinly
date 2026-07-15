@@ -582,7 +582,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Pinly/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
-				INFOPLIST_KEY_NSCameraUsageDescription = "QR kod okuyarak mekan ekleyebilmek için kamera gerekiyor.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "QR kod okumak ve mekan fotoğrafı çekmek için kamera gerekiyor.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Pinly, rotalarını tamamlarken adım sayını ve yürüme mesafeni kaydetmek için Sağlık verisine erişir.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Ferhat Akköprü";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Pinly, yürüyüş rotanı çizmek ve kaydettiğin mekanlara yol tarifi vermek için konumunu kullanır.";
@@ -618,7 +618,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Pinly/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
-				INFOPLIST_KEY_NSCameraUsageDescription = "QR kod okuyarak mekan ekleyebilmek için kamera gerekiyor.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "QR kod okumak ve mekan fotoğrafı çekmek için kamera gerekiyor.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Pinly, rotalarını tamamlarken adım sayını ve yürüme mesafeni kaydetmek için Sağlık verisine erişir.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Ferhat Akköprü";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Pinly, yürüyüş rotanı çizmek ve kaydettiğin mekanlara yol tarifi vermek için konumunu kullanır.";

@@ -9,6 +9,7 @@ struct RouteSummaryView: View {
     @EnvironmentObject var routeManager: RouteManager
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismissRouteFlow) var dismissRouteFlow
+    @Environment(\.placePhotos) private var placePhotos
     @Environment(\.reviewPrompt) private var reviewPrompt
     @Environment(\.requestReview) private var requestReview
 
@@ -626,11 +627,16 @@ struct RouteSummaryView: View {
         durationFmt.unitsStyle = .abbreviated
         durationFmt.allowedUnits = routeManager.totalRouteTime >= 3600 ? [.hour, .minute] : [.minute]
 
+        let stopPhotos = routePlaces
+            .compactMap { place in place.photoFileName.flatMap { placePhotos.load(fileName: $0) } }
+            .prefix(3)
+
         guard let image = RouteShareCardView.makeImage(
             routeName: viewModel.exportRouteName(fallbackRouteName: routeManager.routeName),
             distanceText: fmt.string(fromDistance: routeManager.totalRouteDistance),
             durationText: durationFmt.string(from: routeManager.totalRouteTime) ?? "",
-            stops: routePlaces.map(\.name)
+            stops: routePlaces.map(\.name),
+            photos: Array(stopPhotos)
         ) else { return }
 
         let newBadges = viewModel.recordRouteShared(placeStore: placeStore)

@@ -70,6 +70,10 @@ private struct NearbySearchKey: EnvironmentKey {
     static let defaultValue: NearbySearching = DefaultNearbySearchService.shared
 }
 
+private struct PlacePhotosKey: EnvironmentKey {
+    static let defaultValue: PlacePhotoStoring = DefaultPlacePhotoStore.shared
+}
+
 extension EnvironmentValues {
     var entitlements: EntitlementProviding {
         get { self[EntitlementsKey.self] }
@@ -149,5 +153,10 @@ extension EnvironmentValues {
     var nearbySearch: NearbySearching {
         get { self[NearbySearchKey.self] }
         set { self[NearbySearchKey.self] = newValue }
+    }
+
+    var placePhotos: PlacePhotoStoring {
+        get { self[PlacePhotosKey.self] }
+        set { self[PlacePhotosKey.self] = newValue }
     }
 }

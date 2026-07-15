@@ -245,18 +245,28 @@ struct PlaceListItemView: View {
     let modelContext: ModelContext
     @EnvironmentObject var placeStore: PlaceStore
     @EnvironmentObject var locationManager: LocationManager
+    @Environment(\.placePhotos) private var placePhotos
 
     @State private var showDetail = false
     @State private var showShare = false
+    @State private var thumbnail: UIImage? = nil
 
     var body: some View {
         HStack(spacing: 14) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(place.categoryColor.opacity(0.15))
+            if let thumbnail {
+                Image(uiImage: thumbnail)
+                    .resizable()
+                    .scaledToFill()
                     .frame(width: 42, height: 42)
-                Image(systemName: place.categoryIcon)
-                    .foregroundColor(place.categoryColor)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            } else {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(place.categoryColor.opacity(0.15))
+                        .frame(width: 42, height: 42)
+                    Image(systemName: place.categoryIcon)
+                        .foregroundColor(place.categoryColor)
+                }
             }
 
             VStack(alignment: .leading, spacing: 3) {
@@ -302,6 +312,8 @@ struct PlaceListItemView: View {
         .padding(.vertical, 4)
         .contentShape(Rectangle())
         .onTapGesture { showDetail = true }
+        .onAppear { reloadThumbnail() }
+        .onChange(of: place.photoFileName) { reloadThumbnail() }
         // Sola kaydır: Paylaş + Sil
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button(role: .destructive) {
@@ -342,6 +354,10 @@ struct PlaceListItemView: View {
         .sheet(isPresented: $showShare) {
             SharePlaceView(place: place)
         }
+    }
+
+    private func reloadThumbnail() {
+        thumbnail = place.photoFileName.flatMap { placePhotos.load(fileName: $0) }
     }
 }
 

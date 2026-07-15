@@ -20,7 +20,8 @@ final class MockPlaceRepository: PlaceRepository {
 
     func load(context: ModelContext) {}
 
-    func addPlace(name: String, category: String, address: String, notes: String, coordinate: CLLocationCoordinate2D?, context: ModelContext) async {
+    @discardableResult
+    func addPlace(name: String, category: String, address: String, notes: String, coordinate: CLLocationCoordinate2D?, context: ModelContext) async -> Place {
         addPlaceCallCount += 1
         let place = Place(name: name, category: category, address: address, notes: notes)
         if let coordinate {
@@ -28,6 +29,7 @@ final class MockPlaceRepository: PlaceRepository {
             place.longitude = coordinate.longitude
         }
         places.append(place)
+        return place
     }
 
     func deletePlace(_ place: Place, context: ModelContext) {

@@ -11,12 +11,13 @@ final class AddPlaceViewModel: PlaceFormViewModel {
             place.latitude = coord.latitude
             place.longitude = coord.longitude
             place.locationName = "Mevcut Konum"
+            persistPhoto(to: place)
             context.insert(place)
             placeStore.save(context: context)
             placeStore.load(context: context)
         } else {
             // Haritadan pinlendiyse koordinat direkt kullanılır, geocode atlanır
-            await placeStore.addPlace(
+            let place = await placeStore.addPlace(
                 name: name,
                 category: category,
                 address: address,
@@ -24,6 +25,8 @@ final class AddPlaceViewModel: PlaceFormViewModel {
                 coordinate: pinnedCoord,
                 context: context
             )
+            persistPhoto(to: place)
+            placeStore.save(context: context)
         }
         isSaving = false
     }

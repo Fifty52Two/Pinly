@@ -47,14 +47,16 @@
 
 ## FAZ 3 — Mekanlara fotoğraf
 > Görsellik şu an sıfır. Foursquare'in yerini hedefleyen uygulama için en büyük UX eksiği.
-- [ ] 3.1 `Place` modeline `photoFileName: String?` (SwiftData lightweight migration —
+- [x] 3.1 `Place` modeline `photoFileName: String?` (SwiftData lightweight migration —
       yeni optional alan, sorunsuz). Foto dosyası `Documents/PlacePhotos/<uuid>.jpg`
       (profil fotoğrafı deseniyle aynı: 1200px uzun kenar, 0.8 JPEG)
-- [ ] 3.2 `PlacePhotoStoring` protokolü + servis (kaydet/yükle/sil; Place silinince dosya da silinir)
-- [ ] 3.3 AddPlaceView + EditPlaceView: PhotosPicker (galeri) + kamera seçeneği
-- [ ] 3.4 PlaceDetailView: foto başlık görseli; PlacesListView + Keşfet kartlarında thumbnail
-- [ ] 3.5 RouteShareCard (Instagram kartı): rota duraklarından foto varsa kolaj/ilk foto
-- [ ] 3.6 QR/link paylaşımına foto DAHİL DEĞİL (URL şişer) — bilinçli karar
+- [x] 3.2 `PlacePhotoStoring` protokolü + servis (kaydet/yükle/sil; Place silinince dosya da silinir)
+- [x] 3.3 AddPlaceView + EditPlaceView: PhotosPicker (galeri) + kamera seçeneği (`CameraPicker`,
+      simülatörde kamera butonu gizli; NSCameraUsageDescription metni foto çekimini de kapsıyor)
+- [x] 3.4 PlaceDetailView: foto başlık görseli; PlacesListView satırında thumbnail
+      (Keşfet kartları FAZ 4 yeniden tasarımında ele alınacak)
+- [x] 3.5 RouteShareCard (Instagram kartı): durak fotoğraflarından en fazla 3'lü kolaj şeridi
+- [x] 3.6 QR/link paylaşımına foto DAHİL DEĞİL (URL şişer) — bilinçli karar
 
 ## FAZ 4 — Keşfet'i gerçek keşfe çevir
 > Şu an "Keşfet" sadece kendi eklediğin mekanları kategori grid'inde gösteriyor —
