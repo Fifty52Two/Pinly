@@ -1,6 +1,5 @@
 import SwiftUI
 import SwiftData
-import GoogleMobileAds
 
 @main
 struct PinlyApp: App {
@@ -30,7 +29,9 @@ struct PinlyApp: App {
 
     init() {
         DiagnosticsCollector.shared.register()
-        MobileAds.shared.start { _ in }
+        // AdMob SDK'sı burada BAŞLATILMIYOR — UMP rızası + ATT izni alınmadan
+        // reklam isteği atılamaz (bkz. ConsentManager). Gerçek başlatma
+        // ContentView'in ilk onAppear'ında, rıza akışı tamamlanınca yapılır.
         // Bildirim izni ilk açılışta onboarding'in üstüne düşmesin —
         // yeni kullanıcıda onboarding bitince (ContentView) tetiklenir
         if UserDefaults.standard.bool(forKey: "pinly.hasSeenOnboarding") {

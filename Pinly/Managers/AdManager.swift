@@ -1,15 +1,10 @@
 import UIKit
 import GoogleMobileAds
 
-// TODO: Yayına geçerken test ID'lerini gerçek ID'lerle değiştir:
-// App ID     → Info.plist GADApplicationIdentifier
-// Ad Unit ID → AdManager.interstitialAdUnitID
-
 final class AdManager: NSObject, AdPresenting {
     static let shared = AdManager()
 
-    // Test ID — gerçek ID: "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
-    private static let interstitialAdUnitID = "ca-app-pub-3940256099942544/4411468910"
+    private static let interstitialAdUnitID = "ca-app-pub-7849418614739862/1594342756"
 
     private let entitlements: EntitlementProviding
     private var interstitial: InterstitialAd?
@@ -18,6 +13,11 @@ final class AdManager: NSObject, AdPresenting {
     init(entitlements: EntitlementProviding = LocalEntitlementService.shared) {
         self.entitlements = entitlements
         super.init()
+    }
+
+    /// UMP/ATT rıza akışı tamamlandıktan SONRA çağrılmalı (bkz. `ConsentManager`) —
+    /// reklam SDK'sı rıza alınmadan istek atmamalı.
+    func beginLoadingAds() {
         loadInterstitial()
     }
 

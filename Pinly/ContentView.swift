@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import CoreLocation
+import GoogleMobileAds
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
@@ -22,6 +23,7 @@ struct ContentView: View {
     @AppStorage("pinly.hasSeenOnboarding") private var hasSeenOnboarding = false
     @AppStorage("pinly.hasSetupProfile") private var hasSetupProfile = false
     @AppStorage("pinly.appearance") private var appearance = "system"
+    @State private var hasRequestedAdConsent = false
 
     var body: some View {
         Group {
@@ -53,6 +55,7 @@ struct ContentView: View {
         .onAppear {
             placeStore.load(context: modelContext)
             applyAppearance(appearance)
+            requestAdConsentIfNeeded()
         }
         .onChange(of: appearance) { _, newValue in
             applyAppearance(newValue)
@@ -125,6 +128,19 @@ struct ContentView: View {
             .compactMap { $0 as? UIWindowScene }
             .flatMap { $0.windows }
             .forEach { $0.overrideUserInterfaceStyle = style }
+    }
+
+    /// UMP rızası + ATT izni akışını başlatır, tamamlanınca (ve sadece
+    /// `canRequestAds` ise) AdMob SDK'sını ve interstitial yüklemesini açar.
+    /// Onboarding sırasında da, dönen kullanıcıda da tek seferlik çalışır.
+    private func requestAdConsentIfNeeded() {
+        guard !hasRequestedAdConsent else { return }
+        hasRequestedAdConsent = true
+        ConsentManager.shared.requestConsentAndTracking {
+            guard ConsentManager.shared.canRequestAds else { return }
+            MobileAds.shared.start { _ in }
+            AdManager.shared.beginLoadingAds()
+        }
     }
 
     private func importRoute() {

@@ -195,10 +195,19 @@ TabView (HomeView)
 ## Yapılacaklar (öncelik sırasıyla)
 
 ### Apple Developer Hesabı Alınınca (EN ÖNCE)
-- [ ] RevenueCat SPM + App Store Connect ürünleri (`pinly_pro_monthly` $4.99, `pinly_pro_yearly` $39.99)
-- [ ] `LocalEntitlementService` → `RevenueCatEntitlementService` (protokol sayesinde tek dosya)
-- [ ] PaywallView butonları → gerçek purchase/restore (TODO comment'leri var)
-- [ ] AdMob gerçek ID'ler (Info.plist `GADApplicationIdentifier` + `AdManager.interstitialAdUnitID`) + ATT izni
+- [ ] RevenueCat SPM + App Store Connect ürünleri (`pinly_pro_monthly` $4.99, `pinly_pro_yearly` $39.99) — **ertelendi, kullanıcı kararı**
+- [ ] `LocalEntitlementService` → `RevenueCatEntitlementService` (protokol sayesinde tek dosya) — **ertelendi**
+- [ ] PaywallView butonları → gerçek purchase/restore (TODO comment'leri var) — **ertelendi**
+- [ ] AdMob gerçek ID'ler (Info.plist `GADApplicationIdentifier` + `AdManager.interstitialAdUnitID`) + ATT izni —
+      kod tamam: `ConsentManager.swift` (UMP rıza formu + ATT, `import UserMessagingPlatform`, prefix'siz
+      API: `ConsentInformation`/`ConsentForm`/`RequestParameters`), `AdManager.beginLoadingAds()` rızadan
+      sonra çağrılıyor, `PinlyApp.init()`'te erken `MobileAds.shared.start()` kaldırıldı. **Xcode'da açık
+      kalan iş:** `UserMessagingPlatform` paketi `Package.resolved`'da var ama Xcode'un Frameworks
+      seçicisinde bile listelenmiyor — proje seviyesinde gerçek bir bağımlılık olarak eklenmemiş
+      (RevenueCat'ten farklı, o zaten listede). File > Add Package Dependencies... > URL:
+      `https://github.com/googleads/swift-package-manager-google-user-messaging-platform` > Add Package >
+      "UserMessagingPlatform" ürününü Pinly target'ına ekle. Sonra derle. Gerçek cihazda UMP formu (AEE/UK
+      dışında görünmeyebilir) + ATT diyaloğu henüz test edilmedi.
 - [ ] Crash reporting + analytics (Crashlytics/Sentry), TestFlight beta
 
 ### Apple Developer olmadan yapılabilecekler

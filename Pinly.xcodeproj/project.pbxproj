@@ -11,6 +11,7 @@
 		0A00D6742F7C57AF0031F556 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A00D6732F7C57AF0031F556 /* SwiftUI.framework */; };
 		0A00D6832F7C57AF0031F556 /* PinlyLiveActivityExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0A00D66F2F7C57AF0031F556 /* PinlyLiveActivityExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0A93820E2F8010CB00EF3C24 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 0A93820D2F8010CB00EF3C24 /* GoogleMobileAds */; };
+		0A963A143006882E001B1587 /* GoogleUserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = 0A963A133006882E001B1587 /* GoogleUserMessagingPlatform */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A963A143006882E001B1587 /* GoogleUserMessagingPlatform in Frameworks */,
 				0A93820E2F8010CB00EF3C24 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -235,6 +237,7 @@
 			name = Pinly;
 			packageProductDependencies = (
 				0A93820D2F8010CB00EF3C24 /* GoogleMobileAds */,
+				0A963A133006882E001B1587 /* GoogleUserMessagingPlatform */,
 			);
 			productName = Pinly;
 			productReference = 0AC0FA692F2F9CE300C6C26F /* Pinly.app */;
@@ -278,6 +281,7 @@
 			packageReferences = (
 				0A00DA472F7D4FA80031F556 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
 				0A93820C2F80103A00EF3C24 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				0A963A1230068647001B1587 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0AC0FA6A2F2F9CE300C6C26F /* Products */;
@@ -583,6 +587,7 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Ferhat Akköprü";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Pinly, yürüyüş rotanı çizmek ve kaydettiğin mekanlara yol tarifi vermek için konumunu kullanır.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Sana daha alakalı reklamlar gösterebilmek için bu veri diğer şirketlerdeki uygulama ve web sitelerinde kullanılacak.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -618,6 +623,7 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Ferhat Akköprü";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Pinly, yürüyüş rotanı çizmek ve kaydettiğin mekanlara yol tarifi vermek için konumunu kullanır.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Sana daha alakalı reklamlar gösterebilmek için bu veri diğer şirketlerdeki uygulama ve web sitelerinde kullanılacak.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -692,6 +698,14 @@
 				minimumVersion = 13.2.0;
 			};
 		};
+		0A963A1230068647001B1587 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-user-messaging-platform";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -699,6 +713,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0A93820C2F80103A00EF3C24 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
 			productName = GoogleMobileAds;
+		};
+		0A963A133006882E001B1587 /* GoogleUserMessagingPlatform */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0A963A1230068647001B1587 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */;
+			productName = GoogleUserMessagingPlatform;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
