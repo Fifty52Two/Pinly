@@ -50,8 +50,10 @@ extension DiagnosticsCollector: MXMetricManagerSubscriber {
     func didReceive(_ payloads: [MXDiagnosticPayload]) {
         for payload in payloads {
             for crash in payload.crashDiagnostics ?? [] {
-                let summary = String(crash.callStackTree.jsonRepresentation()
-                    .prefix(120).description)
+                let summary = String(
+                    (String(data: crash.callStackTree.jsonRepresentation(), encoding: .utf8) ?? "<unreadable>")
+                        .prefix(120)
+                )
                 appendLog("[\(timestamp())] Crash: \(summary)")
             }
             for hang in payload.hangDiagnostics ?? [] {

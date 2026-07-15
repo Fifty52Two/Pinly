@@ -70,7 +70,7 @@ struct DefaultWeeklyStatsComputer: WeeklyStatsComputing {
 protocol NotificationScheduling {
     /// Pazar sabahı 09:00 tekrarlayan lokal bildirim planlar.
     func scheduleWeeklyNotification()
-    /// `consecutiveDays > 0` ise bugün 20:00'de tek seferlik hatırlatıcı planlar.
+    /// `consecutiveDays > 0` ise yarın 20:00'de tek seferlik hatırlatıcı planlar.
     func scheduleStreakReminder(consecutiveDays: Int)
 }
 
@@ -88,8 +88,9 @@ struct DefaultNotificationScheduler: NotificationScheduling {
             )
             content.sound = .default
 
-            var comps   = Calendar.current.dateComponents([.year, .month, .day], from: Date())
-            comps.hour  = 20
+            let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
+            var comps    = Calendar.current.dateComponents([.year, .month, .day], from: tomorrow)
+            comps.hour   = 20
             comps.minute = 0
 
             let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
