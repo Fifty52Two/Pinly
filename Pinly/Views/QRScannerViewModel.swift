@@ -12,9 +12,12 @@ final class QRScannerViewModel: ObservableObject {
     @Published var isSaving = false
 
     private let entitlements: EntitlementProviding
+    private let analytics: AnalyticsTracking
 
-    init(entitlements: EntitlementProviding = LocalEntitlementService.shared) {
+    init(entitlements: EntitlementProviding = LocalEntitlementService.shared,
+         analytics: AnalyticsTracking = NoOpAnalyticsService.shared) {
         self.entitlements = entitlements
+        self.analytics = analytics
     }
 
     /// Freemium limiti aşılıyorsa false döner (çağıran taraf paywall göstermeli).
@@ -25,6 +28,7 @@ final class QRScannerViewModel: ObservableObject {
         isSaving = true
         await placeStore.importPlace(data, context: context)
         isSaving = false
+        analytics.track(.placeAdded(source: .qr))
         return true
     }
 }

@@ -31,6 +31,7 @@ struct PlacesListView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.entitlements) private var entitlements
     @Environment(\.swarmImporting) private var swarmImporting
+    @Environment(\.analytics) private var analytics
 
     @StateObject private var viewModel = PlacesListViewModel()
 
@@ -280,6 +281,7 @@ struct PlacesListView: View {
         let toImport = pendingSwarmPlaces
         showSwarmImport = false
         pendingSwarmPlaces = []
+        analytics.track(.placeAdded(source: .swarm))
         Task {
             for data in toImport {
                 await placeStore.importPlace(data, context: modelContext)

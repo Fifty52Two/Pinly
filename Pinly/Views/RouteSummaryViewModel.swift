@@ -30,6 +30,7 @@ final class RouteSummaryViewModel: ObservableObject {
     private let healthStats: HealthStatsProviding
     private let savedRoutes: SavedRouteRepository
     private let routeExporter: RouteExporting
+    private let analytics: AnalyticsTracking
 
     init(
         badges: BadgeServicing = DefaultBadgeService.shared,
@@ -37,7 +38,8 @@ final class RouteSummaryViewModel: ObservableObject {
         ads: AdPresenting = AdManager.shared,
         healthStats: HealthStatsProviding = HealthKitService.shared,
         savedRoutes: SavedRouteRepository = DefaultSavedRouteRepository.shared,
-        routeExporter: RouteExporting = DefaultRouteExporter()
+        routeExporter: RouteExporting = DefaultRouteExporter(),
+        analytics: AnalyticsTracking = NoOpAnalyticsService.shared
     ) {
         self.badges = badges
         self.entitlements = entitlements
@@ -45,6 +47,7 @@ final class RouteSummaryViewModel: ObservableObject {
         self.healthStats = healthStats
         self.savedRoutes = savedRoutes
         self.routeExporter = routeExporter
+        self.analytics = analytics
     }
 
     var isPro: Bool { entitlements.isPro }
@@ -87,6 +90,7 @@ final class RouteSummaryViewModel: ObservableObject {
 
     func recordRouteStarted() {
         badges.recordRouteStarted()
+        analytics.track(.routeStarted)
     }
 
     /// Sağlık izni reddedildiyse true — adım/mesafe istatistiklerinin neden boş
@@ -108,6 +112,7 @@ final class RouteSummaryViewModel: ObservableObject {
         placeStore: PlaceRepository
     ) async -> [Badge] {
         badges.recordRouteCompleted()
+        analytics.track(.routeCompleted)
         let newBadges = badges.check(placeStore: placeStore)
 
         let startDate = routeStartDate ?? Date()
@@ -149,6 +154,7 @@ final class RouteSummaryViewModel: ObservableObject {
 
     func recordRouteShared(placeStore: PlaceRepository) -> [Badge] {
         badges.recordRouteShared()
+        analytics.track(.routeShared)
         return badges.check(placeStore: placeStore)
     }
 

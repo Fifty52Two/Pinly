@@ -3,6 +3,7 @@ import SwiftUI
 struct PaywallView: View {
     let onDismiss: () -> Void
     @Environment(\.entitlements) private var entitlements
+    @Environment(\.analytics) private var analytics
 
     // TODO: Apple Developer alınınca RevenueCat ile değişecek:
     // @State private var offering: Offering? = nil
@@ -110,6 +111,7 @@ struct PaywallView: View {
         }
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
+        .onAppear { analytics.track(.paywallShown) }
     }
 }
 

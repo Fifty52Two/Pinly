@@ -28,6 +28,7 @@ class PlaceFormViewModel: ObservableObject {
 
     let geocoding: GeocodingProviding
     let photoStore: PlacePhotoStoring
+    let analytics: AnalyticsTracking
 
     init(
         name: String = "",
@@ -35,7 +36,8 @@ class PlaceFormViewModel: ObservableObject {
         address: String = "",
         notes: String = "",
         geocoding: GeocodingProviding = DefaultGeocodingService.shared,
-        photoStore: PlacePhotoStoring = DefaultPlacePhotoStore.shared
+        photoStore: PlacePhotoStoring = DefaultPlacePhotoStore.shared,
+        analytics: AnalyticsTracking = NoOpAnalyticsService.shared
     ) {
         self.name = name
         self.category = category
@@ -43,6 +45,7 @@ class PlaceFormViewModel: ObservableObject {
         self.notes = notes
         self.geocoding = geocoding
         self.photoStore = photoStore
+        self.analytics = analytics
     }
 
     func setPhoto(_ image: UIImage) {

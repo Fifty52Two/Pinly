@@ -19,15 +19,18 @@ final class QuickAddViewModel: ObservableObject {
     private let geocoding: GeocodingProviding
     private let entitlements: EntitlementProviding
     private let badges: BadgeServicing
+    private let analytics: AnalyticsTracking
 
     init(
         geocoding: GeocodingProviding = DefaultGeocodingService.shared,
         entitlements: EntitlementProviding = LocalEntitlementService.shared,
-        badges: BadgeServicing = DefaultBadgeService.shared
+        badges: BadgeServicing = DefaultBadgeService.shared,
+        analytics: AnalyticsTracking = NoOpAnalyticsService.shared
     ) {
         self.geocoding = geocoding
         self.entitlements = entitlements
         self.badges = badges
+        self.analytics = analytics
     }
 
     /// Konum iznini/isteğini tetikler, en fazla ~3 saniye bekleyip (0.2s aralıklarla
@@ -74,6 +77,7 @@ final class QuickAddViewModel: ObservableObject {
 
         let newBadges = badges.check(placeStore: placeStore)
         placeStore.pendingBadges.append(contentsOf: newBadges)
+        analytics.track(.placeAdded(source: .quickAdd))
         return true
     }
 }

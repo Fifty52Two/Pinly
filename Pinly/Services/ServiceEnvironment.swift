@@ -74,6 +74,10 @@ private struct PlacePhotosKey: EnvironmentKey {
     static let defaultValue: PlacePhotoStoring = DefaultPlacePhotoStore.shared
 }
 
+private struct AnalyticsKey: EnvironmentKey {
+    static let defaultValue: AnalyticsTracking = NoOpAnalyticsService.shared
+}
+
 extension EnvironmentValues {
     var entitlements: EntitlementProviding {
         get { self[EntitlementsKey.self] }
@@ -158,5 +162,10 @@ extension EnvironmentValues {
     var placePhotos: PlacePhotoStoring {
         get { self[PlacePhotosKey.self] }
         set { self[PlacePhotosKey.self] = newValue }
+    }
+
+    var analytics: AnalyticsTracking {
+        get { self[AnalyticsKey.self] }
+        set { self[AnalyticsKey.self] = newValue }
     }
 }

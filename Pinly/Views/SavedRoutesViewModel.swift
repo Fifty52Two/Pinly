@@ -18,13 +18,16 @@ final class SavedRoutesViewModel: ObservableObject {
 
     private let savedRoutes: SavedRouteRepository
     private let badges: BadgeServicing
+    private let analytics: AnalyticsTracking
 
     init(
         savedRoutes: SavedRouteRepository = DefaultSavedRouteRepository.shared,
-        badges: BadgeServicing = DefaultBadgeService.shared
+        badges: BadgeServicing = DefaultBadgeService.shared,
+        analytics: AnalyticsTracking = NoOpAnalyticsService.shared
     ) {
         self.savedRoutes = savedRoutes
         self.badges = badges
+        self.analytics = analytics
     }
 
     func distanceKm(from userLocation: CLLocation?, to route: SavedRoute) -> Double? {
@@ -76,6 +79,7 @@ final class SavedRoutesViewModel: ObservableObject {
 
         tracker.setRoute(places: places, name: route.name)
         badges.recordRouteStarted()
+        analytics.track(.routeStarted)
     }
 
     private func fetchPlace(for snap: SavedPlaceSnapshot, context: ModelContext) -> Place? {

@@ -27,6 +27,7 @@ struct PinlyApp: App {
     private let starterRoutesProvider = DefaultStarterRoutesProvider()
     private let nearbySearchService = DefaultNearbySearchService.shared
     private let placePhotoStore = DefaultPlacePhotoStore.shared
+    private let analyticsService = NoOpAnalyticsService.shared
 
     init() {
         DiagnosticsCollector.shared.register()
@@ -68,6 +69,7 @@ struct PinlyApp: App {
                 .environment(\.starterRoutes, starterRoutesProvider)
                 .environment(\.nearbySearch, nearbySearchService)
                 .environment(\.placePhotos, placePhotoStore)
+                .environment(\.analytics, analyticsService)
         }
     }
 }

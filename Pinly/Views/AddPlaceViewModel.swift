@@ -28,6 +28,7 @@ final class AddPlaceViewModel: PlaceFormViewModel {
             persistPhoto(to: place)
             placeStore.save(context: context)
         }
+        analytics.track(.placeAdded(source: .manual))
         isSaving = false
     }
 }

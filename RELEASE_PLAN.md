@@ -20,9 +20,11 @@
 - [ ] 1.3 `PinlyApp.init()`: `FirebaseApp.configure()` (ConsentManager akışıyla uyumlu —
       Analytics rıza gerektirmez ama ATT sonrası IDFA erişimi otomatik düzelir)
 - [ ] 1.4 Crashlytics dSYM upload build phase (Xcode'da run script)
-- [ ] 1.5 Temel event seti (protokol arkasında, `AnalyticsTracking` + `\.analytics` environment key):
-      `place_added` (kaynak: manuel/QR/deeplink/swarm/nearby), `route_started`,
-      `route_completed`, `route_shared`, `paywall_shown`, `nearby_search`
+- [x] 1.5 Temel event seti (protokol arkasında, `AnalyticsTracking` + `\.analytics` environment key):
+      `place_added` (kaynak: manual/qr/deeplink/swarm/nearby/quick_add/route_import), `route_started`,
+      `route_completed`, `route_shared`, `paywall_shown`, `nearby_search`.
+      Şimdilik `NoOpAnalyticsService` (DEBUG'da konsola yazar) — Firebase gelince (1.2-1.3)
+      sadece somut sınıf değişir, çağıran yerler sabit
 - [ ] 1.6 MetricKit tanılama ekranı kalıyor (yerinde duruyor, çakışma yok)
 
 ## FAZ 2 — Yakınımda: kategori bug'ı fix + güçlendirme

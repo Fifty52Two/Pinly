@@ -9,6 +9,7 @@ struct ContentView: View {
     @Environment(\.badges) private var badges
     @Environment(\.routeURLCoding) private var routeURLCoding
     @Environment(\.notificationScheduling) private var notificationScheduling
+    @Environment(\.analytics) private var analytics
     @EnvironmentObject var placeStore: PlaceStore
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var routeManager: RouteManager
@@ -156,6 +157,7 @@ struct ContentView: View {
         let toImport = routeImport.places
         showRouteImportSheet = false
         pendingRouteImport = nil
+        analytics.track(.placeAdded(source: .routeImport))
         Task {
             for data in toImport {
                 await placeStore.importPlace(data, context: modelContext)
@@ -205,6 +207,7 @@ struct ContentView: View {
             return
         }
         isImporting = true
+        analytics.track(.placeAdded(source: .deeplink))
         Task {
             await placeStore.importPlace(data, context: modelContext)
             await MainActor.run {

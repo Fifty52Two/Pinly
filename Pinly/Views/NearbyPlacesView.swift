@@ -8,6 +8,7 @@ struct NearbyPlacesView: View {
     @Environment(\.nearbySearch) private var nearbySearch
     @Environment(\.modelContext) private var modelContext
     @Environment(\.entitlements) private var entitlements
+    @Environment(\.analytics) private var analytics
 
     @StateObject private var viewModel = NearbyPlacesViewModel()
     @State private var addedIDs: Set<UUID> = []
@@ -178,6 +179,7 @@ struct NearbyPlacesView: View {
                 context: modelContext
             )
             addedIDs.insert(nearby.id)
+            analytics.track(.placeAdded(source: .nearby))
         }
     }
 }
