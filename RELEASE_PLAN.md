@@ -101,7 +101,15 @@
       yayınlandı (2026-07-16). Not: Privacy "Publish" butonu SADECE gizlilik etiketini
       kesinleştirir — App Store'a submit/yayın ANLAMINA GELMEZ, o ayrı bir adım
       (App Store sekmesi → Submit for Review, henüz basılmadı)
-- [ ] 6.3 Archive + upload, internal test grubu, beta davetleri
+- [x] 6.3 **(Kullanıcı)** Archive + upload (2026-07-16, Build 1.0 (1), "Uploaded to Apple").
+      dSYM upload uyarıları (Firebase Analytics/GoogleAppMeasurement/GoogleMobileAds/UMP)
+      zararsız — 3.parti prebuilt XCFrameworks dSYM bundle etmiyor, submission'ı engellemez.
+      Export compliance: "None of the algorithms mentioned above" (yalnızca standart
+      HTTPS/TLS, özel şifreleme yok) → build "Ready to Submit". TestFlight'ta **Internal**
+      "Beta" grubu (otomatik dağıtım açık, testers henüz eklenmedi) + **External** "Beta"
+      grubu (Public Link açık, kriter yok) oluşturuldu, Test Information dolduruldu,
+      Beta App Review'a gönderildi → **"Waiting for Review"** (2026-07-16). Onaylanınca
+      Public Link arkadaşlarla paylaşılacak.
 - [ ] 6.4 Beta sırasında paralel: RevenueCat entegrasyonu (App Store Connect ürünleri
       `pinly_pro_monthly` $4.99 / `pinly_pro_yearly` $39.99 + `RevenueCatEntitlementService`
       + PaywallView gerçek purchase/restore)
@@ -114,7 +122,10 @@
 
 ## Bilinen dış bağımlılıklar (kullanıcının yapacakları)
 1. ~~FAZ 0.1 — Xcode'da UMP ürün linki~~ ✔ yapıldı (2026-07-15)
-2. FAZ 0.3 — Gerçek cihazda ATT + interstitial smoke testi
-3. FAZ 1.1 — Firebase Console projesi + GoogleService-Info.plist
-4. FAZ 6.2 — App Store Connect app kaydı (Apple Developer hesabı hazır)
-5. FAZ 6.4 — RevenueCat hesabı + API key
+2. ~~FAZ 0.3 — Gerçek cihazda ATT + interstitial smoke testi~~ ✔ yapıldı (2026-07-16)
+3. ~~FAZ 1.1 — Firebase Console projesi + GoogleService-Info.plist~~ ✔ yapıldı
+4. ~~FAZ 6.2 — App Store Connect app kaydı~~ ✔ yapıldı (2026-07-16)
+5. ~~FAZ 6.3 — Archive + upload + TestFlight external grup + Beta App Review'a gönderim~~
+   ✔ yapıldı (2026-07-16), review sonucu bekleniyor
+6. FAZ 6.4 — RevenueCat hesabı + API key + App Store Connect'te
+   `pinly_pro_monthly` / `pinly_pro_yearly` in-app purchase ürünleri
