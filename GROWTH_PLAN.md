@@ -53,7 +53,32 @@ CLAUDE.md + ilgili spec dosyasını okur.
 - FAZ 6'nın basit animasyonları (sayaç, spring pop, haptic), lokalizasyon eklemeleri
 - Ekran görüntüsü otomasyonu, test yazımı/koşturma, build/TestFlight rutinleri
 
-## 🌅 GÜNCEL DURUM (2026-07-23 gece, otonom oturum sonu) — SABAH BURADAN BAŞLA
+## ☀️ GÜNCEL DURUM (2026-07-23 gündüz, çoklu-ajan turu sonu)
+
+Ferhat paywall sandbox testini yaparken (satın alma BAŞARILI — "You're all set" ekranı doğrulandı),
+3 paralel Sonnet ajanı (izole worktree) FAZ 3 + FAZ 4 + FAZ 5 V1'i uyguladı; hepsi main'e
+birleştirildi (2 merge commit, conflict'ler elle çözüldü — hepsi katkı-ekleyici, veri kaybı yok).
+**Ana dal: 181/181 test yeşil.** Ayrıca FAZ 1 kuyruğu kapatıldı (trial uygunluk kontrolü) ve
+Ankara rota kataloğu eklendi (9/9 durak MKLocalSearch doğrulamalı).
+
+**ÖNEMLİ OPERASYONEL BULGU:** XcodeBuildMCP'nin session default'ları (`projectPath` dahil) eş
+zamanlı çalışan ajanlar arasında PAYLAŞILIYOR (süreç-global state, konuşma-izole değil) — bir
+ajanın `session_set_defaults` çağrısı diğerinin varsayılanını sessizce değiştirebiliyor. Bunu bir
+test sonucunun (162 geçti sanılan) aslında yanlış worktree'de koştuğunu keşfederek bulduk. KURAL:
+paralel ajanlar XcodeBuildMCP kullanırken, her build/test çağrısından HEMEN ÖNCE
+`session_set_defaults` ile projectPath'i açıkça yeniden sabitle — asla önceki bir çağrının hâlâ
+geçerli olduğunu varsayma.
+
+**Kalan (bu turda dokunulmadı):**
+- FAZ 6 (UI wow animasyonları) — kasıtlı ertelendi, RouteSummaryView/RouteCompletionOverlay'e
+  hem FAZ 1 hem FAZ 3 dokunduğu için üçüncü bir paralel ajan çakışma riski taşırdı; artık ana dal
+  sakinleşti, sıradaki tur için güvenli.
+- FAZ 5 V2 (Supabase) — Ferhat'ın hesap açması gerekiyor, kod işi ondan sonra.
+- FAZ 7 (pazarlama) — ASO taslağı hazır, ekran görüntüsü/video/PR Ferhat'ın eylemini gerektiriyor.
+- Rota kataloğu Dalga 1 devamı (İzmir/Bursa/Antalya/...) — Ankara gibi MKLocalSearch doğrulamalı
+  üretilebilir, istenirse devam edilir.
+
+## 🌅 GÜNCEL DURUM (2026-07-23 gece, otonom oturum sonu) — ESKİ, YUKARIDAKİ GÜNCEL
 
 **Kod durumu:** FAZ 1 + FAZ 2 + seigaiha UI + tüm doküman/spec'ler **main'e 4 tematik commit'le
 işlendi** (b57722e → d534f40), working tree temiz, **149/149 test yeşil**. PUSH EDİLMEDİ
@@ -200,22 +225,28 @@ Paywall placeholder olduğu sürece App Store'a çıkılamaz; her şey bunun ark
 **Ferhat:**
 - [ ] Beta Public Link'i en az 10-20 kişiye dağıt (arkadaşlar + 1-2 gezi grubu); geri bildirim topla
 
-## FAZ 3 — Anı Günlüğü: viral çekirdek (≈1-1.5 hafta)
+## FAZ 3 — Anı Günlüğü: viral çekirdek — KOD TAMAMLANDI 2026-07-23 (Sonnet, otonom oturum)
 
 Polarsteps'in kanıtladığı model: gezi otomatik belgelenir → anıya dönüşür → paylaşılır.
-Altyapının %60'ı hazır (PlacePhotoStoring, RouteShareCard foto kolajı, RouteHistory).
 
-- [ ] Durakta duraklama ekranına (RatingSheetView) **foto çekme/ekleme** satırı — mevcut
-      `PlacePhotoStoring` + `CameraPicker` yeniden kullanılır
-- [ ] `RouteHistory`'ye foto referansları (`photoFileNames: [String]` — SwiftData hafif migration)
-      + hangi durakta çekildiği
-- [ ] **"Günün Hikayesi" kartı:** rota bitince otomatik üretilen paylaşım görseli — harita izi +
-      durak fotoğrafları kolajı + km/adım/süre. İki format: 9:16 (story) + 4:5 (post).
-      `RouteShareCard` genişletilir; üretim `MemoryCardComposing` protokolü + servis (test edilebilir).
-- [ ] `RouteHistoryView` → **"Günlük"** deneyimine dönüşüm: kartlı zaman akışı (foto başlıklı),
-      karta dokununca tam hikaye + yeniden paylaş
-- [ ] Kutlama akışına "hikayeni paylaş" adımı (interstitial SONRASINA — paylaşım niyetini reklamla kesme)
-- [ ] Analytics: `memory_card_shared` event'i — viral döngünün ana metriği
+- [x] `RatingSheetView`'e foto çekme/ekleme satırı (kamera+galeri, durak başına en fazla 3),
+      `RouteSummaryViewModel.stopPhotos` state'i + `alsoSaveAsPlacePhoto` toggle'ı
+- [x] `RouteHistory.memoryPhotosData` (Data?, hafif migration) + `RouteMemoryPhoto` struct
+      (stopIndex/stopName/fileName) + encode/decode yardımcıları
+- [x] `RouteMemoryStoring`/`DefaultRouteMemoryStore` (`Documents/RouteMemories/<historyID>/`,
+      mekan fotoğrafından AYRI depo) + ortak `ImageDownscaler` (PlacePhotoService'ten çıkarıldı)
+- [x] `MemoryCardComposing`/`DefaultMemoryCardComposer` — story (9:16) + post (4:5),
+      `RouteMemoryMapSnapshotter` (MKMapSnapshotter + elle polyline çizimi, harita nil'ken de çalışır)
+- [x] `RouteHistoryView` → Günlük yeniden tasarımı (foto'lu kart / düz satır) + `MemoryDetailView`
+      ("Yeniden Paylaş"); "Hikayeni Paylaş" `RouteCompletionOverlay`'e eklendi — **soft paywall'ın
+      üç dallı kapanış closure'ına (FAZ 1) DOKUNULMADI**, tasarım kısıtı korundu
+- [x] Analytics: `memory_photo_added`, `memory_card_shared(format)` + 5 dil lokalizasyon
+- [x] Veri silme akışı (`ProfileTab.deleteAllData`) her `RouteHistory`'nin `RouteMemories/`
+      klasörünü de siliyor
+- **Not:** Eski `RouteShareCard.swift`/`shareCompletionCard()` tek-foto paylaşımı yeni akışın
+      SÜPERSETİ olduğu için devre dışı bırakıldı (dosya durduruluyor, silinmedi — ayrı temizlik kararı)
+- 19 yeni test, ana dalda **181/181 yeşil**. Gerçek cihazda/simülatörde foto çekme akışı İNSAN
+  TESTİ bekliyor (kamera simülatörde kısıtlı).
 
 ## FAZ 4 — İlk 30 Saniye + Hazır Rota Fabrikası (≈1 hafta kurulum + sürekli içerik)
 
