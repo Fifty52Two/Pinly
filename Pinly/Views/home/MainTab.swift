@@ -102,8 +102,16 @@ struct MainTab: View {
                             .foregroundColor(.white.opacity(0.9))
                     }
                     .padding(20)
-                    .background(PinlyTheme.heroGradient)
+                    .background(
+                        ZStack {
+                            PinlyTheme.heroWarmGradient
+                            WavePattern(waveLength: 55, amplitude: 8, rowSpacing: 14)
+                                .stroke(PinlyTheme.navy.opacity(0.20), lineWidth: 1)
+                                .clipShape(WavyHorizonMask())
+                        }
+                    )
                     .cornerRadius(20)
+                    .clipped()
                 }
                 .buttonStyle(.plain)
 
@@ -166,7 +174,7 @@ struct MainTab: View {
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, 32)
+            .padding(.bottom, 100)
         }
         .background(PinlyTheme.ground)
         .fullScreenCover(isPresented: $showPlaces) {
@@ -253,7 +261,7 @@ private struct QuickActionCard: View {
             VStack(alignment: .leading, spacing: 10) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(color.opacity(0.14))
+                        .fill(color.opacity(0.22))
                         .frame(width: 42, height: 42)
                     Image(systemName: icon)
                         .font(.headline)

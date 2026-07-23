@@ -105,9 +105,14 @@ struct SavedRoutesView: View {
     private var emptyState: some View {
         ScrollView {
             VStack(spacing: 20) {
-                Image(systemName: "map.fill")
-                    .font(.system(size: 56))
-                    .foregroundColor(.secondary)
+                ZStack {
+                    WavePattern(waveLength: 40, amplitude: 5, rowSpacing: 9)
+                        .stroke(PinlyTheme.slate.opacity(0.10), lineWidth: 1)
+                        .frame(width: 140, height: 90)
+                    Image(systemName: "map.fill")
+                        .font(.system(size: 56))
+                        .foregroundColor(.secondary)
+                }
                 Text(NSLocalizedString("Henüz kayıtlı rota yok", comment: ""))
                     .font(.title3)
                     .fontWeight(.semibold)
@@ -132,6 +137,7 @@ struct SavedRoutesView: View {
 
             starterSection
                 .padding(.top, 28)
+                .padding(.bottom, 100)
         }
     }
 
@@ -190,6 +196,7 @@ struct SavedRoutesView: View {
                 .listRowBackground(Color.clear)
         }
         .listStyle(.plain)
+        .contentMargins(.bottom, 100, for: .scrollContent)
     }
 
     // MARK: - Rota başlatma mantığı

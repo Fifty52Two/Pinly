@@ -14,8 +14,8 @@ struct RouteShareCardView: View {
     var photos: [UIImage] = []
 
     // Kart her modda koyu — dynamic tema renkleri yerine sabit açık tonlar
-    private let mint = Color(red: 0.62, green: 0.71, blue: 0.88)   // buz mavisi (açık slate)
-    private let pine = Color(red: 0.24, green: 0.33, blue: 0.50)   // slate-indigo
+    private let mint = Color(red: 0.616, green: 0.690, blue: 0.761) // açık toz mavi #9DB0C2
+    private let pine = Color(red: 0.133, green: 0.118, blue: 0.169) // koyu lacivert #221E2B
 
     private var dateText: String {
         date.formatted(date: .abbreviated, time: .omitted)
@@ -150,6 +150,13 @@ struct RouteShareCardView: View {
                     .frame(width: 320, height: 320)
                     .blur(radius: 90)
                     .offset(x: -200, y: 280)
+
+                // Alt kısımda ince dalga şeridi
+                WavePattern(waveLength: 50, amplitude: 6, rowSpacing: 10)
+                    .stroke(mint.opacity(0.10), lineWidth: 1)
+                    .frame(height: 120)
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+                    .clipped()
             }
         )
     }

@@ -62,7 +62,17 @@ struct PinlyTabBar: View {
                     scoopCenterY: circleCenterY,
                     cornerRadius: stadiumRadius
                 )
-                .fill(barColor)
+                .fill(.ultraThinMaterial)
+                .overlay(
+                    GooeyTabBarShape(
+                        notchCenterX: notchX,
+                        notchHalfWidth: notchHalfWidth,
+                        scoopRadius: scoopRadius,
+                        scoopCenterY: circleCenterY,
+                        cornerRadius: stadiumRadius
+                    )
+                    .fill(barColor.opacity(0.72))
+                )
                 .overlay(
                     // Dark mode'da zeminle ayrışsın diye ince kontur
                     GooeyTabBarShape(
@@ -74,7 +84,6 @@ struct PinlyTabBar: View {
                     )
                     .stroke(Color.primary.opacity(0.08), lineWidth: 1)
                 )
-                .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 5) // bilinçli: yüzen tab bar'ın tek elevasyon gölgesi
 
                 // Yüzen baloncuk (halo + disk) — ikonların ALTINDA, yatayda kayar
                 ZStack {
@@ -113,8 +122,28 @@ struct PinlyTabBar: View {
             }
         }
         .frame(height: barHeight)
-        .padding(.horizontal, 14)
-        .padding(.bottom, -8)
+        // Üst kenara yumuşak geçiş — içerik bara sert kesilmeden, bulanıklaşarak ulaşır
+        .background(
+            LinearGradient(colors: [.clear, barColor.opacity(0.5)], startPoint: .top, endPoint: .bottom)
+                .frame(height: 22)
+                .frame(maxHeight: .infinity, alignment: .top)
+                .offset(y: -22)
+                .allowsHitTesting(false)
+        )
+        // Yüzen baloncuk bar'ın üst kenarından ~16pt taşıyor (circleCenterY - circleSize/2);
+        // bu taşma barHeight'a dahil değil, safeAreaInset onu rezerve etmez — üstteki
+        // içerik baloncuğun altında kalıp örtülebilir. Bu boşluk o taşmayı telafi eder.
+        .padding(.top, 16)
+        // Sabit/opak dock bar: kenar boşluğu yok, home indicator bölgesine kadar
+        // bulanık malzemeyle devam eder — içerik asla altına sızamaz (kullanıcı kararı,
+        // "yüzen" tasarımdan vazgeçildi), alt kısım da (home indicator) aynı blur ile bitişik.
+        .background(
+            ZStack {
+                Rectangle().fill(.ultraThinMaterial)
+                Rectangle().fill(barColor.opacity(0.72))
+            }
+            .ignoresSafeArea(edges: .bottom)
+        )
     }
 
     private func select(_ index: Int) {
@@ -189,13 +218,16 @@ struct GooeyTabBarShape: Shape {
         // Sağ dudak
         p.addQuadCurve(to: CGPoint(x: cx + hw, y: 0), control: ctrlR)
 
-        // Kalan üst kenar + stadyum uçları
+        // Kalan üst kenar + sadece üst köşeler yuvarlak (sabit/opak dock bar —
+        // alt köşeler ekran kenarına yapışık, düz)
         p.addLine(to: CGPoint(x: w - r, y: 0))
-        p.addArc(center: CGPoint(x: w - r, y: h / 2), radius: r,
-                 startAngle: .degrees(-90), endAngle: .degrees(90), clockwise: false)
-        p.addLine(to: CGPoint(x: r, y: h))
-        p.addArc(center: CGPoint(x: r, y: h / 2), radius: r,
-                 startAngle: .degrees(90), endAngle: .degrees(270), clockwise: false)
+        p.addArc(center: CGPoint(x: w - r, y: r), radius: r,
+                 startAngle: .degrees(-90), endAngle: .degrees(0), clockwise: false)
+        p.addLine(to: CGPoint(x: w, y: h))
+        p.addLine(to: CGPoint(x: 0, y: h))
+        p.addLine(to: CGPoint(x: 0, y: r))
+        p.addArc(center: CGPoint(x: r, y: r), radius: r,
+                 startAngle: .degrees(180), endAngle: .degrees(270), clockwise: false)
         p.closeSubpath()
         return p
     }

@@ -70,6 +70,7 @@ struct PlacesListView: View {
                             .multilineTextAlignment(.center)
                     }
                     .padding()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     List(selection: $selectedIDs) {
                         // Kategori filtre chip'leri

@@ -43,6 +43,11 @@ struct OnboardingView: View {
             PinlyTheme.groundGradient
                 .ignoresSafeArea()
 
+            WavePattern(waveLength: 90, amplitude: 12, rowSpacing: 22)
+                .stroke(PinlyTheme.slate.opacity(0.08), lineWidth: 1)
+                .ignoresSafeArea()
+                .allowsHitTesting(false)
+
             VStack(spacing: 0) {
                 HStack {
                     Spacer()
