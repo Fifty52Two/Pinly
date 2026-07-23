@@ -5,6 +5,7 @@ import CoreLocation
 final class MockLocationProviding: LocationProviding {
     var userLocation: CLLocation?
     var currentDistrict: String = ""
+    var currentCity: String = ""
     var authorizationStatus: CLAuthorizationStatus = .authorizedWhenInUse
 
     var requestPermissionCallCount = 0

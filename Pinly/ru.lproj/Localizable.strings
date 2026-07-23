@@ -503,3 +503,13 @@
 "Eklendi" = "Добавлено";
 "Çevrende öneri bulunamadı." = "Поблизости ничего не найдено.";
 "Henüz mekan yok. Yakınımda önerilerinden veya Mekanlarım ekranından ekleyebilirsin." = "Пока нет мест. Добавьте их из предложений поблизости или на экране «Мои места».";
+
+// İlk Rota Kurulumu (FAZ 4 — İlk 30 Saniye)
+"İlk Rotanı 30 Saniyede Kur" = "Составь Свой Первый Маршрут за 30 Секунд";
+"Çevrendeki en iyi rotayı hazırlıyoruz…" = "Подбираем лучший маршрут рядом с тобой…";
+"Bu Rotayla Başla" = "Начать с Этого Маршрута";
+"Şimdi Değil" = "Не Сейчас";
+"Senin İçin Hazır Rota" = "Готовый Маршрут для Тебя";
+"Çevrende Keşfedilecekler" = "Рядом с Тобой";
+"Çevrende henüz hazır bir rota bulamadık. Mekanlarını istediğin zaman kendin ekleyebilirsin." = "Пока не нашли готовый маршрут поблизости. Ты всегда можешь добавить свои места.";
+"İlk Rotam" = "Мой Первый Маршрут";

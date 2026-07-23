@@ -504,3 +504,13 @@
 "Eklendi" = "Eklendi";
 "Çevrende öneri bulunamadı." = "Çevrende öneri bulunamadı.";
 "Henüz mekan yok. Yakınımda önerilerinden veya Mekanlarım ekranından ekleyebilirsin." = "Henüz mekan yok. Yakınımda önerilerinden veya Mekanlarım ekranından ekleyebilirsin.";
+
+// İlk Rota Kurulumu (FAZ 4 — İlk 30 Saniye)
+"İlk Rotanı 30 Saniyede Kur" = "İlk Rotanı 30 Saniyede Kur";
+"Çevrendeki en iyi rotayı hazırlıyoruz…" = "Çevrendeki en iyi rotayı hazırlıyoruz…";
+"Bu Rotayla Başla" = "Bu Rotayla Başla";
+"Şimdi Değil" = "Şimdi Değil";
+"Senin İçin Hazır Rota" = "Senin İçin Hazır Rota";
+"Çevrende Keşfedilecekler" = "Çevrende Keşfedilecekler";
+"Çevrende henüz hazır bir rota bulamadık. Mekanlarını istediğin zaman kendin ekleyebilirsin." = "Çevrende henüz hazır bir rota bulamadık. Mekanlarını istediğin zaman kendin ekleyebilirsin.";
+"İlk Rotam" = "İlk Rotam";

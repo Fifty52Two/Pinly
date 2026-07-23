@@ -503,3 +503,13 @@
 "Eklendi" = "Añadido";
 "Çevrende öneri bulunamadı." = "No se encontraron sugerencias cerca.";
 "Henüz mekan yok. Yakınımda önerilerinden veya Mekanlarım ekranından ekleyebilirsin." = "Aún no hay lugares. Añade desde las sugerencias cercanas o desde Mis lugares.";
+
+// İlk Rota Kurulumu (FAZ 4 — İlk 30 Saniye)
+"İlk Rotanı 30 Saniyede Kur" = "Crea Tu Primera Ruta en 30 Segundos";
+"Çevrendeki en iyi rotayı hazırlıyoruz…" = "Buscando la mejor ruta cerca de ti…";
+"Bu Rotayla Başla" = "Empezar Con Esta Ruta";
+"Şimdi Değil" = "Ahora No";
+"Senin İçin Hazır Rota" = "Una Ruta Lista Para Ti";
+"Çevrende Keşfedilecekler" = "Descubre Cerca de Ti";
+"Çevrende henüz hazır bir rota bulamadık. Mekanlarını istediğin zaman kendin ekleyebilirsin." = "Aún no encontramos una ruta lista cerca. Siempre puedes añadir tus propios lugares.";
+"İlk Rotam" = "Mi Primera Ruta";

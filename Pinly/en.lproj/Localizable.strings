@@ -505,3 +505,13 @@
 "Eklendi" = "Added";
 "Çevrende öneri bulunamadı." = "No suggestions found nearby.";
 "Henüz mekan yok. Yakınımda önerilerinden veya Mekanlarım ekranından ekleyebilirsin." = "No places yet. Add some from Nearby suggestions or the My Places screen.";
+
+// İlk Rota Kurulumu (FAZ 4 — İlk 30 Saniye)
+"İlk Rotanı 30 Saniyede Kur" = "Set Up Your First Route in 30 Seconds";
+"Çevrendeki en iyi rotayı hazırlıyoruz…" = "Finding the best route around you…";
+"Bu Rotayla Başla" = "Start With This Route";
+"Şimdi Değil" = "Not Now";
+"Senin İçin Hazır Rota" = "A Route Ready For You";
+"Çevrende Keşfedilecekler" = "Discover Nearby";
+"Çevrende henüz hazır bir rota bulamadık. Mekanlarını istediğin zaman kendin ekleyebilirsin." = "We couldn't find a ready-made route nearby yet. You can always add your own places.";
+"İlk Rotam" = "My First Route";
