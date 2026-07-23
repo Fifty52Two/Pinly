@@ -13,6 +13,20 @@ protocol SavedRouteRepository: AnyObject {
     func delete(_ route: SavedRoute, context: ModelContext)
 }
 
+// MARK: - SnapshotPlaceResolver
+
+/// `SavedPlaceSnapshot` ⇄ güncel `Place` eşleştirmesinin tek kaynağı.
+/// `placeId` varsa ve eşleşen mekan bulunursa onu döner (isim değişse de kırılmaz);
+/// bulunamazsa (mekan silinmiş) veya `placeId` nil'se (eski kayıt/dış rota) isimle eşleşir.
+enum SnapshotPlaceResolver {
+    static func resolve(_ snapshot: SavedPlaceSnapshot, in places: [Place]) -> Place? {
+        if let placeId = snapshot.placeId, let match = places.first(where: { $0.id == placeId }) {
+            return match
+        }
+        return places.first(where: { $0.name == snapshot.name })
+    }
+}
+
 @MainActor
 final class DefaultSavedRouteRepository: SavedRouteRepository {
     static let shared = DefaultSavedRouteRepository()

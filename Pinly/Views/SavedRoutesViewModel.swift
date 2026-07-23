@@ -57,45 +57,28 @@ final class SavedRoutesViewModel: ObservableObject {
     /// Rota mekanlarını SwiftData'dan (varsa) eşleştirip navigasyon takipçisine yükler.
     func loadAndStart(_ route: SavedRoute, into tracker: RouteNavigationTracking, context: ModelContext) {
         let snapshots = route.placeSnapshots.sorted { $0.sortIndex < $1.sortIndex }
+        let allPlaces = (try? context.fetch(FetchDescriptor<Place>())) ?? []
 
-        var places: [Place] = []
-        for snap in snapshots {
+        let places: [Place] = snapshots.map { snap in
             // Önce placeId ile eşleştir (kalıcı), yoksa isimle (eski kayıtlar/dış rotalar)
-            if let existing = fetchPlace(for: snap, context: context) {
-                places.append(existing)
-            } else {
-                // Geçici yer tutucu — koordinatları ayarla
-                let temp = Place(
-                    name: snap.name,
-                    category: snap.category,
-                    address: snap.address,
-                    notes: snap.notes
-                )
-                temp.latitude = snap.latitude
-                temp.longitude = snap.longitude
-                places.append(temp)
+            if let existing = SnapshotPlaceResolver.resolve(snap, in: allPlaces) {
+                return existing
             }
+            // Geçici yer tutucu — koordinatları ayarla
+            let temp = Place(
+                name: snap.name,
+                category: snap.category,
+                address: snap.address,
+                notes: snap.notes
+            )
+            temp.latitude = snap.latitude
+            temp.longitude = snap.longitude
+            return temp
         }
 
         tracker.setRoute(places: places, name: route.name)
         badges.recordRouteStarted()
         analytics.track(.routeStarted)
-    }
-
-    private func fetchPlace(for snap: SavedPlaceSnapshot, context: ModelContext) -> Place? {
-        if let placeId = snap.placeId {
-            let byId = FetchDescriptor<Place>(
-                predicate: #Predicate { place in place.id == placeId }
-            )
-            if let match = try? context.fetch(byId).first {
-                return match
-            }
-        }
-        let snapName = snap.name
-        let byName = FetchDescriptor<Place>(
-            predicate: #Predicate { place in place.name == snapName }
-        )
-        return try? context.fetch(byName).first
     }
 
     func delete(_ route: SavedRoute, context: ModelContext) {

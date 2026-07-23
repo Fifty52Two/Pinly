@@ -94,6 +94,51 @@ enum NearbyCategoryResolver {
     }
 }
 
+// MARK: - NearbyResultBander
+
+/// Yakınımda sonuçlarının 25'lik listeye indirgenme mantığı — saf fonksiyon, unit test edilir.
+/// Basit "en yakın 25" yoğun bölgelerde yarıçapı anlamsız kılıyordu: kullanıcı 5 km seçse bile
+/// merkeze en yakın 25 sonuç zaten ilk ~1 km içinde doluyordu, liste HİÇ değişmiyordu.
+/// >1 km yarıçapta sonuçlar 3 eşit mesafe bandına ayrılıp round-robin ile karıştırılır —
+/// böylece geniş yarıçap gerçekten daha uzak sonuçlar da getirir.
+enum NearbyResultBander {
+    static func diversify(_ places: [NearbyPlace], radius: Double) -> [NearbyPlace] {
+        guard radius > 1000 else {
+            return Array(places.sorted { $0.distanceMeters < $1.distanceMeters }.prefix(25))
+        }
+
+        let band1Cutoff = radius / 3
+        let band2Cutoff = radius * 2 / 3
+
+        var bands: [[NearbyPlace]] = [[], [], []]
+        for place in places {
+            switch place.distanceMeters {
+            case ..<band1Cutoff: bands[0].append(place)
+            case ..<band2Cutoff: bands[1].append(place)
+            default: bands[2].append(place)
+            }
+        }
+        for i in bands.indices {
+            bands[i].sort { $0.distanceMeters < $1.distanceMeters }
+        }
+
+        var result: [NearbyPlace] = []
+        var cursors = [0, 0, 0]
+        while result.count < 25 {
+            var addedAny = false
+            for b in bands.indices {
+                guard cursors[b] < bands[b].count else { continue }
+                result.append(bands[b][cursors[b]])
+                cursors[b] += 1
+                addedAny = true
+                if result.count == 25 { break }
+            }
+            guard addedAny else { break }   // tüm bantlar tükendi — 25'ten az sonuç var
+        }
+        return result
+    }
+}
+
 final class DefaultNearbySearchService: NearbySearching {
     static let shared = DefaultNearbySearchService()
 
@@ -114,10 +159,13 @@ final class DefaultNearbySearchService: NearbySearching {
             let request = MKLocalSearch.Request()
             request.naturalLanguageQuery = category.localizedName
             request.resultTypes = .pointOfInterest
+            // MKCoordinateRegion'ın latitudinalMeters/longitudinalMeters'ı TOPLAM span'dır
+            // (çap), yarıçap değil — radiusMeters'ı doğrudan vermek etkin aramayı yarıya
+            // düşürüyordu (kullanıcı 3/5 km seçince gerçekte ~1.5/2.5 km aranıyordu).
             request.region = MKCoordinateRegion(
                 center: coordinate,
-                latitudinalMeters: radiusMeters,
-                longitudinalMeters: radiusMeters
+                latitudinalMeters: radiusMeters * 2,
+                longitudinalMeters: radiusMeters * 2
             )
             items = (try? await MKLocalSearch(request: request).start().mapItems) ?? []
         }
@@ -147,7 +195,7 @@ final class DefaultNearbySearchService: NearbySearching {
                 distanceMeters: distance
             )
         }
-        return Array(places.sorted { $0.distanceMeters < $1.distanceMeters }.prefix(25))
+        return NearbyResultBander.diversify(places, radius: radiusMeters)
     }
 }
 

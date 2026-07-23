@@ -28,7 +28,7 @@ final class MockRouteManager: RouteCalculating, RouteNavigationTracking {
 
     // RouteNavigationTracking
     var selectedCategories: [String] = []
-    var selectedPlaces: [String: Place] = [:]
+    var selectedPlaces: [String: [Place]] = [:]
     var routeName: String = ""
     var isNavigating: Bool = false
     var isPausedAtStop: Bool = false
@@ -41,7 +41,7 @@ final class MockRouteManager: RouteCalculating, RouteNavigationTracking {
     var routePlacesOverride: [Place]?
 
     var routePlaces: [Place] {
-        routePlacesOverride ?? selectedCategories.compactMap { selectedPlaces[$0] }
+        routePlacesOverride ?? selectedCategories.flatMap { selectedPlaces[$0] ?? [] }
     }
 
     var nextWaypointCoordinate: CLLocationCoordinate2D? {

@@ -23,7 +23,7 @@ protocol RouteCalculating: AnyObject {
 @MainActor
 protocol RouteNavigationTracking: AnyObject {
     var selectedCategories: [String] { get set }
-    var selectedPlaces: [String: Place] { get set }
+    var selectedPlaces: [String: [Place]] { get set }
     var routeName: String { get set }
     var isNavigating: Bool { get set }
     var isPausedAtStop: Bool { get }
@@ -46,7 +46,9 @@ protocol RouteNavigationTracking: AnyObject {
 @MainActor
 class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking {
     @Published var selectedCategories: [String] = []
-    @Published var selectedPlaces: [String: Place] = [:]
+    /// Kategori başına SIRALI mekan listesi — aynı kategoriden birden fazla
+    /// mekan seçilebilir, rota sırası kullanıcının seçim sırasıdır.
+    @Published var selectedPlaces: [String: [Place]] = [:]
     @Published var routeName: String = ""
 
     // Route data
@@ -70,10 +72,14 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking 
     @Published var isRouteComplete: Bool = false
     @Published var completionPercentage: Double = 0.0
 
-    /// Hesaplanamayan segment sayısı (offline/erişilemeyen durak vb.).
+    /// PLANLANIP hesaplanamayan segment sayısı (offline/erişilemeyen durak vb.).
     /// Eskiden sessizce boş placeholder kalıyordu; RouteSummaryView >0 ise
     /// kullanıcıya uyarı satırı gösterir.
     @Published var failedLegCount: Int = 0
+
+    /// Koordinatı olmadığı için hiç PLANLANAMAYAN (MKDirections'a gönderilmeyen) durak sayısı.
+    /// `failedLegCount`'tan AYRI tutulur — biri "hesaplama başarısız", diğeri "hedef bilinmiyor".
+    @Published var unroutableStopCount: Int = 0
 
     private var lastRecalculationTime: Date? = nil
     private let liveActivityController = RouteLiveActivityController()
@@ -100,7 +106,7 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking 
     /// Kategori seçim akışı (CategoryPickerView → PlacePickerStepView) bitince
     /// çağrılır; `selectedCategories` sırasına göre seçilen mekanları `routePlaces`'e mühürler.
     func commitCategorySelection() {
-        routePlaces = selectedCategories.compactMap { selectedPlaces[$0] }
+        routePlaces = selectedCategories.flatMap { selectedPlaces[$0] ?? [] }
     }
 
     /// Durak sırasını aynı mekan kümesiyle değiştirir — yalnızca navigasyon
@@ -132,6 +138,7 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking 
         isRouteComplete = false
         completionPercentage = 0
         failedLegCount = 0
+        unroutableStopCount = 0
         lastRecalculationTime = nil
     }
 
@@ -169,26 +176,29 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking 
     // MARK: - Route Calculation
 
     func calculateRoutes(from userLocation: CLLocationCoordinate2D?, completion: @escaping () -> Void) {
-        var allCoords: [CLLocationCoordinate2D] = []
+        // Her durak için TEK bacak planı — routePlaces ile İNDEKS HİZALI (bkz. RouteSegmentPlanner).
+        // Eski implementasyon koordinatsız durakları listeden düşürüp `pairs` kuruyordu; bu, aradaki
+        // bir durağın koordinatsız olması durumunda segment[i]↔routePlaces[i] hizasını kaydırıyordu.
+        let segmentPlan = RouteSegmentPlanner.plan(places: routePlaces, userLocation: userLocation)
 
-        if let userCoord = userLocation {
-            allCoords.append(userCoord)
-        }
-        allCoords += routePlaces.compactMap { $0.coordinate }
+        // Durağın KENDİ koordinatı yoksa "rotaya dahil edilemedi" uyarısı doğar.
+        // segmentPlan'daki nil'lerden SAYILMAZ: konum yokken ilk bacağın planı da nil olur
+        // ama o durak koordinatlıdır — plan'dan saymak sahte uyarı üretirdi.
+        // Guard'dan ÖNCE set edilir ki hiç planlanabilir bacak olmasa da uyarı görünsün.
+        unroutableStopCount = routePlaces.filter { $0.coordinate == nil }.count
 
-        guard allCoords.count >= 2 else { completion(); return }
-
-        let pairs = Array(zip(allCoords, allCoords.dropFirst()))
+        guard segmentPlan.contains(where: { $0 != nil }) else { completion(); return }
 
         Task {
-            var orderedRoutes = [MKRoute?](repeating: nil, count: pairs.count)
+            var orderedRoutes = [MKRoute?](repeating: nil, count: segmentPlan.count)
 
             await withTaskGroup(of: (Int, MKRoute?).self) { group in
-                for (i, (from, to)) in pairs.enumerated() {
+                for (i, leg) in segmentPlan.enumerated() {
+                    guard let leg else { continue }   // hedefi/başlangıcı bilinmeyen bacak — MKDirections'a gitmez
                     group.addTask {
                         let request = MKDirections.Request()
-                        request.source = MKMapItem(placemark: MKPlacemark(coordinate: from))
-                        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: to))
+                        request.source = MKMapItem(placemark: MKPlacemark(coordinate: leg.from))
+                        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: leg.to))
                         request.transportType = .walking
                         let route = try? await MKDirections(request: request).calculate().routes.first
                         return (i, route)
@@ -199,12 +209,12 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking 
                 }
             }
 
-            // Başarısız segmentler boş placeholder alır — indeksler routePlaces
-            // ile hizalı kalmak zorunda, yoksa navigasyon yanlış durağa bağlanır.
+            // failedLegCount: PLANLANIP hesaplanamayan bacaklar (nil plan sayılmaz — o ayrı bir durum).
+            failedLegCount = zip(segmentPlan, orderedRoutes).filter { plan, route in plan != nil && route == nil }.count
+
             routePolylines = orderedRoutes.map { $0?.polyline ?? MKPolyline() }
             stepsPerSegment = orderedRoutes.map { $0?.steps ?? [] }
             segmentDistances = orderedRoutes.map { $0?.distance ?? 0 }
-            failedLegCount = orderedRoutes.filter { $0 == nil }.count
             totalRouteDistance = segmentDistances.reduce(0, +)
             totalRouteTime = orderedRoutes.compactMap { $0?.expectedTravelTime }.reduce(0, +)
             currentWaypointIndex = 0
@@ -247,10 +257,10 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking 
         guard currentSegmentStepIndex < steps.count else { return }
 
         let step = steps[currentSegmentStepIndex]
-        let stepLocation = CLLocation(
-            latitude: step.polyline.coordinate.latitude,
-            longitude: step.polyline.coordinate.longitude
-        )
+        // Adımın BİTİŞ noktasına bak — `polyline.coordinate` orta noktayı verir,
+        // talimat daha adımın yarısında ilerliyordu.
+        let stepEnd = endCoordinate(of: step.polyline)
+        let stepLocation = CLLocation(latitude: stepEnd.latitude, longitude: stepEnd.longitude)
         if userLocation.distance(from: stepLocation) < 20 {
             currentSegmentStepIndex += 1
             if currentSegmentStepIndex < steps.count {
@@ -319,10 +329,16 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking 
 
     private func checkAndRecalculateIfNeeded(userLocation: CLLocation) {
         guard !isRecalculating else { return }
-        guard currentWaypointIndex < routePolylines.count else { return }
 
         // Cooldown: no more than once per 10 seconds
         if let lastTime = lastRecalculationTime, Date().timeIntervalSince(lastTime) < 10 { return }
+
+        guard currentWaypointIndex < routePolylines.count else {
+            // Rota verisi hiç hesaplanamamış (örn. konum yokken kurulan tek
+            // duraklı rota) — kullanıcı konumundan dene, sessizce takılı kalma.
+            recalculateCurrentSegment(from: userLocation)
+            return
+        }
 
         let polyline = routePolylines[currentWaypointIndex]
         guard polyline.pointCount > 0 else {
@@ -335,6 +351,13 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking 
         if minDist > 75 {
             recalculateCurrentSegment(from: userLocation)
         }
+    }
+
+    /// Polyline'ın son noktası; boş polyline'da `coordinate` fallback'i.
+    private func endCoordinate(of polyline: MKPolyline) -> CLLocationCoordinate2D {
+        let count = polyline.pointCount
+        guard count > 0 else { return polyline.coordinate }
+        return polyline.points()[count - 1].coordinate
     }
 
     // internal (private değil) — RouteManagerDeviationTests'ten @testable erişim için.
@@ -379,6 +402,12 @@ class RouteManager: ObservableObject, RouteCalculating, RouteNavigationTracking 
             let route = try? await MKDirections(request: request).calculate().routes.first
             isRecalculating = false
             guard let route else { return }
+
+            // Diziler hedef durağa kadar kısa kalmışsa placeholder'la doldur —
+            // aşağıdaki indeksli yazımlar sessizce düşmesin.
+            while routePolylines.count <= currentWaypointIndex { routePolylines.append(MKPolyline()) }
+            while stepsPerSegment.count <= currentWaypointIndex { stepsPerSegment.append([]) }
+            while segmentDistances.count <= currentWaypointIndex { segmentDistances.append(0) }
 
             if currentWaypointIndex < routePolylines.count {
                 routePolylines[currentWaypointIndex] = route.polyline

@@ -35,6 +35,10 @@ struct PlacePickerStepView: View {
         viewModel.radiusLabel(searchRadiusKm)
     }
 
+    var selectionCount: Int {
+        viewModel.selectionCount(category: currentCategory, tracker: routeManager)
+    }
+
     /// routePlaces'i RouteSummaryView oluşmadan ÖNCE, kesin sırayla mühürleyip
     /// geçişi tetikler — onAppear sıralamasına güvenmek riskli (RouteSummaryView'in
     /// kendi onAppear'ı routePlaces'i henüz boşken okuyup rota hesaplamasını
@@ -57,9 +61,12 @@ struct PlacePickerStepView: View {
                 Text(String(format: NSLocalizedString("Adım %lld / %lld", comment: ""), stepIndex + 1, routeManager.selectedCategories.count))
                     .font(.caption)
                     .foregroundColor(.secondary)
-                Text(String(format: NSLocalizedString("Bir %@ seç", comment: ""), PlaceCategory.from(currentCategory).localizedName))
+                Text(String(format: NSLocalizedString("%@ seç", comment: ""), PlaceCategory.from(currentCategory).localizedName))
                     .font(.title2)
                     .fontWeight(.bold)
+                Text(NSLocalizedString("Birden fazla mekan seçebilirsin", comment: ""))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
                 if !locationManager.currentDistrict.isEmpty {
                     Label(locationManager.currentDistrict, systemImage: "mappin.fill")
                         .font(.subheadline)
@@ -102,11 +109,10 @@ struct PlacePickerStepView: View {
                         ForEach(availablePlaces) { place in
                             PlaceRow(
                                 place: place,
-                                isSelected: routeManager.selectedPlaces[currentCategory]?.id == place.id
+                                isSelected: viewModel.isSelected(place, category: currentCategory, tracker: routeManager)
                             ) {
-                                viewModel.selectPlace(place, category: currentCategory, tracker: routeManager)
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                                    advanceToNext()
+                                withAnimation(.spring(response: 0.25)) {
+                                    viewModel.togglePlace(place, category: currentCategory, tracker: routeManager)
                                 }
                             }
                         }
@@ -114,6 +120,30 @@ struct PlacePickerStepView: View {
                     .padding(.horizontal, 20)
                     .padding(.bottom, 40)
                 }
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
+            if !availablePlaces.isEmpty {
+                Button {
+                    advanceToNext()
+                } label: {
+                    HStack {
+                        Text(selectionCount > 0
+                             ? String(format: NSLocalizedString("Devam Et (%lld mekan)", comment: ""), selectionCount)
+                             : NSLocalizedString("Devam Et", comment: ""))
+                            .fontWeight(.semibold)
+                        Image(systemName: "arrow.right")
+                    }
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(selectionCount > 0 ? PinlyTheme.primary : PinlyTheme.primary.opacity(0.35))
+                    .cornerRadius(14)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 10)
+                }
+                .disabled(selectionCount == 0)
+                .background(.regularMaterial)
             }
         }
         .navigationTitle(currentCategory)
@@ -307,10 +337,6 @@ struct PlaceRow: View {
                 }
 
                 Spacer()
-
-                Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
             }
             .padding(14)
             .background(

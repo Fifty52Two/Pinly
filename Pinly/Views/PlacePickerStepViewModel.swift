@@ -27,7 +27,23 @@ final class PlacePickerStepViewModel: ObservableObject {
         radiusKm == 0 ? NSLocalizedString("Tümü", comment: "") : "\(Int(radiusKm)) km"
     }
 
-    func selectPlace(_ place: Place, category: String, tracker: RouteNavigationTracking) {
-        tracker.selectedPlaces[category] = place
+    /// Aynı kategoriden birden fazla mekan seçilebilir — seçiliyse çıkarır,
+    /// değilse SIRAYI koruyarak sona ekler (rota sırası = seçim sırası).
+    func togglePlace(_ place: Place, category: String, tracker: RouteNavigationTracking) {
+        var current = tracker.selectedPlaces[category] ?? []
+        if let idx = current.firstIndex(where: { $0.id == place.id }) {
+            current.remove(at: idx)
+        } else {
+            current.append(place)
+        }
+        tracker.selectedPlaces[category] = current
+    }
+
+    func isSelected(_ place: Place, category: String, tracker: RouteNavigationTracking) -> Bool {
+        tracker.selectedPlaces[category]?.contains(where: { $0.id == place.id }) ?? false
+    }
+
+    func selectionCount(category: String, tracker: RouteNavigationTracking) -> Int {
+        tracker.selectedPlaces[category]?.count ?? 0
     }
 }

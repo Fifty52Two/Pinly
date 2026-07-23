@@ -101,11 +101,25 @@ final class RouteManagerAlignmentTests: XCTestCase {
         let park = Place(name: "Park Durağı")
 
         manager.selectedCategories = ["Café", "Museum", "Park"]
-        manager.selectedPlaces = ["Museum": museum, "Café": cafe, "Park": park]
+        manager.selectedPlaces = ["Museum": [museum], "Café": [cafe], "Park": [park]]
 
         manager.commitCategorySelection()
 
         XCTAssertEqual(manager.routePlaces.map(\.name), ["Kahve Durağı", "Müze Durağı", "Park Durağı"])
+    }
+
+    func test_commitCategorySelection_multiplePlacesPerCategory_preservesSelectionOrder() {
+        let manager = RouteManager()
+        let cafe1 = Place(name: "Kronotrop")
+        let cafe2 = Place(name: "Coffee Sapiens")
+        let museum = Place(name: "Pera Müzesi")
+
+        manager.selectedCategories = ["Café", "Museum"]
+        manager.selectedPlaces = ["Café": [cafe1, cafe2], "Museum": [museum]]
+
+        manager.commitCategorySelection()
+
+        XCTAssertEqual(manager.routePlaces.map(\.name), ["Kronotrop", "Coffee Sapiens", "Pera Müzesi"])
     }
 
     func test_commitCategorySelection_categoryWithoutSelection_isDropped() {
@@ -113,10 +127,49 @@ final class RouteManagerAlignmentTests: XCTestCase {
         let cafe = Place(name: "Kahve Durağı")
 
         manager.selectedCategories = ["Café", "Museum"]
-        manager.selectedPlaces = ["Café": cafe]   // "Museum" için henüz seçim yok
+        manager.selectedPlaces = ["Café": [cafe]]   // "Museum" için henüz seçim yok
 
         manager.commitCategorySelection()
 
         XCTAssertEqual(manager.routePlaces.map(\.name), ["Kahve Durağı"])
+    }
+
+    // MARK: - unroutableStopCount (koordinatsız durak uyarısı)
+    // Sayaç calculateRoutes'ta guard'dan ÖNCE senkron set edilir — ağ beklemeden assert edilebilir.
+
+    /// Regresyon: konum yokken hesaplanan, TÜM durakları koordinatlı rotada
+    /// "Bazı durakların konumu yok" uyarısı ÇIKMAMALI (plan[0]'ın nil olması
+    /// bilinmeyen başlangıç demektir, koordinatsız durak değil).
+    func test_calculateRoutes_nilUserLocation_allStopsLocated_unroutableCountIsZero() {
+        let manager = RouteManager()
+        manager.setRoute(places: makePlaces(3), name: "")
+
+        manager.calculateRoutes(from: nil) { }
+
+        XCTAssertEqual(manager.unroutableStopCount, 0)
+    }
+
+    func test_calculateRoutes_allStopsUnlocated_setsUnroutableCount_andCompletes() {
+        let manager = RouteManager()
+        let unlocated = [Place(name: "A"), Place(name: "B")]
+        manager.setRoute(places: unlocated, name: "")
+
+        var completed = false
+        manager.calculateRoutes(from: nil) { completed = true }
+
+        // Hiç planlanabilir bacak yok → erken çıkış; sayaç yine de set edilmeli
+        XCTAssertTrue(completed)
+        XCTAssertEqual(manager.unroutableStopCount, 2)
+    }
+
+    func test_calculateRoutes_mixedStops_countsOnlyUnlocatedOnes() {
+        let manager = RouteManager()
+        let located = makePlaces(2)
+        let mixed = [located[0], Place(name: "Koordinatsız"), located[1]]
+        manager.setRoute(places: mixed, name: "")
+
+        manager.calculateRoutes(from: nil) { }
+
+        XCTAssertEqual(manager.unroutableStopCount, 1)
     }
 }

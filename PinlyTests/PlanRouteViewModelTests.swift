@@ -79,6 +79,23 @@ final class PlanRouteViewModelTests: XCTestCase {
         XCTAssertEqual(vm.selectedPlaceIDs, [existingPlace.id])
     }
 
+    /// placeId dolu ama o mekan artık yok (silinmiş) — isimle eşleşmeye düşmeli.
+    /// (Önceki hata: placeId'li snapshot'lar için isim fallback'i hiç denenmiyordu.)
+    func test_editingRoute_fallsBackToNameMatch_whenPlaceIdPointsToDeletedPlace() {
+        let stillExisting = Place(name: "Hâlâ Var", category: PlaceCategory.cafe.rawValue)
+        let deletedPlaceId = UUID()
+        let snapshot = SavedPlaceSnapshot(
+            name: "Hâlâ Var", category: PlaceCategory.cafe.rawValue, address: "", notes: "",
+            latitude: 41.0, longitude: 29.0, sortIndex: 0, placeId: deletedPlaceId
+        )
+        let route = SavedRoute(name: "My Route", centerLatitude: 41.0, centerLongitude: 29.0, snapshots: [snapshot])
+
+        let vm = PlanRouteViewModel(editingRoute: route)
+        _ = vm.hydrateIfEditing(places: [stillExisting])
+
+        XCTAssertEqual(vm.selectedPlaceIDs, [stillExisting.id])
+    }
+
     func test_saveRoute_requiresNameAndSelection() {
         let vm = PlanRouteViewModel(badges: MockBadgeServicing())
         let context = makeInMemoryContext()

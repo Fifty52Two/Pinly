@@ -62,10 +62,8 @@ final class PlanRouteViewModel: ObservableObject {
         if let catRaw = route.categoryRaw, let cat = RouteCategory(rawValue: catRaw) {
             routeCategory = cat
         }
-        // placeId varsa onunla eşleş (kalıcı), yoksa isimle (eski kayıtlar)
-        let snapIds = Set(route.placeSnapshots.compactMap { $0.placeId })
-        let snapNames = Set(route.placeSnapshots.filter { $0.placeId == nil }.map { $0.name })
-        let matched = places.filter { snapIds.contains($0.id) || snapNames.contains($0.name) }
+        // placeId ile eşleş (kalıcı), bulunamazsa isimle (eski kayıt/silinmiş mekan/dış rota)
+        let matched = route.placeSnapshots.compactMap { SnapshotPlaceResolver.resolve($0, in: places) }
         selectedPlaceIDs = Set(matched.map { $0.id })
         return MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
     }
