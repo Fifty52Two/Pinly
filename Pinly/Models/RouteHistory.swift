@@ -13,6 +13,8 @@ class RouteHistory {
     var durationSeconds: Double
     var stepCount: Int
     var categoryRaw: String?         // RouteCategory rawValue
+    /// Durak bazlı anı fotoğrafları: JSON [RouteMemoryPhoto]. nil = eski kayıt/fotosuz.
+    var memoryPhotosData: Data? = nil
 
     var averageSpeedKmh: Double {
         guard durationSeconds > 0, totalDistanceMeters > 0 else { return 0 }
@@ -35,14 +37,16 @@ class RouteHistory {
         return mins == 0 ? "\(hours) sa" : "\(hours) sa \(mins) dk"
     }
 
-    init(routeName: String,
+    init(id: UUID = UUID(),
+         routeName: String,
          date: Date = .now,
          placeNames: [String],
          totalDistanceMeters: Double,
          durationSeconds: Double,
          stepCount: Int,
-         categoryRaw: String? = nil) {
-        self.id                   = UUID()
+         categoryRaw: String? = nil,
+         memoryPhotosData: Data? = nil) {
+        self.id                   = id
         self.routeName            = routeName
         self.date                 = date
         self.placeNames           = placeNames
@@ -50,5 +54,6 @@ class RouteHistory {
         self.durationSeconds      = durationSeconds
         self.stepCount            = stepCount
         self.categoryRaw          = categoryRaw
+        self.memoryPhotosData     = memoryPhotosData
     }
 }

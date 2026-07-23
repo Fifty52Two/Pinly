@@ -16,10 +16,16 @@ final class AnalyticsEventTests: XCTestCase {
         XCTAssertEqual(AnalyticsEvent.purchaseCompleted(product: "pinly_pro_monthly").name, "purchase_completed")
         XCTAssertEqual(AnalyticsEvent.restoreCompleted.name, "restore_completed")
         XCTAssertEqual(AnalyticsEvent.starterRouteAdopted(source: "nearby_fallback").name, "starter_route_adopted")
+        XCTAssertEqual(AnalyticsEvent.memoryPhotoAdded.name, "memory_photo_added")
+        XCTAssertEqual(AnalyticsEvent.memoryCardShared(format: "story").name, "memory_card_shared")
     }
 
     func test_starterRouteAdopted_parametersContainSource() {
         XCTAssertEqual(AnalyticsEvent.starterRouteAdopted(source: "ist-tarihi-yarimada").parameters["source"], "ist-tarihi-yarimada")
+    }
+
+    func test_memoryCardShared_parametersContainFormat() {
+        XCTAssertEqual(AnalyticsEvent.memoryCardShared(format: "post").parameters["format"], "post")
     }
 
     func test_placeAdded_parametersContainSource() {

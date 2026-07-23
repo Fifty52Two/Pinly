@@ -13,6 +13,7 @@ struct ProfileTab: View {
     @Environment(\.badges) private var badges
     @Environment(\.profile) private var profileService
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.routeMemories) private var routeMemories
     @Environment(\.openURL) private var openURL
 
     @Query(sort: \SavedRoute.createdAt, order: .reverse) private var savedRoutes: [SavedRoute]
@@ -55,6 +56,13 @@ struct ProfileTab: View {
     /// rozetler dahil) + profil fotoğrafı. Kullanıcı onboarding'e döner —
     /// KVKK/GDPR "verilerimi sil" talebinin yerel karşılığı.
     private func deleteAllData() {
+        // Anı fotoğraf klasörleri: batch delete `RouteHistory.id`'leri geçmez,
+        // o yüzden silmeden ÖNCE her kaydın RouteMemories klasörü tek tek temizlenir.
+        if let histories = try? modelContext.fetch(FetchDescriptor<RouteHistory>()) {
+            for history in histories {
+                routeMemories.deleteAll(historyID: history.id)
+            }
+        }
         try? modelContext.delete(model: Place.self)
         try? modelContext.delete(model: RouteHistory.self)
         try? modelContext.delete(model: SavedRoute.self)
@@ -141,8 +149,8 @@ struct ProfileTab: View {
                         showStats = true
                     }
                     MoreRow(icon: "clock.arrow.circlepath", iconColor: PinlyTheme.slate,
-                            title: NSLocalizedString("Rota Geçmişi", comment: ""),
-                            subtitle: NSLocalizedString("Tamamladığın rotalar", comment: "")) {
+                            title: NSLocalizedString("Günlük", comment: ""),
+                            subtitle: NSLocalizedString("Tamamladığın rotalar ve anı fotoğrafların", comment: "")) {
                         showHistory = true
                     }
                     MoreRow(icon: "chart.bar.fill", iconColor: PinlyTheme.warning,

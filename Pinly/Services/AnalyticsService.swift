@@ -29,6 +29,10 @@ enum AnalyticsEvent: Equatable {
     /// FAZ 4 "İlk 30 Saniye" akışı: kullanıcı hazır rota kataloğundan ya da Yakınımda
     /// fallback'inden bir rotayı kabul etti. `source`: katalog rota id'si ya da "nearby_fallback".
     case starterRouteAdopted(source: String)
+    /// Anı Günlüğü (FAZ 3): durakta anı fotoğrafı eklendi.
+    case memoryPhotoAdded
+    /// Anı Günlüğü (FAZ 3): rota tamamlama kartı paylaşıldı — format "story"/"post".
+    case memoryCardShared(format: String)
 
     var name: String {
         switch self {
@@ -42,6 +46,8 @@ enum AnalyticsEvent: Equatable {
         case .purchaseCompleted:  return "purchase_completed"
         case .restoreCompleted:   return "restore_completed"
         case .starterRouteAdopted: return "starter_route_adopted"
+        case .memoryPhotoAdded:   return "memory_photo_added"
+        case .memoryCardShared:   return "memory_card_shared"
         }
     }
 
@@ -53,6 +59,7 @@ enum AnalyticsEvent: Equatable {
         case .trialStarted(let product):   return ["product": product]
         case .purchaseCompleted(let product): return ["product": product]
         case .starterRouteAdopted(let source): return ["source": source]
+        case .memoryCardShared(let format): return ["format": format]
         default:                           return [:]
         }
     }

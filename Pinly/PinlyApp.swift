@@ -39,6 +39,7 @@ struct PinlyApp: App {
     private let nearbySearchService = DefaultNearbySearchService.shared
     private let placePhotoStore = DefaultPlacePhotoStore.shared
     private let analyticsService = FirebaseAnalyticsService.shared
+    private let routeMemoryStore = DefaultRouteMemoryStore.shared
 
     init() {
         // Crashlytics + Analytics: rıza gerektirmez (ATT sonrası IDFA erişimi otomatik
@@ -85,6 +86,7 @@ struct PinlyApp: App {
                 .environment(\.placePhotos, placePhotoStore)
                 .environment(\.analytics, analyticsService)
                 .environment(\.purchases, purchasesService)
+                .environment(\.routeMemories, routeMemoryStore)
         }
     }
 }

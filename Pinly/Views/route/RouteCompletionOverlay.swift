@@ -38,7 +38,7 @@ struct RouteCompletionOverlay: View {
     let totalDistance: Double
     let stopsVisited: Int
     let totalStops: Int
-    var onShareCard: (() -> Void)? = nil
+    var onShareMemory: (() -> Void)? = nil
     let onDismiss: () -> Void
 
     // Kutlama animasyon durumu: kart spring ile girer, istatistikler
@@ -85,11 +85,11 @@ struct RouteCompletionOverlay: View {
                 )
 
                 VStack(spacing: 10) {
-                    if let share = onShareCard {
+                    if let share = onShareMemory {
                         Button(action: share) {
                             HStack(spacing: 8) {
                                 Image(systemName: "square.and.arrow.up")
-                                Text(NSLocalizedString("Başarını Paylaş", comment: ""))
+                                Text(NSLocalizedString("Hikayeni Paylaş", comment: ""))
                             }
                         }
                         .buttonStyle(PinlyPrimaryButtonStyle())
