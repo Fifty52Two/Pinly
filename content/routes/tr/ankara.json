@@ -1,0 +1,67 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "fable",
+    "date": "2026-07-23",
+    "note": "3 rota, tüm koordinatlar MKLocalSearch ile doğrulanmış gerçek POI sonuçlarından alındı (Fable, scripts/verify_routes.swift onaylı). verified:false — Ferhat göz kontrolünden geçmeden katalog listesine yayınlanmasın.",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Şehir İçi | Şehir Dışı | Yurt Dışı"
+  },
+  "city": "ankara",
+  "country": "tr",
+  "routes": [
+    {
+      "id": "ank-anitkabir-kizilay",
+      "verified": false,
+      "routeCategory": "Şehir İçi",
+      "name": {"tr": "Anıtkabir'den Kızılay'a", "en": "Anıtkabir to Kızılay", "es": "De Anıtkabir a Kızılay", "de": "Von Anıtkabir nach Kızılay", "ru": "От Аныткабира до Кызылая"},
+      "description": {
+        "tr": "Atatürk'ün anıt mezarından şehrin kalbi Kızılay'a, Gençlik Parkı'nda nefeslenerek bir Ankara yürüyüşü.",
+        "en": "From Atatürk's mausoleum to the city's heart at Kızılay, with a breather in Gençlik Park.",
+        "es": "Del mausoleo de Atatürk al corazón de la ciudad en Kızılay, con una pausa en el parque Gençlik.",
+        "de": "Vom Mausoleum Atatürks zum Herzen der Stadt in Kızılay, mit einer Pause im Gençlik-Park.",
+        "ru": "От мавзолея Ататюрка до сердца города Кызылай с остановкой в парке Генчлик."
+      },
+      "places": [
+        {"name": "Anıtkabir", "category": "Historical Site", "address": "Anıttepe, 06570 Çankaya/Ankara", "latitude": 39.926851, "longitude": 32.835617},
+        {"name": "Kızılay Meydanı", "category": "General", "address": "Kızılay, 06420 Çankaya/Ankara", "latitude": 39.920690, "longitude": 32.853938},
+        {"name": "Gençlik Parkı", "category": "Park", "address": "Altındağ, 06030 Ankara", "latitude": 39.937229, "longitude": 32.850237}
+      ]
+    },
+    {
+      "id": "ank-ulus-tarihi",
+      "verified": false,
+      "routeCategory": "Şehir İçi",
+      "name": {"tr": "Ulus'ta Tarih: Kale'den Hacı Bayram'a", "en": "Historic Ulus: Castle to Hacı Bayram", "es": "Ulus histórico: del castillo a Hacı Bayram", "de": "Historisches Ulus: von der Burg zu Hacı Bayram", "ru": "Исторический Улус: от крепости до мечети Хаджи Байрам"},
+      "description": {
+        "tr": "Ankara Kalesi'nin dar sokaklarından Roma Hamamı'na, Hacı Bayram Camii'nin avlusunda biten kısa bir tarih turu.",
+        "en": "From the narrow lanes of Ankara Castle to the Roman Baths, ending in the courtyard of Hacı Bayram Mosque.",
+        "es": "De las callejuelas del castillo de Ankara a los baños romanos, terminando en el patio de la mezquita Hacı Bayram.",
+        "de": "Von den engen Gassen der Ankara-Burg zu den Römischen Bädern, endend im Hof der Hacı-Bayram-Moschee.",
+        "ru": "От узких улочек крепости Анкары до римских бань, с финалом во дворе мечети Хаджи Байрам."
+      },
+      "places": [
+        {"name": "Ankara Kalesi", "category": "Historical Site", "address": "Kağnı Sk. 24, 06230 Altındağ/Ankara", "latitude": 39.941690, "longitude": 32.865377},
+        {"name": "Roma Hamamı", "category": "Museum", "address": "06050 Altındağ/Ankara", "latitude": 39.946624, "longitude": 32.854016},
+        {"name": "Hacı Bayram Camii", "category": "Historical Site", "address": "Hacı Bayram Veli Cd. 33, 06050 Altındağ/Ankara", "latitude": 39.944370, "longitude": 32.858022}
+      ]
+    },
+    {
+      "id": "ank-cankaya-parklari",
+      "verified": false,
+      "routeCategory": "Şehir İçi",
+      "name": {"tr": "Çankaya'nın Yeşili: Üç Park Turu", "en": "Green Çankaya: A Three-Park Walk", "es": "El verde de Çankaya: ruta de tres parques", "de": "Grünes Çankaya: Drei-Park-Spaziergang", "ru": "Зелёная Чанкая: прогулка по трём паркам"},
+      "description": {
+        "tr": "Kuğulu Park'ın kuğularından Botanik Parkı'na, Seğmenler'in gölünde biten sakin bir Çankaya yürüyüşü.",
+        "en": "From the swans of Kuğulu Park to the Botanical Park, ending by the lake at Seğmenler.",
+        "es": "De los cisnes del parque Kuğulu al Parque Botánico, terminando junto al lago de Seğmenler.",
+        "de": "Von den Schwänen im Kuğulu-Park zum Botanischen Park, endend am See von Seğmenler.",
+        "ru": "От лебедей парка Кугулу до Ботанического парка, с финалом у озера Сегменлер."
+      },
+      "places": [
+        {"name": "Kuğulu Park", "category": "Park", "address": "06690 Çankaya/Ankara", "latitude": 39.902334, "longitude": 32.860014},
+        {"name": "Ankara Botanik Parkı", "category": "Park", "address": "Cinnah Cd. 81, 06690 Çankaya/Ankara", "latitude": 39.888113, "longitude": 32.855197},
+        {"name": "Seğmenler Parkı", "category": "Park", "address": "06690 Çankaya/Ankara", "latitude": 39.894099, "longitude": 32.862551}
+      ]
+    }
+  ]
+}
