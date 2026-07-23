@@ -1,0 +1,162 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "fable",
+    "date": "2026-07-23",
+    "note": "verified:false rotaların koordinatları FAZ 4 doğrulama scriptinden geçmeden yayınlanamaz. İlk 3 rota mevcut StarterRoutes.json'dan taşındı (koordinatlar elden geçmişti).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Şehir İçi | Şehir Dışı | Yurt Dışı"
+  },
+  "city": "istanbul",
+  "country": "tr",
+  "routes": [
+    {
+      "id": "ist-tarihi-yarimada",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {"tr": "Tarihî Yarımada Klasikleri", "en": "Old City Classics", "es": "Clásicos de la Ciudad Vieja", "de": "Klassiker der Altstadt", "ru": "Классика Старого города"},
+      "description": {
+        "tr": "Ayasofya'dan Mısır Çarşısı'na, İstanbul'un bin yıllık kalbinde yarım günlük yürüyüş.",
+        "en": "A half-day walk through Istanbul's thousand-year heart, from Hagia Sophia to the Spice Bazaar.",
+        "es": "Medio día a pie por el corazón milenario de Estambul, de Santa Sofía al Bazar de las Especias.",
+        "de": "Ein halber Tag zu Fuß durch Istanbuls tausendjähriges Herz, von der Hagia Sophia zum Gewürzbasar.",
+        "ru": "Полдня пешком по тысячелетнему сердцу Стамбула — от Айя-Софии до Египетского базара."
+      },
+      "places": [
+        {"name": "Ayasofya", "category": "Historical Site", "address": "Sultan Ahmet, Ayasofya Meydanı No:1, Fatih/İstanbul", "latitude": 41.008583, "longitude": 28.980175},
+        {"name": "Yerebatan Sarnıcı", "category": "Historical Site", "address": "Alemdar, Yerebatan Cd. 1/3, Fatih/İstanbul", "latitude": 41.008418, "longitude": 28.977908},
+        {"name": "Sultanahmet Camii", "category": "Historical Site", "address": "Sultan Ahmet, Atmeydanı Cd. No:7, Fatih/İstanbul", "latitude": 41.005270, "longitude": 28.976960},
+        {"name": "Gülhane Parkı", "category": "Park", "address": "Cankurtaran, Kennedy Cd., Fatih/İstanbul", "latitude": 41.013262, "longitude": 28.981478},
+        {"name": "Mısır Çarşısı", "category": "General", "address": "Rüstem Paşa, Erzak Ambarı Sok. No:92, Fatih/İstanbul", "latitude": 41.016568, "longitude": 28.970483}
+      ]
+    },
+    {
+      "id": "ist-karakoy-galata",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {"tr": "Karaköy–Galata Keyfi", "en": "Karaköy & Galata Stroll", "es": "Paseo por Karaköy y Gálata", "de": "Bummel durch Karaköy & Galata", "ru": "Прогулка по Каракёю и Галате"},
+      "description": {
+        "tr": "Baklavayla başla, Bankalar Caddesi'nden Kamondo Merdivenleri'yle Galata Kulesi'ne tırman.",
+        "en": "Start with baklava, then climb the Camondo Stairs to Galata Tower.",
+        "es": "Empieza con baklava y sube por las escaleras Camondo hasta la Torre de Gálata.",
+        "de": "Mit Baklava starten, dann über die Camondo-Treppe zum Galataturm hinauf.",
+        "ru": "Начните с пахлавы и поднимитесь по лестнице Камондо к Галатской башне."
+      },
+      "places": [
+        {"name": "Karaköy Güllüoğlu", "category": "Dessert", "address": "Kemankeş Karamustafa Paşa, Rıhtım Cd. No:3, Beyoğlu/İstanbul", "latitude": 41.022970, "longitude": 28.977860},
+        {"name": "Salt Galata", "category": "Library", "address": "Azapkapı, Bankalar Cd. No:11, Beyoğlu/İstanbul", "latitude": 41.021111, "longitude": 28.973889},
+        {"name": "Kamondo Merdivenleri", "category": "Historical Site", "address": "Bereketzade, Bankalar Cd., Beyoğlu/İstanbul", "latitude": 41.023889, "longitude": 28.973056},
+        {"name": "Galata Kulesi", "category": "Historical Site", "address": "Bereketzade, Galata Kulesi Sok., Beyoğlu/İstanbul", "latitude": 41.025658, "longitude": 28.974183}
+      ]
+    },
+    {
+      "id": "ist-kadikoy-moda",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {"tr": "Kadıköy–Moda Turu", "en": "Kadıköy & Moda Tour", "es": "Ruta por Kadıköy y Moda", "de": "Kadıköy & Moda Tour", "ru": "Тур по Кадыкёю и Моде"},
+      "description": {
+        "tr": "Tarihî çarşının kokularından Moda sahilinde gün batımına, Anadolu yakası özeti.",
+        "en": "From the historic market's aromas to sunset on the Moda waterfront — the Asian side in a nutshell.",
+        "es": "De los aromas del mercado histórico al atardecer en Moda: el lado asiático en resumen.",
+        "de": "Von den Düften des historischen Markts zum Sonnenuntergang an der Moda-Küste.",
+        "ru": "От ароматов исторического рынка до заката на набережной Моды — азиатский берег вкратце."
+      },
+      "places": [
+        {"name": "Kadıköy Tarihî Çarşı", "category": "General", "address": "Caferağa, Güneşli Bahçe Sok., Kadıköy/İstanbul", "latitude": 40.990278, "longitude": 29.023889},
+        {"name": "Süreyya Operası", "category": "Historical Site", "address": "Caferağa, Gen. Asım Gündüz Cd. No:29, Kadıköy/İstanbul", "latitude": 40.987500, "longitude": 29.030400},
+        {"name": "Moda Sahili", "category": "Park", "address": "Caferağa, Moda Cd., Kadıköy/İstanbul", "latitude": 40.980700, "longitude": 29.024900}
+      ]
+    },
+    {
+      "id": "ist-balat-fener",
+      "verified": false,
+      "routeCategory": "Şehir İçi",
+      "name": {"tr": "Balat'ın Renkli Sokakları", "en": "Colorful Streets of Balat", "es": "Calles de colores de Balat", "de": "Bunte Gassen von Balat", "ru": "Разноцветные улочки Балата"},
+      "description": {
+        "tr": "Rengârenk cepheler, Fener'in tarihi ve Kariye'nin mozaikleri — Haliç yamacında bir öğleden sonra.",
+        "en": "Rainbow facades, the history of Fener and the mosaics of Chora — an afternoon on the Golden Horn.",
+        "es": "Fachadas de colores, la historia de Fener y los mosaicos de Chora, una tarde junto al Cuerno de Oro.",
+        "de": "Bunte Fassaden, die Geschichte Feners und die Mosaike von Chora — ein Nachmittag am Goldenen Horn.",
+        "ru": "Яркие фасады, история Фенера и мозаики Хоры — день на берегу Золотого Рога."
+      },
+      "places": [
+        {"name": "Fener Rum Patrikhanesi", "category": "Historical Site", "address": "Yavuz Sultan Selim, Dr. Sadık Ahmet Cd., Fatih/İstanbul", "latitude": 41.029200, "longitude": 28.951800},
+        {"name": "Balat Kiremit Caddesi", "category": "General", "address": "Balat, Kiremit Cd., Fatih/İstanbul", "latitude": 41.029600, "longitude": 28.948900},
+        {"name": "Kariye Camii (Chora)", "category": "Museum", "address": "Derviş Ali, Kariye Cami Sok. No:8, Fatih/İstanbul", "latitude": 41.031600, "longitude": 28.939400}
+      ]
+    },
+    {
+      "id": "ist-istiklal-pera",
+      "verified": false,
+      "routeCategory": "Şehir İçi",
+      "name": {"tr": "İstiklal'den Tünel'e Pera", "en": "Pera: Istiklal to Tünel", "es": "Pera: de Istiklal a Tünel", "de": "Pera: von Istiklal nach Tünel", "ru": "Пера: от Истикляль до Тюнеля"},
+      "description": {
+        "tr": "Taksim'den nostaljik tramvay hattı boyunca pasajlar, Pera Müzesi ve Asmalımescit akşamüstü.",
+        "en": "From Taksim along the nostalgic tram line: arcades, the Pera Museum and Asmalımescit at dusk.",
+        "es": "Desde Taksim por la línea del tranvía nostálgico: pasajes, el Museo de Pera y Asmalımescit.",
+        "de": "Von Taksim entlang der nostalgischen Tramlinie: Passagen, das Pera-Museum und Asmalımescit.",
+        "ru": "От Таксима вдоль линии ностальгического трамвая: пассажи, музей Пера и Асмалымесджит."
+      },
+      "places": [
+        {"name": "Taksim Meydanı", "category": "General", "address": "Gümüşsuyu, Taksim Meydanı, Beyoğlu/İstanbul", "latitude": 41.037000, "longitude": 28.985000},
+        {"name": "Çiçek Pasajı", "category": "Historical Site", "address": "Hüseyinağa, İstiklal Cd. No:172, Beyoğlu/İstanbul", "latitude": 41.033300, "longitude": 28.977700},
+        {"name": "Pera Müzesi", "category": "Museum", "address": "Asmalı Mescit, Meşrutiyet Cd. No:65, Beyoğlu/İstanbul", "latitude": 41.031300, "longitude": 28.975000},
+        {"name": "Tünel Meydanı", "category": "General", "address": "Asmalı Mescit, Tünel Meydanı, Beyoğlu/İstanbul", "latitude": 41.029300, "longitude": 28.974200}
+      ]
+    },
+    {
+      "id": "ist-dolmabahce-ortakoy",
+      "verified": false,
+      "routeCategory": "Şehir İçi",
+      "name": {"tr": "Boğaz Hattı: Dolmabahçe–Ortaköy", "en": "Bosphorus Line: Dolmabahçe to Ortaköy", "es": "Línea del Bósforo: Dolmabahçe–Ortaköy", "de": "Bosporus-Linie: Dolmabahçe–Ortaköy", "ru": "Линия Босфора: Долмабахче–Ортакёй"},
+      "description": {
+        "tr": "Saray kapısından Yıldız'ın yeşiline, kumpirle biten klasik Boğaz yürüyüşü.",
+        "en": "From the palace gates through Yıldız Park, ending with kumpir by the water — the classic Bosphorus walk.",
+        "es": "De las puertas del palacio al parque Yıldız, terminando con kumpir junto al agua.",
+        "de": "Vom Palasttor durch den Yıldız-Park, zum Abschluss Kumpir am Wasser.",
+        "ru": "От ворот дворца через парк Йылдыз — и кумпир у воды в финале."
+      },
+      "places": [
+        {"name": "Dolmabahçe Sarayı", "category": "Museum", "address": "Vişnezade, Dolmabahçe Cd., Beşiktaş/İstanbul", "latitude": 41.039200, "longitude": 29.000000},
+        {"name": "Beşiktaş Çarşı", "category": "General", "address": "Sinanpaşa, Beşiktaş Cd., Beşiktaş/İstanbul", "latitude": 41.042800, "longitude": 29.006400},
+        {"name": "Yıldız Parkı", "category": "Park", "address": "Yıldız, Çırağan Cd., Beşiktaş/İstanbul", "latitude": 41.049500, "longitude": 29.011500},
+        {"name": "Ortaköy Meydanı", "category": "General", "address": "Mecidiye, İskele Meydanı, Beşiktaş/İstanbul", "latitude": 41.047500, "longitude": 29.026800}
+      ]
+    },
+    {
+      "id": "ist-uskudar-kuzguncuk",
+      "verified": false,
+      "routeCategory": "Şehir İçi",
+      "name": {"tr": "Üsküdar'dan Kuzguncuk'a", "en": "Üsküdar to Kuzguncuk", "es": "De Üsküdar a Kuzguncuk", "de": "Von Üsküdar nach Kuzguncuk", "ru": "Из Ускюдара в Кузгунджук"},
+      "description": {
+        "tr": "Kız Kulesi manzarasından Kuzguncuk'un iki katlı ahşap evlerine sakin bir sahil rotası.",
+        "en": "A calm waterfront route from the Maiden's Tower view to Kuzguncuk's wooden houses.",
+        "es": "Ruta tranquila junto al mar, de la vista de la Torre de la Doncella a las casas de madera de Kuzguncuk.",
+        "de": "Eine ruhige Uferroute vom Blick auf den Leanderturm zu den Holzhäusern von Kuzguncuk.",
+        "ru": "Спокойный маршрут вдоль берега: от вида на Девичью башню к деревянным домам Кузгунджука."
+      },
+      "places": [
+        {"name": "Salacak Sahili (Kız Kulesi manzarası)", "category": "Park", "address": "Salacak, Üsküdar Harem Sahil Yolu, Üsküdar/İstanbul", "latitude": 41.020600, "longitude": 29.007200},
+        {"name": "Mihrimah Sultan Camii", "category": "Historical Site", "address": "Mimar Sinan, Paşa Limanı Cd., Üsküdar/İstanbul", "latitude": 41.027100, "longitude": 29.015800},
+        {"name": "Kuzguncuk İcadiye Caddesi", "category": "General", "address": "Kuzguncuk, İcadiye Cd., Üsküdar/İstanbul", "latitude": 41.034500, "longitude": 29.030000}
+      ]
+    },
+    {
+      "id": "ist-bebek-hisar",
+      "verified": false,
+      "routeCategory": "Şehir İçi",
+      "name": {"tr": "Bebek–Rumeli Hisarı Sahili", "en": "Bebek to Rumeli Fortress", "es": "De Bebek a la Fortaleza de Rumeli", "de": "Von Bebek zur Rumeli-Festung", "ru": "От Бебека до крепости Румели"},
+      "description": {
+        "tr": "Boğaz'ın en keyifli sahil yürüyüşü: Bebek Parkı'ndan Aşiyan'a, hisarın surlarında bitir.",
+        "en": "The Bosphorus's finest shoreline walk: Bebek Park to Aşiyan, ending at the fortress walls.",
+        "es": "El paseo costero más bonito del Bósforo: del parque Bebek a Aşiyan, hasta las murallas.",
+        "de": "Der schönste Uferweg am Bosporus: vom Bebek-Park über Aşiyan bis zu den Festungsmauern.",
+        "ru": "Лучшая прибрежная прогулка Босфора: от парка Бебек через Ашиян к стенам крепости."
+      },
+      "places": [
+        {"name": "Bebek Parkı", "category": "Park", "address": "Bebek, Cevdet Paşa Cd., Beşiktaş/İstanbul", "latitude": 41.077400, "longitude": 29.043200},
+        {"name": "Aşiyan Müzesi", "category": "Museum", "address": "Bebek, Aşiyan Yolu, Beşiktaş/İstanbul", "latitude": 41.081900, "longitude": 29.053700},
+        {"name": "Rumeli Hisarı", "category": "Historical Site", "address": "Rumeli Hisarı, Yahya Kemal Cd. No:42, Sarıyer/İstanbul", "latitude": 41.085100, "longitude": 29.056300}
+      ]
+    }
+  ]
+}
