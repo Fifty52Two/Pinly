@@ -9,7 +9,6 @@ struct RouteSummaryView: View {
     @EnvironmentObject var routeManager: RouteManager
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismissRouteFlow) var dismissRouteFlow
-    @Environment(\.placePhotos) private var placePhotos
     @Environment(\.reviewPrompt) private var reviewPrompt
     @Environment(\.requestReview) private var requestReview
 
@@ -28,6 +27,8 @@ struct RouteSummaryView: View {
     @State private var showPDFPaywall = false
     @State private var showSaveRouteSheet = false
     @State private var showSoftPaywall = false
+    @State private var showShareFormatPicker = false
+    @State private var isComposingMemoryCard = false
 
     var routePlaces: [Place] { routeManager.routePlaces }
 
@@ -150,16 +151,16 @@ struct RouteSummaryView: View {
                                 && index == routeManager.currentWaypointIndex
                             let isNextAfterPause = routeManager.isPausedAtStop
                                 && index == routeManager.currentWaypointIndex + 1
+                            let stopCircleColor: Color = {
+                                if isCompleted { return PinlyTheme.routeCompleted }
+                                if isCurrentStop || isNextAfterPause { return PinlyTheme.primary }
+                                return PinlyTheme.primary.opacity(0.35)
+                            }()
 
                             HStack(spacing: 14) {
                                 ZStack {
                                     Circle()
-                                        .fill(
-                                            isCompleted ? PinlyTheme.routeCompleted :
-                                            isCurrentStop ? PinlyTheme.primary :
-                                            isNextAfterPause ? PinlyTheme.primary :
-                                            PinlyTheme.primary.opacity(0.35)
-                                        )
+                                        .fill(stopCircleColor)
                                         .frame(width: 30, height: 30)
                                     if isCompleted {
                                         Image(systemName: "checkmark")
@@ -241,7 +242,7 @@ struct RouteSummaryView: View {
                     totalDistance: routeManager.totalRouteDistance,
                     stopsVisited: routePlaces.filter { $0.isVisited }.count,
                     totalStops: routePlaces.count,
-                    onShareCard: { shareCompletionCard() }
+                    onShareMemory: { showShareFormatPicker = true }
                 ) {
                     withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                         showCompletionOverlay = false
@@ -273,6 +274,20 @@ struct RouteSummaryView: View {
                 .transition(.opacity)
                 .zIndex(20)
             }
+
+            // Anı kartı üretilirken (harita izi + render) küçük ilerleme göstergesi
+            if isComposingMemoryCard {
+                VStack(spacing: 10) {
+                    ProgressView()
+                        .tint(.white)
+                    Text(NSLocalizedString("Hikayen hazırlanıyor...", comment: ""))
+                        .font(.caption)
+                        .foregroundColor(.white)
+                }
+                .padding(24)
+                .background(RoundedRectangle(cornerRadius: 16).fill(Color.black.opacity(0.75)))
+                .zIndex(30)
+            }
         }
         .navigationTitle(routeManager.isNavigating ? NSLocalizedString("Navigasyon", comment: "") : NSLocalizedString("Rota Hazır", comment: ""))
         .navigationBarTitleDisplayMode(.inline)
@@ -303,7 +318,11 @@ struct RouteSummaryView: View {
         }
         .onChange(of: routeManager.arrivedAtPlace) { _, arrived in
             guard let place = arrived else { return }
-            viewModel.handleArrival(place: place, context: modelContext, placeStore: placeStore)
+            // routeManager.currentWaypointIndex son durakta rotanın SONUNU gösterir
+            // (bkz. RouteManager.handleWaypointArrival) — index'i place'in routePlaces
+            // içindeki gerçek konumundan türetmek daha güvenilir.
+            let stopIndex = routePlaces.firstIndex(where: { $0.id == place.id }) ?? routeManager.currentWaypointIndex
+            viewModel.handleArrival(place: place, stopIndex: stopIndex, context: modelContext, placeStore: placeStore)
             UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
             withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                 showArrivalBanner = true
@@ -343,7 +362,22 @@ struct RouteSummaryView: View {
         }
         .sheet(isPresented: $showRatingSheet) {
             if let place = viewModel.pendingRatingPlace {
-                RatingSheetView(place: place, placeStore: placeStore, modelContext: modelContext) {
+                RatingSheetView(
+                    place: place,
+                    existingPhotoCount: viewModel.stopPhotos[viewModel.pendingRatingStopIndex]?.count ?? 0,
+                    placeStore: placeStore,
+                    modelContext: modelContext,
+                    onPhotoPicked: { image, alsoSaveAsPlacePhoto in
+                        viewModel.addMemoryPhoto(
+                            image,
+                            stopIndex: viewModel.pendingRatingStopIndex,
+                            alsoSaveAsPlacePhoto: alsoSaveAsPlacePhoto,
+                            place: place,
+                            context: modelContext,
+                            placeStore: placeStore
+                        )
+                    }
+                ) {
                     showRatingSheet = false
                 }
             }
@@ -355,6 +389,19 @@ struct RouteSummaryView: View {
             dismissRouteFlow()
         }) {
             PaywallView(source: "first_route_completed") { showSoftPaywall = false }
+        }
+        .confirmationDialog(
+            NSLocalizedString("Hikayeni Paylaş", comment: ""),
+            isPresented: $showShareFormatPicker,
+            titleVisibility: .visible
+        ) {
+            Button(NSLocalizedString("Hikaye (9:16)", comment: "")) {
+                Task { await shareMemoryCard(format: .story) }
+            }
+            Button(NSLocalizedString("Gönderi (4:5)", comment: "")) {
+                Task { await shareMemoryCard(format: .post) }
+            }
+            Button(NSLocalizedString("İptal", comment: ""), role: .cancel) {}
         }
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 10) {
@@ -652,27 +699,28 @@ struct RouteSummaryView: View {
         presentShareSheet(items: [url])
     }
 
-    private func shareCompletionCard() {
-        let fmt = MKDistanceFormatter()
-        fmt.unitStyle = .abbreviated
-        let durationFmt = DateComponentsFormatter()
-        durationFmt.unitsStyle = .abbreviated
-        durationFmt.allowedUnits = routeManager.totalRouteTime >= 3600 ? [.hour, .minute] : [.minute]
-
-        let stopPhotos = routePlaces
-            .compactMap { place in place.photoFileName.flatMap { placePhotos.load(fileName: $0) } }
-            .prefix(3)
-
-        guard let image = RouteShareCardView.makeImage(
-            routeName: viewModel.exportRouteName(fallbackRouteName: routeManager.routeName),
-            distanceText: fmt.string(fromDistance: routeManager.totalRouteDistance),
-            durationText: durationFmt.string(from: routeManager.totalRouteTime) ?? "",
-            stops: routePlaces.map(\.name),
-            photos: Array(stopPhotos)
-        ) else { return }
-
-        let newBadges = viewModel.recordRouteShared(placeStore: placeStore)
-        placeStore.pendingBadges.append(contentsOf: newBadges)
+    /// "Hikayeni Paylaş" — canlı rota verisinden (routePlaces + routePolylines,
+    /// hâlâ RouteManager'da bellekte) gerçek harita izi üretir, anı fotoğraflarıyla
+    /// birlikte kartı oluşturup paylaşım sheet'ini açar. Interstitial paylaşım
+    /// niyetinden ÖNCE kalır (overlay zaten tamamlanma sonrası reklam sonrası açılır),
+    /// paylaşımın ortasına reklam GİRMEZ.
+    @MainActor
+    private func shareMemoryCard(format: MemoryShareFormat) async {
+        isComposingMemoryCard = true
+        let mapSnapshot = await RouteMemoryMapSnapshotter.makeSnapshot(
+            places: routePlaces,
+            polylines: routeManager.routePolylines
+        )
+        let image = viewModel.shareMemoryImage(
+            format: format,
+            routePlaces: routePlaces,
+            fallbackRouteName: routeManager.routeName,
+            totalDistance: routeManager.totalRouteDistance,
+            totalTime: routeManager.totalRouteTime,
+            mapSnapshot: mapSnapshot,
+            placeStore: placeStore
+        )
+        isComposingMemoryCard = false
         presentShareSheet(items: [image])
     }
 
