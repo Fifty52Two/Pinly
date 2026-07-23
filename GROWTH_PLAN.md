@@ -221,11 +221,21 @@ Altyapının %60'ı hazır (PlacePhotoStoring, RouteShareCard foto kolajı, Rout
 
 Soğuk başlangıç ölüm nedenidir: mekanı olmayan kullanıcı boş harita görüp siler.
 
-- [ ] Onboarding son sayfası yenileme: konum izni → çevredeki 5 öneri → **tek dokunuşla ilk rota**
-      ("İlk rotanı 30 saniyede kur"). `OnboardingViewModel` + mevcut `NearbySearching` servisi.
-- [ ] `StarterRouteService` genişletme: bundle JSON katalog formatı
-      `{city, name(5 dil), description(5 dil), category, places:[{name, lat, lon, category}]}` —
-      şehir algılama (`LocationManager.currentDistrict`/locality) → kullanıcıya kendi şehrinin paketleri
+- [x] **"İlk rotanı 30 saniyede kur" akışı (Sonnet, 2026-07-23):** KASITLI TASARIM SAPMASI —
+      OnboardingView İÇİNE konmadı (konum izni orada İSTENMEZ, bkz. mimari kısıt/geçmiş bug).
+      Bunun yerine `FirstRouteSetupView`/`FirstRouteSetupViewModel`: HomeView placeStore boşken
+      VE yalnızca bir kez (`pinly.firstRouteFlowShown`) tam ekran açılır, konum izni PermissionView'de
+      zaten verilmiş olur. Şehir kataloğu varsa onu, yoksa `NearbySearching` ile karışık kategorilerden
+      en yakın 5 öneriyi (paralel TaskGroup) gösterir; kabul → `SavedRoutesViewModel.loadAndStart`
+      ile aynı desenle RouteSummaryView'e geçer. `starter_route_adopted` analytics event'i + 5 dil
+      lokalizasyon eklendi.
+- [x] **`StarterRouteService` genişletme (Sonnet, 2026-07-23):** `pinly-route-catalog-v1` formatı
+      (`RouteCatalogEntry` + `LocalizedRouteText` 5 dil + `verified` bayrağı) eski `StarterRoutes.json`
+      akışını KIRMADAN eklendi. `content/routes/tr/istanbul.json` → `Pinly/Resources/Routes/tr/istanbul.json`
+      kopyalandı. Kategori `PlaceCategory.from(_:)` ile eşlenir (tanınmayan → `.general`, crash yok).
+      Şehir algılama: `LocationManager.currentCity` (yeni, `currentDistrict`'e DOKUNMADAN eklendi —
+      locality öncelikli okur) + `StarterCityMatcher` (saf fonksiyon, TR karakter normalize + eşleştirme).
+      17 yeni test (katalog decode/kategori eşleme/şehir eşleştirme).
 - [ ] **Rota üretim hattı** (içerik fabrikası):
       1. Claude şehir başına 5-10 rota taslağı üretir (bilinen POI'lerle, tematik: "Kadıköy kahve turu",
          "Sultanahmet klasikleri", "Bomonti gece yürüyüşü")
