@@ -82,6 +82,10 @@ private struct PurchasesKey: EnvironmentKey {
     static let defaultValue: PurchasesProviding = RevenueCatPurchasesService.shared
 }
 
+private struct RouteMemoriesKey: EnvironmentKey {
+    static let defaultValue: RouteMemoryStoring = DefaultRouteMemoryStore.shared
+}
+
 extension EnvironmentValues {
     var entitlements: EntitlementProviding {
         get { self[EntitlementsKey.self] }
@@ -176,5 +180,10 @@ extension EnvironmentValues {
     var purchases: PurchasesProviding {
         get { self[PurchasesKey.self] }
         set { self[PurchasesKey.self] = newValue }
+    }
+
+    var routeMemories: RouteMemoryStoring {
+        get { self[RouteMemoriesKey.self] }
+        set { self[RouteMemoriesKey.self] = newValue }
     }
 }
