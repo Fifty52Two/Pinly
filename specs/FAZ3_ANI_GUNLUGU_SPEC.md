@@ -56,6 +56,12 @@ protocol MemoryCardComposing {
    RouteCompletionOverlay). Overlay'e "Hikayeni Paylaş" birincil butonu eklenir → story/post format
    seçimi → `ShareLink`. Interstitial paylaşım niyetinden ÖNCE kalır (mevcut yerinde), paylaşımın
    ortasına reklam GİRMEZ.
+   **DİKKAT — FAZ 1'de bu kapanış akışına soft paywall eklendi (2026-07-23):** overlay kapanış
+   closure'ı artık üç dallı — review prompt / `viewModel.consumeSoftPaywallOffer()` → soft paywall
+   sheet (rota akışı AÇIK kalır, reset+dismiss sheet'in onDismiss'inde) / doğrudan reset+dismiss.
+   "Hikayeni Paylaş" bu yapıyı BOZMADAN eklenecek: paylaşım overlay İÇİNDEN yapılır (overlay
+   kapanmadan), kapanış closure'ının dallanmasına dokunulmaz. Soft paywall'ın sökülen view'dan
+   sheet sunamama tuzağına dikkat (bug geçmişi: RouteSummaryView kapanış sırası).
 3. **Günlük ekranı:** `RouteHistoryView` yeniden düzenlenir — foto'lu kayıtlar büyük kart (ilk foto
    başlık görseli + istatistik şeridi), fotosuz eskiler mevcut satır görünümünde. Karta dokun →
    `MemoryDetailView`: tüm fotolar + harita + "Yeniden Paylaş".

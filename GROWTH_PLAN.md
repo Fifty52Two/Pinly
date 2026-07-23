@@ -53,6 +53,29 @@ CLAUDE.md + ilgili spec dosyasını okur.
 - FAZ 6'nın basit animasyonları (sayaç, spring pop, haptic), lokalizasyon eklemeleri
 - Ekran görüntüsü otomasyonu, test yazımı/koşturma, build/TestFlight rutinleri
 
+## 🌅 GÜNCEL DURUM (2026-07-23 gece, otonom oturum sonu) — SABAH BURADAN BAŞLA
+
+**Kod durumu:** FAZ 1 + FAZ 2 + seigaiha UI + tüm doküman/spec'ler **main'e 4 tematik commit'le
+işlendi** (b57722e → d534f40), working tree temiz, **149/149 test yeşil**. PUSH EDİLMEDİ
+(SSH anahtarı parola korumalı — Ferhat terminalden `git push` atacak).
+
+**Ferhat sabah listesi (sırayla):**
+1. `git push` (4 yeni commit)
+2. **Xcode'u TAMAMEN kapat-aç** → Cmd+R → GPX İndir → paywall: $2.99/$29.99 + "7 Gün Ücretsiz"
+   rozeti gelmeli (dünkü "mağazaya ulaşılamıyor" iki kök nedeniyle çözüldü; Xcode açıkken scheme
+   diskten değiştiği için son deneme eski scheme'le koşmuştu)
+3. Satın al → gate'ler açılıyor mu; Debug → StoreKit → Manage Transactions'tan sil → Restore dene
+4. Test geçtiyse: Build 4 archive + TestFlight upload (beta notları FAZ2 spec'te) + Public Link'i
+   10-20 kişiye dağıt
+5. (Bekleyen karar) RevenueCat'te kullanılmayan Lifetime paketi + eski "Pinly route&places Pro"
+   entitlement'ı temizlensin mi? "Temizle" de yeter.
+
+**Sonraki geliştirme sırası (takvimle uyumlu):** FAZ 3 Anı Günlüğü (Sonnet oturumu:
+`specs/FAZ3_ANI_GUNLUGU_SPEC.md` — spec'e soft-paywall etkileşim uyarısı eklendi) + FAZ 6 wow #1
+(tamamlama sayaç animasyonu — aynı ekran bölgesi, FAZ 3'le birlikte tek turda mantıklı) → Build 5.
+Lansman öncesi FAZ 1 kuyruğu: trial UYGUNLUK kontrolü (`checkTrialOrIntroDiscountEligibility`) +
+ASC review screenshot'ı (gerçek paywall'dan 1170×2532).
+
 ## FAZ 1 — Para Altyapısı: RevenueCat (≈1 hafta) — EN ÖNCELİKLİ
 
 Paywall placeholder olduğu sürece App Store'a çıkılamaz; her şey bunun arkasında.
@@ -126,10 +149,20 @@ Paywall placeholder olduğu sürece App Store'a çıkılamaz; her şey bunun ark
       "7 Gün Ücretsiz" rozeti ürün metadata'sından geliyor, kullanıcı UYGUNLUĞU kontrol edilmiyor
       (`checkTrialOrIntroDiscountEligibility`) — trial'ını kullanmış kullanıcı yanlış CTA görebilir;
       lansman öncesi eklenecek.
-- [ ] **Sandbox'ta uçtan uca insan testi HÂLÂ BEKLİYOR** (satın al → isPro açık → gate'ler açılıyor →
-      restore → uçak modu davranışı) — bu adım gerçek bir Apple ID ile sandbox oturumu gerektirir,
-      otomasyonla tam simüle edilemez; Ferhat'ın simülatörde StoreKit Config ile `deneme_pinly@tester.com`
-      hesabıyla denemesi gerekiyor.
+- [x] **"Mağazaya ulaşılamıyor" sorunu KÖKTEN ÇÖZÜLDÜ (2026-07-23 gece):** iki ayrı kök neden vardı —
+      (1) Pinly.storekit VAR OLMAYAN "v3.3" formatındaydı (Xcode parse edemiyordu) → RC repo'sundaki
+      gerçek Xcode üretimi örneklerden kanonik v4'e yazıldı; (2) scheme'deki
+      StoreKitConfigurationFileReference yolu yanlış çözümleniyordu (Xcode yolu
+      `Pinly.xcodeproj/project.xcworkspace`'e göre çözüyor; `../../../` yerine `../../Pinly.storekit`).
+      Her ikisi de OTOMASYONLA KANITLANDI: `StoreKitConfigFileTests` (SKTestSession, dosya geçerliliği +
+      trial) + RC offerings entegrasyon testi (backend offering → `$rc_monthly`/`$rc_annual` →
+      gerçek ürün ID eşleşmesi) + scheme-yolu probe testi (geçti, sonra silindi). **149/149 yeşil.**
+      ÖĞRENİLEN: xcodebuild, TestAction'daki SK config'i UYGULUYOR; SKTestSession testlerde
+      dosyayı test bundle resource'undan okur (dosya PinlyTests target'ına resource eklendi).
+- [ ] **Sandbox/StoreKit-Config'te uçtan uca insan testi** (satın al → isPro açık → gate'ler açılıyor →
+      restore → iptal davranışı) — Ferhat: **Xcode'u TAMAMEN KAPAT-AÇ** (scheme diskten değişti),
+      Cmd+R → GPX İndir → paywall'da $2.99/$29.99 + "7 Gün Ücretsiz" rozeti gelmeli → satın al →
+      Debug → StoreKit → Manage Transactions ile restore/iptal senaryoları.
 - [ ] Paywall redesign (FAZ 6 UI diliyle): yıllık planı öne çıkar, "7 gün ücretsiz dene" ana CTA —
       bu turda FONKSİYONEL entegrasyon yapıldı (offering/purchase/restore), görsel "wow" katmanı
       (matchedGeometry, Liquid Glass vb.) FAZ 6'ya bırakıldı.
