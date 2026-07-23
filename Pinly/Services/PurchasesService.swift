@@ -27,6 +27,9 @@ protocol PurchasesProviding {
     func offerings() async throws -> Offerings
     func purchase(package: Package) async throws -> (customerInfo: CustomerInfo, userCancelled: Bool)
     func restorePurchases() async throws -> CustomerInfo
+    /// Kullanıcının bu ürünün deneme/giriş fiyatına uygun olup olmadığı (App Store hesabı
+    /// bazında — trial'ını daha önce kullanmış kullanıcı `.ineligible` döner).
+    func checkTrialEligibility(product: StoreProduct) async -> IntroEligibilityStatus
 }
 
 // MARK: - RevenueCatPurchasesService
@@ -49,5 +52,9 @@ final class RevenueCatPurchasesService: PurchasesProviding {
 
     func restorePurchases() async throws -> CustomerInfo {
         try await Purchases.shared.restorePurchases()
+    }
+
+    func checkTrialEligibility(product: StoreProduct) async -> IntroEligibilityStatus {
+        await Purchases.shared.checkTrialOrIntroDiscountEligibility(product: product)
     }
 }

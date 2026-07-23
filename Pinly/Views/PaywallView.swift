@@ -17,12 +17,17 @@ struct PaywallView: View {
     @State private var isLoadingOfferings = true
     @State private var isPurchasing = false
     @State private var errorMessage: String?
+    // Optimistic varsayılan: RC'nin App Store hesabı bazlı gerçek cevabı gelene kadar (veya
+    // hiç gelmezse — offline/ilk kontrol) trial rozetini gizlemeyiz; yalnızca SDK açıkça
+    // ".ineligible" derse (kullanıcı bu ürünün denemesini daha önce kullanmış) gizleriz.
+    @State private var yearlyTrialEligible = true
 
     private var isSoftPaywall: Bool { source == "first_route_completed" }
     private var yearlyPackage: Package? { offering?.annual }
     private var monthlyPackage: Package? { offering?.monthly }
     private var hasFreeTrial: Bool {
         yearlyPackage?.storeProduct.introductoryDiscount?.paymentMode == .freeTrial
+            && yearlyTrialEligible
     }
 
     var body: some View {
@@ -231,6 +236,12 @@ struct PaywallView: View {
                 ?? offerings.current?.availablePackages.first
         } catch {
             offering = nil
+        }
+
+        if let yearly = yearlyPackage,
+           yearly.storeProduct.introductoryDiscount?.paymentMode == .freeTrial {
+            let status = await purchases.checkTrialEligibility(product: yearly.storeProduct)
+            yearlyTrialEligible = status != .ineligible
         }
     }
 
