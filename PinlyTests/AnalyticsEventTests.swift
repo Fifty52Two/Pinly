@@ -15,6 +15,11 @@ final class AnalyticsEventTests: XCTestCase {
         XCTAssertEqual(AnalyticsEvent.trialStarted(product: "pinly_pro_yearly").name, "trial_started")
         XCTAssertEqual(AnalyticsEvent.purchaseCompleted(product: "pinly_pro_monthly").name, "purchase_completed")
         XCTAssertEqual(AnalyticsEvent.restoreCompleted.name, "restore_completed")
+        XCTAssertEqual(AnalyticsEvent.starterRouteAdopted(source: "nearby_fallback").name, "starter_route_adopted")
+    }
+
+    func test_starterRouteAdopted_parametersContainSource() {
+        XCTAssertEqual(AnalyticsEvent.starterRouteAdopted(source: "ist-tarihi-yarimada").parameters["source"], "ist-tarihi-yarimada")
     }
 
     func test_placeAdded_parametersContainSource() {

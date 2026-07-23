@@ -26,6 +26,9 @@ enum AnalyticsEvent: Equatable {
     case trialStarted(product: String)
     case purchaseCompleted(product: String)
     case restoreCompleted
+    /// FAZ 4 "İlk 30 Saniye" akışı: kullanıcı hazır rota kataloğundan ya da Yakınımda
+    /// fallback'inden bir rotayı kabul etti. `source`: katalog rota id'si ya da "nearby_fallback".
+    case starterRouteAdopted(source: String)
 
     var name: String {
         switch self {
@@ -38,6 +41,7 @@ enum AnalyticsEvent: Equatable {
         case .trialStarted:       return "trial_started"
         case .purchaseCompleted:  return "purchase_completed"
         case .restoreCompleted:   return "restore_completed"
+        case .starterRouteAdopted: return "starter_route_adopted"
         }
     }
 
@@ -48,6 +52,7 @@ enum AnalyticsEvent: Equatable {
         case .paywallShown(let source):    return ["source": source]
         case .trialStarted(let product):   return ["product": product]
         case .purchaseCompleted(let product): return ["product": product]
+        case .starterRouteAdopted(let source): return ["source": source]
         default:                           return [:]
         }
     }
