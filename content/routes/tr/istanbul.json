@@ -155,7 +155,7 @@
       "places": [
         {"name": "Bebek Parkı", "category": "Park", "address": "Bebek, Cevdet Paşa Cd., Beşiktaş/İstanbul", "latitude": 41.077400, "longitude": 29.043200},
         {"name": "Aşiyan Müzesi", "category": "Museum", "address": "Bebek, Aşiyan Yolu, Beşiktaş/İstanbul", "latitude": 41.081900, "longitude": 29.053700},
-        {"name": "Rumeli Hisarı", "category": "Historical Site", "address": "Rumeli Hisarı, Yahya Kemal Cd. No:42, Sarıyer/İstanbul", "latitude": 41.085100, "longitude": 29.056300}
+        {"name": "Rumeli Hisarı", "category": "Historical Site", "address": "Rumeli Hisarı, Yahya Kemal Cd. No:42, Sarıyer/İstanbul", "latitude": 41.095644, "longitude": 29.041546}
       ]
     }
   ]
