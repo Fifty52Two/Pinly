@@ -7,6 +7,10 @@ import CoreLocation
 protocol LocationProviding: AnyObject {
     var userLocation: CLLocation? { get }
     var currentDistrict: String { get }
+    /// Şehir düzeyinde adı (`placemark.locality`) — `currentDistrict`'in aksine önce
+    /// district/subLocality'ye değil doğrudan şehre bakar. FAZ 4 "İlk 30 Saniye" akışında
+    /// hazır rota kataloğunu şehre göre seçmek için kullanılır (`StarterCityMatcher`).
+    var currentCity: String { get }
     var authorizationStatus: CLAuthorizationStatus { get }
     func requestPermission()
     func requestLocation()
@@ -26,6 +30,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate, Lo
 
     @Published var userLocation: CLLocation?
     @Published var currentDistrict: String = ""
+    @Published var currentCity: String = ""
     @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
 
     private var isNavigationTracking = false
@@ -113,6 +118,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate, Lo
             currentDistrict = placemark.subLocality
                 ?? placemark.subAdministrativeArea
                 ?? placemark.locality
+                ?? ""
+            currentCity = placemark.locality
+                ?? placemark.subAdministrativeArea
+                ?? placemark.subLocality
                 ?? ""
         }
     }
