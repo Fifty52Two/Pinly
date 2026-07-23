@@ -26,6 +26,10 @@ enum AnalyticsEvent: Equatable {
     case trialStarted(product: String)
     case purchaseCompleted(product: String)
     case restoreCompleted
+    /// Anı Günlüğü (FAZ 3): durakta anı fotoğrafı eklendi.
+    case memoryPhotoAdded
+    /// Anı Günlüğü (FAZ 3): rota tamamlama kartı paylaşıldı — format "story"/"post".
+    case memoryCardShared(format: String)
 
     var name: String {
         switch self {
@@ -38,6 +42,8 @@ enum AnalyticsEvent: Equatable {
         case .trialStarted:       return "trial_started"
         case .purchaseCompleted:  return "purchase_completed"
         case .restoreCompleted:   return "restore_completed"
+        case .memoryPhotoAdded:   return "memory_photo_added"
+        case .memoryCardShared:   return "memory_card_shared"
         }
     }
 
@@ -48,6 +54,7 @@ enum AnalyticsEvent: Equatable {
         case .paywallShown(let source):    return ["source": source]
         case .trialStarted(let product):   return ["product": product]
         case .purchaseCompleted(let product): return ["product": product]
+        case .memoryCardShared(let format): return ["format": format]
         default:                           return [:]
         }
     }
