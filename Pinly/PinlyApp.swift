@@ -12,7 +12,17 @@ struct PinlyApp: App {
     @StateObject private var locationManager = LocationManager()
     @StateObject private var routeManager = RouteManager()
 
-    private let entitlementService = LocalEntitlementService.shared
+    // `entitlements.isPro`'nun (7 gate noktasının) TEK kaynağı: DEBUG'da hızlı geliştirme
+    // için Local (elle toggle edilebilir UserDefaults), Release/TestFlight'ta RevenueCat
+    // (bkz. specs/FAZ1_REVENUECAT_KARAR.md §1). Purchases SDK'sı ise build konfigürasyonundan
+    // BAĞIMSIZ her zaman configure edilir (aşağıda) — PaywallView'un DEBUG'da da StoreKit
+    // Configuration dosyasıyla gerçek fiyat/satın alma testi yapabilmesi için.
+    #if DEBUG
+    private let entitlementService: EntitlementProviding = LocalEntitlementService.shared
+    #else
+    private let entitlementService: EntitlementProviding = RevenueCatEntitlementService.shared
+    #endif
+    private let purchasesService: PurchasesProviding = RevenueCatPurchasesService.shared
     private let badgeService = DefaultBadgeService.shared
     private let adService = AdManager.shared
     private let geocodingService = DefaultGeocodingService.shared
@@ -74,6 +84,7 @@ struct PinlyApp: App {
                 .environment(\.nearbySearch, nearbySearchService)
                 .environment(\.placePhotos, placePhotoStore)
                 .environment(\.analytics, analyticsService)
+                .environment(\.purchases, purchasesService)
         }
     }
 }

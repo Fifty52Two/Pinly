@@ -78,6 +78,10 @@ private struct AnalyticsKey: EnvironmentKey {
     static let defaultValue: AnalyticsTracking = NoOpAnalyticsService.shared
 }
 
+private struct PurchasesKey: EnvironmentKey {
+    static let defaultValue: PurchasesProviding = RevenueCatPurchasesService.shared
+}
+
 extension EnvironmentValues {
     var entitlements: EntitlementProviding {
         get { self[EntitlementsKey.self] }
@@ -167,5 +171,10 @@ extension EnvironmentValues {
     var analytics: AnalyticsTracking {
         get { self[AnalyticsKey.self] }
         set { self[AnalyticsKey.self] = newValue }
+    }
+
+    var purchases: PurchasesProviding {
+        get { self[PurchasesKey.self] }
+        set { self[PurchasesKey.self] = newValue }
     }
 }

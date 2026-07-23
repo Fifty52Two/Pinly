@@ -1,123 +1,279 @@
 import SwiftUI
+import RevenueCat
 
 struct PaywallView: View {
+    /// Hangi gate'in açtığını taşır (`paywall_shown` analytics param'ı + soft/hard metin
+    /// seçimi). Varsayılan "limit_reached" — mevcut 10 hard-gate çağrı sitesi hiç
+    /// değişmeden bu default'u kullanır (bkz. specs/FAZ1_REVENUECAT_KARAR.md).
+    var source: String = "limit_reached"
     let onDismiss: () -> Void
+
     @Environment(\.entitlements) private var entitlements
     @Environment(\.analytics) private var analytics
+    @Environment(\.purchases) private var purchases
 
-    // TODO: Apple Developer alınınca RevenueCat ile değişecek:
-    // @State private var offering: Offering? = nil
-    // @State private var selectedPackage: Package? = nil
-    @State private var selectedPlan: PlanOption = .yearly
+    @State private var offering: Offering?
+    @State private var selectedPackage: Package?
+    @State private var isLoadingOfferings = true
     @State private var isPurchasing = false
+    @State private var errorMessage: String?
+
+    private var isSoftPaywall: Bool { source == "first_route_completed" }
+    private var yearlyPackage: Package? { offering?.annual }
+    private var monthlyPackage: Package? { offering?.monthly }
+    private var hasFreeTrial: Bool {
+        yearlyPackage?.storeProduct.introductoryDiscount?.paymentMode == .freeTrial
+    }
 
     var body: some View {
         VStack(spacing: 0) {
+            header
+            featureList
+            Spacer()
+            content
+        }
+        .presentationDetents([.large])
+        .presentationDragIndicator(.visible)
+        .onAppear { analytics.track(.paywallShown(source: source)) }
+        .task { await loadOfferings() }
+        .alert(NSLocalizedString("Satın alma başarısız oldu", comment: ""), isPresented: errorAlertBinding) {
+            Button(NSLocalizedString("Tamam", comment: ""), role: .cancel) {}
+        } message: {
+            Text(errorMessage ?? "")
+        }
+    }
 
-            // Başlık
-            VStack(spacing: 12) {
-                ZStack {
-                    Circle()
-                        .fill(PinlyTheme.primary.opacity(0.12))
-                        .frame(width: 72, height: 72)
-                    Image(systemName: "mappin.and.ellipse")
-                        .font(.system(size: 32))
-                        .foregroundColor(PinlyTheme.primary)
-                }
-                .padding(.top, 32)
+    private var errorAlertBinding: Binding<Bool> {
+        Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })
+    }
 
-                Text(NSLocalizedString("Mekan Limitine Ulaştın", comment: ""))
-                    .font(.title2)
-                    .fontWeight(.bold)
+    // MARK: - Başlık
 
+    private var header: some View {
+        VStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(PinlyTheme.primary.opacity(0.12))
+                    .frame(width: 72, height: 72)
+                Image(systemName: "mappin.and.ellipse")
+                    .font(.system(size: 32))
+                    .foregroundColor(PinlyTheme.primary)
+            }
+            .padding(.top, 32)
+
+            Text(NSLocalizedString(isSoftPaywall ? "Sınırsız keşif" : "Mekan Limitine Ulaştın", comment: ""))
+                .font(.title2)
+                .fontWeight(.bold)
+
+            if isSoftPaywall {
+                Text(NSLocalizedString("Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç.", comment: ""))
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+            } else {
                 Text(String(format: NSLocalizedString("Ücretsiz planda en fazla %lld mekan kaydedebilirsin.\nSınırsız mekan için Pro'ya geç.", comment: ""), entitlements.freeLimit))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 24)
             }
+        }
+    }
 
-            // Fayda listesi
-            VStack(alignment: .leading, spacing: 14) {
-                ProFeatureRow(icon: "mappin.and.ellipse", color: PinlyTheme.primary,
-                              title: NSLocalizedString("Sınırsız Mekan", comment: ""),
-                              subtitle: NSLocalizedString("İstediğin kadar mekan kaydet", comment: ""),
-                              badge: nil)
-                ProFeatureRow(icon: "map.fill", color: PinlyTheme.primaryWarm,
-                              title: NSLocalizedString("Sınırsız Rota", comment: ""),
-                              subtitle: NSLocalizedString("Dilediğin kadar rota oluştur", comment: ""),
-                              badge: nil)
-                ProFeatureRow(icon: "wifi.slash", color: PinlyTheme.accent,
-                              title: NSLocalizedString("Çevrimdışı Harita", comment: ""),
-                              subtitle: NSLocalizedString("İnternetsiz de çalışır", comment: ""),
-                              badge: NSLocalizedString("Yakında", comment: ""))
-                ProFeatureRow(icon: "person.2.fill", color: PinlyTheme.slate,
-                              title: NSLocalizedString("Grup Rotaları", comment: ""),
-                              subtitle: NSLocalizedString("Arkadaşlarınla birlikte planla", comment: ""),
-                              badge: NSLocalizedString("Yakında", comment: ""))
+    // MARK: - Fayda listesi
+
+    private var featureList: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            ProFeatureRow(icon: "mappin.and.ellipse", color: PinlyTheme.primary,
+                          title: NSLocalizedString("Sınırsız Mekan", comment: ""),
+                          subtitle: NSLocalizedString("İstediğin kadar mekan kaydet", comment: ""),
+                          badge: nil)
+            ProFeatureRow(icon: "square.and.arrow.down.on.square", color: PinlyTheme.primaryWarm,
+                          title: NSLocalizedString("GPX & PDF Dışa Aktar", comment: ""),
+                          subtitle: NSLocalizedString("Rotalarını dışa aktar ve arşivle", comment: ""),
+                          badge: nil)
+            ProFeatureRow(icon: "nosign", color: PinlyTheme.accent,
+                          title: NSLocalizedString("Reklamsız Kullanım", comment: ""),
+                          subtitle: NSLocalizedString("Kesintisiz keşfet", comment: ""),
+                          badge: nil)
+            ProFeatureRow(icon: "wifi.slash", color: PinlyTheme.slate,
+                          title: NSLocalizedString("Çevrimdışı Harita", comment: ""),
+                          subtitle: NSLocalizedString("İnternetsiz de çalışır", comment: ""),
+                          badge: NSLocalizedString("Yakında", comment: ""))
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 28)
+        .padding(.bottom, 8)
+    }
+
+    // MARK: - İçerik (yükleniyor / hata / plan seçici)
+
+    @ViewBuilder
+    private var content: some View {
+        if isLoadingOfferings {
+            ProgressView()
+                .padding(.bottom, 40)
+        } else if offering == nil || (yearlyPackage == nil && monthlyPackage == nil) {
+            offeringsUnavailableView
+        } else {
+            planPicker
+            actionButtons
+        }
+    }
+
+    private var offeringsUnavailableView: some View {
+        VStack(spacing: 12) {
+            Text(NSLocalizedString("Şu an mağazaya ulaşılamıyor", comment: ""))
+                .font(.subheadline)
+                .fontWeight(.semibold)
+            Text(NSLocalizedString("Lütfen internet bağlantını kontrol edip tekrar dene.", comment: ""))
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+
+            Button {
+                Task { await loadOfferings() }
+            } label: {
+                Text(NSLocalizedString("Tekrar Dene", comment: ""))
             }
-            .padding(.horizontal, 24)
-            .padding(.top, 28)
-            .padding(.bottom, 8)
+            .buttonStyle(PinlySecondaryButtonStyle())
+            .padding(.top, 4)
 
-            Spacer()
+            Button { onDismiss() } label: {
+                Text(NSLocalizedString("Şimdi Değil", comment: ""))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .padding(.horizontal, 24)
+        .padding(.bottom, 40)
+    }
 
-            // Plan seçici
-            VStack(spacing: 10) {
+    private var planPicker: some View {
+        VStack(spacing: 10) {
+            if let yearly = yearlyPackage {
                 PlanOptionButton(
                     label: NSLocalizedString("Yıllık", comment: ""),
-                    price: "$39.99 / yıl",
-                    badge: NSLocalizedString("%33 Tasarruf", comment: ""),
-                    isSelected: selectedPlan == .yearly
-                ) { selectedPlan = .yearly }
+                    price: "\(yearly.storeProduct.localizedPriceString) \(NSLocalizedString("/ yıl", comment: ""))",
+                    badge: hasFreeTrial
+                        ? NSLocalizedString("7 Gün Ücretsiz", comment: "")
+                        : NSLocalizedString("%33 Tasarruf", comment: ""),
+                    isSelected: selectedPackage?.identifier == yearly.identifier
+                ) { selectedPackage = yearly }
+            }
 
+            if let monthly = monthlyPackage {
                 PlanOptionButton(
                     label: NSLocalizedString("Aylık", comment: ""),
-                    price: "$4.99 / ay",
+                    price: "\(monthly.storeProduct.localizedPriceString) \(NSLocalizedString("/ ay", comment: ""))",
                     badge: nil,
-                    isSelected: selectedPlan == .monthly
-                ) { selectedPlan = .monthly }
+                    isSelected: selectedPackage?.identifier == monthly.identifier
+                ) { selectedPackage = monthly }
             }
-            .padding(.horizontal, 24)
-
-            // Butonlar
-            VStack(spacing: 8) {
-                Button {
-                    // TODO: RevenueCat ile değiştir — Purchases.shared.purchase(package:)
-                    entitlements.isPro = true
-                    onDismiss()
-                } label: {
-                    Text(NSLocalizedString("Pro'ya Geç", comment: ""))
-                }
-                .buttonStyle(PinlyPrimaryButtonStyle())
-
-                Button {
-                    // TODO: RevenueCat ile değiştir — Purchases.shared.restorePurchases()
-                } label: {
-                    Text(NSLocalizedString("Satın Alımları Geri Yükle", comment: ""))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-
-                Button { onDismiss() } label: {
-                    Text(NSLocalizedString("Şimdi Değil", comment: ""))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-            .padding(.horizontal, 24)
-            .padding(.top, 12)
-            .padding(.bottom, 32)
         }
-        .presentationDetents([.large])
-        .presentationDragIndicator(.visible)
-        .onAppear { analytics.track(.paywallShown) }
+        .padding(.horizontal, 24)
+    }
+
+    private var actionButtons: some View {
+        VStack(spacing: 8) {
+            Button {
+                Task { await purchaseSelected() }
+            } label: {
+                if isPurchasing {
+                    ProgressView()
+                        .tint(.white)
+                        .frame(maxWidth: .infinity)
+                } else {
+                    Text(ctaTitle)
+                }
+            }
+            .buttonStyle(PinlyPrimaryButtonStyle())
+            .disabled(isPurchasing || selectedPackage == nil)
+
+            Button {
+                Task { await restore() }
+            } label: {
+                Text(NSLocalizedString("Satın Alımları Geri Yükle", comment: ""))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .disabled(isPurchasing)
+
+            Button { onDismiss() } label: {
+                Text(NSLocalizedString("Şimdi Değil", comment: ""))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 12)
+        .padding(.bottom, 32)
+    }
+
+    private var ctaTitle: String {
+        if selectedPackage?.identifier == yearlyPackage?.identifier, hasFreeTrial {
+            return NSLocalizedString("7 Gün Ücretsiz Dene", comment: "")
+        }
+        return NSLocalizedString("Pro'ya Geç", comment: "")
+    }
+
+    // MARK: - Mağaza çağrıları
+
+    private func loadOfferings() async {
+        isLoadingOfferings = true
+        defer { isLoadingOfferings = false }
+        do {
+            let offerings = try await purchases.offerings()
+            offering = offerings.current
+            selectedPackage = offerings.current?.annual
+                ?? offerings.current?.monthly
+                ?? offerings.current?.availablePackages.first
+        } catch {
+            offering = nil
+        }
+    }
+
+    private func purchaseSelected() async {
+        guard let package = selectedPackage else { return }
+        isPurchasing = true
+        defer { isPurchasing = false }
+        do {
+            let result = try await purchases.purchase(package: package)
+            guard !result.userCancelled else { return }
+            // Ödeme GERÇEKLEŞTİ: event ve kapanış entitlement eşleşmesine bağlanmaz —
+            // eşleşme gelmese bile (RC konfigürasyon aksaklığı) kullanıcı parası alınmışken
+            // paywall'da kilitli bırakılmaz; Release'te customerInfoStream gecikmeli de olsa
+            // mirror'ı düzeltir.
+            if package.identifier == yearlyPackage?.identifier, hasFreeTrial {
+                analytics.track(.trialStarted(product: package.storeProduct.productIdentifier))
+            }
+            analytics.track(.purchaseCompleted(product: package.storeProduct.productIdentifier))
+            // DEBUG'da entitlements=Local → gerçekten set eder; Release'te entitlements=RevenueCat
+            // → setter no-op (gerçek kaynak zaten customerInfoStream ile aynı anda güncellenir).
+            entitlements.isPro = EntitlementMapper.isPro(customerInfo: result.customerInfo)
+            onDismiss()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func restore() async {
+        isPurchasing = true
+        defer { isPurchasing = false }
+        do {
+            let customerInfo = try await purchases.restorePurchases()
+            let active = EntitlementMapper.isPro(customerInfo: customerInfo)
+            entitlements.isPro = active
+            analytics.track(.restoreCompleted)
+            if active { onDismiss() }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
 
 // MARK: - Plan Seçeneği
-
-private enum PlanOption { case yearly, monthly }
 
 private struct PlanOptionButton: View {
     let label: String

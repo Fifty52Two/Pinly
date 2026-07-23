@@ -21,25 +21,34 @@ enum AnalyticsEvent: Equatable {
     case routeStarted
     case routeCompleted
     case routeShared
-    case paywallShown
+    case paywallShown(source: String)
     case nearbySearch(category: String)
+    case trialStarted(product: String)
+    case purchaseCompleted(product: String)
+    case restoreCompleted
 
     var name: String {
         switch self {
-        case .placeAdded:    return "place_added"
-        case .routeStarted:  return "route_started"
-        case .routeCompleted: return "route_completed"
-        case .routeShared:   return "route_shared"
-        case .paywallShown:  return "paywall_shown"
-        case .nearbySearch:  return "nearby_search"
+        case .placeAdded:         return "place_added"
+        case .routeStarted:       return "route_started"
+        case .routeCompleted:     return "route_completed"
+        case .routeShared:        return "route_shared"
+        case .paywallShown:       return "paywall_shown"
+        case .nearbySearch:       return "nearby_search"
+        case .trialStarted:       return "trial_started"
+        case .purchaseCompleted:  return "purchase_completed"
+        case .restoreCompleted:   return "restore_completed"
         }
     }
 
     var parameters: [String: String] {
         switch self {
-        case .placeAdded(let source):    return ["source": source.rawValue]
-        case .nearbySearch(let category): return ["category": category]
-        default:                          return [:]
+        case .placeAdded(let source):      return ["source": source.rawValue]
+        case .nearbySearch(let category):  return ["category": category]
+        case .paywallShown(let source):    return ["source": source]
+        case .trialStarted(let product):   return ["product": product]
+        case .purchaseCompleted(let product): return ["product": product]
+        default:                           return [:]
         }
     }
 }

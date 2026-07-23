@@ -41,6 +41,9 @@
 // MARK: - Place Picker
 "Adım %lld / %lld" = "Step %lld / %lld";
 "Bir %@ seç" = "Select a %@";
+"%@ seç" = "Select %@";
+"Birden fazla mekan seçebilirsin" = "You can select more than one place";
+"Devam Et (%lld mekan)" = "Continue (%lld places)";
 "Bu kategoride mekan bulunamadı" = "No places found in this category";
 "Bu adımı atla" = "Skip this step";
 "Arama Yarıçapı" = "Search Radius";
@@ -316,6 +319,20 @@
 "Pro'ya Geç" = "Go Pro";
 "Satın Alımları Geri Yükle" = "Restore Purchases";
 "Şimdi Değil" = "Not Now";
+"Sınırsız keşif" = "Explore without limits";
+"Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç." = "You finished a route! Go Pro for unlimited places, exporting, and an ad-free experience.";
+"GPX & PDF Dışa Aktar" = "GPX & PDF Export";
+"Rotalarını dışa aktar ve arşivle" = "Export and archive your routes";
+"Reklamsız Kullanım" = "Ad-Free Experience";
+"Kesintisiz keşfet" = "Explore without interruptions";
+"Şu an mağazaya ulaşılamıyor" = "The store is unavailable right now";
+"Lütfen internet bağlantını kontrol edip tekrar dene." = "Please check your internet connection and try again.";
+"Tekrar Dene" = "Try Again";
+"/ yıl" = "/ year";
+"/ ay" = "/ month";
+"7 Gün Ücretsiz" = "7 Days Free";
+"7 Gün Ücretsiz Dene" = "Start Free Trial";
+"Satın alma başarısız oldu" = "Purchase failed";
 
 // MARK: - Route Share & Import
 "%lld Duraklı Rota Paylaşıldı" = "%lld-Stop Route Shared";
@@ -416,6 +433,7 @@
 "Tüm verilerin kalıcı olarak silinecek — mekanlar, rotalar, rozetler ve profil. Uygulama ilk kurulum durumuna döner. Bu işlem geri alınamaz." = "All your data will be permanently deleted — places, routes, badges and profile. The app returns to its initial state. This cannot be undone.";
 "Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin." = "Place saved without a location — the address could not be resolved. You can add a location from the Edit screen.";
 "Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir." = "Some segments could not be calculated — distance and time may be incomplete.";
+"Bazı durakların konumu yok — rotaya dahil edilemedi." = "Some stops have no location — they couldn't be included in the route.";
 "Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var." = "Health permission is needed in Settings for step data.";
 
 // MARK: - Phase 2: Starter Routes

@@ -27,6 +27,7 @@ struct RouteSummaryView: View {
     @State private var showGPXPaywall = false
     @State private var showPDFPaywall = false
     @State private var showSaveRouteSheet = false
+    @State private var showSoftPaywall = false
 
     var routePlaces: [Place] { routeManager.routePlaces }
 
@@ -93,6 +94,18 @@ struct RouteSummaryView: View {
                     )
                     .padding(.horizontal, 20)
                     .padding(.vertical, 10)
+                }
+
+                // Koordinatsız durak uyarısı — hedefi bilinmediği için hiç planlanamadı
+                if routeManager.unroutableStopCount > 0 {
+                    Label(
+                        NSLocalizedString("Bazı durakların konumu yok — rotaya dahil edilemedi.", comment: ""),
+                        systemImage: "mappin.slash"
+                    )
+                    .font(.caption)
+                    .foregroundColor(PinlyTheme.warning)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 4)
                 }
 
                 // Hesaplanamayan segment uyarısı — eskiden sessizce yutulurdu
@@ -233,17 +246,28 @@ struct RouteSummaryView: View {
                     withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                         showCompletionOverlay = false
                     }
-                    routeManager.reset()
-                    dismissRouteFlow()
                     // App Store istemi kutlama KAPANDIKTAN sonra — konfetinin
                     // üstüne sistem dialogu bindirilmez
                     reviewPrompt.recordRouteCompletion()
                     let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
                     if reviewPrompt.shouldPromptForReview(currentVersion: version) {
                         reviewPrompt.markPrompted(version: version)
+                        routeManager.reset()
+                        dismissRouteFlow()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
                             requestReview()
                         }
+                    } else if viewModel.consumeSoftPaywallOffer() {
+                        // Değer anı: ilk rota TAMAMLANDIKTAN sonra tek seferlik soft paywall
+                        // (specs/FAZ1_REVENUECAT_KARAR.md). Rota akışı henüz KAPATILMAZ —
+                        // dismissRouteFlow() fullScreenCover'ı söker ve sökülen view'dan
+                        // sheet sunulamaz; reset+dismiss paywall kapanınca (sheet onDismiss).
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
+                            showSoftPaywall = true
+                        }
+                    } else {
+                        routeManager.reset()
+                        dismissRouteFlow()
                     }
                 }
                 .transition(.opacity)
@@ -323,6 +347,14 @@ struct RouteSummaryView: View {
                     showRatingSheet = false
                 }
             }
+        }
+        .sheet(isPresented: $showSoftPaywall, onDismiss: {
+            // Soft paywall akışın SON adımı: kapanınca (satın alma ya da "Şimdi Değil")
+            // rota akışı da kapanır — kutlama kapanışında ertelenen reset+dismiss burada.
+            routeManager.reset()
+            dismissRouteFlow()
+        }) {
+            PaywallView(source: "first_route_completed") { showSoftPaywall = false }
         }
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 10) {

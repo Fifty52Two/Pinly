@@ -10,8 +10,11 @@ final class AnalyticsEventTests: XCTestCase {
         XCTAssertEqual(AnalyticsEvent.routeStarted.name, "route_started")
         XCTAssertEqual(AnalyticsEvent.routeCompleted.name, "route_completed")
         XCTAssertEqual(AnalyticsEvent.routeShared.name, "route_shared")
-        XCTAssertEqual(AnalyticsEvent.paywallShown.name, "paywall_shown")
+        XCTAssertEqual(AnalyticsEvent.paywallShown(source: "limit_reached").name, "paywall_shown")
         XCTAssertEqual(AnalyticsEvent.nearbySearch(category: "cafe").name, "nearby_search")
+        XCTAssertEqual(AnalyticsEvent.trialStarted(product: "pinly_pro_yearly").name, "trial_started")
+        XCTAssertEqual(AnalyticsEvent.purchaseCompleted(product: "pinly_pro_monthly").name, "purchase_completed")
+        XCTAssertEqual(AnalyticsEvent.restoreCompleted.name, "restore_completed")
     }
 
     func test_placeAdded_parametersContainSource() {
@@ -24,9 +27,18 @@ final class AnalyticsEventTests: XCTestCase {
         XCTAssertEqual(params["category"], "museum")
     }
 
+    func test_paywallShown_parametersContainSource() {
+        XCTAssertEqual(AnalyticsEvent.paywallShown(source: "first_route_completed").parameters["source"], "first_route_completed")
+    }
+
+    func test_purchaseEvents_parametersContainProduct() {
+        XCTAssertEqual(AnalyticsEvent.trialStarted(product: "pinly_pro_yearly").parameters["product"], "pinly_pro_yearly")
+        XCTAssertEqual(AnalyticsEvent.purchaseCompleted(product: "pinly_pro_monthly").parameters["product"], "pinly_pro_monthly")
+    }
+
     func test_parameterlessEvents_haveEmptyParameters() {
         XCTAssertTrue(AnalyticsEvent.routeStarted.parameters.isEmpty)
-        XCTAssertTrue(AnalyticsEvent.paywallShown.parameters.isEmpty)
+        XCTAssertTrue(AnalyticsEvent.restoreCompleted.parameters.isEmpty)
     }
 
     func test_allPlaceAddSources_haveSnakeCaseRawValues() {

@@ -41,6 +41,9 @@
 // MARK: - Place Picker
 "Adım %lld / %lld" = "Paso %lld / %lld";
 "Bir %@ seç" = "Selecciona un %@";
+"%@ seç" = "Selecciona %@";
+"Birden fazla mekan seçebilirsin" = "Puedes seleccionar más de un lugar";
+"Devam Et (%lld mekan)" = "Continuar (%lld lugares)";
 "Bu kategoride mekan bulunamadı" = "No hay lugares en esta categoría";
 "Bu adımı atla" = "Saltar este paso";
 "Arama Yarıçapı" = "Radio de búsqueda";
@@ -316,6 +319,20 @@
 "Pro'ya Geç" = "Hazte Pro";
 "Satın Alımları Geri Yükle" = "Restaurar compras";
 "Şimdi Değil" = "Ahora no";
+"Sınırsız keşif" = "Explora sin límites";
+"Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç." = "¡Completaste una ruta! Hazte Pro para lugares ilimitados, exportación y una experiencia sin anuncios.";
+"GPX & PDF Dışa Aktar" = "Exportar GPX y PDF";
+"Rotalarını dışa aktar ve arşivle" = "Exporta y archiva tus rutas";
+"Reklamsız Kullanım" = "Sin anuncios";
+"Kesintisiz keşfet" = "Explora sin interrupciones";
+"Şu an mağazaya ulaşılamıyor" = "La tienda no está disponible en este momento";
+"Lütfen internet bağlantını kontrol edip tekrar dene." = "Comprueba tu conexión a internet e inténtalo de nuevo.";
+"Tekrar Dene" = "Reintentar";
+"/ yıl" = "/ año";
+"/ ay" = "/ mes";
+"7 Gün Ücretsiz" = "7 días gratis";
+"7 Gün Ücretsiz Dene" = "Iniciar prueba gratis";
+"Satın alma başarısız oldu" = "La compra falló";
 
 // MARK: - Route Share & Import
 "%lld Duraklı Rota Paylaşıldı" = "Ruta de %lld paradas compartida";
@@ -414,6 +431,7 @@
 "Tüm verilerin kalıcı olarak silinecek — mekanlar, rotalar, rozetler ve profil. Uygulama ilk kurulum durumuna döner. Bu işlem geri alınamaz." = "Todos tus datos se eliminarán permanentemente: lugares, rutas, insignias y perfil. La app vuelve a su estado inicial. Esto no se puede deshacer.";
 "Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin." = "Lugar guardado sin ubicación — no se pudo resolver la dirección. Puedes añadir una ubicación desde Editar.";
 "Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir." = "Algunos segmentos no se pudieron calcular — la distancia y el tiempo pueden estar incompletos.";
+"Bazı durakların konumu yok — rotaya dahil edilemedi." = "Algunas paradas no tienen ubicación — no se pudieron incluir en la ruta.";
 "Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var." = "Se necesita el permiso de Salud en Ajustes para los datos de pasos.";
 
 // MARK: - Fase 2: Rutas listas

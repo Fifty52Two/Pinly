@@ -41,6 +41,9 @@
 // MARK: - Place Picker
 "Adım %lld / %lld" = "Adım %lld / %lld";
 "Bir %@ seç" = "Bir %@ seç";
+"%@ seç" = "%@ seç";
+"Birden fazla mekan seçebilirsin" = "Birden fazla mekan seçebilirsin";
+"Devam Et (%lld mekan)" = "Devam Et (%lld mekan)";
 "Bu kategoride mekan bulunamadı" = "Bu kategoride mekan bulunamadı";
 "Bu adımı atla" = "Bu adımı atla";
 "Arama Yarıçapı" = "Arama Yarıçapı";
@@ -316,6 +319,20 @@
 "Pro'ya Geç" = "Pro'ya Geç";
 "Satın Alımları Geri Yükle" = "Satın Alımları Geri Yükle";
 "Şimdi Değil" = "Şimdi Değil";
+"Sınırsız keşif" = "Sınırsız keşif";
+"Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç." = "Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç.";
+"GPX & PDF Dışa Aktar" = "GPX & PDF Dışa Aktar";
+"Rotalarını dışa aktar ve arşivle" = "Rotalarını dışa aktar ve arşivle";
+"Reklamsız Kullanım" = "Reklamsız Kullanım";
+"Kesintisiz keşfet" = "Kesintisiz keşfet";
+"Şu an mağazaya ulaşılamıyor" = "Şu an mağazaya ulaşılamıyor";
+"Lütfen internet bağlantını kontrol edip tekrar dene." = "Lütfen internet bağlantını kontrol edip tekrar dene.";
+"Tekrar Dene" = "Tekrar Dene";
+"/ yıl" = "/ yıl";
+"/ ay" = "/ ay";
+"7 Gün Ücretsiz" = "7 Gün Ücretsiz";
+"7 Gün Ücretsiz Dene" = "7 Gün Ücretsiz Dene";
+"Satın alma başarısız oldu" = "Satın alma başarısız oldu";
 
 // MARK: - Route Share & Import
 "%lld Duraklı Rota Paylaşıldı" = "%lld Duraklı Rota Paylaşıldı";
@@ -415,6 +432,7 @@
 "Tüm verilerin kalıcı olarak silinecek — mekanlar, rotalar, rozetler ve profil. Uygulama ilk kurulum durumuna döner. Bu işlem geri alınamaz." = "Tüm verilerin kalıcı olarak silinecek — mekanlar, rotalar, rozetler ve profil. Uygulama ilk kurulum durumuna döner. Bu işlem geri alınamaz.";
 "Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin." = "Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin.";
 "Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir." = "Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir.";
+"Bazı durakların konumu yok — rotaya dahil edilemedi." = "Bazı durakların konumu yok — rotaya dahil edilemedi.";
 "Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var." = "Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var.";
 
 // MARK: - Faz 2: Hazır Rotalar

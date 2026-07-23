@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import RevenueCat
 
 // MARK: - EntitlementProviding
 
@@ -53,6 +54,64 @@ final class LocalEntitlementService: EntitlementProviding, ObservableObject {
     func canAddPlace(currentCount: Int) -> Bool {
         // TestFlight betasında limit uygulanmaz — paywall gate'leri hiç tetiklenmez
         // (FAZ 6.1; RevenueCat gelince kaldırılacak)
+        if FeatureFlags.unlimitedPlacesInBeta { return true }
+        return isPro || currentCount < freeLimit
+    }
+}
+
+// MARK: - RevenueCatEntitlementService
+
+/// RevenueCat destekli üyelik servisi — App Store build'inde gerçeğin TEK kaynağı budur.
+///
+/// `isPro` composition root'ta `#if DEBUG` ile `LocalEntitlementService`'e karşı seçilir
+/// (bkz. `PinlyApp`); bu sınıf yalnızca Release/TestFlight'ta aktiftir. `customerInfoStream`
+/// dinlenir, sonuç `pinly.isPro` UserDefaults anahtarına AYNA olarak yazılır — hem uçak
+/// modunda açılışta son bilinen değerle başlamak için hem de `LocalEntitlementService.shared`'ı
+/// varsayılan olarak constructor-inject eden ViewModel'lerin (QuickAddViewModel,
+/// QRScannerViewModel, RouteSummaryViewModel — DIP gereği environment'tan değil kendi
+/// default'larından okurlar) aynı anahtarı okuyarak dolaylı biçimde güncel kalması için.
+final class RevenueCatEntitlementService: EntitlementProviding, ObservableObject {
+    static let shared = RevenueCatEntitlementService()
+
+    let freeLimit = 20
+
+    private let proMirrorKey = "pinly.isPro"
+    private let defaults: UserDefaults
+    private var listenTask: Task<Void, Never>?
+
+    @Published private var isProValue: Bool
+
+    /// Salt-okunur: gerçeğin kaynağı RevenueCat'tir, kimse elle Pro yapamaz.
+    /// Yanlışlıkla çağrılırsa DEBUG'da assert eder (Release'te no-op, derlemede elenir).
+    var isPro: Bool {
+        get { isProValue }
+        set {
+            assertionFailure("RevenueCatEntitlementService.isPro salt-okunur — gerçek kaynak RevenueCat müşteri bilgisidir.")
+        }
+    }
+
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+        self.isProValue = defaults.bool(forKey: proMirrorKey)
+        RevenueCatConfig.configureIfNeeded()
+        listenTask = Task { [weak self] in
+            for await customerInfo in Purchases.shared.customerInfoStream {
+                guard let self else { return }
+                await MainActor.run {
+                    self.apply(customerInfo)
+                }
+            }
+        }
+    }
+
+    deinit { listenTask?.cancel() }
+
+    private func apply(_ customerInfo: CustomerInfo) {
+        isProValue = EntitlementMapper.isPro(customerInfo: customerInfo)
+        defaults.set(isProValue, forKey: proMirrorKey)
+    }
+
+    func canAddPlace(currentCount: Int) -> Bool {
         if FeatureFlags.unlimitedPlacesInBeta { return true }
         return isPro || currentCount < freeLimit
     }

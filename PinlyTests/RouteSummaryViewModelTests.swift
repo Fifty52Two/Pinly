@@ -13,15 +13,54 @@ final class RouteSummaryViewModelTests: XCTestCase {
         return ModelContext(container)
     }
 
-    private func makeViewModel(badges: MockBadgeServicing? = nil) -> RouteSummaryViewModel {
+    private func makeViewModel(
+        badges: MockBadgeServicing? = nil,
+        entitlements: MockEntitlementProviding? = nil
+    ) -> RouteSummaryViewModel {
         RouteSummaryViewModel(
             badges: badges ?? MockBadgeServicing(),
-            entitlements: MockEntitlementProviding(),
+            entitlements: entitlements ?? MockEntitlementProviding(),
             ads: MockAdPresenting(),
             healthStats: MockHealthStatsProviding(),
             savedRoutes: MockSavedRouteRepository(),
             routeExporter: MockRouteExporting()
         )
+    }
+
+    private func makeEphemeralDefaults() -> UserDefaults {
+        let suite = "test.softPaywall.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+        return defaults
+    }
+
+    // MARK: - Soft Paywall (tek seferlik hak)
+
+    func test_consumeSoftPaywallOffer_firstCall_returnsTrueAndBurnsFlag() {
+        let vm = makeViewModel()
+        let defaults = makeEphemeralDefaults()
+
+        XCTAssertTrue(vm.consumeSoftPaywallOffer(defaults: defaults))
+        XCTAssertTrue(defaults.bool(forKey: "pinly.softPaywallShown"))
+    }
+
+    func test_consumeSoftPaywallOffer_secondCall_returnsFalse() {
+        let vm = makeViewModel()
+        let defaults = makeEphemeralDefaults()
+
+        _ = vm.consumeSoftPaywallOffer(defaults: defaults)
+        XCTAssertFalse(vm.consumeSoftPaywallOffer(defaults: defaults))
+    }
+
+    func test_consumeSoftPaywallOffer_proUser_returnsFalse_andFlagStaysUnset() {
+        let pro = MockEntitlementProviding()
+        pro.isPro = true
+        let vm = makeViewModel(entitlements: pro)
+        let defaults = makeEphemeralDefaults()
+
+        XCTAssertFalse(vm.consumeSoftPaywallOffer(defaults: defaults))
+        // Pro kullanıcıda hak YAKILMAZ — abonelik biterse ileride hâlâ gösterilebilir
+        XCTAssertFalse(defaults.bool(forKey: "pinly.softPaywallShown"))
     }
 
     func test_addNoteToCurrentStop_appendsToExistingNotes() {

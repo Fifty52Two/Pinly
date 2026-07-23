@@ -41,6 +41,9 @@
 // MARK: - Place Picker
 "Adım %lld / %lld" = "Шаг %lld / %lld";
 "Bir %@ seç" = "Выбери %@";
+"%@ seç" = "Выбери: %@";
+"Birden fazla mekan seçebilirsin" = "Можно выбрать несколько мест";
+"Devam Et (%lld mekan)" = "Продолжить (%lld мест)";
 "Bu kategoride mekan bulunamadı" = "В этой категории нет мест";
 "Bu adımı atla" = "Пропустить этот шаг";
 "Arama Yarıçapı" = "Радиус поиска";
@@ -316,6 +319,20 @@
 "Pro'ya Geç" = "Стать Pro";
 "Satın Alımları Geri Yükle" = "Восстановить покупки";
 "Şimdi Değil" = "Не сейчас";
+"Sınırsız keşif" = "Исследуй без границ";
+"Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç." = "Ты завершил маршрут! Оформи Pro для безлимита мест, экспорта и работы без рекламы.";
+"GPX & PDF Dışa Aktar" = "Экспорт GPX и PDF";
+"Rotalarını dışa aktar ve arşivle" = "Экспортируй и архивируй маршруты";
+"Reklamsız Kullanım" = "Без рекламы";
+"Kesintisiz keşfet" = "Исследуй без прерываний";
+"Şu an mağazaya ulaşılamıyor" = "Магазин сейчас недоступен";
+"Lütfen internet bağlantını kontrol edip tekrar dene." = "Проверь подключение к интернету и попробуй снова.";
+"Tekrar Dene" = "Повторить";
+"/ yıl" = "/ год";
+"/ ay" = "/ месяц";
+"7 Gün Ücretsiz" = "7 дней бесплатно";
+"7 Gün Ücretsiz Dene" = "Начать бесплатно";
+"Satın alma başarısız oldu" = "Покупка не удалась";
 
 // MARK: - Route Share & Import
 "%lld Duraklı Rota Paylaşıldı" = "Маршрут из %lld остановок отправлен";
@@ -414,6 +431,7 @@
 "Tüm verilerin kalıcı olarak silinecek — mekanlar, rotalar, rozetler ve profil. Uygulama ilk kurulum durumuna döner. Bu işlem geri alınamaz." = "Все ваши данные будут удалены навсегда — места, маршруты, значки и профиль. Приложение вернётся в исходное состояние. Это действие необратимо.";
 "Mekan konumsuz kaydedildi — adres çözümlenemedi. Düzenle ekranından konum ekleyebilirsin." = "Место сохранено без координат — адрес не удалось определить. Добавьте координаты на экране редактирования.";
 "Bazı segmentler hesaplanamadı — mesafe ve süre eksik olabilir." = "Некоторые сегменты не удалось рассчитать — расстояние и время могут быть неполными.";
+"Bazı durakların konumu yok — rotaya dahil edilemedi." = "У некоторых остановок нет местоположения — их не удалось включить в маршрут.";
 "Adım verisi için Ayarlar'dan Sağlık iznine ihtiyaç var." = "Для данных о шагах нужно разрешение Здоровья в Настройках.";
 
 // MARK: - Фаза 2: Готовые маршруты

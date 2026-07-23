@@ -52,6 +52,17 @@ final class RouteSummaryViewModel: ObservableObject {
 
     var isPro: Bool { entitlements.isPro }
 
+    /// İlk rota tamamlanınca gösterilecek tek seferlik soft paywall hakkını tüketir:
+    /// uygunsa bayrağı yakıp true döner. Karar ve bayrak yakma TEK çağrıda — bayrak
+    /// yalnızca paywall gerçekten sunulacaksa yakılır (eskiden gösterim garantiye
+    /// alınmadan yakılıyordu, hak boşa gidebiliyordu).
+    func consumeSoftPaywallOffer(defaults: UserDefaults = .standard) -> Bool {
+        guard !entitlements.isPro,
+              !defaults.bool(forKey: "pinly.softPaywallShown") else { return false }
+        defaults.set(true, forKey: "pinly.softPaywallShown")
+        return true
+    }
+
     func exportRouteName(fallbackRouteName: String) -> String {
         if !shareRouteName.isEmpty { return shareRouteName }
         if !fallbackRouteName.isEmpty { return fallbackRouteName }
