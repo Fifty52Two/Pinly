@@ -37,7 +37,7 @@ struct HomeView: View {
                     .toolbar(.hidden, for: .tabBar)
                     .tag(2)
 
-                ProfileTab()
+                ProfileTab(selectedTab: $selectedTab)
                     .toolbar(.hidden, for: .tabBar)
                     .tag(3)
             }

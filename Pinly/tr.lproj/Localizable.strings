@@ -115,6 +115,11 @@
 
 // MARK: - Saved Routes
 "Kayıtlı Rotalar" = "Kayıtlı Rotalar";
+
+// Rotalarım (Profil sekmesi, FAZ 5 V1)
+"Rotalarım" = "Rotalarım";
+"Kaydedilen" = "Kaydedilen";
+"Paylaşılan" = "Paylaşılan";
 "Önceden planladığın rotalar" = "Önceden planladığın rotalar";
 "Henüz kayıtlı rota yok" = "Henüz kayıtlı rota yok";
 "Önceden bir rota planla, istediğin zaman başlat" = "Önceden bir rota planla, istediğin zaman başlat";

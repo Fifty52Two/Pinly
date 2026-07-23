@@ -115,6 +115,11 @@
 
 // MARK: - Saved Routes
 "Kayıtlı Rotalar" = "Сохранённые маршруты";
+
+// Rotalarım (вкладка профиля, ФАЗА 5 V1)
+"Rotalarım" = "Мои маршруты";
+"Kaydedilen" = "Сохранено";
+"Paylaşılan" = "Отправлено";
 "Önceden planladığın rotalar" = "Маршруты, которые ты спланировал";
 "Henüz kayıtlı rota yok" = "Нет сохранённых маршрутов";
 "Önceden bir rota planla, istediğin zaman başlat" = "Спланируй маршрут заранее, начни когда хочешь";

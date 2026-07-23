@@ -115,6 +115,11 @@
 
 // MARK: - Saved Routes
 "Kayıtlı Rotalar" = "Saved Routes";
+
+// Rotalarım (Profile tab, PHASE 5 V1)
+"Rotalarım" = "My Routes";
+"Kaydedilen" = "Saved";
+"Paylaşılan" = "Shared";
 "Önceden planladığın rotalar" = "Routes you planned ahead";
 "Henüz kayıtlı rota yok" = "No saved routes yet";
 "Önceden bir rota planla, istediğin zaman başlat" = "Plan a route ahead, start it whenever you want";

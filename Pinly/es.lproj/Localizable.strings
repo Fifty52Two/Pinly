@@ -115,6 +115,11 @@
 
 // MARK: - Saved Routes
 "Kayıtlı Rotalar" = "Rutas guardadas";
+
+// Rotalarım (pestaña de perfil, FASE 5 V1)
+"Rotalarım" = "Mis rutas";
+"Kaydedilen" = "Guardadas";
+"Paylaşılan" = "Compartidas";
 "Önceden planladığın rotalar" = "Rutas que planificaste";
 "Henüz kayıtlı rota yok" = "No hay rutas guardadas";
 "Önceden bir rota planla, istediğin zaman başlat" = "Planifica una ruta, iníciala cuando quieras";

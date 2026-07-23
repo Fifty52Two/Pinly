@@ -1,15 +1,21 @@
 import SwiftUI
 import PhotosUI
+import SwiftData
 
 // MARK: - Profil Sekmesi
 
 struct ProfileTab: View {
+    /// HomeView'daki TabView seçimi — "Rotalarım" kartına dokununca Rotalar sekmesine (tag 2) geçmek için.
+    @Binding var selectedTab: Int
+
     @EnvironmentObject var placeStore: PlaceStore
     @EnvironmentObject var languageManager: LanguageManager
     @Environment(\.badges) private var badges
     @Environment(\.profile) private var profileService
     @Environment(\.modelContext) private var modelContext
     @Environment(\.openURL) private var openURL
+
+    @Query(sort: \SavedRoute.createdAt, order: .reverse) private var savedRoutes: [SavedRoute]
 
     @State private var showHistory = false
     @State private var showWeeklyReport = false
@@ -24,6 +30,8 @@ struct ProfileTab: View {
     @State private var pickerItem: PhotosPickerItem? = nil
 
     private var visitedCount: Int { placeStore.places.filter { $0.isVisited }.count }
+    /// FAZ 5 V1 — Rotalarım kartı için son 5 kayıtlı rota (en yeni önce).
+    private var recentSavedRoutes: [SavedRoute] { Array(savedRoutes.prefix(5)) }
     @AppStorage("pinly.appearance") private var appearance = "system"
 
     private var appVersionText: String {
@@ -152,6 +160,66 @@ struct ProfileTab: View {
                                     : String(format: NSLocalizedString("%lld/%lld rozet kazanıldı", comment: ""), earned, total)
                             }()) {
                         showBadges = true
+                    }
+                }
+                .listRowBackground(PinlyTheme.surface)
+
+                // Rotalarım — FAZ 5 V1 (backend'siz): kaydedilen/paylaşılan rota sayaçları
+                // (UserDefaults, BadgeServicing üzerinden) + son kayıtlı rotaların önizlemesi.
+                Section {
+                    HStack {
+                        Text(NSLocalizedString("Rotalarım", comment: ""))
+                            .font(.headline)
+                        Spacer()
+                        if !savedRoutes.isEmpty {
+                            Button {
+                                selectedTab = 2
+                            } label: {
+                                Text(NSLocalizedString("Tümünü Gör", comment: ""))
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundColor(PinlyTheme.primary)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+
+                    HStack(spacing: 36) {
+                        profileMiniStat(value: badges.savedRouteCount,
+                                        label: NSLocalizedString("Kaydedilen", comment: ""))
+                        profileMiniStat(value: badges.sharedRouteCount,
+                                        label: NSLocalizedString("Paylaşılan", comment: ""))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 4)
+
+                    if recentSavedRoutes.isEmpty {
+                        VStack(spacing: 10) {
+                            Image(systemName: "map")
+                                .font(.system(size: 32))
+                                .foregroundColor(.secondary)
+                            Text(NSLocalizedString("Henüz kayıtlı rota yok", comment: ""))
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            Button {
+                                selectedTab = 2
+                            } label: {
+                                Text(NSLocalizedString("Rota Planla", comment: ""))
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundColor(PinlyTheme.primary)
+                                    .padding(.horizontal, 14)
+                                    .padding(.vertical, 8)
+                                    .background(Capsule().fill(PinlyTheme.primary.opacity(0.12)))
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                    } else {
+                        ForEach(recentSavedRoutes) { route in
+                            ProfileRoutePreviewRow(route: route) {
+                                selectedTab = 2
+                            }
+                        }
                     }
                 }
                 .listRowBackground(PinlyTheme.surface)
@@ -374,6 +442,48 @@ private struct MoreRow: View {
                     Text(subtitle)
                         .font(.caption)
                         .foregroundColor(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - ProfileRoutePreviewRow
+
+/// "Rotalarım" kartındaki tek satırlık kayıtlı rota önizlemesi — isim + mekan sayısı + tarih.
+/// Dokununca `onTap` ile Rotalar sekmesine (SavedRoutesView) yönlendirir; ayrı bir detay ekranı YOK (YAGNI).
+private struct ProfileRoutePreviewRow: View {
+    let route: SavedRoute
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: 14) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(PinlyTheme.primary.opacity(0.15))
+                        .frame(width: 40, height: 40)
+                    Image(systemName: "map.fill")
+                        .foregroundColor(PinlyTheme.primary)
+                        .font(.headline)
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(route.name)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(.primary)
+                        .lineLimit(1)
+                    Text("\(String(format: NSLocalizedString("%lld mekan", comment: ""), route.placeCount)) · \(route.formattedDate)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
                 }
                 Spacer()
                 Image(systemName: "chevron.right")
