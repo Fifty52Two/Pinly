@@ -15,6 +15,12 @@ final class AnalyticsEventTests: XCTestCase {
         XCTAssertEqual(AnalyticsEvent.trialStarted(product: "pinly_pro_yearly").name, "trial_started")
         XCTAssertEqual(AnalyticsEvent.purchaseCompleted(product: "pinly_pro_monthly").name, "purchase_completed")
         XCTAssertEqual(AnalyticsEvent.restoreCompleted.name, "restore_completed")
+        XCTAssertEqual(AnalyticsEvent.memoryPhotoAdded.name, "memory_photo_added")
+        XCTAssertEqual(AnalyticsEvent.memoryCardShared(format: "story").name, "memory_card_shared")
+    }
+
+    func test_memoryCardShared_parametersContainFormat() {
+        XCTAssertEqual(AnalyticsEvent.memoryCardShared(format: "post").parameters["format"], "post")
     }
 
     func test_placeAdded_parametersContainSource() {

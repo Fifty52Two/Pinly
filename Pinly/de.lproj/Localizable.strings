@@ -498,3 +498,14 @@
 "Eklendi" = "Hinzugefügt";
 "Çevrende öneri bulunamadı." = "Keine Vorschläge in der Nähe gefunden.";
 "Henüz mekan yok. Yakınımda önerilerinden veya Mekanlarım ekranından ekleyebilirsin." = "Noch keine Orte. Füge welche aus den Vorschlägen in der Nähe oder über „Meine Orte“ hinzu.";
+
+// Erinnerungstagebuch (PHASE 3)
+"Fotoğraf ekle" = "Foto hinzufügen";
+"Hikayeni Paylaş" = "Teile deine Story";
+"Günlük" = "Tagebuch";
+"Tamamladığın rotalar ve anı fotoğrafların" = "Deine abgeschlossenen Routen und Erinnerungsfotos";
+"Yeniden Paylaş" = "Erneut teilen";
+"Mekan fotoğrafı olarak da kaydet" = "Auch als Ortsfoto speichern";
+"Hikaye (9:16)" = "Story (9:16)";
+"Gönderi (4:5)" = "Beitrag (4:5)";
+"Hikayen hazırlanıyor..." = "Deine Story wird erstellt...";

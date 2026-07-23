@@ -5,7 +5,10 @@ import SwiftData
 
 struct RouteHistoryView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.routeMemories) private var routeMemories
     @Query(sort: \RouteHistory.date, order: .reverse) private var histories: [RouteHistory]
+    @State private var selectedHistory: RouteHistory? = nil
 
     var body: some View {
         NavigationStack {
@@ -13,9 +16,21 @@ struct RouteHistoryView: View {
                 if histories.isEmpty {
                     emptyState
                 } else {
-                    List(histories) { history in
-                        RouteHistoryRow(history: history)
+                    List {
+                        ForEach(histories) { history in
+                            Button {
+                                selectedHistory = history
+                            } label: {
+                                if history.memoryPhotos.isEmpty {
+                                    RouteHistoryRow(history: history)
+                                } else {
+                                    MemoryHistoryCard(history: history, routeMemories: routeMemories)
+                                }
+                            }
+                            .buttonStyle(.plain)
                             .listRowBackground(PinlyTheme.surface)
+                        }
+                        .onDelete(perform: deleteHistories)
                     }
                     .listStyle(.insetGrouped)
                 }
@@ -32,7 +47,21 @@ struct RouteHistoryView: View {
                     }
                 }
             }
+            .sheet(item: $selectedHistory) { history in
+                MemoryDetailView(history: history, routeMemories: routeMemories)
+            }
         }
+    }
+
+    /// Anı fotoğraf klasörünü de siler — `RouteHistory` kaydı silinince
+    /// `RouteMemories/<historyID>/` yetim kalmamalı.
+    private func deleteHistories(at offsets: IndexSet) {
+        for index in offsets {
+            let history = histories[index]
+            routeMemories.deleteAll(historyID: history.id)
+            modelContext.delete(history)
+        }
+        try? modelContext.save()
     }
 
     private var emptyState: some View {
@@ -52,7 +81,65 @@ struct RouteHistoryView: View {
     }
 }
 
-// MARK: - Satır
+// MARK: - Foto'lu Kayıt Kartı (Anı Günlüğü)
+
+private struct MemoryHistoryCard: View {
+    let history: RouteHistory
+    let routeMemories: RouteMemoryStoring
+
+    private var memoryPhotos: [RouteMemoryPhoto] { history.memoryPhotos }
+
+    private var coverImage: UIImage? {
+        guard let first = memoryPhotos.first else { return nil }
+        return routeMemories.load(fileName: first.fileName)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            if let coverImage {
+                Image(uiImage: coverImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 140)
+                    .frame(maxWidth: .infinity)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .overlay(alignment: .bottomLeading) {
+                        if memoryPhotos.count > 1 {
+                            Text("+\(memoryPhotos.count - 1)")
+                                .font(.caption.weight(.bold))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Color.black.opacity(0.5), in: Capsule())
+                                .padding(8)
+                        }
+                    }
+                    .clipped()
+            }
+
+            HStack {
+                Text(history.routeName)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                Spacer()
+                Text(history.date, style: .date)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+
+            HStack(spacing: 0) {
+                HistoryStatPill(icon: "figure.walk", value: history.formattedDistance, color: PinlyTheme.primary)
+                HistoryStatPill(icon: "clock", value: history.formattedDuration, color: PinlyTheme.success)
+                if history.stepCount > 0 {
+                    HistoryStatPill(icon: "shoeprints.fill", value: "\(history.stepCount) adım", color: PinlyTheme.warning)
+                }
+            }
+        }
+        .padding(.vertical, 6)
+    }
+}
+
+// MARK: - Fotosuz Eski Kayıt Satırı
 
 private struct RouteHistoryRow: View {
     let history: RouteHistory
@@ -62,6 +149,7 @@ private struct RouteHistoryRow: View {
             HStack {
                 Text(history.routeName)
                     .font(.headline)
+                    .foregroundColor(.primary)
                 Spacer()
                 Text(history.date, style: .date)
                     .font(.caption)
