@@ -23,8 +23,16 @@ final class StarterRouteCatalogTests: XCTestCase {
     }
 
     func test_loadCityCatalog_bilinmeyenSehir_bosDizi() {
-        XCTAssertTrue(provider.loadCityCatalog(city: "Ankara").isEmpty)
+        // NOT (FAZ 4 Dalga 1): Ankara artık `knownCatalogFiles`'a bağlı GERÇEK bir katalog
+        // şehri — burada bilinmeyen şehir örneği olarak kullanılamaz, gerçekten hiç
+        // katalogda olmayan bir şehir adı kullanılıyor.
+        XCTAssertTrue(provider.loadCityCatalog(city: "Rize").isEmpty)
         XCTAssertTrue(provider.loadCityCatalog(city: "").isEmpty)
+    }
+
+    func test_loadCityCatalog_ankara_returnsOnlyVerifiedRoutes() {
+        let entries = provider.loadCityCatalog(city: "Ankara")
+        XCTAssertTrue(entries.allSatisfy(\.verified), "yalnızca verified:true rotalar dönmeli")
     }
 
     func test_loadCityCatalog_koordinatlarIstanbulSinirlarinda() {
