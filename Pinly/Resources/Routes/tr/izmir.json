@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-27",
+    "note": "2 rota (3. taslak rota Kadifekale-Asansör gerçek koordinatlar arası >2.5km çıktığı için eklenmedi), verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-27) — FAIL=0, 1 NEAR (Kültürpark, script'in kısa sorgusu 994m uzağa mahalle adına eşleşti; ayrı bir \"İzmir Enternasyonal Fuar Alanı\" sorgusuyla çapraz kontrol edildi, koordinat fuar girişine ait olarak doğrulandı). Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Şehir İçi | Şehir Dışı | Yurt Dışı"
+  },
+  "city": "izmir",
+  "country": "tr",
+  "routes": [
+    {
+      "id": "izm-konak-kemeralti",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Konak'tan Kemeraltı'na",
+        "en": "Konak to Kemeraltı",
+        "es": "De Konak a Kemeraltı",
+        "de": "Von Konak nach Kemeraltı",
+        "ru": "От Конака до Кемералты"
+      },
+      "description": {
+        "tr": "İzmir'in simgesi Saat Kulesi'nden Kızlarağası Hanı'nın avlusuna, Hisar Camii'nin yanından antik Agora'da biten bir tarih turu.",
+        "en": "From İzmir's landmark Clock Tower to the courtyard of Kızlarağası Han, past Hisar Mosque, ending at the ancient Agora.",
+        "es": "Desde la Torre del Reloj de Esmirna al patio del Kızlarağası Han, junto a la mezquita Hisar, hasta el Ágora antigua.",
+        "de": "Vom Wahrzeichen Uhrturm zum Innenhof des Kızlarağası Han, vorbei an der Hisar-Moschee, bis zur antiken Agora.",
+        "ru": "От часовой башни — символа Измира — до двора Кызларагасы Хан, мимо мечети Хисар, до античной Агоры."
+      },
+      "places": [
+        {
+          "name": "Saat Kulesi",
+          "category": "Historical Site",
+          "address": "Konak Meydanı, Konak/İzmir",
+          "latitude": 38.4188787,
+          "longitude": 27.1286952
+        },
+        {
+          "name": "Kızlarağası Hanı",
+          "category": "General",
+          "address": "871. Sk. 19, Konak/İzmir",
+          "latitude": 38.421242,
+          "longitude": 27.132742
+        },
+        {
+          "name": "Hisar Camii",
+          "category": "Historical Site",
+          "address": "899. Sk. 19, Konak/İzmir",
+          "latitude": 38.421597,
+          "longitude": 27.1334999
+        },
+        {
+          "name": "Agora Örenyeri",
+          "category": "Historical Site",
+          "address": "Tarik Sari Sk. 16, Konak/İzmir",
+          "latitude": 38.418221,
+          "longitude": 27.138488
+        }
+      ]
+    },
+    {
+      "id": "izm-alsancak-kordon",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Alsancak Kordon Yürüyüşü",
+        "en": "Alsancak Kordon Walk",
+        "es": "Paseo por el Kordon de Alsancak",
+        "de": "Spaziergang am Kordon von Alsancak",
+        "ru": "Прогулка по набережной Кордон в Алсанджаке"
+      },
+      "description": {
+        "tr": "Kültürpark Fuar Alanı'nın gölgesinden Cumhuriyet Meydanı'na, Kordon'un deniz kokulu sahilinde biten bir Alsancak turu.",
+        "en": "From the shade of the Kültürpark fairground to Cumhuriyet Meydanı, ending on the sea breeze of the Kordon promenade.",
+        "es": "Desde la sombra del recinto ferial de Kültürpark hasta la plaza Cumhuriyet, terminando en el paseo marítimo Kordon.",
+        "de": "Vom schattigen Kültürpark-Messegelände zum Cumhuriyet-Platz, endend an der Uferpromenade Kordon.",
+        "ru": "От тени выставочного парка Культюрпарк до площади Джумхуриет, с финалом на набережной Кордон."
+      },
+      "places": [
+        {
+          "name": "Kültürpark",
+          "category": "Park",
+          "address": "1396. Sk. 2, Konak/İzmir",
+          "latitude": 38.4280467,
+          "longitude": 27.1494108
+        },
+        {
+          "name": "Cumhuriyet Meydanı",
+          "category": "General",
+          "address": "Cumhuriyet Meydanı, Konak/İzmir",
+          "latitude": 38.428726,
+          "longitude": 27.134927
+        },
+        {
+          "name": "Alsancak Kordon",
+          "category": "Park",
+          "address": "Atatürk Cd., Alsancak/Konak/İzmir",
+          "latitude": 38.4372,
+          "longitude": 27.1436
+        }
+      ]
+    }
+  ]
+}

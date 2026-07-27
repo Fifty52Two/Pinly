@@ -131,7 +131,8 @@ struct DefaultStarterRoutesProvider: StarterRoutesProviding {
     /// eşleşme içerik üzerinden (`RouteCatalogFile.city`) yapılır.
     private static let knownCatalogFiles: [(country: String, filename: String)] = [
         ("tr", "istanbul"),
-        ("tr", "ankara")
+        ("tr", "ankara"),
+        ("tr", "izmir")
     ]
 
     func loadAll() -> [StarterRouteDefinition] {
