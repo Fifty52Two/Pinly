@@ -134,7 +134,7 @@ struct PlanRouteView: View {
                             span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
                         ))
                     }
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    HapticPlayer.impact(.medium)
                 }
             }
 
@@ -232,7 +232,7 @@ struct PlanRouteView: View {
                                     viewModel.selectedPlaceIDs.insert(place.id)
                                 }
                             }
-                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                            HapticPlayer.selectionChanged()
                         }
                         .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                         .listRowSeparator(.hidden)

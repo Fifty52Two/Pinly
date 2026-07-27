@@ -35,6 +35,12 @@ final class RouteSummaryViewModel: ObservableObject {
     /// `place`'in `routePlaces` içindeki index'i buraya ayrıca kaydedilir.
     @Published var pendingRatingStopIndex: Int = 0
 
+    /// Rota tamamlanınca HealthKit'ten çekilen adım sayısı — `RouteCompletionOverlay`
+    /// Wow #1 sekansındaki üçüncü istatistik satırı (km → dk → adım) için.
+    /// `handleRouteCompletion` async olduğundan overlay ilk göründüğünde 0 olabilir,
+    /// sonra @Published güncellemesiyle satır kendini tazeler (bkz. RouteSummaryView).
+    @Published var lastCompletionStepCount: Int = 0
+
     /// Bu rotanın tamamlanınca yazılacağı `RouteHistory.id` — anı fotoğrafları
     /// tamamlanmadan ÖNCE bu ID altına kaydedilir (rota bitmeden app ölürse
     /// fotoğraf kaybolmasın); `handleRouteCompletion` aynı ID'yle kaydı yaratır,
@@ -248,6 +254,7 @@ final class RouteSummaryViewModel: ObservableObject {
         let catRaw = shareRouteCategory.rawValue
 
         let stats = await healthStats.fetchRouteStats(from: startDate, to: endDate)
+        lastCompletionStepCount = stats.steps
         let history = RouteHistory(
             id: pendingHistoryID,
             routeName: name,

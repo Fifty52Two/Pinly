@@ -70,9 +70,10 @@ paralel ajanlar XcodeBuildMCP kullanırken, her build/test çağrısından HEMEN
 geçerli olduğunu varsayma.
 
 **Kalan (bu turda dokunulmadı):**
-- FAZ 6 (UI wow animasyonları) — kasıtlı ertelendi, RouteSummaryView/RouteCompletionOverlay'e
-  hem FAZ 1 hem FAZ 3 dokunduğu için üçüncü bir paralel ajan çakışma riski taşırdı; artık ana dal
-  sakinleşti, sıradaki tur için güvenli.
+- FAZ 6 (UI wow animasyonları) — **wow #1 (rota tamamlama sekansı) + haptic haritası +
+  `contentTransition(.numericText())` sonraki turda ayrı bir Sonnet oturumunda tamamlandı**
+  (bkz. FAZ 6 bölümü altındaki güncel durum). Wow #2-6 (zoom geçişleri, pin/scroll animasyonları,
+  Liquid Glass, boş durumlar) hâlâ ertelendi — spec'teki sıralamaya göre sıradaki tur.
 - FAZ 5 V2 (Supabase) — Ferhat'ın hesap açması gerekiyor, kod işi ondan sonra.
 - FAZ 7 (pazarlama) — ASO taslağı hazır, ekran görüntüsü/video/PR Ferhat'ın eylemini gerektiriyor.
 - Rota kataloğu Dalga 1 devamı (İzmir/Bursa/Antalya/...) — Ankara gibi MKLocalSearch doğrulamalı
@@ -302,20 +303,36 @@ Soğuk başlangıç ölüm nedenidir: mekanı olmayan kullanıcı boş harita g�
 **İlke:** Seigaiha kimliği (krem/kağıt + sage + toz mavi + lacivert) KORUNUR — 2026'da herkes
 "kişiliksiz beyaz minimal app" yaparken el yapımı/Japon esinli kimlik ayrıştırıcı. Üstüne iki katman:
 
+**Güncel durum (Sonnet oturumu — `specs/FAZ6_UI_YON.md` sıralamasının 1. ve 2. maddeleri):**
+Wow #1 (rota tamamlama sekansı) + haptic haritası + `contentTransition(.numericText())` UYGULANDI
+(detay aşağıda `[x]`). Wow #2-6 ve Liquid Glass bu turda BAŞLANMADI — spec'teki öncelik sırasına
+göre sıradaki oturumun kapsamı (aşağıdaki `[ ]` maddeler hâlâ geçerli, aynen bırakıldı).
+
 - [ ] **iOS 26 Liquid Glass (koşullu):** hedef iOS 17 kalır; `if #available(iOS 26)` ile —
       harita üstü paneller/overlay'lerde `glassEffect`, PinlyTabBar'da glass varyant,
       `GlassEffectContainer` ile buton morfları. Xcode 26 ile derleme şart (Ferhat: Xcode güncel mi?).
-- [ ] **Wow anları (öncelik sırasıyla):**
-  1. Rota tamamlama sekansı: konfeti (var) + istatistiklerin sayaç animasyonuyla gelişi
-     (`contentTransition(.numericText)`) + hikaye kartının kart-çevirme reveal'ı
-  2. `matchedGeometryEffect` kart→detay geçişleri (Keşfet kartı → rota detayı)
-  3. Harita pin'lerinde spring "pop" + seçili pin nefes animasyonu (navigasyondaki pulse'ın akrabası)
-  4. Keşfet'te `scrollTransition` parallax kartlar
-  5. Haptic koreografi: durak varışı (success), rozet (çift vuruş), fav (hafif tık)
-  6. Onboarding'de WavePattern'in canlı dalgalanması (TimelineView — düşük maliyet, yüksek his)
+- [x] **Wow anları (öncelik sırasıyla):**
+  1. [x] Rota tamamlama sekansı: konfeti (var, dokunulmadı) → istatistikler km→dk→adım→ziyaret SIRAYLA
+     0.15sn arayla spring+`contentTransition(.numericText())` ile 0'dan sayarak belirir → son
+     istatistikten 0.6sn sonra "Hikayeni Paylaş" kartı alttan `spring(response:0.55,dampingFraction:0.75)`
+     + hafif 3D `rotation3DEffect` ile yükselir → `HapticPlayer.routeCompleted()` (`.success`+0.1sn
+     sonra `.impact(.soft)`). Reduce Motion: sayaçlar direkt final değere, kart sadece fade
+     (`Pinly/Views/route/RouteCompletionOverlay.swift`).
+  2. [ ] `matchedGeometryEffect` kart→detay geçişleri (Keşfet kartı → rota detayı) — ERTELENDİ
+  3. [ ] Harita pin'lerinde spring "pop" + seçili pin nefes animasyonu — ERTELENDİ
+  4. [ ] Keşfet'te `scrollTransition` parallax kartlar — ERTELENDİ
+  5. [x] Haptic koreografi: merkezi `Pinly/Design/HapticPlayer.swift` (tüm UIKit generator'ları
+     önceden `.prepare()` edilmiş `static let`) — durak varışı `.success`, rozet açılması
+     `.success`+0.1sn `.impact(.rigid)`, seçim toggle `.selection`, rota başlatma `.impact(.medium)`,
+     rota tamamlama `.success`+0.1sn `.impact(.soft)`. Favorileme haritada yok (özellik mevcut değil).
+     Tüm eski ad-hoc `UI*FeedbackGenerator` çağrıları (10 dosya) bu merkezi yardımcıya taşındı.
+  6. [ ] Onboarding'de WavePattern'in canlı dalgalanması (TimelineView) — ERTELENDİ
 - [ ] Karanlık mod cila turu + app icon alternate (dark/tinted zaten var; sezonluk varyant değerlendir)
-- [ ] Boş durum illüstrasyonları: SF Symbol'dan seigaiha-uyumlu mini vektör sahnelere (WavePattern dilinde)
-- [ ] Erişilebilirlik: Dynamic Type + VoiceOver turu (App Store kalite sinyali)
+- [ ] Boş durum illüstrasyonları: SF Symbol'dan seigaiha-uyumlu mini vektör sahnelere (WavePattern dilinde) — ERTELENDİ
+- [x] Erişilebilirlik (bu turun kapsamı — Wow #1 + haptic): Reduce Motion yolu, VoiceOver label'ları
+      (paylaşım kartı + gated dismiss butonu), Dynamic Type güvenliği (`lineLimit`+`minimumScaleFactor`)
+      `RouteCompletionOverlay`'de uygulandı. Genel Dynamic Type XL/VoiceOver turu (uygulama geneli)
+      hâlâ ERTELENDİ.
 
 ## FAZ 7 — Pazarlama & Lansman (sürekli; FAZ 1 biter bitmez başlar)
 
