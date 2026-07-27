@@ -240,6 +240,8 @@ struct RouteSummaryView: View {
             if showCompletionOverlay {
                 RouteCompletionOverlay(
                     totalDistance: routeManager.totalRouteDistance,
+                    totalTimeSeconds: routeManager.totalRouteTime,
+                    stepCount: viewModel.lastCompletionStepCount,
                     stopsVisited: routePlaces.filter { $0.isVisited }.count,
                     totalStops: routePlaces.count,
                     onShareMemory: { showShareFormatPicker = true }
@@ -323,7 +325,7 @@ struct RouteSummaryView: View {
             // içindeki gerçek konumundan türetmek daha güvenilir.
             let stopIndex = routePlaces.firstIndex(where: { $0.id == place.id }) ?? routeManager.currentWaypointIndex
             viewModel.handleArrival(place: place, stopIndex: stopIndex, context: modelContext, placeStore: placeStore)
-            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+            HapticPlayer.stopArrival()
             withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                 showArrivalBanner = true
             }
@@ -351,7 +353,7 @@ struct RouteSummaryView: View {
                 )
                 placeStore.pendingBadges.append(contentsOf: newBadges)
             }
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            HapticPlayer.impact(.medium)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 viewModel.showInterstitialThenProceed {
                     withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
@@ -623,6 +625,7 @@ struct RouteSummaryView: View {
                     Button {
                         viewModel.routeStartDate = Date()
                         viewModel.recordRouteStarted()
+                        HapticPlayer.routeStarted()
                         withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                             routeManager.isNavigating = true
                             locationManager.startNavigationTracking()
@@ -661,7 +664,7 @@ struct RouteSummaryView: View {
         withAnimation(.spring(response: 0.3)) {
             noteSaved = true
         }
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        HapticPlayer.success()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             withAnimation(.spring(response: 0.3)) {
                 noteSaved = false

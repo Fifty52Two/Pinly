@@ -61,6 +61,7 @@ struct ProfileStatsView: View {
                                     .font(.system(size: 40, weight: .bold, design: .rounded))
                                     .foregroundColor(.white)
                                     .monospacedDigit()
+                                    .contentTransition(.numericText())
                             }
                             Spacer()
                             Image(systemName: "figure.walk.motion")
@@ -157,6 +158,7 @@ private struct HeroStat: View {
                 .font(.headline.bold())
                 .foregroundColor(.white)
                 .monospacedDigit()
+                .contentTransition(.numericText())
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             Text(label)
