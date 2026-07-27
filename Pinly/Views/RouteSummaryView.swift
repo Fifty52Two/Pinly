@@ -342,6 +342,7 @@ struct RouteSummaryView: View {
         .onChange(of: routeManager.isRouteComplete) { _, isComplete in
             guard isComplete else { return }
             locationManager.stopNavigationTracking()
+            HapticPlayer.impact(.medium)
             Task {
                 let newBadges = await viewModel.handleRouteCompletion(
                     routePlaces: routePlaces,
@@ -352,9 +353,10 @@ struct RouteSummaryView: View {
                     placeStore: placeStore
                 )
                 placeStore.pendingBadges.append(contentsOf: newBadges)
-            }
-            HapticPlayer.impact(.medium)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                // `lastCompletionStepCount` bu noktada (HealthKit fetch bitti) kesinleşir —
+                // overlay'in Wow #1 istatistik sekansı onu okumadan ÖNCE hazır olması şart,
+                // yoksa RouteCompletionOverlay onAppear'ı 0 adımı yakalayıp donuk gösterir.
+                try? await Task.sleep(nanoseconds: 1_500_000_000)
                 viewModel.showInterstitialThenProceed {
                     withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                         showCompletionOverlay = true
