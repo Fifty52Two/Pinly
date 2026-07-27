@@ -164,7 +164,7 @@ struct MapPinPickerView: View {
 
     private func confirm() {
         guard let coord = centerCoordinate else { return }
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        HapticPlayer.impact(.medium)
         onConfirm(coord, viewModel.confirmAddress(for: coord))
         dismiss()
     }

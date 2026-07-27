@@ -148,7 +148,7 @@ struct PinlyTabBar: View {
 
     private func select(_ index: Int) {
         guard index != selection else { return }
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        HapticPlayer.selectionChanged()
         withAnimation(gooeySpring) {
             selection = index
         }

@@ -173,7 +173,7 @@ private struct HapticPressModifier: ViewModifier {
     func body(content: Content) -> some View {
         content.onChange(of: isPressed) { _, pressed in
             if pressed {
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                HapticPlayer.impact(.light)
             }
         }
     }

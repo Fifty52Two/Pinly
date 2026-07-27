@@ -99,7 +99,7 @@ struct PinlyCategoryGrid: View {
                 let isSelected = PlaceCategory.from(selection) == cat
                 Button {
                     selection = cat.rawValue
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    HapticPlayer.selectionChanged()
                 } label: {
                     VStack(spacing: 6) {
                         ZStack {

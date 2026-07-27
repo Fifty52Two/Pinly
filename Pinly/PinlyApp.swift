@@ -58,6 +58,8 @@ struct PinlyApp: App {
         )
         // Emekli edilen çoklu tema tercihinin temizliği (tek slate temaya geçildi)
         UserDefaults.standard.removeObject(forKey: "pinly.theme")
+        // Haptic generator'ları önceden ısıt — ilk gerçek dokunuş gecikmesiz olsun.
+        HapticPlayer.prepareAll()
     }
 
     var body: some Scene {

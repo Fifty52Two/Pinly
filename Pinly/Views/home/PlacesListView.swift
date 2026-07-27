@@ -393,7 +393,7 @@ struct PlaceListItemView: View {
                 if place.isVisited { place.visitCount += 1 }
                 placeStore.save(context: modelContext)
                 placeStore.refreshBadges()
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                HapticPlayer.selectionChanged()
             } label: {
                 Label(
                     place.isVisited ? NSLocalizedString("Ziyaret Edilmedi", comment: "") : NSLocalizedString("Ziyaret Edildi", comment: ""),

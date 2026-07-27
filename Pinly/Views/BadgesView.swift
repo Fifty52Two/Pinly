@@ -206,7 +206,7 @@ struct BadgeBannerView: View {
         .offset(y: visible ? 0 : -120)
         .opacity(visible ? 1 : 0)
         .onAppear {
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            HapticPlayer.badgeUnlocked()
             withAnimation(.spring(response: 0.45, dampingFraction: 0.75)) { visible = true }
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 withAnimation(.easeInOut(duration: 0.3)) { visible = false }
