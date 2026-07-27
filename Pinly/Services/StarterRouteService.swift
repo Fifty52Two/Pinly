@@ -132,7 +132,8 @@ struct DefaultStarterRoutesProvider: StarterRoutesProviding {
     private static let knownCatalogFiles: [(country: String, filename: String)] = [
         ("tr", "istanbul"),
         ("tr", "ankara"),
-        ("tr", "izmir")
+        ("tr", "izmir"),
+        ("tr", "bursa")
     ]
 
     func loadAll() -> [StarterRouteDefinition] {

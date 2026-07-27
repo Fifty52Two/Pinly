@@ -1,0 +1,139 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-27",
+    "note": "3 rota, 9 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-27) — FAIL=0 NEAR=0, tüm eşleşmeler 0-183m sapma (ilk taslakta \"Bursa Kapalıçarşı\" sorgusu şehir adı tekrarı yüzünden 25km uzağa yanlış eşleşmişti, \"Kapalıçarşı\"ya kısaltılıp gerçek koordinatla düzeltildi). Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Şehir İçi | Şehir Dışı | Yurt Dışı"
+  },
+  "city": "bursa",
+  "country": "tr",
+  "routes": [
+    {
+      "id": "bur-ulucami-kozahan",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Ulu Cami'den Koza Han'a",
+        "en": "Ulu Cami to Koza Han",
+        "es": "De la Mezquita Ulu al Koza Han",
+        "de": "Von der Ulu-Moschee zum Koza Han",
+        "ru": "От мечети Улу до Коза-хана"
+      },
+      "description": {
+        "tr": "Osmanlı'nın ilk başkentinin kalbi: Ulu Cami'nin yirmi kubbesinden Kapalıçarşı'ya, ipek kokulu Koza Han'da bitiyor.",
+        "en": "The heart of the Ottomans' first capital: from Ulu Cami's twenty domes through the Grand Bazaar, ending at the silk-scented Koza Han.",
+        "es": "El corazón de la primera capital otomana: de las veinte cúpulas de la mezquita Ulu al Gran Bazar, terminando en el Koza Han.",
+        "de": "Das Herz der ersten osmanischen Hauptstadt: von den zwanzig Kuppeln der Ulu-Moschee zum Basar, endend im Koza Han.",
+        "ru": "Сердце первой османской столицы: от двадцати куполов мечети Улу через крытый базар до Коза-хана."
+      },
+      "places": [
+        {
+          "name": "Ulu Cami",
+          "category": "Historical Site",
+          "address": "Ulucami, Ulucami Cd., Osmangazi/Bursa",
+          "latitude": 40.1826,
+          "longitude": 29.061
+        },
+        {
+          "name": "Kapalıçarşı",
+          "category": "General",
+          "address": "Kapalı Çarşı Cd., Osmangazi/Bursa",
+          "latitude": 40.18480386328946,
+          "longitude": 29.062213073871675
+        },
+        {
+          "name": "Koza Han",
+          "category": "General",
+          "address": "Koza Han, Osmangazi/Bursa",
+          "latitude": 40.1839,
+          "longitude": 29.0631
+        }
+      ]
+    },
+    {
+      "id": "bur-yesil-kulliye",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Yeşil Külliye ve Emir Sultan",
+        "en": "Green Complex and Emir Sultan",
+        "es": "El Complejo Verde y Emir Sultan",
+        "de": "Der Grüne Komplex und Emir Sultan",
+        "ru": "Зелёный комплекс и мечеть Эмир Султан"
+      },
+      "description": {
+        "tr": "Çinilerin en zarifi Yeşil Cami ve yanı başındaki Yeşil Türbe'den, tepede kalan Emir Sultan Camii'ne.",
+        "en": "From the exquisite tiles of Yeşil Cami and the neighboring Green Tomb, up to Emir Sultan Mosque on the hill.",
+        "es": "De los exquisitos azulejos de la mezquita Yeşil y la Tumba Verde a la mezquita Emir Sultan en la colina.",
+        "de": "Von den exquisiten Fliesen der Yeşil-Moschee und dem Grünen Grabmal hinauf zur Emir-Sultan-Moschee.",
+        "ru": "От изысканной плитки мечети Йешиль и Зелёной гробницы к мечети Эмир Султан на холме."
+      },
+      "places": [
+        {
+          "name": "Yeşil Cami",
+          "category": "Historical Site",
+          "address": "Yeşil, Yeşil Cd., Yıldırım/Bursa",
+          "latitude": 40.1818,
+          "longitude": 29.0747
+        },
+        {
+          "name": "Yeşil Türbe",
+          "category": "Historical Site",
+          "address": "1. Yeşil Cd. 72, Yıldırım/Bursa",
+          "latitude": 40.181452,
+          "longitude": 29.07487
+        },
+        {
+          "name": "Emir Sultan Camii",
+          "category": "Historical Site",
+          "address": "Doyuran Cd. 1, Yıldırım/Bursa",
+          "latitude": 40.181169,
+          "longitude": 29.081005
+        }
+      ]
+    },
+    {
+      "id": "bur-tophane-muradiye",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Tophane'den Muradiye'ye",
+        "en": "From Tophane to Muradiye",
+        "es": "De Tophane a Muradiye",
+        "de": "Von Tophane nach Muradiye",
+        "ru": "От Тофане до Мурадийе"
+      },
+      "description": {
+        "tr": "Kalenin sur kalıntılarından, Osman ve Orhan Gazi'nin türbelerinin önünden, Muradiye Külliyesi'nin sessiz bahçelerine.",
+        "en": "From the fortress ruins past the tombs of Osman and Orhan Gazi, to the quiet gardens of Muradiye Complex.",
+        "es": "De las ruinas de la fortaleza junto a las tumbas de Osman y Orhan Gazi, a los jardines de Muradiye.",
+        "de": "Von den Festungsruinen an den Gräbern von Osman und Orhan Gazi vorbei zu den Gärten von Muradiye.",
+        "ru": "От руин крепости мимо гробниц Османа и Орхана Гази к тихим садам комплекса Мурадийе."
+      },
+      "places": [
+        {
+          "name": "Tophane Saat Kulesi",
+          "category": "Historical Site",
+          "address": "Yiğitler Cd. 2/3, Osmangazi/Bursa",
+          "latitude": 40.187535,
+          "longitude": 29.057543
+        },
+        {
+          "name": "Osman Gazi ve Orhan Gazi Türbeleri",
+          "category": "Historical Site",
+          "address": "Osman Gazi Cd. 18, Osmangazi/Bursa",
+          "latitude": 40.1868036,
+          "longitude": 29.0568423
+        },
+        {
+          "name": "Muradiye Külliyesi",
+          "category": "Historical Site",
+          "address": "2. Murat Cd. 2, Osmangazi/Bursa",
+          "latitude": 40.1906722,
+          "longitude": 29.0462208
+        }
+      ]
+    }
+  ]
+}
