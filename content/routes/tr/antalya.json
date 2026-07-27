@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-27",
+    "note": "2 rota, 6 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-27) — FAIL=0 NEAR=0, tüm eşleşmeler 0-164m sapma (ilk taslakta \"Cumhuriyet Meydanı\" ve \"Kaleiçi Yat Limanı\" sorguları ~95-100km uzağa yanlış eşleşmişti — jenerik isim sorunu; Cumhuriyet Meydanı rotadan çıkarılıp yerine çapraz kontrollü \"Mermerli Plajı\" eklendi, Yat Limanı \"Kaleiçi Marina\" adıyla düzeltildi). Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Şehir İçi | Şehir Dışı | Yurt Dışı"
+  },
+  "city": "antalya",
+  "country": "tr",
+  "routes": [
+    {
+      "id": "ant-kaleici-tarihi",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Kaleiçi Tarihi Turu",
+        "en": "Historic Kaleiçi Tour",
+        "es": "Ruta histórica de Kaleiçi",
+        "de": "Historische Kaleiçi-Tour",
+        "ru": "Исторический тур по Калеичи"
+      },
+      "description": {
+        "tr": "Saat Kulesi'nden Yivli Minare'ye, Roma İmparatoru'na adanan Hadrianus Kapısı'nda biten bir Kaleiçi turu.",
+        "en": "From the Clock Tower to the Fluted Minaret, ending at Hadrian's Gate, dedicated to the Roman emperor.",
+        "es": "De la Torre del Reloj al Minarete Acanalado, terminando en la Puerta de Adriano.",
+        "de": "Vom Uhrturm zum Gerillten Minarett, endend am Hadrianstor.",
+        "ru": "От часовой башни до минарета Йивли, с финалом у ворот Адриана."
+      },
+      "places": [
+        {
+          "name": "Saat Kulesi",
+          "category": "Historical Site",
+          "address": "Kaleiçi, Muratpaşa/Antalya",
+          "latitude": 36.8858,
+          "longitude": 30.7047
+        },
+        {
+          "name": "Yivli Minare",
+          "category": "Historical Site",
+          "address": "Kaleiçi, Muratpaşa/Antalya",
+          "latitude": 36.8865,
+          "longitude": 30.7043
+        },
+        {
+          "name": "Hadrianus Kapısı",
+          "category": "Historical Site",
+          "address": "Hadrian Kale Kapısı, Muratpaşa/Antalya",
+          "latitude": 36.885144,
+          "longitude": 30.708367
+        }
+      ]
+    },
+    {
+      "id": "ant-marina-karaalioglu",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Kaleiçi Limanı'ndan Karaalioğlu Parkı'na",
+        "en": "Kaleiçi Marina to Karaalioğlu Park",
+        "es": "Del puerto de Kaleiçi al parque Karaalioğlu",
+        "de": "Vom Kaleiçi-Hafen zum Karaalioğlu-Park",
+        "ru": "От гавани Калеичи до парка Караалиоглу"
+      },
+      "description": {
+        "tr": "Uçurumun dibindeki Mermerli Plajı'ndan Kaleiçi Marina'nın teknelerine, Karaalioğlu Parkı'nın deniz kıyısında biter.",
+        "en": "From Mermerli Beach at the foot of the cliff to the boats of Kaleiçi Marina, ending by the sea at Karaalioğlu Park.",
+        "es": "De la playa Mermerli, al pie del acantilado, a los barcos de Kaleiçi Marina, terminando en el parque Karaalioğlu.",
+        "de": "Vom Mermerli-Strand am Fuß der Klippe zu den Booten der Kaleiçi-Marina, endend im Karaalioğlu-Park.",
+        "ru": "От пляжа Мермерли у подножия скалы до яхт Калеичи Марина, с финалом в парке Караалиоглу."
+      },
+      "places": [
+        {
+          "name": "Mermerli Plajı",
+          "category": "Park",
+          "address": "Mermerli Banyo Sk. 25, Muratpaşa/Antalya",
+          "latitude": 36.88342,
+          "longitude": 30.7020751
+        },
+        {
+          "name": "Kaleiçi Marina",
+          "category": "General",
+          "address": "Kordon Sk. 11–13, Muratpaşa/Antalya",
+          "latitude": 36.8840356,
+          "longitude": 30.7033329
+        },
+        {
+          "name": "Karaalioğlu Parkı",
+          "category": "Park",
+          "address": "Kaleiçi, Muratpaşa/Antalya",
+          "latitude": 36.8814,
+          "longitude": 30.7069
+        }
+      ]
+    }
+  ]
+}

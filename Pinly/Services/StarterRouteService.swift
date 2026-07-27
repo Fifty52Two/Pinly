@@ -130,7 +130,11 @@ struct DefaultStarterRoutesProvider: StarterRoutesProviding {
     /// eklenir (bkz. GROWTH_PLAN FAZ 4). Dosya adı `city` alanıyla aynı olmak ZORUNDA değil,
     /// eşleşme içerik üzerinden (`RouteCatalogFile.city`) yapılır.
     private static let knownCatalogFiles: [(country: String, filename: String)] = [
-        ("tr", "istanbul")
+        ("tr", "istanbul"),
+        ("tr", "ankara"),
+        ("tr", "izmir"),
+        ("tr", "bursa"),
+        ("tr", "antalya")
     ]
 
     func loadAll() -> [StarterRouteDefinition] {
@@ -164,9 +168,17 @@ struct DefaultStarterRoutesProvider: StarterRoutesProviding {
     }
 
     func loadCityCatalog(city: String) -> [RouteCatalogEntry] {
-        guard let matched = StarterCityMatcher.matchCity(from: city) else { return [] }
-        return Self.knownCatalogFiles
+        // BUG FİX (FAZ 4 Dalga 1, Sonnet): önceki sürüm `matchCity(from:)`'i knownCities
+        // parametresi VERMEDEN çağırıyordu → fonksiyonun varsayılan değeri (yalnızca
+        // ["istanbul"]) kullanılıyordu. Sonuç: `knownCatalogFiles`'a yeni şehir eklense bile
+        // `loadCityCatalog` o şehri asla eşleştiremiyordu (Ankara/İzmir/Bursa sessizce boş
+        // dönerdi). Artık bilinen şehir listesi katalog dosyalarının GERÇEK `city` alanından
+        // türetiliyor — yeni bir dosya `knownCatalogFiles`'a eklendiği an otomatik tanınır.
+        let catalogFiles = Self.knownCatalogFiles
             .compactMap { Self.loadCatalogFile(country: $0.country, filename: $0.filename) }
+        let knownCities = catalogFiles.map { StarterCityMatcher.normalize($0.city) }
+        guard let matched = StarterCityMatcher.matchCity(from: city, knownCities: knownCities) else { return [] }
+        return catalogFiles
             .filter { StarterCityMatcher.normalize($0.city) == matched }
             .flatMap(\.routes)
             .filter(\.verified)
