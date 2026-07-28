@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 7 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0-29m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "amsterdam",
+  "country": "nl",
+  "routes": [
+    {
+      "id": "ams-dam-jordaan",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Dam Meydanı'ndan Jordaan'a",
+        "en": "From Dam Square to Jordaan",
+        "es": "De la Plaza Dam a Jordaan",
+        "de": "Vom Dam-Platz zum Jordaan",
+        "ru": "От площади Дам до квартала Йордан"
+      },
+      "description": {
+        "tr": "Kraliyet Sarayı'nın gölgesindeki Dam Meydanı'ndan Westerkerk'in çan kulesine, Anne Frank Müzesi'nin sessizliğine ve Jordaan'ın kanal kenarı sokaklarına uzanan bir Amsterdam yürüyüşü.",
+        "en": "An Amsterdam walk from Dam Square in the shadow of the Royal Palace to the bell tower of Westerkerk, the quiet of the Anne Frank House, and the canal-side streets of Jordaan.",
+        "es": "Un paseo por Ámsterdam desde la Plaza Dam, a la sombra del Palacio Real, hasta el campanario de la Westerkerk, el silencio de la Casa de Ana Frank y las calles junto al canal de Jordaan.",
+        "de": "Ein Amsterdam-Spaziergang vom Dam-Platz im Schatten des Königspalasts zum Glockenturm der Westerkerk, der Stille des Anne-Frank-Hauses und den Kanalstraßen des Jordaan.",
+        "ru": "Прогулка по Амстердаму от площади Дам в тени Королевского дворца до колокольни Вестеркерк, тишины Дома Анны Франк и каналов квартала Йордан."
+      },
+      "places": [
+        {
+          "name": "Dam Square",
+          "category": "General",
+          "address": "Dam, 1012 NP Amsterdam",
+          "latitude": 52.3730316,
+          "longitude": 4.8929608
+        },
+        {
+          "name": "Westerkerk",
+          "category": "Historical Site",
+          "address": "Prinsengracht 281, 1016 GW Amsterdam",
+          "latitude": 52.3745149,
+          "longitude": 4.8835553
+        },
+        {
+          "name": "Anne Frank House",
+          "category": "Museum",
+          "address": "Westermarkt 20, 1016 DK Amsterdam",
+          "latitude": 52.375163,
+          "longitude": 4.8840708
+        },
+        {
+          "name": "Jordaan",
+          "category": "General",
+          "address": "Jordaan, Amsterdam",
+          "latitude": 52.3758908,
+          "longitude": 4.8804855
+        }
+      ]
+    },
+    {
+      "id": "ams-museumplein-vondelpark",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Museumplein'dan Vondelpark'a",
+        "en": "From Museumplein to Vondelpark",
+        "es": "De Museumplein a Vondelpark",
+        "de": "Vom Museumplein zum Vondelpark",
+        "ru": "От Музейной площади до парка Вондел"
+      },
+      "description": {
+        "tr": "Rijksmuseum'un Hollanda Altın Çağı koleksiyonundan Van Gogh Müzesi'nin ayçiçeklerine, oradan yerlilerin en sevdiği yeşil alan Vondelpark'a uzanan bir müze rotası.",
+        "en": "A museum route from the Rijksmuseum's Dutch Golden Age collection to the sunflowers of the Van Gogh Museum, and on to Vondelpark, the locals' favorite green space.",
+        "es": "Una ruta de museos desde la colección del Siglo de Oro holandés del Rijksmuseum hasta los girasoles del Museo Van Gogh, y luego al Vondelpark, el espacio verde favorito de los locales.",
+        "de": "Eine Museumsroute von der Sammlung des Niederländischen Goldenen Zeitalters im Rijksmuseum zu den Sonnenblumen des Van-Gogh-Museums und weiter zum Vondelpark, dem beliebten Grünraum der Einheimischen.",
+        "ru": "Музейный маршрут от коллекции Золотого века Голландии в Рейксмузеуме до подсолнухов Музея Ван Гога и далее в парк Вондел — любимое зелёное пространство местных жителей."
+      },
+      "places": [
+        {
+          "name": "Rijksmuseum",
+          "category": "Museum",
+          "address": "Museumstraat 1, 1071 XX Amsterdam",
+          "latitude": 52.359827,
+          "longitude": 4.8850165
+        },
+        {
+          "name": "Van Gogh Museum",
+          "category": "Museum",
+          "address": "Museumplein 6, 1071 DJ Amsterdam",
+          "latitude": 52.3583822,
+          "longitude": 4.8810889
+        },
+        {
+          "name": "Vondelpark",
+          "category": "Park",
+          "address": "1071 AA Amsterdam",
+          "latitude": 52.3577397,
+          "longitude": 4.8665309
+        }
+      ]
+    }
+  ]
+}
