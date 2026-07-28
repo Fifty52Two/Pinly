@@ -1,0 +1,111 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 8 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Şehir İçi | Şehir Dışı | Yurt Dışı"
+  },
+  "city": "gaziantep",
+  "country": "tr",
+  "routes": [
+    {
+      "id": "gnt-kale-carsi-lezzet",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Kale, Çarşı ve Baklava",
+        "en": "Castle, Bazaar and Baklava",
+        "es": "Castillo, bazar y baklava",
+        "de": "Burg, Basar und Baklava",
+        "ru": "Крепость, базар и пахлава"
+      },
+      "description": {
+        "tr": "Gaziantep Kalesi'nden bakırcılar çarşısına, Tahmis Kahvesi'nde mola verip İmam Çağdaş'ta baklava tadarak biten lezzetli bir tarih yürüyüşü.",
+        "en": "From Gaziantep Castle to the coppersmiths' bazaar, with a coffee break at Tahmis Kahvesi and baklava at İmam Çağdaş.",
+        "es": "Del castillo de Gaziantep al bazar de los caldereros, con una pausa de café en Tahmis Kahvesi y baklava en İmam Çağdaş.",
+        "de": "Von der Burg Gaziantep zum Kupferschmiedebasar, mit einer Kaffeepause im Tahmis Kahvesi und Baklava bei İmam Çağdaş.",
+        "ru": "От крепости Газиантеп до базара медников, с остановкой на кофе в Tahmis Kahvesi и пахлавой у İmam Çağdaş."
+      },
+      "places": [
+        {
+          "name": "Gaziantep Kalesi",
+          "category": "Historical Site",
+          "address": "Hamo Sk. 1, 27400 Şahinbey/Gaziantep",
+          "latitude": 37.066366,
+          "longitude": 37.383281
+        },
+        {
+          "name": "Gaziantep Kahramanlık Panorama Müzesi",
+          "category": "Museum",
+          "address": "Dere Kenarı Cd. 39, 27400 Şahinbey/Gaziantep",
+          "latitude": 37.0658979,
+          "longitude": 37.3791505
+        },
+        {
+          "name": "Bakırcılar Çarşısı",
+          "category": "General",
+          "address": "Eskici Çarşı Sk. 47, 27400 Şahinbey/Gaziantep",
+          "latitude": 37.062085,
+          "longitude": 37.386695
+        },
+        {
+          "name": "Tahmis Kahvesi",
+          "category": "Café",
+          "address": "Buğday Pazarı Sk. 8, 27400 Şahinbey/Gaziantep",
+          "latitude": 37.061313,
+          "longitude": 37.38762
+        },
+        {
+          "name": "İmam Çağdaş",
+          "category": "Dessert",
+          "address": "Uzun Çarşı Cd. 49, 27400 Şahinbey/Gaziantep",
+          "latitude": 37.063485,
+          "longitude": 37.385191
+        }
+      ]
+    },
+    {
+      "id": "gnt-zeugma-muzeler",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Zeugma'dan Mutfak Kültürüne",
+        "en": "From Zeugma to Culinary Culture",
+        "es": "De Zeugma a la cultura culinaria",
+        "de": "Von Zeugma zur Küchenkultur",
+        "ru": "От Зевгмы до кулинарной культуры"
+      },
+      "description": {
+        "tr": "Dünyanın en büyük mozaik koleksiyonlarından birine ev sahipliği yapan Zeugma Müzesi'nden başlayıp Gaziantep mutfağının ve yöresel el sanatlarının müzelerinde devam eden bir kültür rotası.",
+        "en": "Starting at the Zeugma Museum, home to one of the world's largest mosaic collections, continuing through museums of Gaziantep's cuisine and local crafts.",
+        "es": "Comenzando en el Museo Zeugma, hogar de una de las mayores colecciones de mosaicos del mundo, y continuando por los museos de la cocina y la artesanía local de Gaziantep.",
+        "de": "Beginnend im Zeugma-Museum, Heimat einer der größten Mosaiksammlungen der Welt, weiter durch die Museen der Küche und des lokalen Handwerks von Gaziantep.",
+        "ru": "Начинается в музее Зевгма, где хранится одна из крупнейших в мире коллекций мозаик, и продолжается в музеях местной кухни и ремёсел Газиантепа."
+      },
+      "places": [
+        {
+          "name": "Zeugma Mozaik Müzesi",
+          "category": "Museum",
+          "address": "Sani Konukoğlu Blv. 2, 27500 Şehitkamil/Gaziantep",
+          "latitude": 37.0755353,
+          "longitude": 37.3859167
+        },
+        {
+          "name": "Emine Göğüş Mutfak Müzesi",
+          "category": "Museum",
+          "address": "Karagöz Mah. Sadık Dai Sk. 16, 27400 Şahinbey/Gaziantep",
+          "latitude": 37.0646421,
+          "longitude": 37.3824288
+        },
+        {
+          "name": "Hasan Süzer Etnografya Müzesi",
+          "category": "Museum",
+          "address": "Haşimoğlu Sk. 64, 27100 Şahinbey/Gaziantep",
+          "latitude": 37.059352,
+          "longitude": 37.388094
+        }
+      ]
+    }
+  ]
+}
