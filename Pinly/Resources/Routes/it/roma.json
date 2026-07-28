@@ -1,0 +1,146 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "3 rota, 10 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "roma",
+  "country": "it",
+  "routes": [
+    {
+      "id": "rom-colosseo-foro",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Kolezyum'dan Roma Forumu'na",
+        "en": "From the Colosseum to the Roman Forum",
+        "es": "Del Coliseo al Foro Romano",
+        "de": "Vom Kolosseum zum Forum Romanum",
+        "ru": "От Колизея до Римского форума"
+      },
+      "description": {
+        "tr": "Antik Roma'nın gladyatör dövüşlerine sahne olan Kolezyum'dan Palatino Tepesi'nin imparatorluk saray kalıntılarına, oradan Roma Forumu'nun sütunlarına uzanan bir antik tarih yürüyüşü.",
+        "en": "An ancient history walk from the Colosseum, stage of gladiator battles, to the imperial palace ruins of Palatine Hill, and on to the columns of the Roman Forum.",
+        "es": "Un paseo por la historia antigua desde el Coliseo, escenario de luchas de gladiadores, hasta las ruinas del palacio imperial de la colina Palatina, y luego a las columnas del Foro Romano.",
+        "de": "Ein Spaziergang durch die Antike vom Kolosseum, Schauplatz der Gladiatorenkämpfe, zu den Palastruinen des Palatin und weiter zu den Säulen des Forum Romanum.",
+        "ru": "Прогулка по древней истории от Колизея, арены гладиаторских боёв, до руин императорского дворца на Палатинском холме и далее к колоннам Римского форума."
+      },
+      "places": [
+        {
+          "name": "Colosseum",
+          "category": "Historical Site",
+          "address": "Piazza del Colosseo 1, 00184 Rome",
+          "latitude": 41.89018,
+          "longitude": 12.49231
+        },
+        {
+          "name": "Palatine Hill",
+          "category": "Historical Site",
+          "address": "Via di San Gregorio 30, 00186 Rome",
+          "latitude": 41.8895247,
+          "longitude": 12.487419
+        },
+        {
+          "name": "Forum Romanum",
+          "category": "Historical Site",
+          "address": "Largo della Salara Vecchia 5/6, 00186 Rome",
+          "latitude": 41.8901662,
+          "longitude": 12.4874479
+        }
+      ]
+    },
+    {
+      "id": "rom-pantheon-trevi-spagna",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Piazza Navona'dan İspanyol Merdivenleri'ne",
+        "en": "From Piazza Navona to the Spanish Steps",
+        "es": "De Piazza Navona a la Plaza de España",
+        "de": "Von der Piazza Navona zur Spanischen Treppe",
+        "ru": "От площади Навона до Испанской лестницы"
+      },
+      "description": {
+        "tr": "Piazza Navona'nın barok çeşmelerinden Pantheon'un devasa kubbesine, Trevi Çeşmesi'ne para atıp İspanyol Merdivenleri'nde nefeslenerek biten klasik Roma yürüyüşü.",
+        "en": "A classic Rome walk from the baroque fountains of Piazza Navona to the vast dome of the Pantheon, tossing a coin at the Trevi Fountain and catching your breath on the Spanish Steps.",
+        "es": "Un paseo clásico por Roma desde las fuentes barrocas de Piazza Navona hasta la vasta cúpula del Panteón, lanzando una moneda en la Fontana de Trevi y tomando aliento en la Plaza de España.",
+        "de": "Ein klassischer Rom-Spaziergang von den barocken Brunnen der Piazza Navona zur gewaltigen Kuppel des Pantheon, mit einer Münze im Trevi-Brunnen und einer Verschnaufpause an der Spanischen Treppe.",
+        "ru": "Классическая римская прогулка от барочных фонтанов площади Навона до огромного купола Пантеона, с монеткой в фонтане Треви и передышкой на Испанской лестнице."
+      },
+      "places": [
+        {
+          "name": "Piazza Navona",
+          "category": "General",
+          "address": "Piazza Navona, 00186 Rome",
+          "latitude": 41.8989646,
+          "longitude": 12.4731016
+        },
+        {
+          "name": "Pantheon",
+          "category": "Historical Site",
+          "address": "Piazza della Rotonda, 00186 Rome",
+          "latitude": 41.8985558,
+          "longitude": 12.4768317
+        },
+        {
+          "name": "Trevi Fountain",
+          "category": "General",
+          "address": "Piazza di Trevi, 00187 Rome",
+          "latitude": 41.9010674,
+          "longitude": 12.4832476
+        },
+        {
+          "name": "Spanish Steps",
+          "category": "General",
+          "address": "Piazza della Trinità de Monti 380, 00187 Rome",
+          "latitude": 41.9059852,
+          "longitude": 12.4827932
+        }
+      ]
+    },
+    {
+      "id": "rom-vatikan",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Vatikan Müzeleri'nden Sant'Angelo Kalesi'ne",
+        "en": "From the Vatican Museums to Castel Sant'Angelo",
+        "es": "De los Museos Vaticanos al Castel Sant'Angelo",
+        "de": "Von den Vatikanischen Museen zur Engelsburg",
+        "ru": "От Музеев Ватикана до замка Святого Ангела"
+      },
+      "description": {
+        "tr": "Sistine Şapeli'ni barındıran Vatikan Müzeleri'nden Aziz Petrus Bazilikası'nın devasa meydanına, Tiber Nehri kıyısındaki Sant'Angelo Kalesi'ne uzanan bir rota.",
+        "en": "From the Vatican Museums, home to the Sistine Chapel, to the vast square of St. Peter's Basilica, and on to Castel Sant'Angelo on the banks of the Tiber.",
+        "es": "Desde los Museos Vaticanos, hogar de la Capilla Sixtina, hasta la vasta plaza de la Basílica de San Pedro, y luego al Castel Sant'Angelo a orillas del Tíber.",
+        "de": "Von den Vatikanischen Museen, Heimat der Sixtinischen Kapelle, zum weiten Petersplatz und weiter zur Engelsburg am Ufer des Tiber.",
+        "ru": "От Музеев Ватикана, где хранится Сикстинская капелла, до огромной площади базилики Святого Петра и далее к замку Святого Ангела на берегу Тибра."
+      },
+      "places": [
+        {
+          "name": "Vatican Museums",
+          "category": "Museum",
+          "address": "Viale Vaticano, 00165 Rome",
+          "latitude": 41.9057346,
+          "longitude": 12.4540865
+        },
+        {
+          "name": "St. Peter's Basilica",
+          "category": "Historical Site",
+          "address": "Piazza San Pietro, 00120 Vatican City",
+          "latitude": 41.9021573,
+          "longitude": 12.4531853
+        },
+        {
+          "name": "Castel Sant'Angelo",
+          "category": "Historical Site",
+          "address": "Lungotevere Castello 50, 00193 Rome",
+          "latitude": 41.9031434,
+          "longitude": 12.4663496
+        }
+      ]
+    }
+  ]
+}

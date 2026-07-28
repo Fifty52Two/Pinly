@@ -140,7 +140,8 @@ struct DefaultStarterRoutesProvider: StarterRoutesProviding {
         ("tr", "trabzon"),
         ("tr", "mardin"),
         ("tr", "kapadokya"),
-        ("fr", "paris")
+        ("fr", "paris"),
+        ("it", "roma")
     ]
 
     func loadAll() -> [StarterRouteDefinition] {
