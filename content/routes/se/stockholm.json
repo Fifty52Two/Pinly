@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 6 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0-106m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "stockholm",
+  "country": "se",
+  "routes": [
+    {
+      "id": "sto-gamla-stan",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Gamla Stan'da Bir Yürüyüş",
+        "en": "A Walk Through Gamla Stan",
+        "es": "Un paseo por Gamla Stan",
+        "de": "Ein Spaziergang durch Gamla Stan",
+        "ru": "Прогулка по Гамла Стан"
+      },
+      "description": {
+        "tr": "Ortaçağ'dan kalma dar sokaklarıyla Gamla Stan'dan İsveç Kraliyet ailesinin resmi sarayı Kungliga Slottet'e, oradan meydanların en eskisi Stortorget'in renkli cephelerine uzanan bir Stockholm yürüyüşü.",
+        "en": "A Stockholm walk through the medieval narrow streets of Gamla Stan, to Kungliga Slottet, the official palace of the Swedish royal family, and on to the colorful facades of Stortorget, the city's oldest square.",
+        "es": "Un paseo por Estocolmo por las estrechas calles medievales de Gamla Stan, hasta el Kungliga Slottet, el palacio oficial de la familia real sueca, y luego a las coloridas fachadas de Stortorget, la plaza más antigua de la ciudad.",
+        "de": "Ein Stockholm-Spaziergang durch die mittelalterlichen engen Gassen von Gamla Stan, zum Kungliga Slottet, dem offiziellen Palast der schwedischen Königsfamilie, und weiter zu den bunten Fassaden des Stortorget, dem ältesten Platz der Stadt.",
+        "ru": "Прогулка по Стокгольму через средневековые узкие улочки Гамла Стан, к Королевскому дворцу — официальной резиденции шведской королевской семьи, и далее к разноцветным фасадам Стуртбргет — старейшей площади города."
+      },
+      "places": [
+        {
+          "name": "Gamla stan",
+          "category": "General",
+          "address": "Gamla stan, Stockholm",
+          "latitude": 59.3275116,
+          "longitude": 18.0708157
+        },
+        {
+          "name": "Kungliga slottet",
+          "category": "Historical Site",
+          "address": "Slottsbacken 1, 111 30 Stockholm",
+          "latitude": 59.3268164,
+          "longitude": 18.0716901
+        },
+        {
+          "name": "Stortorget",
+          "category": "General",
+          "address": "Stortorget, 111 29 Stockholm",
+          "latitude": 59.3250966,
+          "longitude": 18.0708348
+        }
+      ]
+    },
+    {
+      "id": "sto-djurgarden",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Djurgården: Vasa'dan Skansen'e",
+        "en": "Djurgården: From Vasa to Skansen",
+        "es": "Djurgården: de Vasa a Skansen",
+        "de": "Djurgården: Von der Vasa zum Skansen",
+        "ru": "Юргорден: от Васа до Скансена"
+      },
+      "description": {
+        "tr": "17. yüzyıldan kalma savaş gemisi Vasa'yı barındıran müzeden Gröna Lund'un lunapark heyecanına, oradan dünyanın en eski açık hava müzesi Skansen'in geleneksel İsveç evlerine uzanan bir ada yürüyüşü.",
+        "en": "An island walk from the museum housing the 17th-century warship Vasa, to the amusement-park thrills of Gröna Lund, and on to the traditional Swedish houses of Skansen, the world's oldest open-air museum.",
+        "es": "Un paseo por la isla desde el museo que alberga el buque de guerra Vasa del siglo XVII, hasta las emociones del parque de atracciones Gröna Lund, y luego a las casas tradicionales suecas de Skansen, el museo al aire libre más antiguo del mundo.",
+        "de": "Ein Inselspaziergang vom Museum mit dem Kriegsschiff Vasa aus dem 17. Jahrhundert zum Vergnügungspark Gröna Lund und weiter zu den traditionellen schwedischen Häusern des Skansen, dem ältesten Freilichtmuseum der Welt.",
+        "ru": "Островная прогулка от музея с военным кораблём «Ваза» XVII века до аттракционов парка Грёна Лунд и далее к традиционным шведским домам Скансена — старейшего музея под открытым небом в мире."
+      },
+      "places": [
+        {
+          "name": "Vasamuseet",
+          "category": "Museum",
+          "address": "Galärvarvsvägen 14, 115 21 Stockholm",
+          "latitude": 59.3279145,
+          "longitude": 18.0912943
+        },
+        {
+          "name": "Gröna Lund",
+          "category": "General",
+          "address": "Gröna Lund, Stockholm",
+          "latitude": 59.3242047,
+          "longitude": 18.0947494
+        },
+        {
+          "name": "Skansen",
+          "category": "Museum",
+          "address": "Djurgårdsslätten 49-51, 115 21 Stockholm",
+          "latitude": 59.3257629,
+          "longitude": 18.1048357
+        }
+      ]
+    }
+  ]
+}
