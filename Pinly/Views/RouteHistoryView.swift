@@ -8,7 +8,11 @@ struct RouteHistoryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.routeMemories) private var routeMemories
     @Query(sort: \RouteHistory.date, order: .reverse) private var histories: [RouteHistory]
-    @State private var selectedHistory: RouteHistory? = nil
+
+    // Wow #2: kart → MemoryDetailView zoom geçişi (iOS 18+, specs/FAZ6_UI_YON.md).
+    // Eskiden .sheet(item:) idi — .zoom yalnızca gerçek NavigationStack push'larında
+    // çalıştığı için akış push'a çevrildi (iOS 17'de fallback = varsayılan push).
+    @Namespace private var zoomNamespace
 
     var body: some View {
         NavigationStack {
@@ -18,16 +22,14 @@ struct RouteHistoryView: View {
                 } else {
                     List {
                         ForEach(histories) { history in
-                            Button {
-                                selectedHistory = history
-                            } label: {
+                            NavigationLink(value: history) {
                                 if history.memoryPhotos.isEmpty {
                                     RouteHistoryRow(history: history)
                                 } else {
                                     MemoryHistoryCard(history: history, routeMemories: routeMemories)
                                 }
                             }
-                            .buttonStyle(.plain)
+                            .pinlyZoomSource(id: history.id, in: zoomNamespace)
                             .listRowBackground(PinlyTheme.surface)
                         }
                         .onDelete(perform: deleteHistories)
@@ -47,8 +49,9 @@ struct RouteHistoryView: View {
                     }
                 }
             }
-            .sheet(item: $selectedHistory) { history in
+            .navigationDestination(for: RouteHistory.self) { history in
                 MemoryDetailView(history: history, routeMemories: routeMemories)
+                    .pinlyZoomDestination(id: history.id, in: zoomNamespace)
             }
         }
     }
