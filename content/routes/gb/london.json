@@ -1,0 +1,139 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "3 rota, 9 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0-1m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "london",
+  "country": "gb",
+  "routes": [
+    {
+      "id": "lon-westminster",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Westminster Manastırı'ndan London Eye'a",
+        "en": "From Westminster Abbey to the London Eye",
+        "es": "De la Abadía de Westminster al London Eye",
+        "de": "Von der Westminster Abbey zum London Eye",
+        "ru": "От Вестминстерского аббатства до London Eye"
+      },
+      "description": {
+        "tr": "Kraliyet taç giyme törenlerine ev sahipliği yapan Westminster Manastırı'ndan Big Ben'in saat kulesine, Thames kıyısındaki dev dönme dolap London Eye'a uzanan bir başkent yürüyüşü.",
+        "en": "A capital city walk from Westminster Abbey, host to royal coronations, to the clock tower of Big Ben, and on to the giant Ferris wheel of the London Eye on the Thames.",
+        "es": "Un paseo por la capital desde la Abadía de Westminster, sede de las coronaciones reales, hasta la torre del reloj del Big Ben, y luego a la gigantesca noria del London Eye junto al Támesis.",
+        "de": "Ein Hauptstadt-Spaziergang von der Westminster Abbey, Ort königlicher Krönungen, zum Uhrturm Big Ben und weiter zum riesigen Riesenrad London Eye an der Themse.",
+        "ru": "Прогулка по столице от Вестминстерского аббатства, места коронации монархов, до часовой башни Биг-Бен и далее к гигантскому колесу обозрения London Eye на Темзе."
+      },
+      "places": [
+        {
+          "name": "Westminster Abbey",
+          "category": "Historical Site",
+          "address": "20 Dean's Yard, London, SW1P 3PA",
+          "latitude": 51.4994212,
+          "longitude": -0.1284631
+        },
+        {
+          "name": "Big Ben",
+          "category": "Historical Site",
+          "address": "Parliament Square, London, SW1P 3AD",
+          "latitude": 51.5007021,
+          "longitude": -0.1245697
+        },
+        {
+          "name": "The London Eye",
+          "category": "General",
+          "address": "Riverside Building, Westminster Bridge Road, London, SE1 7PB",
+          "latitude": 51.5033505,
+          "longitude": -0.1196225
+        }
+      ]
+    },
+    {
+      "id": "lon-tower",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Londra Kulesi'nden The Shard'a",
+        "en": "From the Tower of London to The Shard",
+        "es": "De la Torre de Londres al The Shard",
+        "de": "Vom Tower of London zum The Shard",
+        "ru": "От Лондонского Тауэра до The Shard"
+      },
+      "description": {
+        "tr": "Kraliyet mücevherlerini barındıran Londra Kulesi'nden simge Tower Köprüsü'nün üzerinden geçip şehrin en yüksek gökdeleni The Shard'a uzanan bir Thames kıyısı yürüyüşü.",
+        "en": "A Thames-side walk from the Tower of London, home to the Crown Jewels, across the iconic Tower Bridge, to The Shard, the city's tallest skyscraper.",
+        "es": "Un paseo junto al Támesis desde la Torre de Londres, hogar de las Joyas de la Corona, cruzando el icónico Tower Bridge, hasta el The Shard, el rascacielos más alto de la ciudad.",
+        "de": "Ein Spaziergang an der Themse vom Tower of London, Heimat der Kronjuwelen, über die ikonische Tower Bridge, zum The Shard, dem höchsten Wolkenkratzer der Stadt.",
+        "ru": "Прогулка вдоль Темзы от Лондонского Тауэра, где хранятся королевские регалии, через культовый Тауэрский мост до The Shard — самого высокого небоскрёба города."
+      },
+      "places": [
+        {
+          "name": "Tower of London",
+          "category": "Historical Site",
+          "address": "London, EC3N 4AB",
+          "latitude": 51.5080641,
+          "longitude": -0.0760789
+        },
+        {
+          "name": "Tower Bridge",
+          "category": "Historical Site",
+          "address": "222 Tower Bridge Road, London, SE1 2UP",
+          "latitude": 51.5055071,
+          "longitude": -0.0754023
+        },
+        {
+          "name": "The Shard",
+          "category": "General",
+          "address": "32 London Bridge St, London, SE1 9SG",
+          "latitude": 51.5044196,
+          "longitude": -0.0864682
+        }
+      ]
+    },
+    {
+      "id": "lon-buckingham-museum",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Buckingham Sarayı'ndan British Museum'a",
+        "en": "From Buckingham Palace to the British Museum",
+        "es": "Del Palacio de Buckingham al Museo Británico",
+        "de": "Vom Buckingham Palace zum British Museum",
+        "ru": "От Букингемского дворца до Британского музея"
+      },
+      "description": {
+        "tr": "Kraliyet ailesinin resmi ikametgahı Buckingham Sarayı'ndan Trafalgar Meydanı'nın aslan heykellerine, oradan dünya tarihinin koleksiyonlarını barındıran British Museum'a uzanan bir rota.",
+        "en": "From Buckingham Palace, the official residence of the royal family, to the lion statues of Trafalgar Square, and on to the British Museum, home to collections spanning world history.",
+        "es": "Desde el Palacio de Buckingham, residencia oficial de la familia real, hasta las estatuas de leones de Trafalgar Square, y luego al Museo Británico, hogar de colecciones que abarcan la historia mundial.",
+        "de": "Vom Buckingham Palace, der offiziellen Residenz der königlichen Familie, zu den Löwenstatuen des Trafalgar Square und weiter zum British Museum mit Sammlungen zur Weltgeschichte.",
+        "ru": "От Букингемского дворца, официальной резиденции королевской семьи, до львиных статуй Трафальгарской площади и далее к Британскому музею с коллекциями по всей мировой истории."
+      },
+      "places": [
+        {
+          "name": "Buckingham Palace",
+          "category": "Historical Site",
+          "address": "London, SW1A 1AA",
+          "latitude": 51.501107,
+          "longitude": -0.1423605
+        },
+        {
+          "name": "Trafalgar Square",
+          "category": "General",
+          "address": "Trafalgar Sq, London, WC2N 5DN",
+          "latitude": 51.5079839,
+          "longitude": -0.1280147
+        },
+        {
+          "name": "The British Museum",
+          "category": "Museum",
+          "address": "Great Russell Street, London, WC1B 3DE",
+          "latitude": 51.5194502,
+          "longitude": -0.1269867
+        }
+      ]
+    }
+  ]
+}

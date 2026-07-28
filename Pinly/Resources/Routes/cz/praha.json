@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 7 durak. verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0, 1 NEAR (Old Town Square, 414m; script sorgusu 'Old Town Square, praha' geniş 'Prague Old Town' mahalle alanına eşleşti). Yerel adla ('Staromestske namesti') çapraz kontrol edildi: sonuç tam olarak katalogdaki koordinatla eşleşti (0m) — koordinat doğru kabul edildi. Diğer 6 durak 0-26m sapmayla PASS. Otomatik doğrulama + çapraz kontrol insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "praha",
+  "country": "cz",
+  "routes": [
+    {
+      "id": "prg-hrad-most",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Kale'den Charles Köprüsü'ne",
+        "en": "From the Castle to Charles Bridge",
+        "es": "Del castillo al puente de Carlos",
+        "de": "Von der Burg zur Karlsbrücke",
+        "ru": "От Града до Карлова моста"
+      },
+      "description": {
+        "tr": "Aziz Vitus Katedrali'nin gotik kulelerini barındıran Prag Kalesi'nden John Lennon Duvarı'nın renkli grafitilerine, oradan Vltava üzerindeki tarihi Charles Köprüsü'ne inen bir Prag yürüyüşü.",
+        "en": "A Prague walk from Prague Castle, home to St. Vitus Cathedral's Gothic towers, down to the colorful graffiti of the Lennon Wall, and on to the historic Charles Bridge over the Vltava.",
+        "es": "Un paseo por Praga desde el Castillo de Praga, hogar de las torres góticas de la Catedral de San Vito, hasta el colorido grafiti del Muro de Lennon, y luego al histórico puente de Carlos sobre el Moldava.",
+        "de": "Ein Prag-Spaziergang von der Prager Burg mit den gotischen Türmen des Veitsdoms hinunter zu den bunten Graffiti der Lennon-Mauer und weiter zur historischen Karlsbrücke über die Moldau.",
+        "ru": "Прогулка по Праге от Пражского Града с готическими башнями собора Святого Вита вниз к разноцветным граффити Стены Леннона и далее к историческому Карлову мосту через Влтаву."
+      },
+      "places": [
+        {
+          "name": "Katedrála svatého Víta",
+          "category": "Historical Site",
+          "address": "III. Nádvoří 48/2, 119 01 Prague 1",
+          "latitude": 50.0908789,
+          "longitude": 14.4005334
+        },
+        {
+          "name": "Prague Castle",
+          "category": "Historical Site",
+          "address": "Hradčany, 119 08 Prague 1",
+          "latitude": 50.0907757,
+          "longitude": 14.4019282
+        },
+        {
+          "name": "John Lennon Wall",
+          "category": "General",
+          "address": "Velkopřevorské Náměstí, 118 00 Prague 1",
+          "latitude": 50.0862416,
+          "longitude": 14.4068455
+        },
+        {
+          "name": "Charles Bridge",
+          "category": "Historical Site",
+          "address": "Karlův most, 120 00 Praha",
+          "latitude": 50.0866169,
+          "longitude": 14.4103038
+        }
+      ]
+    },
+    {
+      "id": "prg-stare-mesto",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Eski Şehir Meydanı'ndan Vaclav Meydanı'na",
+        "en": "From Old Town Square to Wenceslas Square",
+        "es": "De la Plaza de la Ciudad Vieja a la Plaza de Wenceslao",
+        "de": "Vom Altstädter Ring zum Wenzelsplatz",
+        "ru": "От Староместской площади до Вацлавской площади"
+      },
+      "description": {
+        "tr": "Astronomik Saat'in bulunduğu Eski Şehir Meydanı'ndan Barut Kulesi'nin gotik silüetine, oradan Prag'ın modern kalbi Vaclav Meydanı'na uzanan bir şehir merkezi yürüyüşü.",
+        "en": "A city-center walk from Old Town Square, home of the Astronomical Clock, past the Gothic silhouette of the Powder Gate Tower, to Wenceslas Square, the modern heart of Prague.",
+        "es": "Un paseo por el centro desde la Plaza de la Ciudad Vieja, hogar del Reloj Astronómico, pasando por la silueta gótica de la Torre de la Pólvora, hasta la Plaza de Wenceslao, el corazón moderno de Praga.",
+        "de": "Ein Stadtspaziergang vom Altstädter Ring mit der astronomischen Uhr, vorbei an der gotischen Silhouette des Pulverturms, zum Wenzelsplatz, dem modernen Herzen Prags.",
+        "ru": "Прогулка по центру города от Староместской площади с астрономическими часами мимо готического силуэта Пороховых ворот до Вацлавской площади — современного сердца Праги."
+      },
+      "places": [
+        {
+          "name": "Old Town Square",
+          "category": "General",
+          "address": "Staroměstské náměstí, 110 00 Prague 1",
+          "latitude": 50.0875984,
+          "longitude": 14.4211208
+        },
+        {
+          "name": "Powder Gate Tower",
+          "category": "Historical Site",
+          "address": "náměstí Republiky 5, 110 00 Prague 1",
+          "latitude": 50.0872501,
+          "longitude": 14.4277747
+        },
+        {
+          "name": "Václavské náměstí",
+          "category": "General",
+          "address": "Václavské náměstí, 110 00 Prague 1",
+          "latitude": 50.0809564,
+          "longitude": 14.4281071
+        }
+      ]
+    }
+  ]
+}

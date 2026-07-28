@@ -1,0 +1,139 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "3 rota, 9 durak — Göreme, Üçhisar ve Ürgüp kasabalarında ayrı yürüme rotaları (kasabalar arası mesafe 2.5 km yürüme kuralına uymadığı için tek rotada birleştirilmedi). verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0, 1 NEAR (Ürgüp Müzesi, 468m; script sorgusu 'Ürgüp Müzesi, kapadokya' metniyle alakasız bir sokağa eşleşti — 'kapadokya' city alanı gerçek bir yerleşim adı olmadığından metin-arama yanılıyor). Ayrı bir 'Urgup Muzesi, Urgup' sorgusuyla çapraz kontrol edildi: sonuç otogar yakınında, katalogdaki koordinata ~200m mesafede çıktı (aynı adres: Ataturk Blv. 39, 50400 Urgup) — koordinat doğru kabul edildi. Diğer 8 durak 0-184m sapmayla PASS. Otomatik doğrulama + çapraz kontrol insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4). NOT: city alanı 'kapadokya' — cihazın reverse geocode ettiği gerçek yerleşim adı (Nevşehir/Göreme/Ürgüp) StarterCityMatcher ile birebir/içerir eşleşmeyebilir; bilinen bir sınırlama, servis katmanı bu turun kapsamı dışında.",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Şehir İçi | Şehir Dışı | Yurt Dışı"
+  },
+  "city": "kapadokya",
+  "country": "tr",
+  "routes": [
+    {
+      "id": "kpd-goreme-acikhava",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Göreme: Gün Batımından Açık Hava Müzesi'ne",
+        "en": "Göreme: From Sunset Point to the Open Air Museum",
+        "es": "Göreme: del mirador del atardecer al museo al aire libre",
+        "de": "Göreme: Vom Sunset Point zum Freilichtmuseum",
+        "ru": "Гёреме: от смотровой площадки заката до музея под открытым небом"
+      },
+      "description": {
+        "tr": "Göreme'nin peri bacalarına tepeden bakan gün batımı noktasından kasaba merkezine, oradan UNESCO listesindeki kaya kilise topluluğu Açık Hava Müzesi'ne uzanan bir Kapadokya yürüyüşü.",
+        "en": "A Cappadocia walk from the sunset viewpoint overlooking Göreme's fairy chimneys, through the town center, to the UNESCO-listed rock-cut churches of the Open Air Museum.",
+        "es": "Un paseo por Capadocia desde el mirador del atardecer sobre las chimeneas de hadas de Göreme, por el centro del pueblo, hasta las iglesias rupestres del museo al aire libre, patrimonio de la UNESCO.",
+        "de": "Ein Cappadocia-Spaziergang vom Sonnenuntergangspunkt über Göremes Feenkaminen, durch das Stadtzentrum, zu den UNESCO-gelisteten Felsenkirchen des Freilichtmuseums.",
+        "ru": "Прогулка по Каппадокии от смотровой площадки заката над сказочными дымоходами Гёреме через центр городка до вырубленных в скале церквей музея под открытым небом, объекта ЮНЕСКО."
+      },
+      "places": [
+        {
+          "name": "Sunset Aydın Kiragi Seyir Yeri",
+          "category": "General",
+          "address": "50180 Nevşehir Merkez/Nevşehir",
+          "latitude": 38.64108707730312,
+          "longitude": 34.83226276844341
+        },
+        {
+          "name": "Göreme Otogar",
+          "category": "General",
+          "address": "Cavit Kardeş Sk. 16, 50180 Nevşehir Merkez/Nevşehir",
+          "latitude": 38.643297,
+          "longitude": 34.829533
+        },
+        {
+          "name": "Göreme Açık Hava Müzesi",
+          "category": "Museum",
+          "address": "Müze Cd. 90, 50180 Nevşehir Merkez/Nevşehir",
+          "latitude": 38.640095,
+          "longitude": 34.8454559
+        }
+      ]
+    },
+    {
+      "id": "kpd-uchisar-kale-vadi",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Üçhisar: Kale'den Güvercinlik Vadisi'ne",
+        "en": "Üçhisar: From the Castle to Pigeon Valley",
+        "es": "Uçhisar: del castillo al valle de las Palomas",
+        "de": "Uçhisar: Von der Burg zum Taubental",
+        "ru": "Учхисар: от крепости до Голубиной долины"
+      },
+      "description": {
+        "tr": "Bölgenin en yüksek noktalarından Üçhisar Kalesi'nden kasaba meydanına, oradan manzaralı Güvercinlik Vadisi'ne inen kısa bir yürüyüş.",
+        "en": "A short walk down from Üçhisar Castle, one of the region's highest points, through the town square, to the scenic Pigeon Valley.",
+        "es": "Un breve descenso desde el castillo de Uçhisar, uno de los puntos más altos de la región, por la plaza del pueblo, hasta el pintoresco valle de las Palomas.",
+        "de": "Ein kurzer Abstieg von der Burg Uçhisar, einem der höchsten Punkte der Region, über den Dorfplatz zum malerischen Taubental.",
+        "ru": "Короткий спуск от крепости Учхисар, одной из самых высоких точек региона, через городскую площадь к живописной Голубиной долине."
+      },
+      "places": [
+        {
+          "name": "Üçhisar Kalesi",
+          "category": "Historical Site",
+          "address": "Kesek Sk., 50240 Nevşehir Merkez/Nevşehir",
+          "latitude": 38.6302985,
+          "longitude": 34.805519
+        },
+        {
+          "name": "Kesek Meydanı",
+          "category": "General",
+          "address": "Kesek Meydanı, 50240 Nevşehir Merkez/Nevşehir",
+          "latitude": 38.62905405071114,
+          "longitude": 34.804108207134014
+        },
+        {
+          "name": "Güvercinlik Vadisi",
+          "category": "General",
+          "address": "Adnan Menderes Cd. 50, 50240 Nevşehir Merkez/Nevşehir",
+          "latitude": 38.621356,
+          "longitude": 34.80416
+        }
+      ]
+    },
+    {
+      "id": "kpd-urgup-merkez",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Ürgüp: Üç Güzeller'den Şehir Merkezi'ne",
+        "en": "Ürgüp: From the Three Graces to the Town Center",
+        "es": "Ürgüp: de las Tres Gracias al centro",
+        "de": "Ürgüp: Von den Drei Grazien zum Stadtzentrum",
+        "ru": "Ургюп: от Трёх граций до центра города"
+      },
+      "description": {
+        "tr": "Ürgüp'ün simgesi üç peri bacasından Temenni Tepesi'ne, oradan Ürgüp Müzesi'nin etnografya ve arkeoloji koleksiyonuna uzanan bir kasaba turu.",
+        "en": "A town tour from Ürgüp's iconic three fairy chimneys to Temenni Hill, and on to the ethnography and archaeology collection of Ürgüp Museum.",
+        "es": "Un recorrido urbano desde las icónicas tres chimeneas de hadas de Ürgüp hasta la colina Temenni, y luego a la colección etnográfica y arqueológica del Museo de Ürgüp.",
+        "de": "Eine Stadttour von Ürgüps ikonischen drei Feenkaminen zum Temenni-Hügel und weiter zur ethnografischen und archäologischen Sammlung des Ürgüp-Museums.",
+        "ru": "Городской тур от знаковых трёх сказочных дымоходов Ургюпа до холма Тэменни и далее к этнографической и археологической коллекции музея Ургюпа."
+      },
+      "places": [
+        {
+          "name": "Üç Güzeller",
+          "category": "General",
+          "address": "D302, 50400 Ürgüp/Nevşehir",
+          "latitude": 38.6354218,
+          "longitude": 34.890671
+        },
+        {
+          "name": "Temenni Tepesi",
+          "category": "General",
+          "address": "50400 Ürgüp/Nevşehir",
+          "latitude": 38.631958,
+          "longitude": 34.910213
+        },
+        {
+          "name": "Ürgüp Müzesi",
+          "category": "Museum",
+          "address": "Atatürk Blv. 39, 50400 Ürgüp/Nevşehir",
+          "latitude": 38.6321759,
+          "longitude": 34.9131775
+        }
+      ]
+    }
+  ]
+}

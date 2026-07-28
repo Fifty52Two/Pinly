@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 6 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0-33m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "zurich",
+  "country": "ch",
+  "routes": [
+    {
+      "id": "zur-grossmunster-fraumunster",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Niederdorf'tan İki Kiliseye",
+        "en": "From Niederdorf to the Twin Churches",
+        "es": "De Niederdorf a las iglesias gemelas",
+        "de": "Vom Niederdorf zu den Zwillingskirchen",
+        "ru": "От Нидердорфа до двух церквей"
+      },
+      "description": {
+        "tr": "Zürih'in dar sokaklı eski çarşısı Niederdorf'tan Grossmünster'in ikiz kulelerine, oradan Chagall vitraylarını barındıran Fraumünster'e uzanan bir Limmat kıyısı yürüyüşü.",
+        "en": "A Limmat riverside walk from Niederdorf, Zurich's narrow-laned old quarter, to the twin towers of Grossmünster, and on to Fraumünster, home to Chagall's stained-glass windows.",
+        "es": "Un paseo junto al Limmat desde Niederdorf, el antiguo barrio de calles estrechas de Zúrich, hasta las torres gemelas de Grossmünster, y luego a Fraumünster, hogar de las vidrieras de Chagall.",
+        "de": "Ein Spaziergang an der Limmat vom Niederdorf, Zürichs altem Gassenviertel, zu den Zwillingstürmen des Grossmünsters und weiter zum Fraumünster mit den Chagall-Fenstern.",
+        "ru": "Прогулка вдоль реки Лиммат от Нидердорфа, старого квартала Цюриха с узкими улочками, до башен-близнецов Гроссмюнстера и далее к Фраумюнстеру с витражами Шагала."
+      },
+      "places": [
+        {
+          "name": "Niederdorf",
+          "category": "General",
+          "address": "Niederdorf, Zürich",
+          "latitude": 47.3741145,
+          "longitude": 8.5445136
+        },
+        {
+          "name": "Grossmünster",
+          "category": "Historical Site",
+          "address": "Zwingliplatz 7, 8001 Zürich",
+          "latitude": 47.3702,
+          "longitude": 8.544
+        },
+        {
+          "name": "Fraumünsterstrasse",
+          "category": "Historical Site",
+          "address": "Fraumünsterstrasse, Zürich",
+          "latitude": 47.36819764005976,
+          "longitude": 8.541084413086963
+        }
+      ]
+    },
+    {
+      "id": "zur-bahnhofstrasse-lindenhof",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Bürkliplatz'dan Lindenhof'a",
+        "en": "From Bürkliplatz to Lindenhof",
+        "es": "De Bürkliplatz a Lindenhof",
+        "de": "Vom Bürkliplatz zum Lindenhof",
+        "ru": "От Бюркиплац до Линденхофа"
+      },
+      "description": {
+        "tr": "Zürih Gölü'nün kıyısındaki Bürkliplatz'dan Avrupa'nın en pahalı caddelerinden Bahnhofstrasse'nin vitrinlerine, oradan şehrin ücretsiz en iyi manzarasını sunan Lindenhof tepesine uzanan bir rota.",
+        "en": "From Bürkliplatz on the shore of Lake Zurich, along the shop windows of Bahnhofstrasse, one of Europe's most expensive streets, to Lindenhof hill, offering the city's best free view.",
+        "es": "Desde Bürkliplatz a orillas del lago de Zúrich, por los escaparates de Bahnhofstrasse, una de las calles más caras de Europa, hasta la colina de Lindenhof, con la mejor vista gratuita de la ciudad.",
+        "de": "Von der Bürkliplatz am Ufer des Zürichsees, entlang der Schaufenster der Bahnhofstrasse, einer der teuersten Straßen Europas, zum Lindenhof-Hügel mit dem besten kostenlosen Ausblick der Stadt.",
+        "ru": "От Бюркиплац на берегу Цюрихского озера вдоль витрин Банхофштрассе, одной из самых дорогих улиц Европы, до холма Линденхоф с лучшим бесплатным видом на город."
+      },
+      "places": [
+        {
+          "name": "Bürkliplatz",
+          "category": "General",
+          "address": "Bürkliplatz, 8001 Zürich",
+          "latitude": 47.3660823,
+          "longitude": 8.5412146
+        },
+        {
+          "name": "Bahnhofstrasse",
+          "category": "General",
+          "address": "Bahnhofstrasse, Zürich",
+          "latitude": 47.37143020176336,
+          "longitude": 8.538661999321786
+        },
+        {
+          "name": "Lindenhof",
+          "category": "General",
+          "address": "Lindenhof, Zürich",
+          "latitude": 47.373026,
+          "longitude": 8.5395294
+        }
+      ]
+    }
+  ]
+}

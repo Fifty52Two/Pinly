@@ -1,0 +1,146 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "3 rota, 10 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. East Side Gallery, Checkpoint Charlie'ye ~3.7 km uzakta olduğu için dahil edilmedi. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "berlin",
+  "country": "de",
+  "routes": [
+    {
+      "id": "ber-reichstag-brandenburg",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Reichstag'dan Tiergarten'a",
+        "en": "From the Reichstag to Tiergarten",
+        "es": "Del Reichstag al Tiergarten",
+        "de": "Vom Reichstag zum Tiergarten",
+        "ru": "От Рейхстага до Тиргартена"
+      },
+      "description": {
+        "tr": "Cam kubbesiyle ünlü Reichstag Binası'ndan Brandenburg Kapısı'na, Yahudi Soykırımı Anıtı'nın taş bloklarından geçip Tiergarten'ın geniş yeşilliğinde biten bir başkent yürüyüşü.",
+        "en": "A capital city walk from the Reichstag Building, famous for its glass dome, to the Brandenburg Gate, past the stone slabs of the Holocaust Memorial, ending in the wide greenery of Tiergarten.",
+        "es": "Un paseo por la capital desde el edificio del Reichstag, famoso por su cúpula de cristal, hasta la Puerta de Brandeburgo, pasando por las losas de piedra del Memorial del Holocausto, y terminando en el amplio verdor del Tiergarten.",
+        "de": "Ein Hauptstadt-Spaziergang vom Reichstagsgebäude mit seiner berühmten Glaskuppel zum Brandenburger Tor, vorbei an den Steinstelen des Holocaust-Mahnmals, endend im weiten Grün des Tiergartens.",
+        "ru": "Прогулка по столице от здания Рейхстага со знаменитым стеклянным куполом до Бранденбургских ворот, мимо каменных стел Мемориала жертвам Холокоста, с финалом в зелени Тиргартена."
+      },
+      "places": [
+        {
+          "name": "Reichstag building",
+          "category": "Historical Site",
+          "address": "Platz der Republik 1, 10557 Berlin",
+          "latitude": 52.5186003,
+          "longitude": 13.3761093
+        },
+        {
+          "name": "Brandenburg Gate",
+          "category": "Historical Site",
+          "address": "Pariser Platz 5, 10117 Berlin",
+          "latitude": 52.516274,
+          "longitude": 13.3777073
+        },
+        {
+          "name": "Memorial to the Murdered Jews of Europe",
+          "category": "Historical Site",
+          "address": "Cora-Berliner-Straße 1, 10117 Berlin",
+          "latitude": 52.513962,
+          "longitude": 13.378665
+        },
+        {
+          "name": "Tiergarten",
+          "category": "Park",
+          "address": "Tiergarten, Berlin",
+          "latitude": 52.5063105,
+          "longitude": 13.3685228
+        }
+      ]
+    },
+    {
+      "id": "ber-museumsinsel",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Müze Adası'ndan Televizyon Kulesi'ne",
+        "en": "From Museum Island to the TV Tower",
+        "es": "De la Isla de los Museos a la Torre de Televisión",
+        "de": "Von der Museumsinsel zum Fernsehturm",
+        "ru": "От Музейного острова до телебашни"
+      },
+      "description": {
+        "tr": "Pergamon Müzesi'nin antik Babil kapısından Berlin Katedrali'nin devasa kubbesine, oradan şehrin silüetine hükmeden Televizyon Kulesi'ne uzanan bir rota.",
+        "en": "From the ancient Babylonian gate inside the Pergamon Museum to the vast dome of Berlin Cathedral, and on to the TV Tower dominating the city skyline.",
+        "es": "Desde la antigua puerta babilónica del Museo de Pérgamo hasta la vasta cúpula de la Catedral de Berlín, y luego a la Torre de Televisión que domina el horizonte de la ciudad.",
+        "de": "Vom antiken babylonischen Tor im Pergamonmuseum zur gewaltigen Kuppel des Berliner Doms und weiter zum Fernsehturm, der die Stadtsilhouette dominiert.",
+        "ru": "От древних вавилонских ворот в Пергамском музее до огромного купола Берлинского собора и далее к телебашне, доминирующей над силуэтом города."
+      },
+      "places": [
+        {
+          "name": "Pergamon Museum",
+          "category": "Museum",
+          "address": "Am Kupfergraben 2, 10117 Berlin",
+          "latitude": 52.5209765,
+          "longitude": 13.3967423
+        },
+        {
+          "name": "Berlin Cathedral",
+          "category": "Historical Site",
+          "address": "Am Lustgarten, 10178 Berlin",
+          "latitude": 52.519132,
+          "longitude": 13.4010757
+        },
+        {
+          "name": "TV Tower",
+          "category": "General",
+          "address": "Panoramastraße 1A, 10178 Berlin",
+          "latitude": 52.5208341,
+          "longitude": 13.4094199
+        }
+      ]
+    },
+    {
+      "id": "ber-soguk-savas",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Gendarmenmarkt'tan Checkpoint Charlie'ye",
+        "en": "From Gendarmenmarkt to Checkpoint Charlie",
+        "es": "De Gendarmenmarkt a Checkpoint Charlie",
+        "de": "Vom Gendarmenmarkt zum Checkpoint Charlie",
+        "ru": "От площади Жандарменмаркт до Чекпойнт Чарли"
+      },
+      "description": {
+        "tr": "Berlin'in en zarif meydanı Gendarmenmarkt'tan Soğuk Savaş'ın simgesi Checkpoint Charlie'ye, oradan Nazi terörünü belgeleyen Topographie des Terrors'a uzanan bir yakın tarih rotası.",
+        "en": "A modern history route from Berlin's most elegant square, Gendarmenmarkt, to the Cold War icon of Checkpoint Charlie, and on to Topographie des Terrors, documenting Nazi terror.",
+        "es": "Una ruta de historia moderna desde la plaza más elegante de Berlín, Gendarmenmarkt, hasta el icono de la Guerra Fría, Checkpoint Charlie, y luego a Topographie des Terrors, que documenta el terror nazi.",
+        "de": "Eine Route der jüngeren Geschichte vom elegantesten Platz Berlins, dem Gendarmenmarkt, zum Kalte-Kriegs-Symbol Checkpoint Charlie und weiter zur Topographie des Terrors.",
+        "ru": "Маршрут новейшей истории от самой элегантной площади Берлина, Жандарменмаркт, до символа холодной войны Чекпойнт Чарли и далее к «Топографии террора»."
+      },
+      "places": [
+        {
+          "name": "Gendarmenmarkt",
+          "category": "General",
+          "address": "Gendarmenmarkt 5-6, 10117 Berlin",
+          "latitude": 52.513443,
+          "longitude": 13.3927955
+        },
+        {
+          "name": "Checkpoint Charlie",
+          "category": "Historical Site",
+          "address": "Friedrichstraße 43-45, 10117 Berlin",
+          "latitude": 52.507418,
+          "longitude": 13.390391
+        },
+        {
+          "name": "Topographie des Terrors",
+          "category": "Museum",
+          "address": "Niederkirchnerstraße 8, 10963 Berlin",
+          "latitude": 52.5068117,
+          "longitude": 13.3836758
+        }
+      ]
+    }
+  ]
+}

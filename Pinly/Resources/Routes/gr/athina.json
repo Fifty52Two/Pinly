@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 6 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı ('Acropolis' sorgusu ilk denemede ABD'deki Athens, Georgia'ya eşleşmişti, 'Acropolis Athens Greece' ile düzeltildi). Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "athina",
+  "country": "gr",
+  "routes": [
+    {
+      "id": "ath-akropolis-plaka",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Antik Agora'dan Akropolis'e",
+        "en": "From the Ancient Agora to the Acropolis",
+        "es": "Del Ágora Antigua a la Acrópolis",
+        "de": "Von der Antiken Agora zur Akropolis",
+        "ru": "От Древней Агоры до Акрополя"
+      },
+      "description": {
+        "tr": "Sokrates'in felsefe tartıştığı Antik Agora'dan Plaka'nın dar taş sokaklarına, oradan Parthenon'un mermer sütunlarına tırmanan bir antik Atina yürüyüşü.",
+        "en": "An ancient Athens walk from the Ancient Agora, where Socrates debated philosophy, through the narrow stone streets of Plaka, climbing up to the marble columns of the Parthenon.",
+        "es": "Un paseo por la antigua Atenas desde el Ágora Antigua, donde Sócrates debatía filosofía, por las estrechas calles de piedra de Plaka, subiendo hasta las columnas de mármol del Partenón.",
+        "de": "Ein Spaziergang durch das antike Athen von der Antiken Agora, wo Sokrates über Philosophie debattierte, durch die engen Steingassen von Plaka, hinauf zu den Marmorsäulen des Parthenon.",
+        "ru": "Прогулка по древним Афинам от Древней Агоры, где Сократ вёл философские споры, через узкие мощёные улочки Плаки, вверх к мраморным колоннам Парфенона."
+      },
+      "places": [
+        {
+          "name": "Ancient Agora of Athens",
+          "category": "Historical Site",
+          "address": "Adrianou 24, 105 55 Athens",
+          "latitude": 37.9750795,
+          "longitude": 23.723098
+        },
+        {
+          "name": "Plaka",
+          "category": "General",
+          "address": "Plaka, Athens",
+          "latitude": 37.9710267,
+          "longitude": 23.7300897
+        },
+        {
+          "name": "Acropolis",
+          "category": "Historical Site",
+          "address": "Acropolis, Athens",
+          "latitude": 37.9694214,
+          "longitude": 23.7292406
+        }
+      ]
+    },
+    {
+      "id": "ath-syntagma-stadyum",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Syntagma Meydanı'ndan Panathenaik Stadyumu'na",
+        "en": "From Syntagma Square to the Panathenaic Stadium",
+        "es": "De la Plaza Syntagma al Estadio Panatenaico",
+        "de": "Vom Syntagma-Platz zum Panathinaiko-Stadion",
+        "ru": "От площади Синтагма до Панафинейского стадиона"
+      },
+      "description": {
+        "tr": "Yunan Parlamentosu'nun bulunduğu Syntagma Meydanı'ndan Zeus Tapınağı'nın devasa sütunlarına, oradan tamamen mermerden yapılmış tek stadyum Panathenaik'e uzanan bir rota.",
+        "en": "From Syntagma Square, home to the Greek Parliament, to the massive columns of the Temple of Olympian Zeus, and on to the Panathenaic Stadium, the only stadium built entirely of marble.",
+        "es": "Desde la Plaza Syntagma, sede del Parlamento griego, hasta las enormes columnas del Templo de Zeus Olímpico, y luego al Estadio Panatenaico, el único estadio construido enteramente en mármol.",
+        "de": "Vom Syntagma-Platz, Sitz des griechischen Parlaments, zu den gewaltigen Säulen des Olympieion und weiter zum Panathinaiko-Stadion, dem einzigen vollständig aus Marmor erbauten Stadion.",
+        "ru": "От площади Синтагма, где заседает греческий парламент, до массивных колонн храма Зевса Олимпийского и далее к Панафинейскому стадиону — единственному стадиону, полностью построенному из мрамора."
+      },
+      "places": [
+        {
+          "name": "Syntagma Square",
+          "category": "General",
+          "address": "Vasileos Georgiou A΄ 2, 105 64 Athens",
+          "latitude": 37.9755816,
+          "longitude": 23.7348477
+        },
+        {
+          "name": "Temple of Olympian Zeus",
+          "category": "Historical Site",
+          "address": "Vasilissis Olgas Avenue 1, 105 57 Athens",
+          "latitude": 37.9696861,
+          "longitude": 23.7333416
+        },
+        {
+          "name": "Panathenaic Stadium",
+          "category": "Historical Site",
+          "address": "Leoforos Vasileos Konstantinou, 116 36 Athens",
+          "latitude": 37.9683493,
+          "longitude": 23.7409616
+        }
+      ]
+    }
+  ]
+}

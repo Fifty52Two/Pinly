@@ -1,0 +1,139 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "3 rota, 9 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0-6m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "wien",
+  "country": "at",
+  "routes": [
+    {
+      "id": "wie-hofburg-stephansdom",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Hofburg'dan Aziz Stephan Katedrali'ne",
+        "en": "From the Hofburg to St. Stephen's Cathedral",
+        "es": "De la Hofburg a la Catedral de San Esteban",
+        "de": "Von der Hofburg zum Stephansdom",
+        "ru": "От Хофбурга до собора Святого Стефана"
+      },
+      "description": {
+        "tr": "Habsburg hanedanının kışlık sarayı Hofburg'dan Viyana Devlet Operası'nın önünden geçip Aziz Stephan Katedrali'nin sivri kulesinde biten klasik bir şehir merkezi yürüyüşü.",
+        "en": "A classic city-center walk from the Hofburg, winter palace of the Habsburg dynasty, past the Vienna State Opera, ending at the spire of St. Stephen's Cathedral.",
+        "es": "Un paseo clásico por el centro desde la Hofburg, palacio de invierno de la dinastía de los Habsburgo, pasando por la Ópera Estatal de Viena, terminando en la aguja de la Catedral de San Esteban.",
+        "de": "Ein klassischer Stadtspaziergang von der Hofburg, dem Winterpalast der Habsburger, vorbei an der Wiener Staatsoper, endend am Turm des Stephansdoms.",
+        "ru": "Классическая прогулка по центру города от Хофбурга, зимней резиденции Габсбургов, мимо Венской государственной оперы, к шпилю собора Святого Стефана."
+      },
+      "places": [
+        {
+          "name": "Hofburg Imperial Palace",
+          "category": "Historical Site",
+          "address": "Heldenplatz, 1010 Vienna",
+          "latitude": 48.2052773,
+          "longitude": 16.365037
+        },
+        {
+          "name": "Vienna State Opera",
+          "category": "Historical Site",
+          "address": "Opernring 2, 1010 Vienna",
+          "latitude": 48.2032637,
+          "longitude": 16.369155
+        },
+        {
+          "name": "St. Stephen's Cathedral",
+          "category": "Historical Site",
+          "address": "Stephansplatz 3, 1010 Vienna",
+          "latitude": 48.208416,
+          "longitude": 16.37347
+        }
+      ]
+    },
+    {
+      "id": "wie-naschmarkt-belvedere",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Naschmarkt'tan Belvedere'ye",
+        "en": "From Naschmarkt to Belvedere",
+        "es": "De Naschmarkt a Belvedere",
+        "de": "Vom Naschmarkt zum Belvedere",
+        "ru": "От Нашмаркта до Бельведера"
+      },
+      "description": {
+        "tr": "Viyana'nın en canlı pazarı Naschmarkt'tan Karlskirche'nin yeşil kubbesine, oradan Prens Eugen'in barok yazlık sarayı Belvedere'nin bahçelerine uzanan bir rota.",
+        "en": "From Vienna's liveliest market, Naschmarkt, to the green dome of Karlskirche, and on to the gardens of Belvedere, Prince Eugene's baroque summer palace.",
+        "es": "Desde el mercado más animado de Viena, Naschmarkt, hasta la cúpula verde de la Karlskirche, y luego a los jardines del Belvedere, el palacio de verano barroco del príncipe Eugenio.",
+        "de": "Vom lebhaftesten Markt Wiens, dem Naschmarkt, zur grünen Kuppel der Karlskirche und weiter zu den Gärten des Belvedere, dem barocken Sommerpalast Prinz Eugens.",
+        "ru": "От самого оживлённого рынка Вены, Нашмаркта, до зелёного купола Карлскирхе и далее к садам Бельведера — барочного летнего дворца принца Евгения."
+      },
+      "places": [
+        {
+          "name": "The Vienna Naschmarkt",
+          "category": "General",
+          "address": "Naschmarkt 429, 1060 Vienna",
+          "latitude": 48.1990919,
+          "longitude": 16.3636744
+        },
+        {
+          "name": "St Charles's Church (Karlskirche)",
+          "category": "Historical Site",
+          "address": "Kreuzherrengasse 1, 1040 Vienna",
+          "latitude": 48.1983277,
+          "longitude": 16.3718872
+        },
+        {
+          "name": "Belvedere Palace",
+          "category": "Historical Site",
+          "address": "Prinz-Eugen-Straße 27, 1030 Vienna",
+          "latitude": 48.1915901,
+          "longitude": 16.3809105
+        }
+      ]
+    },
+    {
+      "id": "wie-schonbrunn",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Schönbrunn Sarayı ve Bahçeleri",
+        "en": "Schönbrunn Palace and Gardens",
+        "es": "Palacio y jardines de Schönbrunn",
+        "de": "Schloss Schönbrunn und die Gärten",
+        "ru": "Дворец и сады Шёнбрунн"
+      },
+      "description": {
+        "tr": "Habsburgların sarı yazlık sarayı Schönbrunn'dan hayvanat bahçesine, oradan tepedeki Gloriette anıtının manzarasına uzanan bir saray bahçesi yürüyüşü.",
+        "en": "A palace-grounds walk from the Habsburgs' yellow summer palace, Schönbrunn, to the zoo, and up to the view from the Gloriette monument on the hill.",
+        "es": "Un paseo por los jardines del palacio desde el amarillo palacio de verano de los Habsburgo, Schönbrunn, hasta el zoológico, y a la vista desde el monumento de la Gloriette en la colina.",
+        "de": "Ein Spaziergang durch die Schlossanlage vom gelben Sommerpalast der Habsburger, Schönbrunn, zum Tiergarten und hinauf zur Aussicht von der Gloriette auf dem Hügel.",
+        "ru": "Прогулка по территории дворца от жёлтого летнего дворца Габсбургов Шёнбрунн до зоопарка и вверх к виду с монумента Глориетте на холме."
+      },
+      "places": [
+        {
+          "name": "Schönbrunn Palace",
+          "category": "Historical Site",
+          "address": "Schönbrunner Schloßstraße 47, 1130 Vienna",
+          "latitude": 48.1848321,
+          "longitude": 16.3121408
+        },
+        {
+          "name": "Tiergarten Schoenbrunn",
+          "category": "General",
+          "address": "Maxingstraße 13B, 1130 Vienna",
+          "latitude": 48.1816557,
+          "longitude": 16.304687
+        },
+        {
+          "name": "Gloriette",
+          "category": "Historical Site",
+          "address": "Maria-Theresia-Brücke, 1130 Vienna",
+          "latitude": 48.1782308,
+          "longitude": 16.308699
+        }
+      ]
+    }
+  ]
+}

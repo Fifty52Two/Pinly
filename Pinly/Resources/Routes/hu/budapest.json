@@ -1,0 +1,139 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "3 rota, 9 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "budapest",
+  "country": "hu",
+  "routes": [
+    {
+      "id": "bud-budai-var",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Buda Kalesi'nden Balıkçı Tabyası'na",
+        "en": "From Buda Castle to Fisherman's Bastion",
+        "es": "Del Castillo de Buda al Bastión de los Pescadores",
+        "de": "Von der Budaer Burg zur Fischerbastei",
+        "ru": "От Будайской крепости до Рыбацкого бастиона"
+      },
+      "description": {
+        "tr": "Tuna kıyısındaki Buda Kalesi'nden Matthias Kilisesi'nin renkli çinili çatısına, oradan Balıkçı Tabyası'nın masalsı kulelerinden Pest manzarasını izleyen bir tepe yürüyüşü.",
+        "en": "A hilltop walk from Buda Castle on the banks of the Danube to the colorful tiled roof of Matthias Church, ending with the view of Pest from the fairytale towers of Fisherman's Bastion.",
+        "es": "Un paseo por la colina desde el Castillo de Buda a orillas del Danubio hasta el tejado de tejas coloridas de la Iglesia de Matías, terminando con la vista de Pest desde las torres de cuento del Bastión de los Pescadores.",
+        "de": "Ein Hügelspaziergang von der Budaer Burg am Donauufer zum bunten Ziegeldach der Matthiaskirche, endend mit dem Blick auf Pest von den märchenhaften Türmen der Fischerbastei.",
+        "ru": "Прогулка по холму от Будайской крепости на берегу Дуная до разноцветной черепичной крыши церкви Матьяша, с видом на Пешт со сказочных башен Рыбацкого бастиона."
+      },
+      "places": [
+        {
+          "name": "Buda Castle",
+          "category": "Historical Site",
+          "address": "Szent György tér 2, 1014 Budapest",
+          "latitude": 47.4960891,
+          "longitude": 19.0395856
+        },
+        {
+          "name": "Matthias Church",
+          "category": "Historical Site",
+          "address": "Szentháromság tér 2, 1014 Budapest",
+          "latitude": 47.5019175,
+          "longitude": 19.0342312
+        },
+        {
+          "name": "Fisherman's Bastion",
+          "category": "Historical Site",
+          "address": "Hess András tér 1-3, 1014 Budapest",
+          "latitude": 47.5028482,
+          "longitude": 19.0347254
+        }
+      ]
+    },
+    {
+      "id": "bud-parlamento-hidak",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Parlamento'dan Zincirli Köprü'ye",
+        "en": "From the Parliament to Chain Bridge",
+        "es": "Del Parlamento al Puente de las Cadenas",
+        "de": "Vom Parlament zur Kettenbrücke",
+        "ru": "От Парламента до Цепного моста"
+      },
+      "description": {
+        "tr": "Tuna kıyısındaki gotik Macar Parlamento Binası'ndan Aziz István Bazilikası'nın kubbesine, oradan Budapeşte'nin sembolü Zincirli Köprü'ye inen bir Pest yürüyüşü.",
+        "en": "A Pest-side walk from the neo-Gothic Hungarian Parliament Building on the Danube to the dome of St. Stephen's Basilica, down to the Chain Bridge, symbol of Budapest.",
+        "es": "Un paseo por el lado de Pest desde el neogótico edificio del Parlamento húngaro junto al Danubio hasta la cúpula de la Basílica de San Esteban, y hasta el Puente de las Cadenas, símbolo de Budapest.",
+        "de": "Ein Spaziergang auf der Pest-Seite vom neugotischen ungarischen Parlamentsgebäude an der Donau zur Kuppel der Stephansbasilika, hinunter zur Kettenbrücke, dem Wahrzeichen Budapests.",
+        "ru": "Прогулка по стороне Пешт от неоготического здания венгерского парламента на Дунае до купола базилики Святого Иштвана и вниз к Цепному мосту — символу Будапешта."
+      },
+      "places": [
+        {
+          "name": "House of Parliament",
+          "category": "Historical Site",
+          "address": "Kossuth Lajos tér 1-3, 1055 Budapest",
+          "latitude": 47.5070192,
+          "longitude": 19.0457118
+        },
+        {
+          "name": "St. Stephen's Basilica",
+          "category": "Historical Site",
+          "address": "Szt István tér 1, 1051 Budapest",
+          "latitude": 47.5008294,
+          "longitude": 19.0539239
+        },
+        {
+          "name": "Széchenyi Chain Bridge",
+          "category": "Historical Site",
+          "address": "Széchenyi lánchíd, 1051 Budapest",
+          "latitude": 47.4990075,
+          "longitude": 19.0438002
+        }
+      ]
+    },
+    {
+      "id": "bud-varosliget",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Hősök Meydanı'ndan Széchenyi Kaplıcası'na",
+        "en": "From Heroes' Square to Széchenyi Bath",
+        "es": "De la Plaza de los Héroes a los Baños Széchenyi",
+        "de": "Vom Heldenplatz zum Széchenyi-Bad",
+        "ru": "От площади Героев до купальни Сечени"
+      },
+      "description": {
+        "tr": "Macar tarihinin yedi kabile önderini anan Hősök Meydanı'ndan peri masalı gibi görünen Vajdahunyad Kalesi'ne, oradan Avrupa'nın en büyük termal kaplıcası Széchenyi'ye uzanan bir Şehir Parkı rotası.",
+        "en": "A City Park route from Heroes' Square, honoring Hungary's seven tribal chiefs, to the fairytale-like Vajdahunyad Castle, and on to Széchenyi, Europe's largest thermal bath.",
+        "es": "Una ruta por el Parque de la Ciudad desde la Plaza de los Héroes, que honra a los siete jefes tribales de Hungría, hasta el fantástico Castillo de Vajdahunyad, y luego a Széchenyi, el mayor baño termal de Europa.",
+        "de": "Eine Route durch den Stadtpark vom Heldenplatz, der die sieben ungarischen Stammesführer ehrt, zur märchenhaften Burg Vajdahunyad und weiter zum Széchenyi-Bad, dem größten Thermalbad Europas.",
+        "ru": "Маршрут по Городскому парку от площади Героев, чтящей семь вождей венгерских племён, до сказочного замка Вайдахуняд и далее к купальне Сечени — крупнейшей термальной купальне Европы."
+      },
+      "places": [
+        {
+          "name": "Heroes' Square",
+          "category": "General",
+          "address": "Hősök tere, 1068 Budapest",
+          "latitude": 47.5148804,
+          "longitude": 19.0777208
+        },
+        {
+          "name": "Vajdahunyad Castle",
+          "category": "Historical Site",
+          "address": "Vajdahunyad sétány, 1146 Budapest",
+          "latitude": 47.5149351,
+          "longitude": 19.0829897
+        },
+        {
+          "name": "Széchenyi Thermal Bath",
+          "category": "General",
+          "address": "Állatkerti körút 9-11, 1146 Budapest",
+          "latitude": 47.5184675,
+          "longitude": 19.0825819
+        }
+      ]
+    }
+  ]
+}

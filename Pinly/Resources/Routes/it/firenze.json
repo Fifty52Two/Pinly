@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 7 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "firenze",
+  "country": "it",
+  "routes": [
+    {
+      "id": "fir-duomo-ponte-vecchio",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Duomo'dan Ponte Vecchio'ya",
+        "en": "From the Duomo to Ponte Vecchio",
+        "es": "Del Duomo al Ponte Vecchio",
+        "de": "Vom Dom zum Ponte Vecchio",
+        "ru": "От Дуомо до Понте Веккьо"
+      },
+      "description": {
+        "tr": "Brunelleschi'nin devasa kubbesiyle ünlü Santa Maria del Fiore Katedrali'nden Piazza della Signoria'nın heykel galerisine, Uffizi'nin Rönesans tabloları arasından geçip Arno üzerindeki tarihi Ponte Vecchio'ya uzanan bir Floransa yürüyüşü.",
+        "en": "A Florence walk from Santa Maria del Fiore Cathedral, famous for Brunelleschi's massive dome, through the outdoor sculpture gallery of Piazza della Signoria, past the Renaissance paintings of the Uffizi, to the historic Ponte Vecchio over the Arno.",
+        "es": "Un paseo por Florencia desde la Catedral de Santa María del Fiore, famosa por la enorme cúpula de Brunelleschi, por la galería de esculturas al aire libre de la Piazza della Signoria, junto a las pinturas renacentistas de los Uffizi, hasta el histórico Ponte Vecchio sobre el Arno.",
+        "de": "Ein Florenz-Spaziergang von der Kathedrale Santa Maria del Fiore mit Brunelleschis gewaltiger Kuppel, durch die Freiluft-Skulpturengalerie der Piazza della Signoria, vorbei an den Renaissance-Gemälden der Uffizien, zur historischen Ponte Vecchio über den Arno.",
+        "ru": "Прогулка по Флоренции от собора Санта-Мария-дель-Фьоре с огромным куполом Брунеллески, через галерею скульптур под открытым небом на площади Синьории, мимо картин Возрождения в Уффици, к историческому мосту Понте Веккьо через Арно."
+      },
+      "places": [
+        {
+          "name": "Santa Maria del Fiore",
+          "category": "Historical Site",
+          "address": "Piazza del Duomo, 50122 Florence",
+          "latitude": 43.7731275,
+          "longitude": 11.2569577
+        },
+        {
+          "name": "Piazza della Signoria",
+          "category": "General",
+          "address": "Piazza della Signoria, 50122 Florence",
+          "latitude": 43.76968,
+          "longitude": 11.255877
+        },
+        {
+          "name": "Uffizi Gallery",
+          "category": "Museum",
+          "address": "Piazzale degli Uffizi 6, 50122 Florence",
+          "latitude": 43.767813,
+          "longitude": 11.255394
+        },
+        {
+          "name": "Ponte Vecchio",
+          "category": "Historical Site",
+          "address": "Ponte Vecchio, 50125 Florence",
+          "latitude": 43.76798156810939,
+          "longitude": 11.25317537376234
+        }
+      ]
+    },
+    {
+      "id": "fir-pitti-michelangelo",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Pitti Sarayı'ndan Michelangelo Meydanı'na",
+        "en": "From Pitti Palace to Piazzale Michelangelo",
+        "es": "Del Palacio Pitti a la Piazzale Michelangelo",
+        "de": "Vom Palazzo Pitti zur Piazzale Michelangelo",
+        "ru": "От дворца Питти до площади Микеланджело"
+      },
+      "description": {
+        "tr": "Medici ailesinin ihtişamlı Pitti Sarayı'ndan İtalyan bahçe sanatının başyapıtı Boboli Bahçeleri'ne, oradan Floransa'nın tüm silüetini gösteren Michelangelo Meydanı'na tırmanan bir manzara rotası.",
+        "en": "A viewpoint route from the Medici family's grand Pitti Palace to the Boboli Gardens, a masterpiece of Italian garden design, climbing up to Piazzale Michelangelo for the full skyline view of Florence.",
+        "es": "Una ruta panorámica desde el grandioso Palacio Pitti de la familia Medici hasta los Jardines de Boboli, obra maestra del diseño de jardines italiano, ascendiendo hasta la Piazzale Michelangelo para la vista completa del horizonte de Florencia.",
+        "de": "Eine Aussichtsroute vom prächtigen Palazzo Pitti der Medici zu den Boboli-Gärten, einem Meisterwerk der italienischen Gartenkunst, hinauf zur Piazzale Michelangelo mit dem vollen Blick auf die Skyline von Florenz.",
+        "ru": "Панорамный маршрут от роскошного дворца Питти семьи Медичи до садов Боболи, шедевра итальянского садового искусства, вверх к площади Микеланджело с полным видом на силуэт Флоренции."
+      },
+      "places": [
+        {
+          "name": "Pitti Palace",
+          "category": "Historical Site",
+          "address": "Piazza dei Pitti 1, 50125 Florence",
+          "latitude": 43.7651745,
+          "longitude": 11.2499678
+        },
+        {
+          "name": "Boboli Gardens",
+          "category": "Park",
+          "address": "Piazza dei Pitti 1, 50125 Florence",
+          "latitude": 43.7625711,
+          "longitude": 11.2488413
+        },
+        {
+          "name": "Piazzale Michelangelo",
+          "category": "General",
+          "address": "Piazzale Michelangelo, 50125 Firenze",
+          "latitude": 43.762819,
+          "longitude": 11.2650311
+        }
+      ]
+    }
+  ]
+}

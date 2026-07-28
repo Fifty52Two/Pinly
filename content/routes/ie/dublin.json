@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 6 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "dublin",
+  "country": "ie",
+  "routes": [
+    {
+      "id": "dub-trinity-castle",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Trinity College'dan Dublin Kalesi'ne",
+        "en": "From Trinity College to Dublin Castle",
+        "es": "Del Trinity College al Castillo de Dublín",
+        "de": "Vom Trinity College zum Dublin Castle",
+        "ru": "От Тринити-колледжа до Дублинского замка"
+      },
+      "description": {
+        "tr": "Book of Kells'i barındıran Trinity College'ın tarihi avlusundan Temple Bar'ın canlı sokak müziğine, oradan İngiliz yönetiminin merkezi olmuş Dublin Kalesi'ne uzanan bir şehir merkezi yürüyüşü.",
+        "en": "A city-center walk from the historic courtyard of Trinity College, home to the Book of Kells, through the lively street music of Temple Bar, to Dublin Castle, once the seat of British rule.",
+        "es": "Un paseo por el centro desde el histórico patio del Trinity College, hogar del Libro de Kells, por la animada música callejera de Temple Bar, hasta el Castillo de Dublín, antigua sede del dominio británico.",
+        "de": "Ein Stadtspaziergang vom historischen Hof des Trinity College, Heimat des Book of Kells, durch die lebendige Straßenmusik von Temple Bar, zum Dublin Castle, einst Sitz der britischen Herrschaft.",
+        "ru": "Прогулка по центру города от исторического двора Тринити-колледжа, где хранится Келлская книга, через оживлённую уличную музыку Темпл-Бара, до Дублинского замка, некогда центра британского правления."
+      },
+      "places": [
+        {
+          "name": "Trinity College Dublin",
+          "category": "Historical Site",
+          "address": "College Green, Dublin 2, D02 PN40",
+          "latitude": 53.3438347,
+          "longitude": -6.2553282
+        },
+        {
+          "name": "Temple Bar",
+          "category": "General",
+          "address": "Temple Bar, Dublin 2",
+          "latitude": 53.3455583,
+          "longitude": -6.2638556
+        },
+        {
+          "name": "Dublin Castle",
+          "category": "Historical Site",
+          "address": "Dame St, Dublin 2, D02 XN27",
+          "latitude": 53.3428848,
+          "longitude": -6.2674373
+        }
+      ]
+    },
+    {
+      "id": "dub-katedraller-guinness",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "İki Katedralden Guinness Fabrikası'na",
+        "en": "From Two Cathedrals to the Guinness Storehouse",
+        "es": "De dos catedrales a la Guinness Storehouse",
+        "de": "Von zwei Kathedralen zum Guinness Storehouse",
+        "ru": "От двух соборов до пивоварни Guinness"
+      },
+      "description": {
+        "tr": "Christ Church Katedrali'nin Viking dönemi kriptasından Aziz Patrick Katedrali'nin İrlanda'nın en büyük kilisesi unvanına, oradan efsanevi Guinness biracılığının hikayesini anlatan Storehouse'a uzanan bir rota.",
+        "en": "From the Viking-era crypt of Christ Church Cathedral to St Patrick's Cathedral, Ireland's largest church, and on to the Storehouse telling the story of legendary Guinness brewing.",
+        "es": "Desde la cripta de la era vikinga de la Catedral de Christ Church hasta la Catedral de San Patricio, la iglesia más grande de Irlanda, y luego a la Storehouse que cuenta la historia de la legendaria cervecería Guinness.",
+        "de": "Von der Krypta aus der Wikingerzeit der Christ Church Cathedral zur St. Patrick's Cathedral, Irlands größter Kirche, und weiter zum Storehouse, das die Geschichte der legendären Guinness-Brauerei erzählt.",
+        "ru": "От крипты эпохи викингов в соборе Крайст-Чёрч до собора Святого Патрика, крупнейшей церкви Ирландии, и далее к пивоварне, рассказывающей историю легендарного Guinness."
+      },
+      "places": [
+        {
+          "name": "Christ Church Cathedral",
+          "category": "Historical Site",
+          "address": "Christchurch Place, Dublin, D08 TF98",
+          "latitude": 53.343442,
+          "longitude": -6.2711227
+        },
+        {
+          "name": "Saint Patrick's Cathedral",
+          "category": "Historical Site",
+          "address": "St Patrick's Close, Dublin 8, D08 H6X3",
+          "latitude": 53.339541,
+          "longitude": -6.2715411
+        },
+        {
+          "name": "Guinness Storehouse",
+          "category": "Museum",
+          "address": "St. James's Gate, Dublin 8, D08 VF8H",
+          "latitude": 53.3417125,
+          "longitude": -6.2867654
+        }
+      ]
+    }
+  ]
+}

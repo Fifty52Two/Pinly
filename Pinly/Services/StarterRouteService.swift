@@ -134,7 +134,32 @@ struct DefaultStarterRoutesProvider: StarterRoutesProviding {
         ("tr", "ankara"),
         ("tr", "izmir"),
         ("tr", "bursa"),
-        ("tr", "antalya")
+        ("tr", "antalya"),
+        ("tr", "eskisehir"),
+        ("tr", "gaziantep"),
+        ("tr", "trabzon"),
+        ("tr", "mardin"),
+        ("tr", "kapadokya"),
+        ("fr", "paris"),
+        ("it", "roma"),
+        ("es", "barcelona"),
+        ("nl", "amsterdam"),
+        ("de", "berlin"),
+        ("cz", "praha"),
+        ("at", "wien"),
+        ("hu", "budapest"),
+        ("gb", "london"),
+        ("pt", "lisboa"),
+        ("gr", "athina"),
+        ("es", "madrid"),
+        ("it", "firenze"),
+        ("de", "muenchen"),
+        ("ch", "zurich"),
+        ("dk", "copenhagen"),
+        ("se", "stockholm"),
+        ("ie", "dublin"),
+        ("be", "brussels"),
+        ("gr", "thessaloniki")
     ]
 
     func loadAll() -> [StarterRouteDefinition] {
