@@ -157,7 +157,8 @@ struct DefaultStarterRoutesProvider: StarterRoutesProviding {
         ("ch", "zurich"),
         ("dk", "copenhagen"),
         ("se", "stockholm"),
-        ("ie", "dublin")
+        ("ie", "dublin"),
+        ("be", "brussels")
     ]
 
     func loadAll() -> [StarterRouteDefinition] {

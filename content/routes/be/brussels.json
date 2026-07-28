@@ -1,0 +1,90 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 5 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "brussels",
+  "country": "be",
+  "routes": [
+    {
+      "id": "brx-grand-place",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Manneken Pis'ten Mont des Arts'a",
+        "en": "From Manneken Pis to Mont des Arts",
+        "es": "De Manneken Pis a Mont des Arts",
+        "de": "Vom Manneken Pis zum Mont des Arts",
+        "ru": "От Маннекен-Пис до Мон-де-Ар"
+      },
+      "description": {
+        "tr": "Brüksel'in ünlü küçük bronz heykeli Manneken Pis'ten UNESCO listesindeki Grand-Place'in altın yaldızlı lonca binalarına, oradan şehrin panoramik teraslı bahçesi Mont des Arts'a uzanan bir yürüyüş.",
+        "en": "A walk from Brussels' famous little bronze statue Manneken Pis to the gilded guild halls of the UNESCO-listed Grand-Place, and on to Mont des Arts, the city's panoramic terraced garden.",
+        "es": "Un paseo desde la famosa estatuilla de bronce Manneken Pis hasta las doradas casas gremiales de la Grand-Place, patrimonio de la UNESCO, y luego al Mont des Arts, el jardín en terrazas panorámico de la ciudad.",
+        "de": "Ein Spaziergang von der berühmten kleinen Bronzestatue Manneken Pis zu den vergoldeten Zunfthäusern des UNESCO-gelisteten Grand-Place und weiter zum Mont des Arts, dem Panorama-Terrassengarten der Stadt.",
+        "ru": "Прогулка от знаменитой маленькой бронзовой статуи Маннекен-Пис до позолоченных зданий гильдий на площади Гран-Плас, объекте ЮНЕСКО, и далее к Мон-де-Ар — панорамному террасному саду города."
+      },
+      "places": [
+        {
+          "name": "Manneken-Pis",
+          "category": "Historical Site",
+          "address": "Rue du Chêne 2, 1000 Brussels",
+          "latitude": 50.8449536,
+          "longitude": 4.3499887
+        },
+        {
+          "name": "Grand-Place",
+          "category": "Historical Site",
+          "address": "Grand-Place, Brussels",
+          "latitude": 50.8467409,
+          "longitude": 4.3522996
+        },
+        {
+          "name": "Mont des Arts",
+          "category": "General",
+          "address": "Rue de Namur 10, 1000 Brussels",
+          "latitude": 50.8439091,
+          "longitude": 4.3566736
+        }
+      ]
+    },
+    {
+      "id": "brx-atomium",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Atomium ve Mini-Europe",
+        "en": "Atomium and Mini-Europe",
+        "es": "Atomium y Mini-Europe",
+        "de": "Atomium und Mini-Europe",
+        "ru": "Атомиум и Мини-Европа"
+      },
+      "description": {
+        "tr": "1958 Expo'sunun devasa demir kristal yapısı Atomium'dan Avrupa'nın simge yapılarının minyatürlerini bir araya getiren Mini-Europe parkına kısa bir Heysel platosu yürüyüşü.",
+        "en": "A short walk on the Heysel plateau from the Atomium, the giant iron crystal structure from Expo 58, to Mini-Europe, a park gathering miniatures of Europe's landmark buildings.",
+        "es": "Un breve paseo por la meseta de Heysel desde el Atomium, la gigantesca estructura cristalina de hierro de la Expo 58, hasta Mini-Europe, un parque que reúne miniaturas de los edificios emblemáticos de Europa.",
+        "de": "Ein kurzer Spaziergang auf dem Heysel-Plateau vom Atomium, der riesigen Eisenkristallstruktur der Expo 58, zu Mini-Europe, einem Park mit Miniaturen der Wahrzeichen Europas.",
+        "ru": "Короткая прогулка по плато Гейзель от Атомиума, гигантской железной кристаллической конструкции с выставки Expo 58, до Мини-Европы — парка с миниатюрами знаковых зданий Европы."
+      },
+      "places": [
+        {
+          "name": "Atomium",
+          "category": "Historical Site",
+          "address": "Place de l'Atomium 1, 1020 Brussels",
+          "latitude": 50.8949182,
+          "longitude": 4.3415189
+        },
+        {
+          "name": "Mini-Europe",
+          "category": "General",
+          "address": "Avenue du Football 1, 1020 Brussels",
+          "latitude": 50.8944534,
+          "longitude": 4.3385428
+        }
+      ]
+    }
+  ]
+}
