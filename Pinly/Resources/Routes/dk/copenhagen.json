@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 6 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0-69m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "copenhagen",
+  "country": "dk",
+  "routes": [
+    {
+      "id": "cph-nyhavn-mermaid",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Nyhavn'dan Küçük Deniz Kızı'na",
+        "en": "From Nyhavn to the Little Mermaid",
+        "es": "De Nyhavn a la Sirenita",
+        "de": "Von Nyhavn zur Kleinen Meerjungfrau",
+        "ru": "От Нюхавна до Русалочки"
+      },
+      "description": {
+        "tr": "Renkli cepheli kanal evleriyle ünlü Nyhavn'dan Danimarka Kraliyet ailesinin ikametgahı Amalienborg Sarayı'na, oradan Andersen masalının bronz heykeli Küçük Deniz Kızı'na uzanan bir liman yürüyüşü.",
+        "en": "A harbor walk from Nyhavn, famous for its colorful canal-front houses, to Amalienborg Palace, home of the Danish royal family, and on to the bronze statue of the Little Mermaid from Andersen's tale.",
+        "es": "Un paseo por el puerto desde Nyhavn, famoso por sus coloridas casas frente al canal, hasta el Palacio de Amalienborg, hogar de la familia real danesa, y luego a la estatua de bronce de la Sirenita del cuento de Andersen.",
+        "de": "Ein Hafenspaziergang von Nyhavn, berühmt für seine bunten Häuser am Kanal, zum Schloss Amalienborg, Sitz der dänischen Königsfamilie, und weiter zur Bronzestatue der Kleinen Meerjungfrau aus Andersens Märchen.",
+        "ru": "Прогулка по гавани от Нюхавна, знаменитого разноцветными домами вдоль канала, до дворца Амалиенборг, резиденции датской королевской семьи, и далее к бронзовой статуе Русалочки из сказки Андерсена."
+      },
+      "places": [
+        {
+          "name": "Nyhavn",
+          "category": "General",
+          "address": "Nyhavn 47C, 1051 København K",
+          "latitude": 55.6797759,
+          "longitude": 12.5913681
+        },
+        {
+          "name": "Amalienborg",
+          "category": "Historical Site",
+          "address": "Amalienborg Slotsplads, 1257 Copenhagen K",
+          "latitude": 55.683994,
+          "longitude": 12.5932093
+        },
+        {
+          "name": "The Little Mermaid",
+          "category": "General",
+          "address": "Langelinie 19, 2100 København Ø",
+          "latitude": 55.6928601,
+          "longitude": 12.5993102
+        }
+      ]
+    },
+    {
+      "id": "cph-rosenborg-tivoli",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Rosenborg'dan Tivoli'ye",
+        "en": "From Rosenborg to Tivoli",
+        "es": "De Rosenborg a Tivoli",
+        "de": "Von Rosenborg zum Tivoli",
+        "ru": "От Розенборга до Тиволи"
+      },
+      "description": {
+        "tr": "Danimarka taç mücevherlerini barındıran Rosenborg Kalesi'nden Danimarka Parlamentosu'nun bulunduğu Christiansborg Sarayı'na, oradan dünyanın en eski eğlence parklarından Tivoli Bahçeleri'ne uzanan bir rota.",
+        "en": "From Rosenborg Castle, home to the Danish crown jewels, to Christiansborg Palace, seat of the Danish Parliament, and on to Tivoli Gardens, one of the world's oldest amusement parks.",
+        "es": "Desde el Castillo de Rosenborg, hogar de las joyas de la corona danesa, hasta el Palacio de Christiansborg, sede del Parlamento danés, y luego a los Jardines de Tivoli, uno de los parques de atracciones más antiguos del mundo.",
+        "de": "Vom Schloss Rosenborg, Heimat der dänischen Kronjuwelen, zum Schloss Christiansborg, Sitz des dänischen Parlaments, und weiter zum Tivoli, einem der ältesten Vergnügungsparks der Welt.",
+        "ru": "От замка Розенборг, где хранятся датские королевские регалии, до дворца Кристиансборг, резиденции датского парламента, и далее в сады Тиволи — один из старейших парков развлечений в мире."
+      },
+      "places": [
+        {
+          "name": "Rosenborg Castle",
+          "category": "Historical Site",
+          "address": "Øster Voldgade 4A, 1350 København K",
+          "latitude": 55.6856905,
+          "longitude": 12.5774402
+        },
+        {
+          "name": "Christiansborg Palace",
+          "category": "Historical Site",
+          "address": "Prins Jørgens Gård 5, 1218 Copenhagen K",
+          "latitude": 55.675661,
+          "longitude": 12.578895
+        },
+        {
+          "name": "Tivoli",
+          "category": "General",
+          "address": "Vesterbrogade 3, 1620 København V",
+          "latitude": 55.6738638,
+          "longitude": 12.5684774
+        }
+      ]
+    }
+  ]
+}
