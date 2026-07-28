@@ -135,19 +135,11 @@ struct NavigationMapView: UIViewRepresentable {
                 pulseRing.opacity = 0
                 view.layer.addSublayer(pulseRing)
 
-                let scaleAnim = CAKeyframeAnimation(keyPath: "transform.scale")
-                scaleAnim.values = [0.5, 1.2, 1.0]
-                scaleAnim.keyTimes = [0, 0.7, 1.0]
-
-                let opacityAnim = CAKeyframeAnimation(keyPath: "opacity")
-                opacityAnim.values = [0.8, 0.3, 0.0]
-                opacityAnim.keyTimes = [0, 0.7, 1.0]
-
-                let animGroup = CAAnimationGroup()
-                animGroup.animations = [scaleAnim, opacityAnim]
-                animGroup.duration = 1.5
-                animGroup.repeatCount = .infinity
-                pulseRing.add(animGroup, forKey: "pulse")
+                // Ortak animasyon: MapPinAnimator — MapView'in pin drop/nefes
+                // animasyonuyla AYNI kod yolu (specs/FAZ6_UI_YON.md Wow #3-4).
+                if let animGroup = MapPinAnimator.ringPulseAnimationGroup() {
+                    pulseRing.add(animGroup, forKey: "pulse")
+                }
 
                 return view
             }

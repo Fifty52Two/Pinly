@@ -17,6 +17,7 @@ struct DiscoverView: View {
     @Environment(\.nearbySearch) private var nearbySearch
     @Environment(\.starterRoutes) private var starterRoutes
     @Environment(\.analytics) private var analytics
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Query private var savedRoutes: [SavedRoute]
 
     // Filtreler
@@ -30,6 +31,9 @@ struct DiscoverView: View {
     // Panel
     @State private var panelDetent: PanelDetent = .half
     @GestureState private var panelDrag: CGFloat = 0
+
+    // Wow #2: kategori kartı → detay listesi zoom geçişi (iOS 18+, specs/FAZ6_UI_YON.md)
+    @Namespace private var zoomNamespace
 
     // Yakınımda önerileri
     @State private var nearbySuggestions: [NearbyPlace] = []
@@ -312,10 +316,17 @@ struct DiscoverView: View {
                     ForEach(categoriesWithPlaces, id: \.0.rawValue) { cat, places in
                         NavigationLink {
                             CategoryPlacesView(category: cat, places: places)
+                                .pinlyZoomDestination(id: cat.rawValue, in: zoomNamespace)
                         } label: {
                             CategoryDiscoverCard(category: cat, count: places.count)
                         }
                         .buttonStyle(.plain)
+                        .pinlyZoomSource(id: cat.rawValue, in: zoomNamespace)
+                        .scrollTransition { content, phase in
+                            content
+                                .opacity(phase.isIdentity || reduceMotion ? 1 : 0.85)
+                                .scaleEffect(phase.isIdentity || reduceMotion ? 1 : 0.96)
+                        }
                     }
                 }
                 .padding(.horizontal, 16)
