@@ -322,11 +322,7 @@ struct DiscoverView: View {
                         }
                         .buttonStyle(.plain)
                         .pinlyZoomSource(id: cat.rawValue, in: zoomNamespace)
-                        .scrollTransition { content, phase in
-                            content
-                                .opacity(phase.isIdentity || reduceMotion ? 1 : 0.85)
-                                .scaleEffect(phase.isIdentity || reduceMotion ? 1 : 0.96)
-                        }
+                        .discoverCardScrollTransition(skipsAnimation: reduceMotion)
                     }
                 }
                 .padding(.horizontal, 16)
@@ -608,5 +604,18 @@ private struct CategoryPlaceRow: View {
             }
         }
         .padding(.vertical, 4)
+    }
+}
+
+private extension View {
+    /// `scrollTransition`'ın body closure'ı nonisolated'dır — `@Environment(\.accessibilityReduceMotion)`
+    /// gibi MainActor-izoleli bir property'yi doğrudan içeriden okumak Swift 6'da uyarı/hataya yol açar.
+    /// Değer çağrı yerinde (MainActor) yakalanıp closure'a düz bir `Bool` olarak geçirilir.
+    func discoverCardScrollTransition(skipsAnimation: Bool) -> some View {
+        scrollTransition { content, phase in
+            content
+                .opacity(phase.isIdentity || skipsAnimation ? 1 : 0.85)
+                .scaleEffect(phase.isIdentity || skipsAnimation ? 1 : 0.96)
+        }
     }
 }
