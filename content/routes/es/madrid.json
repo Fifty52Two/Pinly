@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 7 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "madrid",
+  "country": "es",
+  "routes": [
+    {
+      "id": "mad-palacio-sol",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Kraliyet Sarayı'ndan Puerta del Sol'a",
+        "en": "From the Royal Palace to Puerta del Sol",
+        "es": "Del Palacio Real a la Puerta del Sol",
+        "de": "Vom Königspalast zur Puerta del Sol",
+        "ru": "От Королевского дворца до Пуэрта-дель-Соль"
+      },
+      "description": {
+        "tr": "İspanyol kraliyet ailesinin resmi ikametgahı Kraliyet Sarayı'ndan Almudena Katedrali'nin rengarenk tavanına, Plaza Mayor'un tarihi avlusundan geçip İspanya'nın sıfır kilometre noktası Puerta del Sol'a uzanan bir rota.",
+        "en": "From the Royal Palace, official residence of the Spanish royal family, to the colorful ceiling of Almudena Cathedral, through the historic courtyard of Plaza Mayor, to Puerta del Sol, Spain's kilometer zero.",
+        "es": "Desde el Palacio Real, residencia oficial de la familia real española, hasta el colorido techo de la Catedral de la Almudena, a través del histórico patio de la Plaza Mayor, hasta la Puerta del Sol, el kilómetro cero de España.",
+        "de": "Vom Königspalast, der offiziellen Residenz der spanischen Königsfamilie, zur bunten Decke der Almudena-Kathedrale, durch den historischen Hof der Plaza Mayor, zur Puerta del Sol, dem Kilometer Null Spaniens.",
+        "ru": "От Королевского дворца, официальной резиденции испанской королевской семьи, до разноцветного потолка собора Альмудена, через исторический двор Плаза Майор, до Пуэрта-дель-Соль — нулевого километра Испании."
+      },
+      "places": [
+        {
+          "name": "Royal Palace of Madrid",
+          "category": "Historical Site",
+          "address": "Calle de Bailén, 28071 Madrid",
+          "latitude": 40.4179263,
+          "longitude": -3.7142443
+        },
+        {
+          "name": "Almudena Cathedral",
+          "category": "Historical Site",
+          "address": "Calle de Bailén 10, 28013 Madrid",
+          "latitude": 40.4161355,
+          "longitude": -3.714474
+        },
+        {
+          "name": "Plaza Mayor",
+          "category": "General",
+          "address": "Plaza Mayor, 28012 Madrid",
+          "latitude": 40.4154423,
+          "longitude": -3.7073825
+        },
+        {
+          "name": "Puerta del Sol",
+          "category": "General",
+          "address": "Plaza Puerta Del Sol, 28013 Madrid",
+          "latitude": 40.4168054,
+          "longitude": -3.7035128
+        }
+      ]
+    },
+    {
+      "id": "mad-retiro-prado",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Retiro'dan Prado'ya",
+        "en": "From Retiro to the Prado",
+        "es": "Del Retiro al Prado",
+        "de": "Vom Retiro zum Prado",
+        "ru": "От Ретиро до Прадо"
+      },
+      "description": {
+        "tr": "Neoklasik Alcalá Kapısı'ndan Retiro Parkı'nın sandal gezintili gölüne, oradan Velázquez ve Goya tablolarını barındıran Prado Müzesi'ne uzanan bir Madrid yürüyüşü.",
+        "en": "A Madrid walk from the neoclassical Alcalá Gate to the rowing-boat lake of Retiro Park, and on to the Prado Museum, home to paintings by Velázquez and Goya.",
+        "es": "Un paseo por Madrid desde la neoclásica Puerta de Alcalá hasta el lago con botes de remo del Parque del Retiro, y luego al Museo del Prado, hogar de obras de Velázquez y Goya.",
+        "de": "Ein Madrid-Spaziergang vom klassizistischen Alcalá-Tor zum Ruderbootsee des Retiro-Parks und weiter zum Prado-Museum mit Gemälden von Velázquez und Goya.",
+        "ru": "Прогулка по Мадриду от неоклассических ворот Алькала до озера с лодками в парке Ретиро и далее к музею Прадо с картинами Веласкеса и Гойи."
+      },
+      "places": [
+        {
+          "name": "Puerta de Alcalá",
+          "category": "Historical Site",
+          "address": "Plaza de la Independencia, 28001 Madrid",
+          "latitude": 40.4199957,
+          "longitude": -3.6887125
+        },
+        {
+          "name": "Parc del Retiro",
+          "category": "Park",
+          "address": "Plaza Independencia 7, 28009 Madrid",
+          "latitude": 40.4147955,
+          "longitude": -3.6830533
+        },
+        {
+          "name": "Prado Museum",
+          "category": "Museum",
+          "address": "Paseo del Prado, 28014 Madrid",
+          "latitude": 40.413795,
+          "longitude": -3.6922792
+        }
+      ]
+    }
+  ]
+}
