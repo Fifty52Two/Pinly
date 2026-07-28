@@ -43,8 +43,7 @@ struct OnboardingView: View {
             PinlyTheme.groundGradient
                 .ignoresSafeArea()
 
-            WavePattern(waveLength: 90, amplitude: 12, rowSpacing: 22)
-                .stroke(PinlyTheme.slate.opacity(0.08), lineWidth: 1)
+            OnboardingWavePattern(waveLength: 90, amplitude: 12, rowSpacing: 22, color: PinlyTheme.slate, opacity: 0.08)
                 .ignoresSafeArea()
                 .allowsHitTesting(false)
 

@@ -88,18 +88,24 @@ struct MainTab: View {
                                 .font(.title2)
                                 .foregroundColor(.white)
                         }
+                        .accessibilityHidden(true)
                         VStack(alignment: .leading, spacing: 3) {
                             Text(NSLocalizedString("Rota Planla", comment: ""))
                                 .font(.title3.bold())
                                 .foregroundColor(.white)
+                                .lineLimit(2)
+                                .minimumScaleFactor(0.85)
                             Text(NSLocalizedString("Konumuna göre rota oluştur", comment: ""))
                                 .font(.subheadline)
                                 .foregroundColor(.white.opacity(0.85))
+                                .lineLimit(2)
+                                .minimumScaleFactor(0.85)
                         }
                         Spacer()
                         Image(systemName: "arrow.right.circle.fill")
                             .font(.title2)
                             .foregroundColor(.white.opacity(0.9))
+                            .accessibilityHidden(true)
                     }
                     .padding(20)
                     .background(
@@ -114,6 +120,7 @@ struct MainTab: View {
                     .clipped()
                 }
                 .buttonStyle(.plain)
+                .accessibilityElement(children: .combine)
 
                 // Hızlı aksiyonlar
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
@@ -223,8 +230,11 @@ struct MainTab: View {
                 Image(systemName: "map.fill")
                     .font(.title3)
                     .foregroundColor(PinlyTheme.primary)
+                    .accessibilityHidden(true)
                 Text(NSLocalizedString("Hazır İstanbul rotalarını dene", comment: ""))
                     .font(.headline)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.85)
             }
             Text(NSLocalizedString("Küratörlü yürüyüş rotaları — tek dokunuşla rotalarına ekle.", comment: ""))
                 .font(.subheadline)
@@ -237,7 +247,7 @@ struct MainTab: View {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
                     .background(PinlyTheme.primary)
-                    .foregroundColor(.white)
+                    .foregroundColor(PinlyTheme.onAccent)
                     .cornerRadius(12)
             }
         }
@@ -266,16 +276,19 @@ private struct QuickActionCard: View {
                     Image(systemName: icon)
                         .font(.headline)
                         .foregroundColor(color)
+                        .accessibilityHidden(true)
                 }
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(.subheadline.weight(.semibold))
                         .foregroundColor(.primary)
-                        .lineLimit(1)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.85)
                     Text(subtitle)
                         .font(.caption)
                         .foregroundColor(.secondary)
-                        .lineLimit(1)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.85)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -290,6 +303,7 @@ private struct QuickActionCard: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -322,8 +336,9 @@ private struct RecentPlaceCard: View {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.caption)
                             .symbolRenderingMode(.palette)
-                            .foregroundStyle(.white, PinlyTheme.success)
+                            .foregroundStyle(PinlyTheme.onAccent, PinlyTheme.success)
                             .padding(8)
+                            .accessibilityHidden(true)
                     }
                 }
 
@@ -337,9 +352,11 @@ private struct RecentPlaceCard: View {
                         Image(systemName: place.categoryIcon)
                             .font(.caption2)
                             .foregroundColor(place.categoryColor)
+                            .accessibilityHidden(true)
                         Text(PlaceCategory.from(place.category).localizedName)
                             .font(.caption)
                             .foregroundColor(.secondary)
+                            .lineLimit(1)
                     }
                 }
                 .padding(10)
@@ -354,5 +371,8 @@ private struct RecentPlaceCard: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(place.name)
+        .accessibilityValue(place.isVisited ? NSLocalizedString("Ziyaret Edildi", comment: "") : "")
     }
 }

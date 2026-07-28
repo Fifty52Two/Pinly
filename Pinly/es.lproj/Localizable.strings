@@ -563,3 +563,16 @@
 "Herkese Açık Profil" = "Perfil Público";
 "Yayınlanan" = "Publicadas";
 "Alınan Fav" = "Favoritos Recibidos";
+// Accesibilidad (Dynamic Type / VoiceOver — continuación de FAZ 6)
+"%@ ekle" = "Añadir %@";
+"%@ rotalarıma ekle" = "Añadir %@ a mis rutas";
+"%lld üzerinden %lld yıldız" = "%lld de %lld estrellas";
+"Panel Yüksekliği" = "Altura del panel";
+"Daraltılmış" = "Contraído";
+"Yarım" = "Medio";
+"Genişletilmiş" = "Expandido";
+"Sırala" = "Ordenar";
+"Swarm'dan İçe Aktar" = "Importar desde Swarm";
+"Profil Fotoğrafını Değiştir" = "Cambiar foto de perfil";
+"Durak %lld: %@" = "Parada %lld: %@";
+"Tamamlandı" = "Completado";

@@ -160,7 +160,7 @@ struct SavedRoutesView: View {
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)
                         .background(PinlyTheme.primary)
-                        .foregroundColor(.white)
+                        .foregroundColor(PinlyTheme.onAccent)
                         .cornerRadius(14)
                 }
             }
@@ -362,7 +362,7 @@ private struct SavedRouteCard: View {
                     Text(NSLocalizedString("Rotayı Başlat", comment: ""))
                         .fontWeight(.semibold)
                 }
-                .foregroundColor(.white)
+                .foregroundColor(PinlyTheme.onAccent)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 10)
                 .background(PinlyTheme.primary)

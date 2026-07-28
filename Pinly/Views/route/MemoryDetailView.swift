@@ -113,7 +113,7 @@ struct MemoryDetailView: View {
                 HStack(spacing: 10) {
                     Text("\(index + 1)")
                         .font(.caption.weight(.bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(PinlyTheme.onAccent)
                         .frame(width: 22, height: 22)
                         .background(Circle().fill(PinlyTheme.primary))
                     Text(name)

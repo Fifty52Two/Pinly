@@ -187,7 +187,7 @@ struct PaywallView: View {
             } label: {
                 if isPurchasing {
                     ProgressView()
-                        .tint(.white)
+                        .tint(PinlyTheme.onAccent)
                         .frame(maxWidth: .infinity)
                 } else {
                     Text(ctaTitle)

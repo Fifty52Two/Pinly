@@ -73,7 +73,7 @@ struct RatingSheetView: View {
                     }
                     onDismiss()
                 }
-                .foregroundColor(.white)
+                .foregroundColor(PinlyTheme.onAccent)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
                 .background(selectedRating > 0 ? PinlyTheme.primary : Color.gray)

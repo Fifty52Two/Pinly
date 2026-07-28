@@ -73,6 +73,17 @@ enum PinlyTheme {
     /// İnce kart kenarlığı — "gölge değil kenarlık" kuralının tek kaynağı
     static let hairline = Color.primary.opacity(0.07)
 
+    /// `primary`/`accent`/`gold`/`slate` SOLID dolgu üzerine yazılan metin/ikon rengi.
+    /// Bu dört token karanlık modda AÇILIR (bkz. yukarıdaki tanımlar) — üzerlerine sabit
+    /// `.white` yazmak WCAG kontrastını kırar (ör. karanlık modda `primary` #9DB0C2
+    /// üzerinde beyaz metin ~2.2:1 — 4.5:1 eşiğinin altında). Açık modda bu token'lar
+    /// koyu olduğu için orada beyaz kalır; karanlık modda koyu (navy) metne döner.
+    static let onAccent = Color(uiColor: UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(red: 0.133, green: 0.118, blue: 0.169, alpha: 1) // #221E2B (navy)
+            : .white
+    })
+
     // MARK: - Zemin Renkleri
 
     /// Sayfa zemini — krem/kağıt (açık) / koyu lacivert-antrasit (koyu)
@@ -183,7 +194,7 @@ struct PinlyPrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.headline)
-            .foregroundColor(.white)
+            .foregroundColor(PinlyTheme.onAccent)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
             .background(PinlyTheme.primary)
@@ -245,6 +256,7 @@ struct StatChip: View {
             Image(systemName: icon)
                 .font(.caption)
                 .foregroundColor(color)
+                .accessibilityHidden(true)
             Text(value)
                 .font(.headline)
                 .fontWeight(.bold)
@@ -255,7 +267,13 @@ struct StatChip: View {
             Text(label)
                 .font(.caption2)
                 .foregroundColor(.secondary)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
+                .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
+        // VoiceOver'da "1 Mekan" gibi tek okuma; dekoratif ikon SF Symbol adıyla
+        // okunacağı için gizlendi (yukarıda).
+        .accessibilityElement(children: .combine)
     }
 }

@@ -564,3 +564,16 @@
 "Herkese Açık Profil" = "Herkese Açık Profil";
 "Yayınlanan" = "Yayınlanan";
 "Alınan Fav" = "Alınan Fav";
+// Erişilebilirlik (Dynamic Type / VoiceOver taraması — FAZ 6 devamı)
+"%@ ekle" = "%@ ekle";
+"%@ rotalarıma ekle" = "%@ rotalarıma ekle";
+"%lld üzerinden %lld yıldız" = "%lld üzerinden %lld yıldız";
+"Panel Yüksekliği" = "Panel Yüksekliği";
+"Daraltılmış" = "Daraltılmış";
+"Yarım" = "Yarım";
+"Genişletilmiş" = "Genişletilmiş";
+"Sırala" = "Sırala";
+"Swarm'dan İçe Aktar" = "Swarm'dan İçe Aktar";
+"Profil Fotoğrafını Değiştir" = "Profil Fotoğrafını Değiştir";
+"Durak %lld: %@" = "Durak %lld: %@";
+"Tamamlandı" = "Tamamlandı";

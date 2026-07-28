@@ -61,6 +61,7 @@ struct PlacesListView: View {
                         Image(systemName: "mappin.slash")
                             .font(.system(size: 60))
                             .foregroundColor(.secondary)
+                            .accessibilityHidden(true)
                         Text(NSLocalizedString("Henüz mekan eklenmedi", comment: ""))
                             .font(.title3)
                             .fontWeight(.semibold)
@@ -105,6 +106,7 @@ struct PlacesListView: View {
                                     Image(systemName: "magnifyingglass")
                                         .font(.system(size: 36))
                                         .foregroundColor(.secondary)
+                                        .accessibilityHidden(true)
                                     Text(NSLocalizedString("Sonuç bulunamadı", comment: ""))
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
@@ -183,16 +185,19 @@ struct PlacesListView: View {
                             } label: {
                                 Image(systemName: "arrow.up.arrow.down")
                             }
+                            .accessibilityLabel(NSLocalizedString("Sırala", comment: ""))
                             Button {
                                 showSwarmPicker = true
                             } label: {
                                 Image(systemName: "square.and.arrow.down")
                             }
+                            .accessibilityLabel(NSLocalizedString("Swarm'dan İçe Aktar", comment: ""))
                             Button {
                                 showQRScanner = true
                             } label: {
                                 Image(systemName: "qrcode.viewfinder")
                             }
+                            .accessibilityLabel(NSLocalizedString("QR Tara", comment: ""))
                             Button {
                                 if entitlements.canAddPlace(currentCount: placeStore.places.count) {
                                     showAddPlace = true
@@ -202,6 +207,7 @@ struct PlacesListView: View {
                             } label: {
                                 Image(systemName: "plus")
                             }
+                            .accessibilityLabel(NSLocalizedString("Mekan Ekle", comment: ""))
                         }
                     }
                 }
@@ -313,6 +319,7 @@ struct PlaceListItemView: View {
                     .scaledToFill()
                     .frame(width: 42, height: 42)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .accessibilityHidden(true)
             } else {
                 ZStack {
                     RoundedRectangle(cornerRadius: 10)
@@ -321,6 +328,7 @@ struct PlaceListItemView: View {
                     Image(systemName: place.categoryIcon)
                         .foregroundColor(place.categoryColor)
                 }
+                .accessibilityHidden(true)
             }
 
             VStack(alignment: .leading, spacing: 3) {
@@ -345,6 +353,8 @@ struct PlaceListItemView: View {
                                 .foregroundColor(star <= rating ? PinlyTheme.ratingStar : .secondary)
                         }
                     }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(String(format: NSLocalizedString("%lld üzerinden %lld yıldız", comment: ""), 5, rating))
                 }
                 if !place.address.isEmpty {
                     Text(place.address)
@@ -361,9 +371,11 @@ struct PlaceListItemView: View {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(PinlyTheme.success)
                     .font(.subheadline)
+                    .accessibilityLabel(NSLocalizedString("Ziyaret Edildi", comment: ""))
             }
         }
         .padding(.vertical, 4)
+        .accessibilityElement(children: .combine)
         .contentShape(Rectangle())
         // simultaneousGesture: edit modunda List'in seçim dokunuşunu bloklamaz
         .simultaneousGesture(TapGesture().onEnded {
@@ -432,12 +444,13 @@ private struct CategoryChip: View {
             Text(title)
                 .font(.caption)
                 .fontWeight(.medium)
-                .foregroundColor(isSelected ? .white : color)
+                .foregroundColor(isSelected ? PinlyTheme.onAccent : color)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
                 .background(isSelected ? color : color.opacity(0.12))
                 .cornerRadius(20)
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }

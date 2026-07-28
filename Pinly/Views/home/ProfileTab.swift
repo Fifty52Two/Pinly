@@ -57,6 +57,7 @@ struct ProfileTab: View {
                 .foregroundColor(color)
                 .font(.headline)
         }
+        .accessibilityHidden(true)
     }
 
     /// TAM sıfırlama: SwiftData modelleri + tüm UserDefaults (onboarding, isPro,
@@ -98,12 +99,13 @@ struct ProfileTab: View {
                                         .frame(width: 32, height: 32)
                                     Image(systemName: "camera.fill")
                                         .font(.footnote)
-                                        .foregroundColor(.white)
+                                        .foregroundColor(PinlyTheme.onAccent)
                                 }
                                 .overlay(Circle().strokeBorder(PinlyTheme.surface, lineWidth: 3))
                             }
                         }
                         .buttonStyle(.plain)
+                        .accessibilityLabel(NSLocalizedString("Profil Fotoğrafını Değiştir", comment: ""))
 
                         VStack(spacing: 3) {
                             if let profile {
@@ -285,6 +287,7 @@ struct ProfileTab: View {
                                 .foregroundColor(PinlyTheme.slate)
                                 .font(.headline)
                         }
+                        .accessibilityHidden(true)
                         Text(NSLocalizedString("Görünüm", comment: ""))
                             .font(.subheadline)
                             .fontWeight(.medium)
@@ -447,6 +450,7 @@ struct ProfileTab: View {
                 .font(.caption)
                 .foregroundColor(.secondary)
         }
+        .accessibilityElement(children: .combine)
     }
 
     private func reloadProfile() {
@@ -492,6 +496,7 @@ private struct MoreRow: View {
                         .foregroundColor(iconColor)
                         .font(.headline)
                 }
+                .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(.subheadline)
@@ -506,10 +511,12 @@ private struct MoreRow: View {
                     .font(.caption)
                     .fontWeight(.semibold)
                     .foregroundColor(.secondary)
+                    .accessibilityHidden(true)
             }
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -532,6 +539,7 @@ private struct ProfileRoutePreviewRow: View {
                         .foregroundColor(PinlyTheme.primary)
                         .font(.headline)
                 }
+                .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(route.name)
                         .font(.subheadline)
@@ -548,10 +556,12 @@ private struct ProfileRoutePreviewRow: View {
                     .font(.caption)
                     .fontWeight(.semibold)
                     .foregroundColor(.secondary)
+                    .accessibilityHidden(true)
             }
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -571,6 +581,7 @@ private struct LanguagePickerSheet: View {
                     } label: {
                         HStack {
                             Text(lang.flag).font(.title2)
+                                .accessibilityHidden(true)
                             Text(lang.name)
                                 .foregroundStyle(.primary)
                             Spacer()
@@ -578,9 +589,11 @@ private struct LanguagePickerSheet: View {
                                 Image(systemName: "checkmark")
                                     .foregroundStyle(PinlyTheme.primary)
                                     .fontWeight(.semibold)
+                                    .accessibilityHidden(true)
                             }
                         }
                     }
+                    .accessibilityAddTraits(languageManager.currentLanguage == lang.code ? .isSelected : [])
                 }
             }
             .navigationTitle("Dil / Language")
