@@ -27,9 +27,14 @@ struct PermissionView: View {
 struct LocationDeniedView: View {
     var body: some View {
         VStack(spacing: 24) {
-            Image(systemName: "location.slash.fill")
-                .font(.system(size: 80))
-                .foregroundColor(PinlyTheme.danger)
+            ZStack {
+                WavePattern(waveLength: 40, amplitude: 5, rowSpacing: 9)
+                    .stroke(PinlyTheme.slate.opacity(0.10), lineWidth: 1)
+                    .frame(width: 160, height: 100)
+                Image(systemName: "location.slash.fill")
+                    .font(.system(size: 80))
+                    .foregroundColor(PinlyTheme.danger)
+            }
             VStack(spacing: 8) {
                 Text(NSLocalizedString("Konum İzni Gerekli", comment: ""))
                     .font(.title2)
