@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 7 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0m sapma (ilk koşuda Jerónimos Manastırı geçici ağ/rate-limit nedeniyle FAIL vermişti, ikinci koşuda ve elle tekrar sorguda PASS — halüsinasyon değil). Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "lisboa",
+  "country": "pt",
+  "routes": [
+    {
+      "id": "lis-belem",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Belém: Manastırdan Kule'ye",
+        "en": "Belém: From the Monastery to the Tower",
+        "es": "Belém: del monasterio a la torre",
+        "de": "Belém: Vom Kloster zum Turm",
+        "ru": "Белен: от монастыря до башни"
+      },
+      "description": {
+        "tr": "Portekiz Keşif Çağı'nın taş anıtı Jerónimos Manastırı'ndan Keşifler Anıtı'nın Tagus Nehri'ne bakan pruvasına, oradan Belém Kulesi'nin denizci ustalığına uzanan bir Nehir kıyısı yürüyüşü.",
+        "en": "A riverside walk from the stone monument of Jerónimos Monastery, symbol of the Portuguese Age of Discovery, to the prow of the Monument to the Discoveries facing the Tagus, and on to the maritime craftsmanship of Belém Tower.",
+        "es": "Un paseo junto al río desde el monumento de piedra del Monasterio de los Jerónimos, símbolo de la era de los descubrimientos portugueses, hasta la proa del Monumento a los Descubrimientos frente al Tajo, y luego a la artesanía marítima de la Torre de Belém.",
+        "de": "Ein Spaziergang am Fluss vom steinernen Hieronymuskloster, Symbol des portugiesischen Entdeckungszeitalters, zum Bug des Denkmals der Entdeckungen am Tejo, und weiter zur maritimen Handwerkskunst des Turms von Belém.",
+        "ru": "Прогулка вдоль реки от каменного монастыря Жеронимуш, символа эпохи великих географических открытий Португалии, до носа Памятника первооткрывателям на реке Тежу и далее к морскому мастерству Белемской башни."
+      },
+      "places": [
+        {
+          "name": "Mosteiro dos Jerónimos",
+          "category": "Historical Site",
+          "address": "Praça do Império, 1400-206 Lisboa",
+          "latitude": 38.6976256,
+          "longitude": -9.2054904
+        },
+        {
+          "name": "Padrão dos Descobrimentos",
+          "category": "Historical Site",
+          "address": "Av. Brasília, 1400-038 Lisboa",
+          "latitude": 38.6935994,
+          "longitude": -9.2056927
+        },
+        {
+          "name": "Belém Tower",
+          "category": "Historical Site",
+          "address": "Av. Brasília, 1400-038 Lisbon",
+          "latitude": 38.6917101,
+          "longitude": -9.2158942
+        }
+      ]
+    },
+    {
+      "id": "lis-alfama-baixa",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Kale'den Ticaret Meydanı'na",
+        "en": "From the Castle to Commerce Square",
+        "es": "Del castillo a la Plaza del Comercio",
+        "de": "Von der Burg zum Handelsplatz",
+        "ru": "От крепости до площади Коммерции"
+      },
+      "description": {
+        "tr": "Alfama semtine hükmeden Lizbon Kalesi'nden Rossio Meydanı'nın dalgalı taş döşemesine, Rua Augusta'nın zafer takından geçip Tagus kıyısındaki Ticaret Meydanı'na inen bir tarih yürüyüşü.",
+        "en": "A history walk from Lisbon Castle overlooking the Alfama district, to the wave-patterned cobblestones of Rossio Square, through the triumphal Rua Augusta arch, down to Commerce Square on the Tagus.",
+        "es": "Un paseo histórico desde el Castillo de Lisboa, que domina el barrio de Alfama, hasta los adoquines ondulados de la Plaza Rossio, atravesando el arco triunfal de la Rua Augusta, hasta la Plaza del Comercio junto al Tajo.",
+        "de": "Ein historischer Spaziergang von der Burg Lissabon, die das Alfama-Viertel überblickt, zu den wellenförmigen Pflastersteinen des Rossio-Platzes, durch den Triumphbogen der Rua Augusta, hinunter zum Handelsplatz am Tejo.",
+        "ru": "Исторический маршрут от Лиссабонского замка, возвышающегося над районом Альфама, до волнистой брусчатки площади Россиу, через триумфальную арку Руа Аугушта, вниз к площади Коммерции на реке Тежу."
+      },
+      "places": [
+        {
+          "name": "Lisbon Castle",
+          "category": "Historical Site",
+          "address": "Rua de Santa Cruz do Castelo, 1100-129 Lisbon",
+          "latitude": 38.7139216,
+          "longitude": -9.1334721
+        },
+        {
+          "name": "Praça Dom Pedro IV (Rossio)",
+          "category": "General",
+          "address": "Praça Dom Pedro IV, 1100 Lisboa",
+          "latitude": 38.7136981,
+          "longitude": -9.1393871
+        },
+        {
+          "name": "Arco da Rua Augusta",
+          "category": "Historical Site",
+          "address": "Rua Augusta 2, 1100-053 Lisboa",
+          "latitude": 38.7084321,
+          "longitude": -9.1368109
+        },
+        {
+          "name": "Praça do Comércio",
+          "category": "General",
+          "address": "Praça do Comércio, 1100 Lisboa",
+          "latitude": 38.7075196,
+          "longitude": -9.1364568
+        }
+      ]
+    }
+  ]
+}
