@@ -1,0 +1,153 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "3 rota, 11 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0-25m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı (halüsinasyon riski azaltıldı). Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Şehir İçi | Şehir Dışı | Yurt Dışı"
+  },
+  "city": "eskisehir",
+  "country": "tr",
+  "routes": [
+    {
+      "id": "esk-odunpazari-evleri",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Odunpazarı'nda Tarih ve Zanaat",
+        "en": "History and Craft in Odunpazarı",
+        "es": "Historia y artesanía en Odunpazarı",
+        "de": "Geschichte und Handwerk in Odunpazarı",
+        "ru": "История и ремесло в Одунпазары"
+      },
+      "description": {
+        "tr": "Osmanlı evlerinin renkli cephelerinden lületaşı atölyelerine, dar taş sokaklarda kısa bir Eskişehir turu.",
+        "en": "From the colorful facades of Ottoman houses to meerschaum workshops, a short Eskişehir walk through narrow stone streets.",
+        "es": "De las coloridas fachadas de las casas otomanas a los talleres de espuma de mar, un breve paseo por Eskişehir entre callejuelas de piedra.",
+        "de": "Von den bunten Fassaden osmanischer Häuser zu Meerschaum-Werkstätten – ein kurzer Spaziergang durch Eskişehirs enge Steingassen.",
+        "ru": "От разноцветных фасадов османских домов до мастерских по обработке пенки — короткая прогулка по узким мощёным улочкам Эскишехира."
+      },
+      "places": [
+        {
+          "name": "Anadolu Üniversitesi Cumhuriyet Tarihi Müzesi",
+          "category": "Museum",
+          "address": "Kemal Zeytinoğlu Cd. 1, 26030 Odunpazarı/Eskişehir",
+          "latitude": 39.765528,
+          "longitude": 30.5240569
+        },
+        {
+          "name": "Atlıhan El Sanatları Çarşısı",
+          "category": "General",
+          "address": "Pazaroğlu Sk. 12, 26030 Odunpazarı/Eskişehir",
+          "latitude": 39.764084,
+          "longitude": 30.523739
+        },
+        {
+          "name": "Odunpazarı Evleri",
+          "category": "Historical Site",
+          "address": "Çürükhoca Sk. 21, 26030 Odunpazarı/Eskişehir",
+          "latitude": 39.7633806,
+          "longitude": 30.5249612
+        },
+        {
+          "name": "Eskişehir Lületaşı Müzesi",
+          "category": "Museum",
+          "address": "Çürükhoca Sk. 2/1, 26030 Odunpazarı/Eskişehir",
+          "latitude": 39.7630447,
+          "longitude": 30.525546
+        },
+        {
+          "name": "Kurşunlu Camii Külliyesi",
+          "category": "Historical Site",
+          "address": "Mücellit Sk. 24/1, 26030 Odunpazarı/Eskişehir",
+          "latitude": 39.7630553,
+          "longitude": 30.5258453
+        }
+      ]
+    },
+    {
+      "id": "esk-porsuk-kentpark",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Porsuk Kıyısından Kentpark'a",
+        "en": "From the Porsuk Riverbank to Kentpark",
+        "es": "De la ribera del Porsuk a Kentpark",
+        "de": "Vom Ufer des Porsuk zum Kentpark",
+        "ru": "От набережной Порсук до Кентпарка"
+      },
+      "description": {
+        "tr": "Yunus Emre Kültür Merkezi'nden başlayıp Porsuk Çayı kıyısında yürüyerek Kentpark'ın geniş yeşil alanında biten sakin bir rota.",
+        "en": "Starting at Yunus Emre Cultural Center, walking along the Porsuk River, ending in the wide green expanse of Kentpark.",
+        "es": "Comenzando en el Centro Cultural Yunus Emre, caminando junto al río Porsuk, y terminando en la amplia zona verde de Kentpark.",
+        "de": "Beginnend am Yunus-Emre-Kulturzentrum, entlang des Porsuk-Flusses, endend in der weitläufigen Grünfläche des Kentpark.",
+        "ru": "Начинается у культурного центра Юнус Эмре, идёт вдоль реки Порсук и заканчивается на просторной зелёной территории Кентпарка."
+      },
+      "places": [
+        {
+          "name": "Yunus Emre Kültür Merkezi",
+          "category": "General",
+          "address": "2 Eylül Cd. 61, 26010 Odunpazarı/Eskişehir",
+          "latitude": 39.770492,
+          "longitude": 30.5200913
+        },
+        {
+          "name": "Porsuk Çayı",
+          "category": "General",
+          "address": "Odunpazarı/Eskişehir",
+          "latitude": 39.772846,
+          "longitude": 30.5405286
+        },
+        {
+          "name": "Kentpark",
+          "category": "Park",
+          "address": "26120 Tepebaşı/Eskişehir",
+          "latitude": 39.77340770238352,
+          "longitude": 30.549739866682515
+        }
+      ]
+    },
+    {
+      "id": "esk-sazova-parki",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Sazova Parkı: Masal, Bilim ve Doğa",
+        "en": "Sazova Park: Fairy Tale, Science and Nature",
+        "es": "Parque Sazova: cuento de hadas, ciencia y naturaleza",
+        "de": "Sazova-Park: Märchen, Wissenschaft und Natur",
+        "ru": "Парк Сазова: сказка, наука и природа"
+      },
+      "description": {
+        "tr": "Ailece gezilebilecek Sazova Parkı'nda Masal Şatosu'ndan bilim merkezine, oradan hayvanat bahçesine kısa bir yürüyüş.",
+        "en": "A short family-friendly walk in Sazova Park from the Fairy Tale Castle to the science center and on to the zoo.",
+        "es": "Un breve paseo familiar por el parque Sazova, del Castillo de los Cuentos al centro de ciencias y luego al zoológico.",
+        "de": "Ein kurzer familienfreundlicher Spaziergang im Sazova-Park vom Märchenschloss zum Wissenschaftszentrum und weiter zum Zoo.",
+        "ru": "Короткая семейная прогулка по парку Сазова от сказочного замка до научного центра и зоопарка."
+      },
+      "places": [
+        {
+          "name": "Masal Şatosu",
+          "category": "General",
+          "address": "Ulusal Egemenlik Blv. 209, 26150 Tepebaşı/Eskişehir",
+          "latitude": 39.7604525,
+          "longitude": 30.4732011
+        },
+        {
+          "name": "Sazova Bilim Merkezi",
+          "category": "Museum",
+          "address": "Sazova Bilim Merkezi, 26150 Tepebaşı/Eskişehir",
+          "latitude": 39.76609946703829,
+          "longitude": 30.47497136942556
+        },
+        {
+          "name": "Eskişehir Büyükşehir Belediyesi Hayvanat Bahçesi",
+          "category": "General",
+          "address": "Ulusal Egemenlik Blv. 209/20, 26150 Tepebaşı/Eskişehir",
+          "latitude": 39.7674198,
+          "longitude": 30.4741286
+        }
+      ]
+    }
+  ]
+}
