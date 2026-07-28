@@ -311,14 +311,12 @@ Soğuk başlangıç ölüm nedenidir: mekanı olmayan kullanıcı boş harita g�
 **İlke:** Seigaiha kimliği (krem/kağıt + sage + toz mavi + lacivert) KORUNUR — 2026'da herkes
 "kişiliksiz beyaz minimal app" yaparken el yapımı/Japon esinli kimlik ayrıştırıcı. Üstüne iki katman:
 
-**Güncel durum (Sonnet oturumu — `specs/FAZ6_UI_YON.md` sıralamasının 1. ve 2. maddeleri):**
-Wow #1 (rota tamamlama sekansı) + haptic haritası + `contentTransition(.numericText())` UYGULANDI
-(detay aşağıda `[x]`). Wow #2-6 ve Liquid Glass bu turda BAŞLANMADI — spec'teki öncelik sırasına
-göre sıradaki oturumun kapsamı (aşağıdaki `[ ]` maddeler hâlâ geçerli, aynen bırakıldı).
+**Güncel durum (2026-07-28, Sonnet doğrudan çalıştı — agent'a devredilmedi, kullanıcı kararı):**
+Wow #1-4 + haptic haritası + `numericText` UYGULANDI. **Liquid Glass (Wow #5) kullanıcı kararıyla
+KAPSAM DIŞI bırakıldı** ("gerek yok, boktan bir şey" — 2026-07-28) — bir daha gündeme getirilmeyecek,
+spec'teki madde kalıcı olarak iptal. Kalan tek açık madde: Wow #6 boş durumlar.
 
-- [ ] **iOS 26 Liquid Glass (koşullu):** hedef iOS 17 kalır; `if #available(iOS 26)` ile —
-      harita üstü paneller/overlay'lerde `glassEffect`, PinlyTabBar'da glass varyant,
-      `GlassEffectContainer` ile buton morfları. Xcode 26 ile derleme şart (Ferhat: Xcode güncel mi?).
+- [x] ~~iOS 26 Liquid Glass~~ — **KULLANICI KARARIYLA İPTAL (2026-07-28), bir daha yapılmayacak.**
 - [x] **Wow anları (öncelik sırasıyla):**
   1. [x] Rota tamamlama sekansı: konfeti (var, dokunulmadı) → istatistikler km→dk→adım→ziyaret SIRAYLA
      0.15sn arayla spring+`contentTransition(.numericText())` ile 0'dan sayarak belirir → son
@@ -326,17 +324,32 @@ göre sıradaki oturumun kapsamı (aşağıdaki `[ ]` maddeler hâlâ geçerli, 
      + hafif 3D `rotation3DEffect` ile yükselir → `HapticPlayer.routeCompleted()` (`.success`+0.1sn
      sonra `.impact(.soft)`). Reduce Motion: sayaçlar direkt final değere, kart sadece fade
      (`Pinly/Views/route/RouteCompletionOverlay.swift`).
-  2. [ ] `matchedGeometryEffect` kart→detay geçişleri (Keşfet kartı → rota detayı) — ERTELENDİ
-  3. [ ] Harita pin'lerinde spring "pop" + seçili pin nefes animasyonu — ERTELENDİ
-  4. [ ] Keşfet'te `scrollTransition` parallax kartlar — ERTELENDİ
+  2. [x] iOS 18+ `navigationTransition(.zoom)` kart→detay geçişleri: Günlük kartı → `MemoryDetailView`
+     (RouteHistoryView `.sheet`den `.navigationDestination(for:)` push'a çevrildi — `.zoom` sheet
+     sınırından geçmiyor), Keşfet kategori kartı → `CategoryPlacesView`. Merkezi kapı:
+     `Pinly/Design/NavigationTransitions.swift` (`pinlyZoomSource`/`pinlyZoomDestination`,
+     iOS 17'de no-op → varsayılan push). iOS 18 altı hiç dokunulmuyor.
+  3. [x] Harita pin'lerinde spring "pop" (0→1.1→1) + seçili pin nefes animasyonu (1.0↔1.06, 2sn) —
+     merkezi `Pinly/Design/MapPinAnimator.swift` (CALayer tabanlı, Reduce Motion'da no-op).
+     `NavigationMapView`'in mevcut "sonraki durak" pulse'ı da bu ortak yardımcıya taşındı
+     (spec'in istediği "aynı kod yolu"). `MapView` yeni pin dropta pop + seçili pinde nefes kullanıyor.
+  4. [x] Keşfet'te `scrollTransition` (`opacity`+`scale`, parallax yok, Reduce Motion farkında —
+     `DiscoverView.discoverCardScrollTransition`).
   5. [x] Haptic koreografi: merkezi `Pinly/Design/HapticPlayer.swift` (tüm UIKit generator'ları
      önceden `.prepare()` edilmiş `static let`) — durak varışı `.success`, rozet açılması
      `.success`+0.1sn `.impact(.rigid)`, seçim toggle `.selection`, rota başlatma `.impact(.medium)`,
      rota tamamlama `.success`+0.1sn `.impact(.soft)`. Favorileme haritada yok (özellik mevcut değil).
      Tüm eski ad-hoc `UI*FeedbackGenerator` çağrıları (10 dosya) bu merkezi yardımcıya taşındı.
-  6. [ ] Onboarding'de WavePattern'in canlı dalgalanması (TimelineView) — ERTELENDİ
+  6. [ ] Onboarding'de WavePattern'in canlı dalgalanması (TimelineView) — ERTELENDİ (düşük öncelik)
 - [ ] Karanlık mod cila turu + app icon alternate (dark/tinted zaten var; sezonluk varyant değerlendir)
-- [ ] Boş durum illüstrasyonları: SF Symbol'dan seigaiha-uyumlu mini vektör sahnelere (WavePattern dilinde) — ERTELENDİ
+- [x] **Boş durum dokusu:** `SavedRoutesView`'in zaten kullandığı desen (WavePattern arka planda +
+      SF Symbol ikon önde, ikisi ZStack'te) `RouteHistoryView` (Günlük boş) ve `LocationDeniedView`
+      (konum reddedildi — Keşfet'in önkoşulu) ekranlarına da uygulandı. Tam özgün vektör sahne
+      (SF Symbol'süz) YAPILMADI — mevcut kararla (`Design/WavePattern.swift`: "SADECE dekoratif
+      doku, tam illüstrasyon kartlarına dönülmedi") tutarlı, üç ekran artık aynı dili konuşuyor.
+
+**FAZ 6 SONUÇ (2026-07-28):** Liquid Glass hariç tüm Wow maddeleri (1-4, 6) + haptic haritası +
+numericText tamamlandı. Kalan tek düşük öncelikli madde: onboarding canlı dalga animasyonu.
 - [x] Erişilebilirlik (bu turun kapsamı — Wow #1 + haptic): Reduce Motion yolu, VoiceOver label'ları
       (paylaşım kartı + gated dismiss butonu), Dynamic Type güvenliği (`lineLimit`+`minimumScaleFactor`)
       `RouteCompletionOverlay`'de uygulandı. Genel Dynamic Type XL/VoiceOver turu (uygulama geneli)
