@@ -1,0 +1,139 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "3 rota, 9 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "barcelona",
+  "country": "es",
+  "routes": [
+    {
+      "id": "bcn-gaudi-eixample",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Gaudí'nin İzinde: Batlló'dan Sagrada Família'ya",
+        "en": "In Gaudí's Footsteps: From Casa Batlló to Sagrada Família",
+        "es": "Tras los pasos de Gaudí: de Casa Batlló a la Sagrada Família",
+        "de": "Auf Gaudís Spuren: von Casa Batlló zur Sagrada Família",
+        "ru": "По следам Гауди: от Casa Batlló до Саграда Фамилия"
+      },
+      "description": {
+        "tr": "Passeig de Gràcia'daki dalgalı cepheli Casa Batlló'dan La Pedrera'nın taş dalgalarına, oradan Gaudí'nin bitmemiş başyapıtı Sagrada Família'ya uzanan bir modernist mimari rotası.",
+        "en": "A modernist architecture route from the wavy facade of Casa Batlló on Passeig de Gràcia to the stone waves of La Pedrera, and on to Gaudí's unfinished masterpiece, Sagrada Família.",
+        "es": "Una ruta de arquitectura modernista desde la ondulante fachada de Casa Batlló en el Passeig de Gràcia hasta las olas de piedra de La Pedrera, y luego a la obra maestra inacabada de Gaudí, la Sagrada Família.",
+        "de": "Eine Route der modernistischen Architektur von der wellenförmigen Fassade der Casa Batlló am Passeig de Gràcia zu den Steinwellen von La Pedrera und weiter zu Gaudís unvollendetem Meisterwerk, der Sagrada Família.",
+        "ru": "Маршрут модернистской архитектуры от волнистого фасада Casa Batlló на Пасео-де-Грасия до каменных волн Ла-Педреры и далее к незаконченному шедевру Гауди — Саграда Фамилия."
+      },
+      "places": [
+        {
+          "name": "Casa Batlló",
+          "category": "Historical Site",
+          "address": "Passeig de Gràcia 43, 08007 Barcelona",
+          "latitude": 41.3916718,
+          "longitude": 2.1649383
+        },
+        {
+          "name": "La Pedrera (Casa Milà)",
+          "category": "Historical Site",
+          "address": "Passeig de Gràcia 92, 08008 Barcelona",
+          "latitude": 41.395371,
+          "longitude": 2.161914
+        },
+        {
+          "name": "Sagrada Família",
+          "category": "Historical Site",
+          "address": "Sagrada Família, 08013 Barcelona",
+          "latitude": 41.4053629,
+          "longitude": 2.1733398
+        }
+      ]
+    },
+    {
+      "id": "bcn-barri-gotic",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Gotik Mahalle'de Bir Yürüyüş",
+        "en": "A Walk Through the Gothic Quarter",
+        "es": "Un paseo por el Barrio Gótico",
+        "de": "Ein Spaziergang durchs Gotische Viertel",
+        "ru": "Прогулка по Готическому кварталу"
+      },
+      "description": {
+        "tr": "Barselona Katedrali'nin gotik cephesinden Plaça Reial'in palmiyeli avlusuna, oradan La Rambla'nın kalabalık yürüyüş yoluna inen dar sokaklarda bir tarih turu.",
+        "en": "A history tour through narrow streets, from the Gothic facade of Barcelona Cathedral to the palm-lined courtyard of Plaça Reial, ending on the bustling promenade of La Rambla.",
+        "es": "Un recorrido histórico por calles estrechas, desde la fachada gótica de la Catedral de Barcelona hasta el patio con palmeras de la Plaça Reial, terminando en el bullicioso paseo de La Rambla.",
+        "de": "Eine Geschichtstour durch enge Gassen, von der gotischen Fassade der Kathedrale von Barcelona zum von Palmen gesäumten Hof der Plaça Reial, endend auf der belebten Promenade La Rambla.",
+        "ru": "Исторический тур по узким улочкам от готического фасада Барселонского собора до обрамлённого пальмами двора площади Реаль, с финалом на оживлённой Ла-Рамбла."
+      },
+      "places": [
+        {
+          "name": "Barcelona Cathedral",
+          "category": "Historical Site",
+          "address": "Pla de la Seu, 08002 Barcelona",
+          "latitude": 41.3841531,
+          "longitude": 2.1763267
+        },
+        {
+          "name": "Plaça Reial",
+          "category": "General",
+          "address": "Plaça Reial, 08002 Barcelona",
+          "latitude": 41.3800619,
+          "longitude": 2.175302
+        },
+        {
+          "name": "Les Rambles",
+          "category": "General",
+          "address": "Plaça Catalunya, 08002 Barcelona",
+          "latitude": 41.3806393,
+          "longitude": 2.1736914
+        }
+      ]
+    },
+    {
+      "id": "bcn-park-guell",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Casa Vicens'ten Park Güell'e",
+        "en": "From Casa Vicens to Park Güell",
+        "es": "De Casa Vicens al Park Güell",
+        "de": "Von Casa Vicens zum Park Güell",
+        "ru": "От Casa Vicens до парка Гуэля"
+      },
+      "description": {
+        "tr": "Gaudí'nin ilk büyük eseri Casa Vicens'ten mozaik banklarıyla ünlü Park Güell'e, oradan şehrin en geniş panoramasını sunan Carmel Sığınakları'na tırmanan bir tepe rotası.",
+        "en": "A hillside route from Casa Vicens, Gaudí's first major work, to Park Güell with its famous mosaic benches, climbing on to Bunkers del Carmel for the city's widest panorama.",
+        "es": "Una ruta de colina desde Casa Vicens, la primera gran obra de Gaudí, hasta el Park Güell con sus famosos bancos de mosaico, ascendiendo hasta los Bunkers del Carmel para la panorámica más amplia de la ciudad.",
+        "de": "Eine Hügelroute von Casa Vicens, Gaudís erstem großen Werk, zum Park Güell mit seinen berühmten Mosaikbänken, weiter hinauf zu den Bunkers del Carmel für das weiteste Panorama der Stadt.",
+        "ru": "Маршрут по холмам от Casa Vicens, первой крупной работы Гауди, до парка Гуэля с его знаменитыми мозаичными скамьями, с подъёмом к бункерам Кармель для самой широкой панорамы города."
+      },
+      "places": [
+        {
+          "name": "Casa Vicens Gaudí",
+          "category": "Historical Site",
+          "address": "Carrer de les Carolines 20-26, 08012 Barcelona",
+          "latitude": 41.4034791,
+          "longitude": 2.1506113
+        },
+        {
+          "name": "Park Güell",
+          "category": "Park",
+          "address": "Carrer d'Olot 11, 08024 Barcelona",
+          "latitude": 41.413765,
+          "longitude": 2.1527625
+        },
+        {
+          "name": "Els Búnkers del Carmel",
+          "category": "General",
+          "address": "Carrer Marià Lavèrnia, 08032 Barcelona",
+          "latitude": 41.4193828,
+          "longitude": 2.1617156
+        }
+      ]
+    }
+  ]
+}
