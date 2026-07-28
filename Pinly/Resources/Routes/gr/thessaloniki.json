@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 7 durak. verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0, 1 NEAR (St. Dimitrios, 499m; script sorgusu 'St. Dimitrios, thessaloniki' yakındaki 'Demetrius the Besieger' adlı ayrı bir anıta eşleşti). 'Basilica of Saint Demetrius' sorgusuyla çapraz kontrol edildi: sonuç TAM olarak katalogdaki koordinatla eşleşti (0m) — koordinat doğru kabul edildi. Diğer 6 durak 0m sapmayla PASS. Otomatik doğrulama + çapraz kontrol insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "thessaloniki",
+  "country": "gr",
+  "routes": [
+    {
+      "id": "the-beyaz-kule-rotonda",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Beyaz Kule'den Rotonda'ya",
+        "en": "From the White Tower to the Rotunda",
+        "es": "De la Torre Blanca a la Rotonda",
+        "de": "Vom Weißen Turm zur Rotunde",
+        "ru": "От Белой башни до Ротонды"
+      },
+      "description": {
+        "tr": "Selanik'in simgesi Beyaz Kule'den Aristotelous Meydanı'nın deniz manzaralı geniş caddesine, Galerius Kemeri'nin Roma dönemi kabartmalarından geçip Roma imparatoru mozolesi Rotonda'ya uzanan bir sahil yürüyüşü.",
+        "en": "A seafront walk from the White Tower, symbol of Thessaloniki, along the sea-view boulevard of Aristotelous Square, past the Roman-era reliefs of the Arch of Galerius, to the Rotunda, a Roman emperor's mausoleum.",
+        "es": "Un paseo por el paseo marítimo desde la Torre Blanca, símbolo de Salónica, por el bulevar con vista al mar de la Plaza Aristotelous, pasando por los relieves de la época romana del Arco de Galerio, hasta la Rotonda, mausoleo de un emperador romano.",
+        "de": "Ein Spaziergang an der Küste vom Weißen Turm, dem Wahrzeichen Thessalonikis, entlang des Meerblick-Boulevards des Aristotelous-Platzes, vorbei an den römischen Reliefs des Galeriusbogens, zur Rotunde, dem Mausoleum eines römischen Kaisers.",
+        "ru": "Прогулка по набережной от Белой башни, символа Салоников, вдоль бульвара с видом на море площади Аристотелус, мимо римских рельефов Арки Галерия, к Ротонде — мавзолею римского императора."
+      },
+      "places": [
+        {
+          "name": "White Tower",
+          "category": "Historical Site",
+          "address": "Nikis Avenue, 546 21 Thessaloniki",
+          "latitude": 40.6263633,
+          "longitude": 22.9483902
+        },
+        {
+          "name": "Aristotelous",
+          "category": "General",
+          "address": "Aristotelous, 546 24 Thessaloniki",
+          "latitude": 40.63449803111915,
+          "longitude": 22.942790595718733
+        },
+        {
+          "name": "Arch of Galerius",
+          "category": "Historical Site",
+          "address": "Egnatia Str, 546 25 Thessaloniki",
+          "latitude": 40.6321825,
+          "longitude": 22.9517309
+        },
+        {
+          "name": "Kamara-Rotonta",
+          "category": "Historical Site",
+          "address": "Kamara-Rotonta, Thessaloniki",
+          "latitude": 40.6353367,
+          "longitude": 22.9542043
+        }
+      ]
+    },
+    {
+      "id": "the-ano-poli",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Ano Poli: Aziz Dimitrios'tan Eptapyrgio'ya",
+        "en": "Ano Poli: From St. Demetrius to Eptapyrgio",
+        "es": "Ano Poli: de San Demetrio a Eptapyrgio",
+        "de": "Ano Poli: Vom Heiligen Demetrios zum Eptapyrgio",
+        "ru": "Ано Поли: от святого Димитрия до Эптапиргио"
+      },
+      "description": {
+        "tr": "Selanik'in koruyucu azizine adanmış Aziz Dimitrios Bazilikası'ndan Bizans surlarının Trigoniou Kulesi'ne, oradan Osmanlı döneminde hapishane olarak kullanılan Eptapyrgio kalesine tırmanan bir Yukarı Şehir yürüyüşü.",
+        "en": "An Upper Town walk from St. Demetrius Basilica, dedicated to the city's patron saint, to Trigoniou Tower on the Byzantine walls, climbing up to Eptapyrgio, a fortress once used as an Ottoman-era prison.",
+        "es": "Un paseo por la Ciudad Alta desde la Basílica de San Demetrio, dedicada al santo patrón de la ciudad, hasta la Torre de Trigoniou en las murallas bizantinas, ascendiendo hasta Eptapyrgio, una fortaleza usada como prisión en la época otomana.",
+        "de": "Ein Spaziergang durch die Oberstadt von der Demetrios-Basilika, dem Schutzpatron der Stadt gewidmet, zum Trigoniou-Turm an den byzantinischen Mauern, hinauf zum Eptapyrgio, einer einst als osmanisches Gefängnis genutzten Festung.",
+        "ru": "Прогулка по Верхнему городу от базилики Святого Димитрия, покровителя города, до башни Тригониу на византийских стенах, вверх к крепости Эптапиргио, использовавшейся как тюрьма в османский период."
+      },
+      "places": [
+        {
+          "name": "St. Dimitrios",
+          "category": "Historical Site",
+          "address": "Agiou Dimitriou 83, 546 33 Thessaloniki",
+          "latitude": 40.6387597,
+          "longitude": 22.9477519
+        },
+        {
+          "name": "Trigonou",
+          "category": "Historical Site",
+          "address": "Trigonou, 554 37 Thessaloniki",
+          "latitude": 40.6342685,
+          "longitude": 22.9579569
+        },
+        {
+          "name": "Eptapyrgiou",
+          "category": "Historical Site",
+          "address": "Eptapyrgiou, 546 34 Thessaloniki",
+          "latitude": 40.64226635336979,
+          "longitude": 22.95475053211013
+        }
+      ]
+    }
+  ]
+}
