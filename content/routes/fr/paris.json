@@ -1,0 +1,195 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "4 rota, 14 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0-34m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "paris",
+  "country": "fr",
+  "routes": [
+    {
+      "id": "par-trocadero-eiffel",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Trocadéro'dan Eyfel Kulesi'ne",
+        "en": "From Trocadéro to the Eiffel Tower",
+        "es": "De Trocadéro a la Torre Eiffel",
+        "de": "Von Trocadéro zum Eiffelturm",
+        "ru": "От Трокадеро до Эйфелевой башни"
+      },
+      "description": {
+        "tr": "Palais de Chaillot'nun taraçasından Eyfel Kulesi'nin en fotojenik manzarasını izleyip Champ de Mars'ın çimenlerinde mola veren klasik bir Paris yürüyüşü.",
+        "en": "A classic Paris walk taking in the most photogenic view of the Eiffel Tower from the terrace of the Palais de Chaillot, with a break on the lawns of Champ de Mars.",
+        "es": "Un paseo clásico por París que captura la vista más fotogénica de la Torre Eiffel desde la terraza del Palais de Chaillot, con un descanso en el césped del Champ de Mars.",
+        "de": "Ein klassischer Paris-Spaziergang mit dem fotogensten Blick auf den Eiffelturm von der Terrasse des Palais de Chaillot, mit einer Pause auf den Rasenflächen des Champ de Mars.",
+        "ru": "Классическая парижская прогулка с самым фотогеничным видом на Эйфелеву башню с террасы дворца Шайо и отдыхом на газонах Марсова поля."
+      },
+      "places": [
+        {
+          "name": "Palais de Chaillot",
+          "category": "Historical Site",
+          "address": "1 Place du Trocadéro et du 11 Novembre, 75016 Paris",
+          "latitude": 48.8628542,
+          "longitude": 2.2882415
+        },
+        {
+          "name": "Eiffel Tower",
+          "category": "Historical Site",
+          "address": "5 Avenue Anatole France, 75007 Paris",
+          "latitude": 48.8582583,
+          "longitude": 2.2944877
+        },
+        {
+          "name": "Parc du Champ de Mars",
+          "category": "Park",
+          "address": "2 Allée Adrienne Lecouvreur, 75007 Paris",
+          "latitude": 48.8562007,
+          "longitude": 2.2977081
+        }
+      ]
+    },
+    {
+      "id": "par-louvre-concorde",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Louvre'dan Concorde'a",
+        "en": "From the Louvre to Concorde",
+        "es": "Del Louvre a la Concordia",
+        "de": "Vom Louvre zur Concorde",
+        "ru": "От Лувра до площади Согласия"
+      },
+      "description": {
+        "tr": "Dünyanın en büyük sanat müzesi Louvre'dan Tuileries Bahçesi'nde yürüyerek Concorde Meydanı'na, oradan Seine kıyısındaki süslü Alexandre III Köprüsü'ne uzanan bir rota.",
+        "en": "From the Louvre, the world's largest art museum, through the Tuileries Garden to Place de la Concorde, and on to the ornate Pont Alexandre III on the banks of the Seine.",
+        "es": "Desde el Louvre, el museo de arte más grande del mundo, a través del Jardín de las Tullerías hasta la Plaza de la Concordia, y luego al ornamentado Puente Alejandro III a orillas del Sena.",
+        "de": "Vom Louvre, dem größten Kunstmuseum der Welt, durch den Tuileriengarten zum Place de la Concorde und weiter zur prunkvollen Pont Alexandre III am Ufer der Seine.",
+        "ru": "От Лувра, крупнейшего художественного музея мира, через сад Тюильри до площади Согласия и далее к нарядному мосту Александра III на берегу Сены."
+      },
+      "places": [
+        {
+          "name": "Musée du Louvre",
+          "category": "Museum",
+          "address": "93 Rue de Rivoli, 75001 Paris",
+          "latitude": 48.8610142,
+          "longitude": 2.335854
+        },
+        {
+          "name": "Jardin des Tuileries",
+          "category": "Park",
+          "address": "2 Quai des Tuileries, 75001 Paris",
+          "latitude": 48.8636786,
+          "longitude": 2.3256576
+        },
+        {
+          "name": "Place de la Concorde",
+          "category": "General",
+          "address": "Place de la Concorde, 75001 Paris",
+          "latitude": 48.8663158,
+          "longitude": 2.3233233
+        },
+        {
+          "name": "Pont Alexandre III",
+          "category": "Historical Site",
+          "address": "Cours la Reine, Quai d'Orsay, 75008 Paris",
+          "latitude": 48.863677,
+          "longitude": 2.313539
+        }
+      ]
+    },
+    {
+      "id": "par-montmartre",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Montmartre'da Bir Öğleden Sonra",
+        "en": "An Afternoon in Montmartre",
+        "es": "Una tarde en Montmartre",
+        "de": "Ein Nachmittag in Montmartre",
+        "ru": "День на Монмартре"
+      },
+      "description": {
+        "tr": "Sacré-Cœur Bazilikası'nın beyaz kubbesinden ressamların meydanı Place du Tertre'ye, oradan efsanevi kabare Moulin Rouge'a inen tepe mahalle yürüyüşü.",
+        "en": "A hilltop neighborhood walk from the white domes of Sacré-Cœur Basilica to the painters' square of Place du Tertre, then down to the legendary Moulin Rouge cabaret.",
+        "es": "Un paseo por el barrio de la colina, desde las cúpulas blancas de la basílica del Sacré-Cœur hasta la plaza de los pintores, Place du Tertre, y luego al legendario cabaret Moulin Rouge.",
+        "de": "Ein Spaziergang durch das Hügelviertel von den weißen Kuppeln der Sacré-Cœur-Basilika zum Malerplatz Place du Tertre und weiter zum legendären Kabarett Moulin Rouge.",
+        "ru": "Прогулка по холмистому кварталу от белых куполов базилики Сакре-Кёр до площади художников Тертр и далее к легендарному кабаре Мулен Руж."
+      },
+      "places": [
+        {
+          "name": "Sacré-Cœur Basilica",
+          "category": "Historical Site",
+          "address": "35 Rue du Chevalier de la Barre, 75018 Paris",
+          "latitude": 48.8866342,
+          "longitude": 2.3430482
+        },
+        {
+          "name": "Place du Tertre",
+          "category": "General",
+          "address": "Place du Tertre, 75018 Paris",
+          "latitude": 48.8865293,
+          "longitude": 2.3407745
+        },
+        {
+          "name": "Moulin Rouge",
+          "category": "General",
+          "address": "82 Boulevard de Clichy, 75018 Paris",
+          "latitude": 48.8842303,
+          "longitude": 2.3323815
+        }
+      ]
+    },
+    {
+      "id": "par-notre-dame-luxembourg",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Notre-Dame'dan Luxembourg Bahçesi'ne",
+        "en": "From Notre-Dame to the Luxembourg Garden",
+        "es": "De Notre-Dame al Jardín de Luxemburgo",
+        "de": "Von Notre-Dame zum Jardin du Luxembourg",
+        "ru": "От Нотр-Дама до Люксембургского сада"
+      },
+      "description": {
+        "tr": "Notre-Dame Katedrali'nin adasından Sainte-Chapelle'in vitraylarına, Panthéon'un büyük kubbesinden Luxembourg Bahçesi'nin havuzuna uzanan Latin Mahallesi yürüyüşü.",
+        "en": "A Latin Quarter walk from the island of Notre-Dame Cathedral to the stained glass of Sainte-Chapelle, from the Panthéon's great dome to the pond of the Luxembourg Garden.",
+        "es": "Un paseo por el Barrio Latino desde la isla de la catedral de Notre-Dame hasta las vidrieras de la Sainte-Chapelle, de la gran cúpula del Panteón al estanque del Jardín de Luxemburgo.",
+        "de": "Ein Spaziergang durchs Lateinische Viertel von der Insel der Kathedrale Notre-Dame zu den Glasfenstern der Sainte-Chapelle, von der großen Kuppel des Panthéon zum Teich des Jardin du Luxembourg.",
+        "ru": "Прогулка по Латинскому кварталу от острова с собором Нотр-Дам до витражей Сент-Шапель, от большого купола Пантеона до пруда Люксембургского сада."
+      },
+      "places": [
+        {
+          "name": "Cathédrale Notre-Dame de Paris",
+          "category": "Historical Site",
+          "address": "Rue du Cloître Notre-Dame, 75004 Paris",
+          "latitude": 48.85326274753312,
+          "longitude": 2.3501863580709035
+        },
+        {
+          "name": "Sainte-Chapelle",
+          "category": "Historical Site",
+          "address": "10 Boulevard du Palais, 75001 Paris",
+          "latitude": 48.8553979,
+          "longitude": 2.3449689
+        },
+        {
+          "name": "Panthéon",
+          "category": "Historical Site",
+          "address": "Place du Panthéon, 75005 Paris",
+          "latitude": 48.8461875,
+          "longitude": 2.34615
+        },
+        {
+          "name": "Jardin du Luxembourg",
+          "category": "Park",
+          "address": "15 Rue de Vaugirard, 75291 Paris",
+          "latitude": 48.8468835,
+          "longitude": 2.3363328
+        }
+      ]
+    }
+  ]
+}
