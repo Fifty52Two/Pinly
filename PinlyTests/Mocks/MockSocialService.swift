@@ -5,6 +5,7 @@ import Foundation
 /// ayarladığı `stub*`/`*Result` alanlarından okunur (diğer Mock'ların deseninin devamı).
 final class MockSocialService: RouteFeedProviding, ProfileSyncing {
     // MARK: - Stub veriler
+    var hasLocalSession: Bool = true
     var feedResult: [PublicRouteDTO] = []
     var publishResult: String = "stub-route-id"
     var publishError: Error?

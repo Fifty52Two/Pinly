@@ -51,6 +51,12 @@ protocol RouteFeedProviding {
 // MARK: - ProfileSyncing
 
 protocol ProfileSyncing {
+    /// Cihazda ZATEN bir Supabase oturumu var mı — senkron, ağa çıkmaz. Ekranların "sosyal
+    /// katmana hiç dokunulmadıysa myProfile() bile çağırma" kontrolü için (ör. ProfileTab her
+    /// açılışta bunu kontrol eder; aksi halde myProfile() ensureSession() üzerinden HERKESTE
+    /// sessizce anonim hesap açardı — "hesap sürtünmesi sıfır" ilkesi yalnızca UI'da değil,
+    /// arka planda hesap oluşturmama sözü de verir).
+    var hasLocalSession: Bool { get }
     func myProfile() async throws -> SocialProfileDTO?
     func publicProfile(id: String) async throws -> SocialProfileDTO?
     /// Kullanıcı adı sadece ilk yayınlama/favlama anında istenir; bu çağrı o formun submit'i.
@@ -227,6 +233,8 @@ final class SupabaseSocialService: RouteFeedProviding, ProfileSyncing {
 
     // MARK: ProfileSyncing
 
+    var hasLocalSession: Bool { client.auth.currentUser != nil }
+
     func myProfile() async throws -> SocialProfileDTO? {
         let userId = try await ensureSession()
         let rows: [SocialProfileDTO] = try await client.from("profiles")
@@ -274,6 +282,7 @@ final class NoOpSocialService: RouteFeedProviding, ProfileSyncing {
     func myPublishedRoutes() async throws -> [PublicRouteDTO] { [] }
     func report(routeId: String, reason: ReportReason, note: String?) async throws {}
     func block(userId: String) async throws {}
+    var hasLocalSession: Bool { false }
     func myProfile() async throws -> SocialProfileDTO? { nil }
     func publicProfile(id: String) async throws -> SocialProfileDTO? { nil }
     func setUsername(_ username: String) async throws {}

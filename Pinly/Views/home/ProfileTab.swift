@@ -458,6 +458,11 @@ struct ProfileTab: View {
     /// profil + istatistikleri çeker; aksi halde ağa hiç çıkmaz — sessiz "çevrimdışı" davranışıyla
     /// tutarlı (bkz. specs/FAZ5_SUPABASE_MIMARI.md "hesap sürtünmesi sıfır").
     private func loadSocialProfile() async {
+        // `social.hasLocalSession` kontrolü olmadan `myProfile()` HER ProfileTab açılışında
+        // (yani hemen hemen her kullanıcıda) sessizce anonim Supabase hesabı açardı — sosyal
+        // katmana hiç dokunmamış kullanıcılar için de. Sadece daha önce feed/publish/favorite
+        // üzerinden bir oturum kurulduysa profil sorgula.
+        guard social.hasLocalSession else { return }
         guard let profile = try? await social.myProfile(), profile.username != nil else { return }
         socialProfile = profile
         if let published = try? await social.myPublishedRoutes() {

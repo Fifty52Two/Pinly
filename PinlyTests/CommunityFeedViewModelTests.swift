@@ -40,6 +40,7 @@ final class CommunityFeedViewModelTests: XCTestCase {
     func test_loadInitial_networkError_setsErrorMessage() async {
         struct DummyError: Error {}
         final class ThrowingSocial: RouteFeedProviding, ProfileSyncing {
+            var hasLocalSession: Bool { true }
             func fetchFeed(city: String, cursor: Date?) async throws -> [PublicRouteDTO] { throw DummyError() }
             func publish(_ route: SavedRoute) async throws -> String { "" }
             func favorite(routeId: String) async throws {}
