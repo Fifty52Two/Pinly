@@ -40,6 +40,10 @@ protocol RouteFeedProviding {
     func favorite(routeId: String) async throws
     func unfavorite(routeId: String) async throws
     func myFavorites() async throws -> [PublicRouteDTO]
+    /// Kendi yayınladığım rotalar (her status) — Kamu Profili ekranında yayın sayısı +
+    /// toplam alınan fav'i hesaplamak için (`profile_stats` view'ı henüz yok, client-side
+    /// toplanıyor). RLS: `public_routes` select politikası zaten "kendi satırları her status'te".
+    func myPublishedRoutes() async throws -> [PublicRouteDTO]
     func report(routeId: String, reason: ReportReason, note: String?) async throws
     func block(userId: String) async throws
 }
@@ -47,6 +51,12 @@ protocol RouteFeedProviding {
 // MARK: - ProfileSyncing
 
 protocol ProfileSyncing {
+    /// Cihazda ZATEN bir Supabase oturumu var mı — senkron, ağa çıkmaz. Ekranların "sosyal
+    /// katmana hiç dokunulmadıysa myProfile() bile çağırma" kontrolü için (ör. ProfileTab her
+    /// açılışta bunu kontrol eder; aksi halde myProfile() ensureSession() üzerinden HERKESTE
+    /// sessizce anonim hesap açardı — "hesap sürtünmesi sıfır" ilkesi yalnızca UI'da değil,
+    /// arka planda hesap oluşturmama sözü de verir).
+    var hasLocalSession: Bool { get }
     func myProfile() async throws -> SocialProfileDTO?
     func publicProfile(id: String) async throws -> SocialProfileDTO?
     /// Kullanıcı adı sadece ilk yayınlama/favlama anında istenir; bu çağrı o formun submit'i.
@@ -183,6 +193,16 @@ final class SupabaseSocialService: RouteFeedProviding, ProfileSyncing {
         return rows.map(\.publicRoutes)
     }
 
+    func myPublishedRoutes() async throws -> [PublicRouteDTO] {
+        let owner = try await ensureSession()
+        return try await client.from("public_routes")
+            .select()
+            .eq("owner", value: owner)
+            .order("created_at", ascending: false)
+            .execute()
+            .value
+    }
+
     func report(routeId: String, reason: ReportReason, note: String?) async throws {
         let reporter = try await ensureSession()
         struct ReportInsert: Encodable {
@@ -212,6 +232,8 @@ final class SupabaseSocialService: RouteFeedProviding, ProfileSyncing {
     }
 
     // MARK: ProfileSyncing
+
+    var hasLocalSession: Bool { client.auth.currentUser != nil }
 
     func myProfile() async throws -> SocialProfileDTO? {
         let userId = try await ensureSession()
@@ -257,8 +279,10 @@ final class NoOpSocialService: RouteFeedProviding, ProfileSyncing {
     func favorite(routeId: String) async throws {}
     func unfavorite(routeId: String) async throws {}
     func myFavorites() async throws -> [PublicRouteDTO] { [] }
+    func myPublishedRoutes() async throws -> [PublicRouteDTO] { [] }
     func report(routeId: String, reason: ReportReason, note: String?) async throws {}
     func block(userId: String) async throws {}
+    var hasLocalSession: Bool { false }
     func myProfile() async throws -> SocialProfileDTO? { nil }
     func publicProfile(id: String) async throws -> SocialProfileDTO? { nil }
     func setUsername(_ username: String) async throws {}

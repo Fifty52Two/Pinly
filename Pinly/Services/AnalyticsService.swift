@@ -33,6 +33,10 @@ enum AnalyticsEvent: Equatable {
     case memoryPhotoAdded
     /// Anı Günlüğü (FAZ 3): rota tamamlama kartı paylaşıldı — format "story"/"post".
     case memoryCardShared(format: String)
+    /// Sosyal katman (FAZ 5 V2): kayıtlı bir rota topluluk feed'ine yayınlandı.
+    case routePublished
+    /// Sosyal katman (FAZ 5 V2): feed'de bir rota favlandı.
+    case routeFavorited
 
     var name: String {
         switch self {
@@ -48,6 +52,8 @@ enum AnalyticsEvent: Equatable {
         case .starterRouteAdopted: return "starter_route_adopted"
         case .memoryPhotoAdded:   return "memory_photo_added"
         case .memoryCardShared:   return "memory_card_shared"
+        case .routePublished:     return "route_published"
+        case .routeFavorited:     return "route_favorited"
         }
     }
 
