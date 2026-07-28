@@ -563,3 +563,16 @@
 "Herkese Açık Profil" = "Публичный Профиль";
 "Yayınlanan" = "Опубликовано";
 "Alınan Fav" = "Полученные Избранные";
+// Специальные возможности (Dynamic Type / VoiceOver — продолжение FAZ 6)
+"%@ ekle" = "Добавить %@";
+"%@ rotalarıma ekle" = "Добавить %@ в мои маршруты";
+"%lld üzerinden %lld yıldız" = "%lld из %lld звёзд";
+"Panel Yüksekliği" = "Высота панели";
+"Daraltılmış" = "Свёрнуто";
+"Yarım" = "Наполовину";
+"Genişletilmiş" = "Развёрнуто";
+"Sırala" = "Сортировать";
+"Swarm'dan İçe Aktar" = "Импорт из Swarm";
+"Profil Fotoğrafını Değiştir" = "Изменить фото профиля";
+"Durak %lld: %@" = "Остановка %lld: %@";
+"Tamamlandı" = "Завершено";

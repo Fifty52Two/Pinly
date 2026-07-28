@@ -156,6 +156,19 @@ struct RouteSummaryView: View {
                                 if isCurrentStop || isNextAfterPause { return PinlyTheme.primary }
                                 return PinlyTheme.primary.opacity(0.35)
                             }()
+                            // ScrollView+VStack listesi List DEĞİL — "durak N" sırası VoiceOver'a
+                            // otomatik gelmez, tek etiketle elle eklenir (durum bilgisiyle birlikte).
+                            let stopStatusSuffix: String? = {
+                                if isArrivedHere { return NSLocalizedString("Varıldı!", comment: "") }
+                                if isCurrentStop { return NSLocalizedString("Mevcut durak", comment: "") }
+                                if isNextAfterPause { return NSLocalizedString("Sonraki durak", comment: "") }
+                                if isCompleted { return NSLocalizedString("Tamamlandı", comment: "") }
+                                return nil
+                            }()
+                            let stopAccessibilityLabel = [
+                                String(format: NSLocalizedString("Durak %lld: %@", comment: ""), index + 1, place.name),
+                                stopStatusSuffix
+                            ].compactMap { $0 }.joined(separator: ", ")
 
                             HStack(spacing: 14) {
                                 ZStack {
@@ -166,14 +179,17 @@ struct RouteSummaryView: View {
                                         Image(systemName: "checkmark")
                                             .font(.caption)
                                             .fontWeight(.bold)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(PinlyTheme.onAccent)
                                     } else {
                                         Text("\(index + 1)")
                                             .font(.caption)
                                             .fontWeight(.bold)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(PinlyTheme.onAccent)
                                     }
                                 }
+                                // Sıra numarası zaten "durak N" olarak VoiceOver'a satır
+                                // etiketinde geçiyor — burada tekrar okunmasın.
+                                .accessibilityHidden(true)
 
                                 VStack(alignment: .leading, spacing: 3) {
                                     Text(place.name)
@@ -207,10 +223,13 @@ struct RouteSummaryView: View {
                                     Image(systemName: "location.fill")
                                         .font(.caption)
                                         .foregroundColor(PinlyTheme.primary)
+                                        .accessibilityHidden(true)
                                 }
                             }
                             .padding(.horizontal, 20)
                             .padding(.vertical, 10)
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel(stopAccessibilityLabel)
 
                             if index < routePlaces.count - 1 {
                                 HStack {
@@ -304,6 +323,7 @@ struct RouteSummaryView: View {
                         .foregroundColor(.secondary)
                         .font(.title3)
                 }
+                .accessibilityLabel(NSLocalizedString("Kapat", comment: ""))
             }
         }
         .onAppear {
@@ -462,7 +482,7 @@ struct RouteSummaryView: View {
                                     .fontWeight(.semibold)
                             }
                         }
-                        .foregroundColor(.white)
+                        .foregroundColor(PinlyTheme.onAccent)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                         .background(PinlyTheme.primary)
@@ -482,7 +502,7 @@ struct RouteSummaryView: View {
                             Text(NSLocalizedString("Navigasyonu Durdur", comment: ""))
                                 .fontWeight(.semibold)
                         }
-                        .foregroundColor(.white)
+                        .foregroundColor(PinlyTheme.onAccent)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                         .background(PinlyTheme.danger)
@@ -640,7 +660,7 @@ struct RouteSummaryView: View {
                             Text(NSLocalizedString("Navigasyonu Başlat", comment: ""))
                                 .fontWeight(.semibold)
                         }
-                        .foregroundColor(.white)
+                        .foregroundColor(PinlyTheme.onAccent)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                         .background(PinlyTheme.primary)

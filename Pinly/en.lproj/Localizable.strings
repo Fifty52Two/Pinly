@@ -565,3 +565,16 @@
 "Herkese Açık Profil" = "Public Profile";
 "Yayınlanan" = "Published";
 "Alınan Fav" = "Favorites Received";
+// Accessibility (Dynamic Type / VoiceOver pass — FAZ 6 continuation)
+"%@ ekle" = "Add %@";
+"%@ rotalarıma ekle" = "Add %@ to my routes";
+"%lld üzerinden %lld yıldız" = "%lld out of %lld stars";
+"Panel Yüksekliği" = "Panel Height";
+"Daraltılmış" = "Collapsed";
+"Yarım" = "Half";
+"Genişletilmiş" = "Expanded";
+"Sırala" = "Sort";
+"Swarm'dan İçe Aktar" = "Import from Swarm";
+"Profil Fotoğrafını Değiştir" = "Change Profile Photo";
+"Durak %lld: %@" = "Stop %lld: %@";
+"Tamamlandı" = "Completed";

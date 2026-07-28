@@ -14,10 +14,11 @@ struct NavigationBanner: View {
             HStack(spacing: 14) {
                 Image(systemName: "arrow.turn.up.right")
                     .font(.title2)
-                    .foregroundColor(.white)
+                    .foregroundColor(PinlyTheme.onAccent)
                     .frame(width: 44, height: 44)
                     .background(PinlyTheme.primary)
                     .cornerRadius(10)
+                    .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(String(format: NSLocalizedString("Durak %lld / %lld", comment: ""), stopIndex, totalStops))
@@ -34,6 +35,7 @@ struct NavigationBanner: View {
                             .foregroundColor(.secondary)
                     }
                 }
+                .accessibilityElement(children: .combine)
                 Spacer()
             }
             .padding(.horizontal, 16)
@@ -106,6 +108,7 @@ struct RouteStatItem: View {
             Image(systemName: icon)
                 .font(.caption)
                 .foregroundColor(PinlyTheme.primary)
+                .accessibilityHidden(true)
             Text(value)
                 .font(.subheadline)
                 .fontWeight(.bold)
@@ -114,5 +117,6 @@ struct RouteStatItem: View {
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .combine)
     }
 }

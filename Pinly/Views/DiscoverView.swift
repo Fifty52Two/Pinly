@@ -42,7 +42,32 @@ struct DiscoverView: View {
     @State private var showPaywall = false
     @State private var showCommunityFeed = false
 
-    enum PanelDetent { case collapsed, half, expanded }
+    enum PanelDetent {
+        case collapsed, half, expanded
+
+        /// VoiceOver'ın adjustable action'ı için bir sonraki/önceki basamak (Slider'daki gibi).
+        func expanded() -> PanelDetent {
+            switch self {
+            case .collapsed: return .half
+            case .half, .expanded: return .expanded
+            }
+        }
+
+        func collapsed() -> PanelDetent {
+            switch self {
+            case .expanded: return .half
+            case .half, .collapsed: return .collapsed
+            }
+        }
+
+        var accessibilityDescription: String {
+            switch self {
+            case .collapsed: return NSLocalizedString("Daraltılmış", comment: "")
+            case .half:      return NSLocalizedString("Yarım", comment: "")
+            case .expanded:  return NSLocalizedString("Genişletilmiş", comment: "")
+            }
+        }
+    }
 
     // MARK: Türetilmiş veriler
 
@@ -132,6 +157,7 @@ struct DiscoverView: View {
                             }
                         }
                         .buttonStyle(.plain)
+                        .accessibilityLabel(place.name)
                     }
                 }
             }
@@ -214,6 +240,19 @@ struct DiscoverView: View {
                             } ?? .half
                         }
                 )
+                // Sürükleme gesture'ı VoiceOver'a görünmez — panel yüksekliği bu olmadan
+                // VoiceOver kullanıcısı için hiç değiştirilemezdi. Adjustable trait ile
+                // yukarı/aşağı kaydırma jesti .increment/.decrement'e eşlenir.
+                .accessibilityElement()
+                .accessibilityLabel(NSLocalizedString("Panel Yüksekliği", comment: ""))
+                .accessibilityValue(panelDetent.accessibilityDescription)
+                .accessibilityAdjustableAction { direction in
+                    switch direction {
+                    case .increment: panelDetent = panelDetent.expanded()
+                    case .decrement: panelDetent = panelDetent.collapsed()
+                    default: break
+                    }
+                }
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
@@ -420,11 +459,12 @@ private struct DiscoverFilterChip: View {
                 if let icon {
                     Image(systemName: icon)
                         .font(.caption2)
+                        .accessibilityHidden(true)
                 }
                 Text(title)
                     .font(.caption.weight(.medium))
             }
-            .foregroundColor(isSelected ? .white : .primary)
+            .foregroundColor(isSelected ? PinlyTheme.onAccent : .primary)
             .padding(.horizontal, 12)
             .padding(.vertical, 7)
             .background(
@@ -436,6 +476,7 @@ private struct DiscoverFilterChip: View {
             .shadow(color: .black.opacity(0.08), radius: 3, y: 1)
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 
@@ -457,6 +498,7 @@ private struct NearbySuggestionCard: View {
                         .font(.caption)
                         .foregroundColor(place.category.color)
                 }
+                .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 1) {
                     Text(place.name)
                         .font(.caption.weight(.semibold))
@@ -466,10 +508,12 @@ private struct NearbySuggestionCard: View {
                         .foregroundColor(.secondary)
                 }
             }
+            .accessibilityElement(children: .combine)
 
             Button(action: onAdd) {
                 HStack(spacing: 4) {
                     Image(systemName: isAdded ? "checkmark" : "plus")
+                        .accessibilityHidden(true)
                     Text(isAdded
                          ? NSLocalizedString("Eklendi", comment: "")
                          : NSLocalizedString("Ekle", comment: ""))
@@ -483,6 +527,9 @@ private struct NearbySuggestionCard: View {
                 )
             }
             .disabled(isAdded)
+            .accessibilityLabel(isAdded
+                ? NSLocalizedString("Eklendi", comment: "")
+                : String(format: NSLocalizedString("%@ ekle", comment: ""), place.name))
         }
         .padding(10)
         .frame(width: 170, alignment: .leading)
@@ -505,6 +552,7 @@ private struct StarterRouteMiniCard: View {
                 Image(systemName: "map.fill")
                     .font(.caption)
                     .foregroundColor(PinlyTheme.primary)
+                    .accessibilityHidden(true)
                 Text(definition.name)
                     .font(.caption.weight(.semibold))
                     .lineLimit(1)
@@ -514,10 +562,12 @@ private struct StarterRouteMiniCard: View {
                 .font(.caption2)
                 .foregroundColor(.secondary)
                 .lineLimit(1)
+                .accessibilityHidden(true) // Buton kendi label'ında rota adını zaten söylüyor
 
             Button(action: onAdd) {
                 HStack(spacing: 4) {
                     Image(systemName: "plus.circle.fill")
+                        .accessibilityHidden(true)
                     Text(NSLocalizedString("Rotalarıma Ekle", comment: ""))
                 }
                 .font(.caption2.weight(.semibold))
@@ -526,6 +576,7 @@ private struct StarterRouteMiniCard: View {
                 .padding(.vertical, 6)
                 .background(Capsule().fill(PinlyTheme.slate.opacity(0.10)))
             }
+            .accessibilityLabel(String(format: NSLocalizedString("%@ rotalarıma ekle", comment: ""), definition.name))
         }
         .padding(10)
         .frame(width: 200, alignment: .leading)
@@ -552,6 +603,7 @@ struct CategoryDiscoverCard: View {
                     .font(.title2)
                     .foregroundColor(category.color)
             }
+            .accessibilityHidden(true)
             Text(category.localizedName)
                 .font(.subheadline)
                 .fontWeight(.semibold)
@@ -619,6 +671,7 @@ private struct CategoryPlaceRow: View {
                     .font(.callout)
                     .foregroundColor(category.color)
             }
+            .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text(place.name)
                     .font(.subheadline)
@@ -637,6 +690,8 @@ private struct CategoryPlaceRow: View {
                                 .foregroundColor(star <= rating ? PinlyTheme.ratingStar : .secondary)
                         }
                     }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(String(format: NSLocalizedString("%lld üzerinden %lld yıldız", comment: ""), 5, rating))
                 }
             }
             Spacer()
@@ -644,9 +699,11 @@ private struct CategoryPlaceRow: View {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(PinlyTheme.success)
                     .font(.subheadline)
+                    .accessibilityLabel(NSLocalizedString("Ziyaret Edildi", comment: ""))
             }
         }
         .padding(.vertical, 4)
+        .accessibilityElement(children: .combine)
     }
 }
 

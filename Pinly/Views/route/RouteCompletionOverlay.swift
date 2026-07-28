@@ -9,15 +9,15 @@ struct ArrivalBannerView: View {
         HStack(spacing: 12) {
             Image(systemName: "checkmark.seal.fill")
                 .font(.title2)
-                .foregroundColor(.white)
+                .foregroundColor(PinlyTheme.onAccent)
             VStack(alignment: .leading, spacing: 2) {
                 Text(NSLocalizedString("Varıldı!", comment: ""))
                     .font(.caption)
-                    .foregroundColor(.white.opacity(0.8))
+                    .foregroundColor(PinlyTheme.onAccent.opacity(0.8))
                 Text(placeName)
                     .font(.subheadline)
                     .fontWeight(.bold)
-                    .foregroundColor(.white)
+                    .foregroundColor(PinlyTheme.onAccent)
             }
             Spacer()
         }
