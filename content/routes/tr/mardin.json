@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 6 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Deyrulzafaran Manastırı şehir merkezinden ~7 km uzakta olduğu için 2.5 km yürüme kuralına uymadığından dahil edilmedi. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Şehir İçi | Şehir Dışı | Yurt Dışı"
+  },
+  "city": "mardin",
+  "country": "tr",
+  "routes": [
+    {
+      "id": "mrd-ulu-camii-zinciriye",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Zinciriye'den Kent Müzesi'ne",
+        "en": "From Zinciriye to the City Museum",
+        "es": "De Zinciriye al museo de la ciudad",
+        "de": "Von Zinciriye zum Stadtmuseum",
+        "ru": "От Зинджирие до городского музея"
+      },
+      "description": {
+        "tr": "Mardin'in sarı taş mimarisinin en güzel örneklerinden Zinciriye Medresesi ve Ulu Camii'nin avlusundan geçip Sabancı Kent Müzesi'nde biten kısa bir eski şehir yürüyüşü.",
+        "en": "A short old-town walk past two of Mardin's finest examples of golden stone architecture — Zinciriye Madrasa and the courtyard of the Great Mosque — ending at the Sabancı City Museum.",
+        "es": "Un breve paseo por el casco antiguo junto a dos de los mejores ejemplos de arquitectura de piedra dorada de Mardin —la Madraza Zinciriye y el patio de la Gran Mezquita— terminando en el Museo de la Ciudad Sabancı.",
+        "de": "Ein kurzer Spaziergang durch die Altstadt vorbei an zwei der schönsten Beispiele goldener Steinarchitektur Mardins – der Zinciriye-Medrese und dem Hof der Großen Moschee – endend im Sabancı-Stadtmuseum.",
+        "ru": "Короткая прогулка по старому городу мимо двух лучших образцов золотистой каменной архитектуры Мардина — медресе Зинджирие и двора Великой мечети — с финалом в городском музее Сабанджи."
+      },
+      "places": [
+        {
+          "name": "Zinciriye Medresesi",
+          "category": "Historical Site",
+          "address": "249. Kumlu Sk. 2B, 47100 Artuklu/Mardin",
+          "latitude": 37.314066,
+          "longitude": 40.739693
+        },
+        {
+          "name": "Mardin Ulu Camii",
+          "category": "Historical Site",
+          "address": "79. Nur Sk. 59, 47100 Artuklu/Mardin",
+          "latitude": 37.312718,
+          "longitude": 40.739437
+        },
+        {
+          "name": "Sabancı Kent Müzesi",
+          "category": "Museum",
+          "address": "Hükümet Cd. 6/1, 47100 Artuklu/Mardin",
+          "latitude": 37.314523,
+          "longitude": 40.746109
+        }
+      ]
+    },
+    {
+      "id": "mrd-kirklar-kasimiye",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Kırklar Kilisesi'nden Kasımiye'ye",
+        "en": "From Kırklar Church to Kasımiye Madrasa",
+        "es": "De la iglesia Kırklar a la madraza Kasımiye",
+        "de": "Von der Kırklar-Kirche zur Kasımiye-Medrese",
+        "ru": "От церкви Кырклар до медресе Касымие"
+      },
+      "description": {
+        "tr": "Süryani cemaatinin asırlık Kırklar Kilisesi'nden geleneksel bir Mardin konağında sofraya, oradan şehrin güneybatı ucundaki Kasımiye Medresesi'ne uzanan bir yürüyüş.",
+        "en": "A walk from the centuries-old Kırklar Church of the Syriac community, to a table in a traditional Mardin mansion, and on to Kasımiye Madrasa at the city's southwestern edge.",
+        "es": "Un paseo desde la centenaria iglesia Kırklar de la comunidad siríaca, a una mesa en una mansión tradicional de Mardin, y hasta la madraza Kasımiye en el extremo suroeste de la ciudad.",
+        "de": "Ein Spaziergang von der jahrhundertealten Kırklar-Kirche der syrischen Gemeinde zu einem Tisch in einem traditionellen Mardin-Herrenhaus und weiter zur Kasımiye-Medrese am südwestlichen Stadtrand.",
+        "ru": "Прогулка от многовековой церкви Кырклар сирийской общины к столу в традиционном мардинском особняке и далее к медресе Касымие на юго-западной окраине города."
+      },
+      "places": [
+        {
+          "name": "Mor Behnam (Kırklar) Kilisesi",
+          "category": "Historical Site",
+          "address": "Kırklar Kilisesi Sk. 10B, 47100 Artuklu/Mardin",
+          "latitude": 37.313649,
+          "longitude": 40.732657
+        },
+        {
+          "name": "Cercis Murat Konağı",
+          "category": "Restaurant",
+          "address": "1. Cd. 273, 47100 Artuklu/Mardin",
+          "latitude": 37.312801,
+          "longitude": 40.733768
+        },
+        {
+          "name": "Kasımiye Medresesi",
+          "category": "Historical Site",
+          "address": "Cumhuriyet 1711 Sk., 47100 Artuklu/Mardin",
+          "latitude": 37.3076466,
+          "longitude": 40.7199186
+        }
+      ]
+    }
+  ]
+}
