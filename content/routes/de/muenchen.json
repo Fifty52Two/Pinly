@@ -1,0 +1,139 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "3 rota, 9 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0-6m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4, Avrupa Dalga 2).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Yurt Dışı"
+  },
+  "city": "muenchen",
+  "country": "de",
+  "routes": [
+    {
+      "id": "muc-marienplatz-hofbrauhaus",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Marienplatz'dan Hofbräuhaus'a",
+        "en": "From Marienplatz to Hofbräuhaus",
+        "es": "De Marienplatz a Hofbräuhaus",
+        "de": "Vom Marienplatz zum Hofbräuhaus",
+        "ru": "От Мариенплац до Хофбройхауса"
+      },
+      "description": {
+        "tr": "Frauenkirche'nin ikiz soğan kulelerinden Marienplatz'ın oynatmalı saatine, Viktualienmarkt'ın taze ürün tezgahlarından geçip dünyaca ünlü bira salonu Hofbräuhaus'ta biten bir Münih yürüyüşü.",
+        "en": "A Munich walk from the twin onion domes of Frauenkirche to the animated clock of Marienplatz, through the fresh produce stalls of Viktualienmarkt, ending at the world-famous Hofbräuhaus beer hall.",
+        "es": "Un paseo por Múnich desde las cúpulas gemelas de la Frauenkirche hasta el reloj animado de Marienplatz, por los puestos de productos frescos del Viktualienmarkt, terminando en la mundialmente famosa cervecería Hofbräuhaus.",
+        "de": "Ein München-Spaziergang von den Zwiebeltürmen der Frauenkirche zum Glockenspiel am Marienplatz, durch die Marktstände des Viktualienmarkts, endend im weltberühmten Hofbräuhaus.",
+        "ru": "Прогулка по Мюнхену от двух луковичных куполов Фрауэнкирхе до знаменитых часов на Мариенплац, через прилавки со свежими продуктами Виктуалиенмаркта, с финалом во всемирно известной пивной Хофбройхаус."
+      },
+      "places": [
+        {
+          "name": "The Munich Cathedral",
+          "category": "Historical Site",
+          "address": "Frauenplatz 12, 80331 Munich",
+          "latitude": 48.1385363,
+          "longitude": 11.5730162
+        },
+        {
+          "name": "Marienplatz",
+          "category": "General",
+          "address": "Marienplatz, 80331 Munich",
+          "latitude": 48.1370731796653,
+          "longitude": 11.576002347183698
+        },
+        {
+          "name": "Viktualienmarkt",
+          "category": "General",
+          "address": "Viktualienmarkt 3, 80881 Munich",
+          "latitude": 48.1354662,
+          "longitude": 11.576229
+        },
+        {
+          "name": "Hofbräuhaus",
+          "category": "Restaurant",
+          "address": "Platzl 9, 80331 Munich",
+          "latitude": 48.137633,
+          "longitude": 11.5799654
+        }
+      ]
+    },
+    {
+      "id": "muc-englischer-garten",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "İngiliz Bahçesi'nde Bir Öğleden Sonra",
+        "en": "An Afternoon in the English Garden",
+        "es": "Una tarde en el Jardín Inglés",
+        "de": "Ein Nachmittag im Englischen Garten",
+        "ru": "День в Английском саду"
+      },
+      "description": {
+        "tr": "Çin Kulesi'nin ünlü bira bahçesinden Eisbach nehrinin sörfçülerle dolu yapay dalgasına, oradan Avrupa'nın en büyük kent parklarından İngiliz Bahçesi'nin çayırlarına uzanan bir yürüyüş.",
+        "en": "A walk from the famous beer garden at the Chinese Tower to the artificial standing wave of the Eisbach river, packed with surfers, and on to the meadows of the English Garden, one of Europe's largest urban parks.",
+        "es": "Un paseo desde el famoso jardín de cerveza de la Torre China hasta la ola artificial del río Eisbach, llena de surfistas, y luego a los prados del Jardín Inglés, uno de los mayores parques urbanos de Europa.",
+        "de": "Ein Spaziergang vom berühmten Biergarten am Chinesischen Turm zur künstlichen Stehwelle des Eisbachs, umringt von Surfern, und weiter zu den Wiesen des Englischen Gartens, einem der größten Stadtparks Europas.",
+        "ru": "Прогулка от знаменитого пивного сада у Китайской башни до искусственной стоячей волны реки Айсбах, окружённой сёрферами, и далее к лугам Английского сада — одного из крупнейших городских парков Европы."
+      },
+      "places": [
+        {
+          "name": "Chinesischer Turm",
+          "category": "General",
+          "address": "Englischer Garten 3, 80538 Munich",
+          "latitude": 48.1519305,
+          "longitude": 11.5922346
+        },
+        {
+          "name": "Am Eisbach",
+          "category": "General",
+          "address": "Am Eisbach, 80538 Munich",
+          "latitude": 48.15450178764666,
+          "longitude": 11.60035471448058
+        },
+        {
+          "name": "English Garden",
+          "category": "Park",
+          "address": "Englischer Garten, 80538 Munich",
+          "latitude": 48.1700676,
+          "longitude": 11.6103879
+        }
+      ]
+    },
+    {
+      "id": "muc-nymphenburg",
+      "verified": true,
+      "routeCategory": "Yurt Dışı",
+      "name": {
+        "tr": "Nymphenburg Sarayı ve Parkı",
+        "en": "Nymphenburg Palace and Park",
+        "es": "Palacio y parque de Nymphenburg",
+        "de": "Schloss Nymphenburg und Park",
+        "ru": "Дворец и парк Нимфенбург"
+      },
+      "description": {
+        "tr": "Bavyera Wittelsbach hanedanının yazlık sarayı Nymphenburg'un barok cephesinden kanallı bahçe parkının sakin yürüyüş yollarına uzanan bir rota.",
+        "en": "A route from the baroque facade of Nymphenburg, the summer palace of the Bavarian Wittelsbach dynasty, to the quiet walking paths of its canal-lined garden park.",
+        "es": "Una ruta desde la fachada barroca de Nymphenburg, el palacio de verano de la dinastía bávara de los Wittelsbach, hasta los tranquilos senderos de su parque ajardinado con canales.",
+        "de": "Eine Route von der barocken Fassade von Nymphenburg, dem Sommerschloss der bayerischen Wittelsbacher, zu den ruhigen Spazierwegen des kanalgesäumten Schlossparks.",
+        "ru": "Маршрут от барочного фасада Нимфенбурга, летнего дворца баварской династии Виттельсбахов, до тихих дорожек паркового ансамбля с каналами."
+      },
+      "places": [
+        {
+          "name": "Nymphenburg Palace",
+          "category": "Historical Site",
+          "address": "Nymphenburg Palace, 80638 Munich",
+          "latitude": 48.1582284,
+          "longitude": 11.5032815
+        },
+        {
+          "name": "Schlosspark Nymphenburg",
+          "category": "Park",
+          "address": "Schlosspark Nymphenburg, Munich",
+          "latitude": 48.1584981,
+          "longitude": 11.495473
+        }
+      ]
+    }
+  ]
+}
