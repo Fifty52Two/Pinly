@@ -185,14 +185,12 @@ Paywall placeholder olduğu sürece App Store'a çıkılamaz; her şey bunun ark
       gerçek ürün ID eşleşmesi) + scheme-yolu probe testi (geçti, sonra silindi). **149/149 yeşil.**
       ÖĞRENİLEN: xcodebuild, TestAction'daki SK config'i UYGULUYOR; SKTestSession testlerde
       dosyayı test bundle resource'undan okur (dosya PinlyTests target'ına resource eklendi).
-- [ ] **Sandbox/StoreKit-Config'te uçtan uca insan testi** (satın al → isPro açık → gate'ler açılıyor →
-      restore → iptal davranışı) — Ferhat: **Xcode'u TAMAMEN KAPAT-AÇ** (scheme diskten değişti),
-      Cmd+R → GPX İndir → paywall'da $2.99/$29.99 + "7 Gün Ücretsiz" rozeti gelmeli → satın al →
-      Debug → StoreKit → Manage Transactions ile restore/iptal senaryoları.
+- [x] **Sandbox/StoreKit-Config'te uçtan uca insan testi** — Ferhat 2026-07-23'te yaptı: satın alma
+      BAŞARILI ("You're all set" ekranı doğrulandı), gate'ler açıldı.
 - [ ] Paywall redesign (FAZ 6 UI diliyle): yıllık planı öne çıkar, "7 gün ücretsiz dene" ana CTA —
       bu turda FONKSİYONEL entegrasyon yapıldı (offering/purchase/restore), görsel "wow" katmanı
-      (matchedGeometry, Liquid Glass vb.) FAZ 6'ya bırakıldı.
-- [ ] `FeatureFlags.unlimitedPlacesInBeta` gözden geçirildi (kod değişmedi): `isTestFlightBuild`
+      FAZ 6'ya bırakıldı — **2026-07-28'de Sonnet doğrudan uyguluyor, bkz. FAZ 6.**
+- [x] `FeatureFlags.unlimitedPlacesInBeta` gözden geçirildi (kod değişmedi): `isTestFlightBuild`
       zaten Release+sandbox receipt'e bakıyor — App Store production build'de otomatik `false` olur,
       ekstra bir "beta bitti" flag'ine gerek yok, gate'ler kendiliğinden aktifleşir.
 
@@ -211,8 +209,8 @@ Paywall placeholder olduğu sürece App Store'a çıkılamaz; her şey bunun ark
       call site'ta da kullanılıyor; asıl bulunan açık: `hydrateIfEditing` placeId'li ama silinmiş
       mekanlarda isme HİÇ düşmüyordu — düzeltildi + regresyon testi eklendi.
 - [x] Build numarası 4'e yükseltildi (Xcode proje ayarları). Tüm testler yeşil: **134/134**.
-- [ ] **TestFlight'a fiili yükleme (archive+upload) BEKLİYOR** — imzalama/Organizer erişimi
-      gerektirdiği için Ferhat'ın onayı/aksiyonu gerekiyor (beta notları FAZ2 spec'te hazır).
+- [x] **TestFlight'a fiili yükleme** — Build 4 archive+upload edildi, Beta App Review 2026-07-23'te
+      ONAYLANDI, External Testing Public Link açık.
 - [x] **Fable review kapısı GEÇİLDİ (2026-07-23):** bant çeşitlendirme + segment invariant elle
       denetlendi. 1 CONFIRMED bug bulunup düzeltildi: `unroutableStopCount` plan'daki nil'lerden
       sayılıyordu — konum yokken hesaplanan rotada (plan[0]=nil, bilinen meşru durum) tüm duraklar
@@ -382,8 +380,8 @@ numericText tamamlandı. Kalan tek düşük öncelikli madde: onboarding canlı 
 |---|---|---|
 | XcodeBuildMCP | ✔ kurulu | build/test/simülatör UI otomasyonu, ekran görüntüsü üretimi |
 | Firebase MCP | ✔ kurulu | Crashlytics + Analytics raporları (FAZ 7 ölçüm) |
-| RevenueCat MCP | kurulu, **OAuth bekliyor** (Ferhat: `/mcp`) | FAZ 1 ürün/entitlement/offering kurulumu |
-| App Store Connect MCP | bekliyor (**Ferhat: .p8 anahtarı**) | TestFlight/review durumu, meta yönetimi |
+| RevenueCat MCP | ✔ OAuth bağlı (2026-07-23) | FAZ 1 ürün/entitlement/offering kurulumu |
+| App Store Connect MCP | kurulmadı, gerek kalmadı — .p8 ile doğrudan ASC API scripti kullanıldı | TestFlight/review durumu, meta yönetimi |
 | Supabase MCP | FAZ 5 başında kurulacak | sosyal backend şema/RLS yönetimi |
 | Google Places API | **KULLANILMAYACAK** (karar) | puan gösterimi maliyeti ($35-40/1K çağrı) sürdürülemez; kendi topluluk puanımız + "Google Maps'te aç" düğmesi |
 
@@ -418,15 +416,14 @@ onu da en çok yıllık+deneme kurgusu ve paywall zamanlaması etkiler.
 4. **Hafta 5-8:** FAZ 5 (Supabase sosyal) + Avrupa rota dalga 2 + video/PR hattı sürekli
 5. Lansman sonrası: haftalık metrik raporu → plana revizyon
 
-## Ferhat'ın Yapacakları (konsolide)
+## Ferhat'ın Yapacakları (konsolide — 2026-07-28 güncellendi)
 
-1. `/mcp` → revenuecat OAuth (5 dk)
-2. RevenueCat hesabı + ASC API anahtarı (.p8) üretip paylaş (15 dk)
-3. ASC'de abonelik ürünleri onayı (Claude yönlendirir)
-4. Sandbox test hesabı
-5. Beta Public Link'i 10-20 kişiye dağıt
-6. Xcode 26 kurulu mu kontrol (Liquid Glass için)
-7. Rota kataloğu göz kontrolü (dalga başına ~30 dk)
-8. Video çekim/kurgu (Claude senaryoları verir) + influencer DM'leri
-9. Supabase hesabı (FAZ 5'te)
-10. Büyük tasarım kararlarında AskUserQuestion'lara cevap
+Maddeler 1-4 ✅ TAMAM (2026-07-23: RevenueCat OAuth, ASC anahtarları, ürün onayı, sandbox testi).
+Liquid Glass kalıcı olarak İPTAL edildi (2026-07-28 kararı) — Xcode 26 kontrolüne gerek yok.
+
+1. `git push` — main origin'den çok sayıda commit ileride, SSH parola korumalı, terminalden atılmalı
+2. Beta Public Link'i 10-20 kişiye dağıt (arkadaşlar + 1-2 gezi grubu), geri bildirim topla
+3. Rota kataloğu göz kontrolü (opsiyonel — `verify_routes.swift` zaten otomatik doğruluyor)
+4. Video çekim/kurgu (Claude senaryoları verir) + influencer DM'leri (FAZ 7)
+5. Supabase hesabı (FAZ 5 V2 — birlikte kuracağız)
+6. Büyük tasarım kararlarında AskUserQuestion'lara cevap (sürekli)
