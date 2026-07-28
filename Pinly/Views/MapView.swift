@@ -240,12 +240,41 @@ struct MainMapView: UIViewRepresentable {
         let currentIds = Set(map.annotations.compactMap { ($0 as? PlaceAnnotation)?.placeKey })
         let newIds = Set(places.compactMap { $0.coordinate != nil ? "\($0.id.uuidString)-\($0.category)" : nil })
 
-        guard currentIds != newIds else { return }
+        if currentIds != newIds {
+            map.removeAnnotations(map.annotations.filter { $0 is PlaceAnnotation })
+            for place in places {
+                guard let coord = place.coordinate else { continue }
+                map.addAnnotation(PlaceAnnotation(place: place, coordinate: coord))
+            }
+            // Pin seti yeniden kurulduğunda eski annotation view'lar (varsa nefes alan
+            // pin dahil) düşer — takip edilen view referansı geçersiz olur, yeniden bulunmalı.
+            context.coordinator.breathingView = nil
+        }
 
-        map.removeAnnotations(map.annotations.filter { $0 is PlaceAnnotation })
-        for place in places {
-            guard let coord = place.coordinate else { continue }
-            map.addAnnotation(PlaceAnnotation(place: place, coordinate: coord))
+        // Seçili pin "nefes alma" (Wow #3-4, specs/FAZ6_UI_YON.md) — NavigationMapView'in
+        // pulse'ıyla AYNI MapPinAnimator mekanizması. Reduce Motion: MapPinAnimator kendi
+        // içinde no-op'a düşer. Pin seti değişmese BİLE (ör. sadece seçim değişince)
+        // her updateUIView çağrısında çalışır.
+        updateSelectedBreathing(map: map, coordinator: context.coordinator)
+    }
+
+    private func updateSelectedBreathing(map: MKMapView, coordinator: Coordinator) {
+        let targetKey = selectedPlace.flatMap { place -> String? in
+            guard place.coordinate != nil else { return nil }
+            return "\(place.id.uuidString)-\(place.category)"
+        }
+        if coordinator.breathingKey != targetKey {
+            if let oldView = coordinator.breathingView {
+                MapPinAnimator.removeBreathing(from: oldView)
+            }
+            coordinator.breathingView = nil
+            coordinator.breathingKey = targetKey
+        }
+        guard let targetKey, coordinator.breathingView == nil else { return }
+        if let annotation = map.annotations.first(where: { ($0 as? PlaceAnnotation)?.placeKey == targetKey }),
+           let view = map.view(for: annotation) {
+            MapPinAnimator.addBreathing(to: view)
+            coordinator.breathingView = view
         }
     }
 
@@ -254,6 +283,9 @@ struct MainMapView: UIViewRepresentable {
     class Coordinator: NSObject, MKMapViewDelegate {
         @Binding var selectedPlace: Place?
         var hasZoomed = false
+        // Wow #3-4 (specs/FAZ6_UI_YON.md): şu an "nefes alan" pin'in view/anahtar takibi.
+        var breathingView: MKAnnotationView?
+        var breathingKey: String?
 
         init(selectedPlace: Binding<Place?>) {
             _selectedPlace = selectedPlace
@@ -272,6 +304,9 @@ struct MainMapView: UIViewRepresentable {
             view.glyphImage = UIImage(systemName: placeAnnotation.place.categoryIcon)
             view.titleVisibility = .hidden
             view.canShowCallout = false
+            // Pin drop "pop" (Wow #3-4) — NavigationMapView'in pulse'ıyla AYNI
+            // MapPinAnimator mekanizması; Reduce Motion açıksa no-op.
+            MapPinAnimator.popIn(view)
             return view
         }
 

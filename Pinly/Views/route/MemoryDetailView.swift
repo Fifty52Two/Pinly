@@ -21,61 +21,63 @@ struct MemoryDetailView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    Text(history.date, style: .date)
-                        .font(.subheadline)
+        // ÖNEMLİ: kendi NavigationStack'ini SARMAZ — RouteHistoryView'in
+        // navigationDestination(for:) ile push ettiği hedef budur; iç içe
+        // NavigationStack .zoom geçişini kırar (bkz. specs/FAZ6_UI_YON.md Wow #2).
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                Text(history.date, style: .date)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+
+                if !loadedPhotos.isEmpty {
+                    photoGrid
+                }
+
+                statCard
+
+                if !history.placeNames.isEmpty {
+                    stopsCard
+                }
+            }
+            .padding(20)
+            .padding(.bottom, 90)
+        }
+        .background(PinlyTheme.groundGradient)
+        .navigationTitle(history.routeName)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.secondary)
-
-                    if !loadedPhotos.isEmpty {
-                        photoGrid
-                    }
-
-                    statCard
-
-                    if !history.placeNames.isEmpty {
-                        stopsCard
-                    }
                 }
-                .padding(20)
-                .padding(.bottom, 90)
+                .accessibilityLabel(NSLocalizedString("Kapat", comment: ""))
             }
-            .background(PinlyTheme.groundGradient)
-            .navigationTitle(history.routeName)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button { dismiss() } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.secondary)
-                    }
+        }
+        .safeAreaInset(edge: .bottom) {
+            Button {
+                showShareFormatPicker = true
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "square.and.arrow.up")
+                    Text(NSLocalizedString("Yeniden Paylaş", comment: ""))
                 }
             }
-            .safeAreaInset(edge: .bottom) {
-                Button {
-                    showShareFormatPicker = true
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "square.and.arrow.up")
-                        Text(NSLocalizedString("Yeniden Paylaş", comment: ""))
-                    }
-                }
-                .buttonStyle(PinlyPrimaryButtonStyle())
-                .padding(.horizontal, 20)
-                .padding(.top, 10)
-                .padding(.bottom, 20)
-                .background(.regularMaterial)
-            }
-            .confirmationDialog(
-                NSLocalizedString("Yeniden Paylaş", comment: ""),
-                isPresented: $showShareFormatPicker,
-                titleVisibility: .visible
-            ) {
-                Button(NSLocalizedString("Hikaye (9:16)", comment: "")) { share(format: .story) }
-                Button(NSLocalizedString("Gönderi (4:5)", comment: "")) { share(format: .post) }
-                Button(NSLocalizedString("İptal", comment: ""), role: .cancel) {}
-            }
+            .buttonStyle(PinlyPrimaryButtonStyle())
+            .padding(.horizontal, 20)
+            .padding(.top, 10)
+            .padding(.bottom, 20)
+            .background(.regularMaterial)
+        }
+        .confirmationDialog(
+            NSLocalizedString("Yeniden Paylaş", comment: ""),
+            isPresented: $showShareFormatPicker,
+            titleVisibility: .visible
+        ) {
+            Button(NSLocalizedString("Hikaye (9:16)", comment: "")) { share(format: .story) }
+            Button(NSLocalizedString("Gönderi (4:5)", comment: "")) { share(format: .post) }
+            Button(NSLocalizedString("İptal", comment: ""), role: .cancel) {}
         }
     }
 
