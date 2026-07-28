@@ -22,6 +22,10 @@
 	<string>ca-app-pub-7849418614739862~9682238844</string>
 	<key>RevenueCatAPIKey</key>
 	<string>appl_RUAmxHPfjrHHoKGQwOmrVllWMiH</string>
+	<key>SupabaseURL</key>
+	<string>https://ddodromuhgqznmhrwqbt.supabase.co</string>
+	<key>SupabasePublishableKey</key>
+	<string>sb_publishable_0sjg2ErAZPv8YuoVcGYRkg_TeruwoMW</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>UILaunchScreen</key>

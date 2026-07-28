@@ -86,6 +86,12 @@ private struct RouteMemoriesKey: EnvironmentKey {
     static let defaultValue: RouteMemoryStoring = DefaultRouteMemoryStore.shared
 }
 
+private struct SocialKey: EnvironmentKey {
+    // Analytics'teki NoOp varsayılan deseniyle aynı gerekçe: preview/test'te canlı ağ isteği
+    // veya anonim Supabase oturumu açılması istenmez. Gerçek servis SADECE PinlyApp'te enjekte edilir.
+    static let defaultValue: SocialServicing = NoOpSocialService.shared
+}
+
 extension EnvironmentValues {
     var entitlements: EntitlementProviding {
         get { self[EntitlementsKey.self] }
@@ -185,5 +191,10 @@ extension EnvironmentValues {
     var routeMemories: RouteMemoryStoring {
         get { self[RouteMemoriesKey.self] }
         set { self[RouteMemoriesKey.self] = newValue }
+    }
+
+    var social: SocialServicing {
+        get { self[SocialKey.self] }
+        set { self[SocialKey.self] = newValue }
     }
 }
