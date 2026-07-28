@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "format": "pinly-route-catalog-v1",
+    "author": "sonnet",
+    "date": "2026-07-29",
+    "note": "2 rota, 7 durağın tamamı verify_routes.swift ile otomatik doğrulandı (Sonnet, 2026-07-29) — FAIL=0 NEAR=0, tüm eşleşmeler 0-108m sapma. Koordinatlar önce MKLocalSearch ile arandı, sonra JSON'a yazıldı. Atatürk Köşkü ve Sümela Manastırı gibi şehir merkezinden uzak/tek duraklı yerler 2.5 km yürüme kuralına uymadığı için dahil edilmedi. Otomatik doğrulama insan onayı yerine geçen kapı olarak kabul edildi (GROWTH_PLAN FAZ 4).",
+    "rules": "Duraklar arası yürüme < 2.5 km; kategori değerleri PlaceCategory.rawValue; routeCategory: Şehir İçi | Şehir Dışı | Yurt Dışı"
+  },
+  "city": "trabzon",
+  "country": "tr",
+  "routes": [
+    {
+      "id": "trb-ayasofya-kale",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Ayasofya'dan Kale'ye",
+        "en": "From Hagia Sophia to the Castle",
+        "es": "De Santa Sofía al castillo",
+        "de": "Von der Hagia Sophia zur Burg",
+        "ru": "От Айя-Софии до крепости"
+      },
+      "description": {
+        "tr": "Bizans dönemi fresklerini barındıran Ayasofya'dan Gülbahar Hatun Camii'ne, oradan Trabzon Kalesi'nin surlarına ve Zağnos Vadisi'ne uzanan bir tarih yürüyüşü.",
+        "en": "A historic walk from the Byzantine-era frescoes of Hagia Sophia to Gülbahar Hatun Mosque, then to the walls of Trabzon Castle and Zağnos Valley.",
+        "es": "Un paseo histórico desde los frescos bizantinos de Santa Sofía hasta la mezquita Gülbahar Hatun, y luego a las murallas del castillo de Trabzon y el valle de Zağnos.",
+        "de": "Ein historischer Spaziergang von den byzantinischen Fresken der Hagia Sophia zur Gülbahar-Hatun-Moschee, dann zu den Mauern der Burg Trabzon und ins Zağnos-Tal.",
+        "ru": "Исторический маршрут от византийских фресок Айя-Софии до мечети Гюльбахар-Хатун, затем к стенам крепости Трабзон и в долину Загнос."
+      },
+      "places": [
+        {
+          "name": "Trabzon Ayasofya Müzesi",
+          "category": "Historical Site",
+          "address": "Ayasofya Müzesi 60, 61040 Trabzon Merkez/Trabzon",
+          "latitude": 41.0020995,
+          "longitude": 39.6958297
+        },
+        {
+          "name": "Gülbahar Hatun Camii",
+          "category": "Historical Site",
+          "address": "61060 Trabzon Merkez/Trabzon",
+          "latitude": 41.003522,
+          "longitude": 39.715836
+        },
+        {
+          "name": "Trabzon Kalesi",
+          "category": "Historical Site",
+          "address": "Eflatun Sk. 5, 61050 Trabzon Merkez/Trabzon",
+          "latitude": 41.001364,
+          "longitude": 39.7188022
+        },
+        {
+          "name": "Zağnos Vadisi Parkı",
+          "category": "Park",
+          "address": "61050 Trabzon Merkez/Trabzon",
+          "latitude": 41.00303315314815,
+          "longitude": 39.718417099717875
+        }
+      ]
+    },
+    {
+      "id": "trb-carsi-meydan",
+      "verified": true,
+      "routeCategory": "Şehir İçi",
+      "name": {
+        "tr": "Çarşı Camii'nden Meydan'a",
+        "en": "From Çarşı Mosque to the Main Square",
+        "es": "De la mezquita Çarşı a la plaza principal",
+        "de": "Von der Çarşı-Moschee zum Hauptplatz",
+        "ru": "От мечети Чарши до главной площади"
+      },
+      "description": {
+        "tr": "Trabzon'un işlek Çarşı Camii çevresinden Uzun Sokak'ın vitrinlerine bakarak yürüyüp Atatürk Alanı'nda (Meydan) mola verilen kısa bir şehir merkezi turu.",
+        "en": "A short city-center walk from the busy area around Çarşı Mosque, along the shop windows of Uzun Sokak, ending with a break at Atatürk Square (Meydan).",
+        "es": "Un breve paseo por el centro, desde la concurrida zona de la mezquita Çarşı, junto a los escaparates de Uzun Sokak, terminando con un descanso en la plaza Atatürk (Meydan).",
+        "de": "Ein kurzer Spaziergang durch das Stadtzentrum, von der belebten Gegend um die Çarşı-Moschee, entlang der Schaufenster der Uzun Sokak, mit einer Pause auf dem Atatürk-Platz (Meydan).",
+        "ru": "Короткая прогулка по центру города от оживлённого района мечети Чарши вдоль витрин улицы Узун-Сокак с остановкой на площади Ататюрка (Мейдан)."
+      },
+      "places": [
+        {
+          "name": "Çarşı Camii",
+          "category": "Historical Site",
+          "address": "61050 Trabzon Merkez/Trabzon",
+          "latitude": 41.007766662729395,
+          "longitude": 39.722961319764124
+        },
+        {
+          "name": "Uzun Sokak",
+          "category": "General",
+          "address": "61050 Trabzon Merkez/Trabzon",
+          "latitude": 41.00536038069541,
+          "longitude": 39.7241863568571
+        },
+        {
+          "name": "Trabzon Meydan",
+          "category": "General",
+          "address": "Atatürk Meydanı 15/1, 61030 Trabzon Merkez/Trabzon",
+          "latitude": 41.0052693,
+          "longitude": 39.7307038
+        }
+      ]
+    }
+  ]
+}
