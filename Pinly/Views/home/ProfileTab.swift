@@ -15,6 +15,7 @@ struct ProfileTab: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.routeMemories) private var routeMemories
     @Environment(\.openURL) private var openURL
+    @Environment(\.social) private var social
 
     @Query(sort: \SavedRoute.createdAt, order: .reverse) private var savedRoutes: [SavedRoute]
 
@@ -29,6 +30,12 @@ struct ProfileTab: View {
     @State private var profile: UserProfile? = nil
     @State private var profilePhoto: UIImage? = nil
     @State private var pickerItem: PhotosPickerItem? = nil
+
+    /// FAZ 5 V2 — Kamu Profili: kullanıcı adı (varsa) + yayınlanan rota sayısı + toplam alınan fav.
+    /// Kullanıcı adı hiç ayarlanmadıysa (sosyal katmana hiç dokunmadıysa) bölüm gizlenir.
+    @State private var socialProfile: SocialProfileDTO? = nil
+    @State private var publishedRoutesCount = 0
+    @State private var totalFavsReceived = 0
 
     private var visitedCount: Int { placeStore.places.filter { $0.isVisited }.count }
     /// FAZ 5 V1 — Rotalarım kartı için son 5 kayıtlı rota (en yeni önce).
@@ -232,6 +239,31 @@ struct ProfileTab: View {
                 }
                 .listRowBackground(PinlyTheme.surface)
 
+                // Kamu Profili — FAZ 5 V2: kullanıcı adı ayarlandıysa (ilk yayın/fav sonrası)
+                // yayınlanan rota sayısı + toplam alınan fav gösterilir.
+                if let username = socialProfile?.username {
+                    Section {
+                        Text(NSLocalizedString("Herkese Açık Profil", comment: ""))
+                            .font(.headline)
+
+                        HStack(spacing: 36) {
+                            VStack(spacing: 2) {
+                                Text("@\(username)")
+                                    .font(.subheadline.bold())
+                                    .lineLimit(1)
+                                Text(NSLocalizedString("Kullanıcı Adı", comment: ""))
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            }
+                            profileMiniStat(value: publishedRoutesCount, label: NSLocalizedString("Yayınlanan", comment: ""))
+                            profileMiniStat(value: totalFavsReceived, label: NSLocalizedString("Alınan Fav", comment: ""))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 4)
+                    }
+                    .listRowBackground(PinlyTheme.surface)
+                }
+
                 Section {
                     let current = LanguageManager.supported.first { $0.code == languageManager.currentLanguage }
                     MoreRow(
@@ -379,6 +411,7 @@ struct ProfileTab: View {
             }
         }
         .onAppear { reloadProfile() }
+        .task { await loadSocialProfile() }
     }
 
     private var profileAvatar: some View {
@@ -419,6 +452,18 @@ struct ProfileTab: View {
     private func reloadProfile() {
         profile = profileService.load()
         profilePhoto = profileService.loadPhoto()
+    }
+
+    /// Sadece kullanıcı adı ZATEN ayarlıysa (yani sosyal katmana en az bir kez dokunulduysa)
+    /// profil + istatistikleri çeker; aksi halde ağa hiç çıkmaz — sessiz "çevrimdışı" davranışıyla
+    /// tutarlı (bkz. specs/FAZ5_SUPABASE_MIMARI.md "hesap sürtünmesi sıfır").
+    private func loadSocialProfile() async {
+        guard let profile = try? await social.myProfile(), profile.username != nil else { return }
+        socialProfile = profile
+        if let published = try? await social.myPublishedRoutes() {
+            publishedRoutesCount = published.count
+            totalFavsReceived = published.reduce(0) { $0 + $1.favCount }
+        }
     }
 }
 

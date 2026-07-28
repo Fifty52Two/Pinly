@@ -40,6 +40,7 @@ struct DiscoverView: View {
     @State private var addedNearbyIDs: Set<UUID> = []
     @State private var showNearbyAll = false
     @State private var showPaywall = false
+    @State private var showCommunityFeed = false
 
     enum PanelDetent { case collapsed, half, expanded }
 
@@ -92,6 +93,10 @@ struct DiscoverView: View {
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView { showPaywall = false }
+        }
+        .sheet(isPresented: $showCommunityFeed) {
+            CommunityFeedView()
+                .environmentObject(locationManager)
         }
         .task(id: taskKey) {
             await loadNearbySuggestions()
@@ -214,6 +219,7 @@ struct DiscoverView: View {
                 VStack(alignment: .leading, spacing: 22) {
                     nearbySection
                     starterRoutesSection
+                    communitySection
                     collectionSection
                 }
                 .padding(.top, 4)
@@ -295,6 +301,43 @@ struct DiscoverView: View {
                 }
             }
         }
+    }
+
+    // MARK: - Topluluk rotaları (FAZ 5 V2)
+
+    private var communitySection: some View {
+        Button {
+            showCommunityFeed = true
+        } label: {
+            HStack(spacing: 14) {
+                ZStack {
+                    Circle()
+                        .fill(PinlyTheme.primary.opacity(0.15))
+                        .frame(width: 44, height: 44)
+                    Image(systemName: "person.3.fill")
+                        .foregroundColor(PinlyTheme.primary)
+                        .font(.headline)
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(NSLocalizedString("Topluluk Rotaları", comment: ""))
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                    Text(NSLocalizedString("Şehrindeki gezginlerin paylaştığı rotalara göz at", comment: ""))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+            }
+            .padding(12)
+            .background(RoundedRectangle(cornerRadius: 14).fill(PinlyTheme.fillMuted))
+            .padding(.horizontal, 16)
+        }
+        .buttonStyle(.plain)
     }
 
     // MARK: - Koleksiyonum
