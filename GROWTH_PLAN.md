@@ -289,19 +289,28 @@ Soğuk başlangıç ölüm nedenidir: mekanı olmayan kullanıcı boş harita g�
 
 ## FAZ 5 — Sosyal Katman: profil, paylaşım, fav (≈2-3 hafta, backend başlangıcı)
 
-- [ ] **V1 (backend'siz, hemen):** ProfileTab'a "Rotalarım" bölümü — kaydettiği + paylaştığı rota
+- [x] **V1 (backend'siz, hemen):** ProfileTab'a "Rotalarım" bölümü — kaydettiği + paylaştığı rota
       sayıları (sayaçlar UserDefaults'ta zaten var), rota kartları
-- [ ] **V2 (Supabase):**
-  - [ ] Supabase MCP kur (`claude mcp add supabase ...`), proje oluştur (Ferhat: hesap açar)
-  - [ ] Anonim auth → kullanıcı adı seçimi (zorunlu hesap YOK — sürtünme düşük kalsın)
-  - [ ] Rota yayınlama: `SavedRoute.isPublic` + `supabaseId` alanları ZATEN modelde — publish servisi
-        (`RouteFeedProviding` protokolü + `SupabaseRouteFeedService`)
-  - [ ] Keşfet feed'i: şehre göre topluluk rotaları (hazır rota katalogu da aynı feed'den gelir)
-  - [ ] **Fav sistemi:** rotayı favla → profilinde "Favlananlar"; rota kartında fav sayısı
-  - [ ] **Kamu profili:** kullanıcı adı, paylaştığı rota sayısı, rotaları, toplam aldığı fav
-  - [ ] **Moderasyon (App Review ZORUNLU şartı — UGC):** rota/profil raporlama butonu, engelleme,
-        basit kelime filtresi, admin gizleme (Supabase dashboard)
-  - [ ] RLS policy'leri + rate limit (spam rota yayınlamaya karşı)
+- [x] **V2 (Supabase) — 2026-07-28/29, Sonnet doğrudan çalıştı:**
+  - [x] Supabase MCP kuruldu, proje canlıda (profiles/public_routes/favorites/reports/blocks/banned_words
+        şeması + RLS + trigger'lar — bkz. specs/FAZ5_SUPABASE_MIMARI.md)
+  - [x] Anonim auth → kullanıcı adı seçimi: `UsernameSetupSheet.swift` (kullanıcı adı + topluluk
+        kuralları onayı, ilk publish/favlama denemesinden hemen önce gösterilir)
+  - [x] Rota yayınlama: `SavedRoutesView` "Paylaş" swipe aksiyonu → `SavedRoutesViewModel.publish()`
+        → `SocialService.publish()`, başarılı olursa `SavedRoute.supabaseId`/`isPublic` yazılır
+  - [x] Keşfet feed'i: `Pinly/Views/social/CommunityFeedView.swift` — şehre göre (varsayılan
+        `LocationManager.currentCity`, elle şehir arama da mümkün) + keyset pagination.
+        DiscoverView panelinden "Topluluk Rotaları" girişiyle açılıyor (hazır rota kataloğu ayrı
+        akış olarak kaldı, aynı feed'e henüz taşınmadı)
+  - [x] **Fav sistemi:** feed kartında kalp toggle + fav sayısı (iyimser güncelleme);
+        ayrı bir "Favlananlar" listesi ekranı YAPILMADI (servis katmanında `myFavorites()` hazır,
+        UI'si sonraki tura kaldı)
+  - [x] **Kamu profili:** ProfileTab'a "Herkese Açık Profil" bölümü — kullanıcı adı ayarlıysa
+        yayınlanan rota sayısı + toplam alınan fav gösterir (`SocialService.myPublishedRoutes()`)
+  - [x] **Moderasyon (App Review ZORUNLU şartı — UGC):** `ReportRouteSheet.swift` (4 sebep + not),
+        engelleme (feed kartı menüsü, engellenen kullanıcı feed'den anında düşer). Kelime filtresi
+        + oto-gizleme + admin gizleme zaten DB trigger/dashboard katmanında (backend tarafı)
+  - [x] RLS policy'leri + rate limit — backend tarafında zaten uygulandı (specs/FAZ5_SUPABASE_MIMARI.md)
 - [ ] Influencer köprüsü: "adına rota paketi" — seçili kullanıcılara rozetli profil ("Rota Küratörü")
 
 ## FAZ 6 — UI/UX Yenileme (FAZ 3-5 ile paralel, toplam ≈1-2 hafta efor)
