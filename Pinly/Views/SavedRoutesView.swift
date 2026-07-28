@@ -97,6 +97,37 @@ struct SavedRoutesView: View {
                     Text(String(format: NSLocalizedString("\"%@\" rotasını silmek istiyor musun?", comment: ""), route.name))
                 }
             }
+            .sheet(isPresented: $viewModel.showUsernameSetup) {
+                UsernameSetupSheet {
+                    viewModel.usernameSetupSucceeded()
+                }
+            }
+            .alert(
+                NSLocalizedString("Rota Yayınlandı", comment: ""),
+                isPresented: Binding(
+                    get: { viewModel.publishedRouteName != nil },
+                    set: { if !$0 { viewModel.publishedRouteName = nil } }
+                )
+            ) {
+                Button(NSLocalizedString("Tamam", comment: "")) { viewModel.publishedRouteName = nil }
+            } message: {
+                if let name = viewModel.publishedRouteName {
+                    Text(String(format: NSLocalizedString("\"%@\" artık topluluk feed'inde görünüyor.", comment: ""), name))
+                }
+            }
+            .alert(
+                NSLocalizedString("Yayınlanamadı", comment: ""),
+                isPresented: Binding(
+                    get: { viewModel.publishErrorMessage != nil },
+                    set: { if !$0 { viewModel.publishErrorMessage = nil } }
+                )
+            ) {
+                Button(NSLocalizedString("Tamam", comment: "")) { viewModel.publishErrorMessage = nil }
+            } message: {
+                if let message = viewModel.publishErrorMessage {
+                    Text(message)
+                }
+            }
         }
     }
 
@@ -186,6 +217,16 @@ struct SavedRoutesView: View {
                     }
                     .tint(PinlyTheme.primary)
                 }
+                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                    if !route.isPublic {
+                        Button {
+                            viewModel.publish(route, context: modelContext)
+                        } label: {
+                            Label(NSLocalizedString("Paylaş", comment: ""), systemImage: "globe")
+                        }
+                        .tint(PinlyTheme.slate)
+                    }
+                }
                 .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
@@ -273,9 +314,16 @@ private struct SavedRouteCard: View {
                     }
                 }
                 Spacer()
-                Text(route.formattedDate)
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
+                VStack(alignment: .trailing, spacing: 3) {
+                    Text(route.formattedDate)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                    if route.isPublic {
+                        Label(NSLocalizedString("Yayında", comment: ""), systemImage: "globe")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundColor(PinlyTheme.success)
+                    }
+                }
             }
 
             // Mekan sayısı + uzaklık
