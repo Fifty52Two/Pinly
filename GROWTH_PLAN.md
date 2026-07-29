@@ -381,6 +381,29 @@ numericText tamamlandı. Kalan tek düşük öncelikli madde: onboarding canlı 
 - [ ] **Ölçüm çerçevesi (Firebase MCP ile Claude raporlar):** haftalık — indirme, D1/D7/D30 retention,
       rota tamamlama oranı, memory_card_shared, paywall funnel, crash-free oranı
 
+## FAZ 8 — Seyahat Modu: Kemik Kitle & Uluslararası Büyüme (2026-07-29 karar, detay specs/FAZ8_SEYAHAT_MODU.md)
+
+> Yön kararı AskUserQuestion ile alındı: sosyal katman büyütme + retention + uluslararası genişleme
+> öncelikli. AI rota asistanı ("az maliyetli tam olmaz") ve iCloud Sync/Apple Watch gibi mimari
+> yükü büyük özellikler BİLİNÇLİ OLARAK ERTELENDİ. Ferhat'ın somut isteği: yurt dışı gezisi
+> yapacaklar önceden rota kursun + sevgililer/arkadaşlar birlikte rota yapabilsin — appi
+> karmaşıklaştırmadan, hem profesyonel hem sıcak, kemik kitle kuracak özellikler.
+
+- [ ] **8.1 Seyahat Planlama (Yaklaşan Gezi):** Yeni `Trip` modeli (SwiftData, yerel) — şehir +
+      tarih aralığı + gün gün rota ataması (hazır katalog/topluluk feed/kendi rotaları). Seyahat
+      yaklaşınca yerel bildirim. Bugün eklenen 30 şehirlik kataloğu "buradayken keşfet"ten
+      "gitmeden önce planla"ya taşıyan asıl özellik — uluslararası büyümenin UI karşılığı.
+- [ ] **8.2 Birlikte Rota Planlama (Together):** Supabase'e 2 küçük tablo (`draft_routes`/
+      `draft_participants`, public feed'den AYRI görünürlük). Deep link davet (`pinly://joindraft`),
+      gerçek zamanlı senkron YOK (pull-to-refresh yeterli — basit tut ilkesi). Ortak tamamlama anısı.
+- [ ] **8.3 Kemik kitle mekanikleri:** `profiles.is_curator` aktivasyonu (zaten şemada var, hiç
+      kullanılmıyor), "bu ay öne çıkanlar" (var olan fav_count'un ay filtreli varyantı) — yeni
+      backend gerekmez.
+- **Kapsam dışı (bilinçli):** iCloud Sync/CloudKit, Apple Watch, AI rota asistanı, draft'larda
+  WebSocket senkron, çoklu-kullanıcı foto birleştirme (V2'ye).
+- **Açık kararlar (Ferhat'a sorulacak, uygulamaya başlamadan):** Trip gün sınırı (öneri: 14),
+  Birlikte taslakta katılımcı sınırı (öneri: 2-4 kişi), küratör rozeti otomatik mi/manuel mi.
+
 ---
 
 ## MCP / Tool Durumu
