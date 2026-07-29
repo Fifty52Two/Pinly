@@ -76,7 +76,7 @@ struct CategoryPickerView: View {
                                 .fontWeight(.semibold)
                             Image(systemName: "arrow.right")
                         }
-                        .foregroundColor(.white)
+                        .foregroundColor(PinlyTheme.onAccent)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
                         .background(PinlyTheme.primary)

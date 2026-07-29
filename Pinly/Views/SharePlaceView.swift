@@ -79,7 +79,7 @@ struct SharePlaceView: View {
                             Text(NSLocalizedString("Paylaş", comment: ""))
                                 .fontWeight(.semibold)
                         }
-                        .foregroundColor(.white)
+                        .foregroundColor(PinlyTheme.onAccent)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                         .background(PinlyTheme.primary)

@@ -98,7 +98,7 @@ struct RouteSharePickerView: View {
                                                 .frame(width: 22, height: 22)
                                             Text("\(index + 1)")
                                                 .font(.caption2.bold())
-                                                .foregroundColor(.white)
+                                                .foregroundColor(PinlyTheme.onAccent)
                                         }
                                     }
                                 }
@@ -115,7 +115,7 @@ struct RouteSharePickerView: View {
                             HStack(spacing: 10) {
                                 Text("\(index + 1)")
                                     .font(.caption.bold())
-                                    .foregroundColor(.white)
+                                    .foregroundColor(PinlyTheme.onAccent)
                                     .frame(width: 20, height: 20)
                                     .background(Circle().fill(PinlyTheme.primary))
                                 Text(place.name)
@@ -150,7 +150,7 @@ struct RouteSharePickerView: View {
                         Text(NSLocalizedString("Paylaş", comment: ""))
                             .fontWeight(.semibold)
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(PinlyTheme.onAccent)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
                     .background(PinlyTheme.primary)

@@ -95,7 +95,7 @@ struct WeeklyReportView: View {
             } label: {
                 Text(NSLocalizedString("Aç", comment: ""))
                     .font(.subheadline.weight(.semibold))
-                    .foregroundColor(.white)
+                    .foregroundColor(PinlyTheme.onAccent)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
                     .background(Capsule().fill(PinlyTheme.primary))

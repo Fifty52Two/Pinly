@@ -51,7 +51,7 @@ struct LocationDeniedView: View {
             } label: {
                 Text(NSLocalizedString("Ayarlara Git", comment: ""))
                     .fontWeight(.semibold)
-                    .foregroundColor(.white)
+                    .foregroundColor(PinlyTheme.onAccent)
                     .padding(.horizontal, 30)
                     .padding(.vertical, 14)
                     .background(PinlyTheme.primary)

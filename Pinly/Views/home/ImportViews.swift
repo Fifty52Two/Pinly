@@ -102,7 +102,7 @@ struct RouteImportView: View {
                 Button(action: onConfirm) {
                     Text(NSLocalizedString("Tümünü Ekle", comment: ""))
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(PinlyTheme.onAccent)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                         .background(PinlyTheme.success)
@@ -230,7 +230,7 @@ struct SwarmImportView: View {
                          ? String(format: NSLocalizedString("Tümünü Ekle (%lld)", comment: ""), places.count)
                          : NSLocalizedString("Pro'ya Geç", comment: ""))
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(PinlyTheme.onAccent)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                         .background(PinlyTheme.warning)

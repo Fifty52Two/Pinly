@@ -82,7 +82,7 @@ struct MapView: View {
                         Text(NSLocalizedString("Rota Oluştur", comment: ""))
                             .fontWeight(.semibold)
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(PinlyTheme.onAccent)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
                     .background(PinlyTheme.primary)
@@ -134,7 +134,7 @@ struct MapView: View {
                         Image(systemName: "plus")
                             .font(.title3)
                             .fontWeight(.bold)
-                            .foregroundColor(.white)
+                            .foregroundColor(PinlyTheme.onAccent)
                             .padding(12)
                             .background(PinlyTheme.primary)
                             .clipShape(Circle())
@@ -476,7 +476,7 @@ struct PlaceCard: View {
                         Text(NSLocalizedString("Navigate Here", comment: ""))
                             .fontWeight(.semibold)
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(PinlyTheme.onAccent)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
                     .background(PinlyTheme.primary)

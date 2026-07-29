@@ -134,7 +134,7 @@ struct PlacePickerStepView: View {
                             .fontWeight(.semibold)
                         Image(systemName: "arrow.right")
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(PinlyTheme.onAccent)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
                     .background(selectionCount > 0 ? PinlyTheme.primary : PinlyTheme.primary.opacity(0.35))
@@ -322,7 +322,7 @@ struct PlaceRow: View {
                         Image(systemName: "checkmark")
                             .font(.caption)
                             .fontWeight(.bold)
-                            .foregroundColor(.white)
+                            .foregroundColor(PinlyTheme.onAccent)
                     }
                 }
 

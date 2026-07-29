@@ -36,7 +36,7 @@ struct CategoryOrderingView: View {
                             Text("\(index + 1)")
                                 .font(.caption)
                                 .fontWeight(.bold)
-                                .foregroundColor(.white)
+                                .foregroundColor(PinlyTheme.onAccent)
                         }
 
                         Image(systemName: icon(for: category))
@@ -70,7 +70,7 @@ struct CategoryOrderingView: View {
                         .fontWeight(.semibold)
                     Image(systemName: "arrow.right")
                 }
-                .foregroundColor(.white)
+                .foregroundColor(PinlyTheme.onAccent)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
                 .background(PinlyTheme.primary)
