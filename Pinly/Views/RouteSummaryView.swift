@@ -313,6 +313,44 @@ struct RouteSummaryView: View {
         .navigationTitle(routeManager.isNavigating ? NSLocalizedString("Navigasyon", comment: "") : NSLocalizedString("Rota Hazır", comment: ""))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            // Dışa aktarma (GPX/PDF) niş bir Pro özelliği — ana buton yığınında birincil
+            // aksiyonlarla (Paylaş/Kaydet/Navigasyon) aynı görsel ağırlıkta durmasın diye
+            // ikincil bir menüye taşındı; sadece navigasyon başlamadan önce anlamlı.
+            if !routeManager.isNavigating {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button {
+                            if viewModel.isPro {
+                                shareGPX()
+                            } else {
+                                showGPXPaywall = true
+                            }
+                        } label: {
+                            Label(NSLocalizedString("GPX İndir", comment: ""), systemImage: "square.and.arrow.down")
+                        }
+                        Button {
+                            if viewModel.isPro {
+                                sharePDF()
+                            } else {
+                                showPDFPaywall = true
+                            }
+                        } label: {
+                            Label(NSLocalizedString("PDF İndir", comment: ""), systemImage: "doc.richtext")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .foregroundColor(.secondary)
+                            .font(.title3)
+                    }
+                    .accessibilityLabel(NSLocalizedString("Dışa Aktarma Seçenekleri", comment: ""))
+                    .sheet(isPresented: $showGPXPaywall) {
+                        PaywallView { showGPXPaywall = false }
+                    }
+                    .sheet(isPresented: $showPDFPaywall) {
+                        PaywallView { showPDFPaywall = false }
+                    }
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     locationManager.stopNavigationTracking()
@@ -598,50 +636,6 @@ struct RouteSummaryView: View {
                             .background(PinlyTheme.gold.opacity(0.10))
                             .cornerRadius(14)
                         }
-                    }
-
-                    Button {
-                        if viewModel.isPro {
-                            shareGPX()
-                        } else {
-                            showGPXPaywall = true
-                        }
-                    } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: "square.and.arrow.down")
-                            Text(NSLocalizedString("GPX İndir", comment: ""))
-                                .fontWeight(.semibold)
-                        }
-                        .foregroundColor(PinlyTheme.primaryWarm)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(PinlyTheme.primaryWarm.opacity(0.10))
-                        .cornerRadius(14)
-                    }
-                    .sheet(isPresented: $showGPXPaywall) {
-                        PaywallView { showGPXPaywall = false }
-                    }
-
-                    Button {
-                        if viewModel.isPro {
-                            sharePDF()
-                        } else {
-                            showPDFPaywall = true
-                        }
-                    } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: "doc.richtext")
-                            Text(NSLocalizedString("PDF İndir", comment: ""))
-                                .fontWeight(.semibold)
-                        }
-                        .foregroundColor(PinlyTheme.accent)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(PinlyTheme.accent.opacity(0.10))
-                        .cornerRadius(14)
-                    }
-                    .sheet(isPresented: $showPDFPaywall) {
-                        PaywallView { showPDFPaywall = false }
                     }
 
                     Button {
