@@ -130,9 +130,14 @@ struct CommunityFeedView: View {
 
     private var emptyState: some View {
         VStack(spacing: 14) {
-            Image(systemName: "person.3.sequence.fill")
-                .font(.system(size: 44))
-                .foregroundColor(.secondary)
+            ZStack {
+                WavePattern(waveLength: 40, amplitude: 5, rowSpacing: 9)
+                    .stroke(PinlyTheme.slate.opacity(0.10), lineWidth: 1)
+                    .frame(width: 140, height: 90)
+                Image(systemName: "person.3.sequence.fill")
+                    .font(.system(size: 44))
+                    .foregroundColor(.secondary)
+            }
             Text(NSLocalizedString("Bu şehirde henüz paylaşılan rota yok", comment: ""))
                 .font(.headline)
             Text(NSLocalizedString("İlk paylaşan sen ol — kayıtlı rotalarından birini topluluğa aç.", comment: ""))

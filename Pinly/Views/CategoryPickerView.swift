@@ -27,9 +27,14 @@ struct CategoryPickerView: View {
                     // eski hali sonsuza dek "yükleniyor" gösteriyordu
                     Spacer()
                     VStack(spacing: 14) {
-                        Image(systemName: "mappin.slash")
-                            .font(.system(size: 48))
-                            .foregroundColor(.secondary)
+                        ZStack {
+                            WavePattern(waveLength: 40, amplitude: 5, rowSpacing: 9)
+                                .stroke(PinlyTheme.slate.opacity(0.10), lineWidth: 1)
+                                .frame(width: 140, height: 90)
+                            Image(systemName: "mappin.slash")
+                                .font(.system(size: 48))
+                                .foregroundColor(.secondary)
+                        }
                         Text(NSLocalizedString("Henüz mekan yok", comment: ""))
                             .font(.headline)
                         Text(NSLocalizedString("Mekanlarım ekranından mekan ekledikten sonra burada görünür", comment: ""))
