@@ -31,11 +31,23 @@ struct PaywallView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            header
-            featureList
-            Spacer()
-            content
+        ZStack {
+            // Paywall daha önce hiç temalanmamıştı (sistem varsayılan sheet zemini) —
+            // uygulamanın geri kalanıyla aynı krem zemin + seigaiha dokusu, en kritik
+            // gelir ekranının "dandik" görünmemesi için (bkz. OnboardingView aynı desen).
+            PinlyTheme.groundGradient
+                .ignoresSafeArea()
+            WavePattern(waveLength: 90, amplitude: 12, rowSpacing: 22)
+                .stroke(PinlyTheme.slate.opacity(0.08), lineWidth: 1)
+                .ignoresSafeArea()
+                .allowsHitTesting(false)
+
+            VStack(spacing: 0) {
+                header
+                featureList
+                Spacer()
+                content
+            }
         }
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
