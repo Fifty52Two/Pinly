@@ -72,7 +72,7 @@ struct RouteSharePickerView: View {
                                     .font(.subheadline)
                                     .fontWeight(.medium)
                             }
-                            .foregroundColor(category == cat ? .white : .primary)
+                            .foregroundColor(category == cat ? PinlyTheme.onAccent : .primary)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 8)
                             .background(category == cat ? PinlyTheme.primary : PinlyTheme.fillMuted)

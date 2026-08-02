@@ -23,7 +23,7 @@ struct PinlyTabBar: View {
     private var barColor: Color { PinlyTheme.surface }
     private var bubbleColor: Color { PinlyTheme.primary }
     private var haloColor: Color { PinlyTheme.ground }
-    private var activeIconColor: Color { .white }
+    private var activeIconColor: Color { PinlyTheme.onAccent }
     private var inactiveIconColor: Color { Color.primary.opacity(0.45) }
 
     // MARK: Geometri

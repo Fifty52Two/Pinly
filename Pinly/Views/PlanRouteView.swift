@@ -332,7 +332,7 @@ private struct PlacePlanRow: View {
                     Image(systemName: isSelected ? "checkmark" : place.placeCategory.icon)
                         .font(.caption)
                         .fontWeight(.bold)
-                        .foregroundColor(isSelected ? .white : .secondary)
+                        .foregroundColor(isSelected ? PinlyTheme.onAccent : .secondary)
                 }
                 .animation(.spring(response: 0.25), value: isSelected)
 

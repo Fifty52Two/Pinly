@@ -152,7 +152,7 @@ struct PinlyLocationOption: View {
                         .frame(width: 42, height: 42)
                     Image(systemName: icon)
                         .font(.body)
-                        .foregroundColor(isActive ? .white : PinlyTheme.primary)
+                        .foregroundColor(isActive ? PinlyTheme.onAccent : PinlyTheme.primary)
                 }
                 Text(title)
                     .font(.caption)
