@@ -67,35 +67,52 @@ struct PaywallView: View {
     // MARK: - Başlık
 
     private var header: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 10) {
             ZStack {
                 Circle()
-                    .fill(PinlyTheme.primary.opacity(0.12))
-                    .frame(width: 72, height: 72)
-                Image(systemName: "mappin.and.ellipse")
-                    .font(.system(size: 32))
-                    .foregroundColor(PinlyTheme.primary)
+                    .fill(Color.white.opacity(0.18))
+                    .frame(width: 64, height: 64)
+                Image(systemName: "crown.fill")
+                    .font(.system(size: 26))
+                    .foregroundColor(.white)
             }
-            .padding(.top, 32)
 
             Text(NSLocalizedString(isSoftPaywall ? "Sınırsız keşif" : "Mekan Limitine Ulaştın", comment: ""))
                 .font(.title2)
                 .fontWeight(.bold)
+                .foregroundColor(.white)
 
             if isSoftPaywall {
                 Text(NSLocalizedString("Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç.", comment: ""))
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.white.opacity(0.85))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 24)
             } else {
                 Text(String(format: NSLocalizedString("Ücretsiz planda en fazla %lld mekan kaydedebilirsin.\nSınırsız mekan için Pro'ya geç.", comment: ""), entitlements.freeLimit))
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.white.opacity(0.85))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 24)
             }
         }
+        .padding(.top, 36)
+        .padding(.bottom, 26)
+        .frame(maxWidth: .infinity)
+        .background(
+            // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki Paywall header'ı — sıcak
+            // hero gradyanı (Ana sekme kartıyla aynı, mod bağımsız) + gerçek seigaiha PNG dokusu.
+            ZStack {
+                PinlyTheme.heroWarmGradient
+                Image("SeigaihaPattern")
+                    .resizable()
+                    .scaledToFill()
+                    .opacity(0.55)
+                    .allowsHitTesting(false)
+            }
+            .clipped()
+            .ignoresSafeArea(edges: .top)
+        )
     }
 
     // MARK: - Fayda listesi

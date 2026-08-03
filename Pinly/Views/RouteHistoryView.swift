@@ -69,14 +69,7 @@ struct RouteHistoryView: View {
 
     private var emptyState: some View {
         VStack(spacing: 16) {
-            ZStack {
-                WavePattern(waveLength: 40, amplitude: 5, rowSpacing: 9)
-                    .stroke(PinlyTheme.slate.opacity(0.10), lineWidth: 1)
-                    .frame(width: 140, height: 90)
-                Image(systemName: "clock.arrow.circlepath")
-                    .font(.system(size: 56))
-                    .foregroundColor(.secondary)
-            }
+            EmptyStateMedallion(icon: "clock.arrow.circlepath", badgeColor: PinlyTheme.slate)
             Text(NSLocalizedString("Henüz rota tamamlanmadı", comment: ""))
                 .font(.title3)
                 .fontWeight(.semibold)

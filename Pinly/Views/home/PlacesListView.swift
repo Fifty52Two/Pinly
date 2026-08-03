@@ -58,15 +58,7 @@ struct PlacesListView: View {
             Group {
                 if placeStore.places.isEmpty {
                     VStack(spacing: 16) {
-                        ZStack {
-                            WavePattern(waveLength: 40, amplitude: 5, rowSpacing: 9)
-                                .stroke(PinlyTheme.slate.opacity(0.10), lineWidth: 1)
-                                .frame(width: 140, height: 90)
-                            Image(systemName: "mappin.slash")
-                                .font(.system(size: 60))
-                                .foregroundColor(.secondary)
-                        }
-                        .accessibilityHidden(true)
+                        EmptyStateMedallion(icon: "mappin.slash", badgeColor: PinlyTheme.accent)
                         Text(NSLocalizedString("Henüz mekan eklenmedi", comment: ""))
                             .font(.title3)
                             .fontWeight(.semibold)

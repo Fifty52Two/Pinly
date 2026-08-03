@@ -43,9 +43,19 @@ struct OnboardingView: View {
             PinlyTheme.groundGradient
                 .ignoresSafeArea()
 
-            OnboardingWavePattern(waveLength: 90, amplitude: 12, rowSpacing: 22, color: PinlyTheme.slate, opacity: 0.08)
-                .ignoresSafeArea()
-                .allowsHitTesting(false)
+            // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki organik "kıyı" şekli —
+            // gerçek seigaiha PNG dokusu (SeigaihaPattern asset'i), WavyHorizonMask'e kırpılmış.
+            VStack {
+                Spacer()
+                Image("SeigaihaPattern")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                    .clipped()
+                    .clipShape(WavyHorizonMask())
+            }
+            .ignoresSafeArea()
+            .allowsHitTesting(false)
 
             VStack(spacing: 0) {
                 HStack {

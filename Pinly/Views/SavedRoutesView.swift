@@ -136,14 +136,7 @@ struct SavedRoutesView: View {
     private var emptyState: some View {
         ScrollView {
             VStack(spacing: 20) {
-                ZStack {
-                    WavePattern(waveLength: 40, amplitude: 5, rowSpacing: 9)
-                        .stroke(PinlyTheme.slate.opacity(0.10), lineWidth: 1)
-                        .frame(width: 140, height: 90)
-                    Image(systemName: "map.fill")
-                        .font(.system(size: 56))
-                        .foregroundColor(.secondary)
-                }
+                EmptyStateMedallion(icon: "map.fill", badgeColor: PinlyTheme.primary)
                 Text(NSLocalizedString("Henüz kayıtlı rota yok", comment: ""))
                     .font(.title3)
                     .fontWeight(.semibold)

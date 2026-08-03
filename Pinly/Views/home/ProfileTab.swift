@@ -146,7 +146,23 @@ struct ProfileTab: View {
                         .buttonStyle(.plain)
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 6)
+                    .padding(.vertical, 20)
+                    .background(
+                        // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki profil kartı —
+                        // sağ üst köşeden taşan dairesel seigaiha dokusu, gerçek PNG asset'i.
+                        ZStack(alignment: .topTrailing) {
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(PinlyTheme.surface)
+                                .overlay(RoundedRectangle(cornerRadius: 20).strokeBorder(PinlyTheme.hairline, lineWidth: 1))
+                            Image("SeigaihaPattern")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 150, height: 150)
+                                .clipShape(Circle())
+                                .offset(x: 40, y: -50)
+                        }
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                 }
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)

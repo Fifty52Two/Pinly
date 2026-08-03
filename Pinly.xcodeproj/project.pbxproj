@@ -15,9 +15,9 @@
 		0AAC824C30082E5D005FE580 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0AAC824B30082E5D005FE580 /* FirebaseAnalytics */; };
 		0AAC824E30082E5D005FE580 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0AAC824D30082E5D005FE580 /* FirebaseCrashlytics */; };
 		3D1B6A928953D80E6C9B7E2C /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 790B572ECAA330585051B340 /* RevenueCat */; };
+		5924CDB062E6B38434C008DE /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 5A6A3BF2197287D57AC0FF42 /* Supabase */; };
 		D2B6061E114DCD909E3D0E76 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = F0BDACF376A95B2925062C6A /* RevenueCat */; };
 		DC3DC36FA7AF8E68FB0C168D /* Pinly.storekit in Resources */ = {isa = PBXBuildFile; fileRef = D3DF6A7ECBFA83FD1B26E2F7 /* Pinly.storekit */; };
-		5924CDB062E6B38434C008DE /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 5A6A3BF2197287D57AC0FF42 /* Supabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -792,6 +792,11 @@
 			package = 0AAC824A30082E5D005FE580 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
 		};
+		5A6A3BF2197287D57AC0FF42 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 289E846336E21BE5A1216F65 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
 		790B572ECAA330585051B340 /* RevenueCat */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0A00DA472F7D4FA80031F556 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
@@ -801,11 +806,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0A00DA472F7D4FA80031F556 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
 			productName = RevenueCat;
-		};
-		5A6A3BF2197287D57AC0FF42 /* Supabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 289E846336E21BE5A1216F65 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Supabase;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
