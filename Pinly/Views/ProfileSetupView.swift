@@ -28,18 +28,25 @@ struct ProfileSetupView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                // Hero — tema gradyanlı daire içinde pin sembolü
+                // Hero — Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki gerçek
+                // seigaiha dokulu daire + küçük primary rozet (birebir; önceki heroGradient
+                // dairenin yerine).
                 ZStack {
                     Circle()
-                        .strokeBorder(PinlyTheme.primary.opacity(0.20), lineWidth: 1)
-                        .frame(width: 168, height: 168)
+                        .fill(PinlyTheme.ground)
+                        .frame(width: 132, height: 132)
+                    Image("SeigaihaPattern")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 132, height: 132)
+                        .clipShape(Circle())
                     Circle()
-                        .fill(PinlyTheme.heroGradient)
-                        .frame(width: 140, height: 140)
-                    Image(systemName: "mappin.and.ellipse")
-                        .font(.system(size: 56, weight: .medium))
-                        .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(.white)
+                        .fill(PinlyTheme.primary)
+                        .frame(width: 48, height: 48)
+                        .shadow(color: PinlyTheme.primary.opacity(0.3), radius: 10, y: 4)
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundColor(PinlyTheme.onAccent)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 44)

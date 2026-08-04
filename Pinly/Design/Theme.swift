@@ -131,6 +131,9 @@ enum PinlyTheme {
 
     static let navy      = Color(red: 0.133, green: 0.118, blue: 0.169) // #221E2B
     static let navyLight = Color(red: 0.200, green: 0.180, blue: 0.251) // #332E40
+    /// Navy zemin üstüne sabit krem — tab bar baloncuğu gibi HER modda koyu kalan
+    /// yüzeylerde ikon rengi (onAccent'in mod-bağımlı flip'i burada YANLIŞ olur).
+    static let cream     = Color(red: 0.941, green: 0.914, blue: 0.863) // #F0E9DC
 
     // MARK: - Hero Kart Gradyanı
 

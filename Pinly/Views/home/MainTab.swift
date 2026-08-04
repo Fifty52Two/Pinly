@@ -75,38 +75,40 @@ struct MainTab: View {
                 }
                 .pinlyCard()
 
-                // Hero CTA — Rota Planla
+                // Hero CTA — Rota Planla. Claude Design "Pinly Seigaiha Uygulama"
+                // mockup'ındaki dizilim: küçük harf üstü etiket + kalın başlık + altında
+                // yarı saydam hap buton (birebir) — aynı tıklama hedefi (MapView), sadece
+                // görsel restyle.
                 Button {
                     showRoute = true
                 } label: {
-                    HStack(spacing: 16) {
-                        ZStack {
-                            Circle()
-                                .fill(.white.opacity(0.2))
-                                .frame(width: 56, height: 56)
-                            Image(systemName: "map.fill")
-                                .font(.title2)
-                                .foregroundColor(.white)
-                        }
-                        .accessibilityHidden(true)
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text(NSLocalizedString("Rota Planla", comment: ""))
-                                .font(.title3.bold())
-                                .foregroundColor(.white)
-                                .lineLimit(2)
-                                .minimumScaleFactor(0.85)
-                            Text(NSLocalizedString("Konumuna göre rota oluştur", comment: ""))
-                                .font(.subheadline)
-                                .foregroundColor(.white.opacity(0.85))
-                                .lineLimit(2)
-                                .minimumScaleFactor(0.85)
-                        }
-                        Spacer()
-                        Image(systemName: "arrow.right.circle.fill")
-                            .font(.title2)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(NSLocalizedString("Yürüyüş rotası", comment: ""))
+                            .font(.caption.weight(.bold))
+                            .textCase(.uppercase)
+                            .tracking(0.6)
                             .foregroundColor(.white.opacity(0.9))
-                            .accessibilityHidden(true)
+                        Text(NSLocalizedString("Bugün nereyi keşfedelim?", comment: ""))
+                            .font(.title3.bold())
+                            .foregroundColor(.white)
+                            .shadow(color: .black.opacity(0.3), radius: 6, y: 2)
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.85)
+                        HStack(spacing: 8) {
+                            Image(systemName: "mappin.and.ellipse")
+                                .font(.subheadline.weight(.bold))
+                            Text(NSLocalizedString("Rota Planla", comment: ""))
+                                .font(.subheadline.weight(.bold))
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 18)
+                        .padding(.vertical, 11)
+                        .background(Color.white.opacity(0.28))
+                        .clipShape(Capsule())
+                        .shadow(color: .black.opacity(0.15), radius: 6, y: 3)
+                        .padding(.top, 6)
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(20)
                     .background(
                         ZStack {
@@ -116,7 +118,7 @@ struct MainTab: View {
                                 .clipShape(WavyHorizonMask())
                         }
                     )
-                    .cornerRadius(20)
+                    .cornerRadius(22)
                     .clipped()
                 }
                 .buttonStyle(.plain)

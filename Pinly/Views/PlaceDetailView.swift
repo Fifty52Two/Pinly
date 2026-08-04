@@ -21,10 +21,15 @@ struct PlaceDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                photoHeader
-                mapPreview
+                heroBanner
                 infoCard
+                    .padding(.top, -24)
+                mapPreview
+                    .padding(.horizontal, 20)
+                    .padding(.top, 20)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
             }
+            .padding(.bottom, 20)
         }
         .onAppear { reloadPhoto() }
         .onChange(of: place.photoFileName) { reloadPhoto() }
@@ -60,17 +65,32 @@ struct PlaceDetailView: View {
         photo = place.photoFileName.flatMap { placePhotos.load(fileName: $0) }
     }
 
-    // MARK: - Fotoğraf
+    // MARK: - Hero Banner
 
+    // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki mekan detay hero'su —
+    // fotoğraf varsa fotoğraf, yoksa dolu primary zemin + gerçek seigaiha PNG dokusu
+    // (birebir; önceden fotoğrafsız mekanlarda burası boştu).
     @ViewBuilder
-    private var photoHeader: some View {
+    private var heroBanner: some View {
         if let photo {
             Image(uiImage: photo)
                 .resizable()
                 .scaledToFill()
                 .frame(maxWidth: .infinity)
-                .frame(height: 240)
+                .frame(height: 220)
                 .clipped()
+        } else {
+            ZStack {
+                PinlyTheme.primary
+                Image("SeigaihaPattern")
+                    .resizable()
+                    .scaledToFill()
+                    .opacity(0.4)
+                    .allowsHitTesting(false)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 220)
+            .clipped()
         }
     }
 
@@ -193,7 +213,8 @@ struct PlaceDetailView: View {
                 DetailRow(icon: "note.text", color: PinlyTheme.warning, text: place.notes)
             }
 
-            // Düzenle + Paylaş butonları
+            // Düzenle + Paylaş butonları — mockup'taki solid primary + yumuşak ton
+            // ikilisi (birebir).
             HStack(spacing: 12) {
                 Button {
                     showEdit = true
@@ -205,8 +226,8 @@ struct PlaceDetailView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(PinlyTheme.primary.opacity(0.1))
-                    .foregroundColor(PinlyTheme.primary)
+                    .background(PinlyTheme.primary)
+                    .foregroundColor(PinlyTheme.onAccent)
                     .cornerRadius(14)
                 }
 
@@ -220,13 +241,23 @@ struct PlaceDetailView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(PinlyTheme.success.opacity(0.1))
-                    .foregroundColor(PinlyTheme.success)
+                    .background(PinlyTheme.primary.opacity(0.1))
+                    .foregroundColor(PinlyTheme.primary)
                     .cornerRadius(14)
                 }
             }
         }
         .padding(20)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(PinlyTheme.surface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18)
+                        .strokeBorder(PinlyTheme.hairline, lineWidth: 1)
+                )
+                .shadow(color: .black.opacity(0.08), radius: 14, y: 6)
+        )
+        .padding(.horizontal, 20)
     }
 }
 

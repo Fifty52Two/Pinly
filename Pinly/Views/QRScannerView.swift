@@ -32,21 +32,16 @@ struct QRScannerView: View {
                     })
                     .ignoresSafeArea()
 
-                    // Kılavuz çerçeve
-                    VStack {
+                    // Kılavuz çerçeve — Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki
+                    // dört köşe braketi (accent renginde), dolu çerçeve yerine (birebir).
+                    VStack(spacing: 26) {
                         Spacer()
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.white.opacity(0.8), lineWidth: 3)
-                            .frame(width: 240, height: 240)
-                            .shadow(color: .white.opacity(0.3), radius: 8) // bilinçli: kamera görüntüsü üzerinde odak parlaması
+                        QRCornerFrame()
+                            .stroke(PinlyTheme.accent, style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                            .frame(width: 230, height: 230)
                         Text(NSLocalizedString("QR kodu çerçeve içine al", comment: ""))
                             .font(.subheadline)
-                            .foregroundColor(.white)
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 20)
-                            .background(.ultraThinMaterial)
-                            .cornerRadius(12)
-                            .padding(.top, 24)
+                            .foregroundColor(.white.opacity(0.8))
                         Spacer()
                     }
                 }
@@ -319,5 +314,40 @@ private struct CameraPermissionDeniedView: View {
                     .cornerRadius(12)
             }
         }
+    }
+}
+
+// MARK: - QR Köşe Braketi
+
+/// Dört ayrı L-braket (tam çerçeve değil) — Claude Design mockup'ındaki tarayıcı
+/// kılavuzu birebir.
+struct QRCornerFrame: Shape {
+    var cornerLength: CGFloat = 34
+    var cornerRadius: CGFloat = 10
+
+    func path(in rect: CGRect) -> Path {
+        var p = Path()
+
+        p.move(to: CGPoint(x: rect.minX, y: rect.minY + cornerLength))
+        p.addLine(to: CGPoint(x: rect.minX, y: rect.minY + cornerRadius))
+        p.addQuadCurve(to: CGPoint(x: rect.minX + cornerRadius, y: rect.minY), control: CGPoint(x: rect.minX, y: rect.minY))
+        p.addLine(to: CGPoint(x: rect.minX + cornerLength, y: rect.minY))
+
+        p.move(to: CGPoint(x: rect.maxX - cornerLength, y: rect.minY))
+        p.addLine(to: CGPoint(x: rect.maxX - cornerRadius, y: rect.minY))
+        p.addQuadCurve(to: CGPoint(x: rect.maxX, y: rect.minY + cornerRadius), control: CGPoint(x: rect.maxX, y: rect.minY))
+        p.addLine(to: CGPoint(x: rect.maxX, y: rect.minY + cornerLength))
+
+        p.move(to: CGPoint(x: rect.maxX, y: rect.maxY - cornerLength))
+        p.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - cornerRadius))
+        p.addQuadCurve(to: CGPoint(x: rect.maxX - cornerRadius, y: rect.maxY), control: CGPoint(x: rect.maxX, y: rect.maxY))
+        p.addLine(to: CGPoint(x: rect.maxX - cornerLength, y: rect.maxY))
+
+        p.move(to: CGPoint(x: rect.minX + cornerLength, y: rect.maxY))
+        p.addLine(to: CGPoint(x: rect.minX + cornerRadius, y: rect.maxY))
+        p.addQuadCurve(to: CGPoint(x: rect.minX, y: rect.maxY - cornerRadius), control: CGPoint(x: rect.minX, y: rect.maxY))
+        p.addLine(to: CGPoint(x: rect.minX, y: rect.maxY - cornerLength))
+
+        return p
     }
 }

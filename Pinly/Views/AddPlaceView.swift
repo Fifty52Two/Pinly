@@ -16,6 +16,8 @@ struct AddPlaceView: View {
 
     var body: some View {
         NavigationStack {
+            // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki form zemini — krem
+            // zemin + kart yüzeyli satırlar (sistem Form gri zemini yerine, birebir).
             Form {
                 Section(header: Text(NSLocalizedString("Mekan Bilgileri", comment: ""))) {
                     TextField(NSLocalizedString("Mekan Adı", comment: ""), text: $viewModel.name)
@@ -104,6 +106,8 @@ struct AddPlaceView: View {
                         .frame(height: 100)
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(PinlyTheme.groundGradient)
             .navigationTitle(NSLocalizedString("Yeni Mekan Ekle", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -118,6 +122,8 @@ struct AddPlaceView: View {
                             ProgressView().scaleEffect(0.8)
                         } else {
                             Text(NSLocalizedString("Kaydet", comment: ""))
+                                .fontWeight(.bold)
+                                .foregroundColor(PinlyTheme.primary)
                         }
                     }
                     .disabled(viewModel.name.isEmpty || (!viewModel.usedCurrentLocation && viewModel.address.isEmpty) || viewModel.isSaving)

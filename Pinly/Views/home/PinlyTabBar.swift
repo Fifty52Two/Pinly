@@ -21,9 +21,12 @@ struct PinlyTabBar: View {
     // Bar açık renk (light'ta beyaz, dark'ta zeminden bir ton açık slate) —
     // zeminle aynılaşmasın diye koyu navy'den vazgeçildi (kullanıcı kararı)
     private var barColor: Color { PinlyTheme.surface }
-    private var bubbleColor: Color { PinlyTheme.primary }
+    // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki (17 · Ana sekme) sabit
+    // navy baloncuk — primary'nin aksine mod bağımsız, HER modda koyu kalır (CLAUDE.md
+    // "navy... tab bar... sabit" kararıyla birebir). İkon de onunla eşleşen sabit krem.
+    private var bubbleColor: Color { PinlyTheme.navy }
     private var haloColor: Color { PinlyTheme.ground }
-    private var activeIconColor: Color { PinlyTheme.onAccent }
+    private var activeIconColor: Color { PinlyTheme.cream }
     private var inactiveIconColor: Color { Color.primary.opacity(0.45) }
 
     // MARK: Geometri

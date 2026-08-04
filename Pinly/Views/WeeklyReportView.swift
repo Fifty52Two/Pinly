@@ -21,29 +21,33 @@ struct WeeklyReportView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
-                    dateHeader
+                    header
+                        .padding(.bottom, stats.isEmpty ? 0 : -24)
+                    if !stats.isEmpty {
+                        statsOverlapCard
+                    }
                     if !weeklyNotifOptIn {
                         notificationCTACard
+                            .padding(.horizontal, 20)
                     }
                     if stats.isEmpty {
                         emptyState
+                            .padding(.horizontal, 20)
                     } else {
-                        statsGrid
                         if let cat = stats.topCategory {
                             topCategoryCard(cat)
+                                .padding(.horizontal, 20)
                         }
                         if let district = stats.topDistrict {
                             topDistrictCard(district)
+                                .padding(.horizontal, 20)
                         }
                     }
                 }
-                .padding(.top, 16)
                 .padding(.bottom, 40)
-                .padding(.horizontal, 20)
             }
             .background(PinlyTheme.groundGradient)
-            .navigationTitle("Haftalık Rapor")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button { dismiss() } label: {
@@ -55,17 +59,83 @@ struct WeeklyReportView: View {
         }
     }
 
-    // MARK: - Tarih başlığı
+    // MARK: - Başlık
 
-    private var dateHeader: some View {
+    // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki sage renkli dalgalı
+    // header — gerçek seigaiha PNG dokusu + "Bu Hafta" etiketi + kalın başlık,
+    // altına taşan istatistik kartı (birebir).
+    private var header: some View {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .none
         let range = "\(formatter.string(from: stats.weekStart)) – \(formatter.string(from: stats.weekEnd))"
-        return Text(range)
-            .font(.subheadline)
-            .foregroundColor(.secondary)
-            .frame(maxWidth: .infinity, alignment: .leading)
+
+        return VStack(alignment: .leading, spacing: 6) {
+            Text(NSLocalizedString("Bu Hafta", comment: ""))
+                .font(.caption.weight(.bold))
+                .textCase(.uppercase)
+                .tracking(0.6)
+                .foregroundColor(.white.opacity(0.8))
+            Text(String(format: NSLocalizedString("%lld rota tamamladın", comment: ""), stats.routesCompleted))
+                .font(.title2.bold())
+                .foregroundColor(.white)
+            Text(range)
+                .font(.caption)
+                .foregroundColor(.white.opacity(0.7))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 24)
+        .padding(.top, 24)
+        .padding(.bottom, stats.isEmpty ? 24 : 48)
+        .background(
+            ZStack {
+                PinlyTheme.slate
+                Image("SeigaihaPattern")
+                    .resizable()
+                    .scaledToFill()
+                    .opacity(0.3)
+                    .allowsHitTesting(false)
+            }
+            .clipped()
+        )
+    }
+
+    // MARK: - Taşan istatistik kartı
+
+    private var statsOverlapCard: some View {
+        HStack {
+            weeklyStatColumn(value: stats.totalSteps > 0 ? "\(stats.totalSteps)" : "—", label: NSLocalizedString("Adım", comment: ""))
+            Spacer()
+            weeklyStatColumn(value: stats.totalDistanceMeters > 0 ? stats.formattedDistance : "—", label: NSLocalizedString("Mesafe", comment: ""))
+            Spacer()
+            weeklyStatColumn(value: "\(placeStore.places.filter { $0.isVisited }.count)", label: NSLocalizedString("Toplam Ziyaret", comment: ""))
+            Spacer()
+            weeklyStatColumn(value: "\(stats.routesCompleted)", label: NSLocalizedString("Rota", comment: ""), valueColor: PinlyTheme.gold)
+        }
+        .padding(20)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(PinlyTheme.surface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(PinlyTheme.hairline, lineWidth: 1)
+                )
+                .shadow(color: .black.opacity(0.08), radius: 12, y: 6)
+        )
+        .padding(.horizontal, 20)
+    }
+
+    private func weeklyStatColumn(value: String, label: String, valueColor: Color = .primary) -> some View {
+        VStack(spacing: 4) {
+            Text(value)
+                .font(.system(.callout, design: .rounded).weight(.bold))
+                .foregroundColor(valueColor)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            Text(label)
+                .font(.caption2)
+                .foregroundColor(.secondary)
+        }
     }
 
     // MARK: - Bildirim CTA (izin isteme anı — FAZ 5.4)
@@ -127,36 +197,6 @@ struct WeeklyReportView: View {
         .padding(.top, 40)
     }
 
-    // MARK: - İstatistik kartları
-
-    private var statsGrid: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
-            WeeklyStatCard(
-                icon: "figure.walk.circle.fill",
-                color: PinlyTheme.primary,
-                value: stats.totalSteps > 0 ? "\(stats.totalSteps)" : "—",
-                label: NSLocalizedString("Adım", comment: "")
-            )
-            WeeklyStatCard(
-                icon: "arrow.triangle.turn.up.right.circle.fill",
-                color: PinlyTheme.success,
-                value: stats.totalDistanceMeters > 0 ? stats.formattedDistance : "—",
-                label: NSLocalizedString("Mesafe", comment: "")
-            )
-            WeeklyStatCard(
-                icon: "mappin.circle.fill",
-                color: PinlyTheme.primaryWarm,
-                value: "\(placeStore.places.filter { $0.isVisited }.count)",
-                label: NSLocalizedString("Toplam Ziyaret", comment: "")
-            )
-            WeeklyStatCard(
-                icon: "map.circle.fill",
-                color: .teal,
-                value: "\(stats.routesCompleted)",
-                label: NSLocalizedString("Rota", comment: "")
-            )
-        }
-    }
 
     // MARK: - En çok kategori
 
@@ -217,31 +257,3 @@ struct WeeklyReportView: View {
     }
 }
 
-// MARK: - İstatistik Kart
-
-private struct WeeklyStatCard: View {
-    let icon: String
-    let color: Color
-    let value: String
-    let label: String
-
-    var body: some View {
-        VStack(spacing: 10) {
-            Image(systemName: icon)
-                .font(.title)
-                .foregroundColor(color)
-            Text(value)
-                .font(.title2)
-                .fontWeight(.bold)
-            Text(label)
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 20)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(color.opacity(0.08))
-        )
-    }
-}

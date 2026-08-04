@@ -10,19 +10,22 @@ struct BadgesView: View {
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     private var unlocked: Set<Badge> { badgeService.unlockedBadges }
 
+    private var total: Int { Badge.allCases.count }
+    private var earned: Int { unlocked.count }
+    private var fraction: Double { Double(earned) / Double(total) }
+
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 20) {
-                    progressBar
+                VStack(spacing: 0) {
+                    header
                     badgeGrid
+                        .padding(.top, 26)
+                        .padding(.bottom, 40)
                 }
-                .padding(.top, 16)
-                .padding(.bottom, 40)
             }
             .background(PinlyTheme.groundGradient)
-            .navigationTitle(NSLocalizedString("Rozetler", comment: ""))
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button { dismiss() } label: {
@@ -34,37 +37,50 @@ struct BadgesView: View {
         }
     }
 
-    // MARK: - İlerleme çubuğu
+    // MARK: - Başlık
 
-    private var progressBar: some View {
-        let total    = Badge.allCases.count
-        let earned   = unlocked.count
-        let fraction = Double(earned) / Double(total)
-
-        return VStack(spacing: 8) {
-            HStack {
-                Text(String(format: NSLocalizedString("%lld/%lld rozet kazanıldı", comment: ""), earned, total))
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                Spacer()
-                Text("\(Int(fraction * 100))%")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
+    // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki rozet header'ı — kart
+    // yüzeyi + gerçek seigaiha PNG dokusu + büyük başlık, sistem large-title'ın yerine
+    // (birebir). İlerleme çubuğu mockup'ta yok ama mevcut işlevsellik korunuyor — başlık
+    // altına küçük bir aksesuar olarak eklendi (görsel restyle, davranış aynı).
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(NSLocalizedString("Rozetlerin", comment: ""))
+                .font(.title2)
+                .fontWeight(.heavy)
+                .foregroundColor(.primary)
+            Text(String(format: NSLocalizedString("%lld/%lld rozet kazanıldı", comment: ""), earned, total))
+                .font(.footnote)
+                .foregroundColor(.secondary)
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 4)
                         .fill(PinlyTheme.fillMuted)
-                        .frame(height: 8)
+                        .frame(height: 6)
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.yellow)
-                        .frame(width: geo.size.width * fraction, height: 8)
+                        .fill(PinlyTheme.gold)
+                        .frame(width: geo.size.width * fraction, height: 6)
                         .animation(.spring(response: 0.4), value: fraction)
                 }
             }
-            .frame(height: 8)
+            .frame(height: 6)
+            .padding(.top, 6)
         }
-        .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 24)
+        .padding(.top, 24)
+        .padding(.bottom, 22)
+        .background(
+            ZStack {
+                PinlyTheme.surface
+                Image("SeigaihaPattern")
+                    .resizable()
+                    .scaledToFill()
+                    .opacity(0.5)
+                    .allowsHitTesting(false)
+            }
+            .clipped()
+        )
     }
 
     // MARK: - Rozet grid
@@ -88,18 +104,22 @@ private struct BadgeCell: View {
     let placeStore: PlaceStore
 
     var body: some View {
+        // Claude Design mockup'ındaki rozet hücresi — kazanılan rozetler dolu renkli
+        // daire + beyaz glif + gölge, kilitli olanlar nötr gri daire + asma kilit
+        // (kart zemini yok, madalyonlar doğrudan grid üstünde — birebir).
         VStack(spacing: 8) {
             ZStack {
                 Circle()
-                    .fill(isUnlocked ? badgeColor.opacity(0.15) : PinlyTheme.fillMuted)
+                    .fill(isUnlocked ? badgeColor : PinlyTheme.fillMuted)
                     .frame(width: 60, height: 60)
+                    .shadow(color: isUnlocked ? badgeColor.opacity(0.35) : .clear, radius: 6, y: 3)
                 if isUnlocked {
                     Image(systemName: badge.icon)
-                        .font(.title)
-                        .foregroundColor(badgeColor)
+                        .font(.title3)
+                        .foregroundColor(.white)
                 } else {
-                    Image(systemName: "lock.fill")
-                        .font(.title2)
+                    Image(systemName: "lock")
+                        .font(.title3)
                         .foregroundColor(Color(.systemGray3))
                 }
             }
@@ -118,14 +138,6 @@ private struct BadgeCell: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
         .padding(.horizontal, 4)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(isUnlocked ? badgeColor.opacity(0.06) : PinlyTheme.fillMuted)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(isUnlocked ? badgeColor.opacity(0.3) : Color.clear, lineWidth: 1)
-                )
-        )
     }
 
     private var badgeColor: Color {

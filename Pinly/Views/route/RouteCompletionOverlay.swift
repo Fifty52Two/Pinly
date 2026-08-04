@@ -93,27 +93,29 @@ struct RouteCompletionOverlay: View {
             }
 
             VStack(spacing: 24) {
-                Image(systemName: "flag.pattern.checkered.circle.fill")
-                    .font(.system(size: 64))
-                    .foregroundStyle(PinlyTheme.primary)
-                    .symbolRenderingMode(.hierarchical)
-                    .symbolEffect(.bounce, value: reduceMotion ? false : appeared)
+                // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki rota tamamlandı
+                // rozeti — dolu sage dairesi + kalın check glifi (önceki hiyerarşik
+                // bayrak ikonunun yerine, birebir).
+                ZStack {
+                    Circle()
+                        .fill(PinlyTheme.success)
+                        .frame(width: 84, height: 84)
+                        .shadow(color: PinlyTheme.success.opacity(0.35), radius: 12, y: 6)
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundColor(PinlyTheme.onAccent)
+                        .symbolEffect(.bounce, value: reduceMotion ? false : appeared)
+                }
                 Text(NSLocalizedString("Rota Tamamlandı!", comment: ""))
                     .font(.title)
                     .fontWeight(.bold)
 
-                VStack(spacing: 14) {
-                    statRow(index: 0, icon: "figure.walk", label: NSLocalizedString("Toplam Mesafe", comment: ""), value: formattedDistance)
-                    statRow(index: 1, icon: "clock.fill", label: NSLocalizedString("Süre", comment: ""), value: formattedDuration)
-                    statRow(index: 2, icon: "shoeprints.fill", label: NSLocalizedString("Adım", comment: ""), value: formattedSteps)
-                    statRow(index: 3, icon: "checkmark.circle.fill", label: NSLocalizedString("Ziyaret Edilen", comment: ""), value: "\(displayedVisited) / \(totalStops)")
+                HStack(spacing: 28) {
+                    statColumn(index: 0, label: NSLocalizedString("Toplam Mesafe", comment: ""), value: formattedDistance)
+                    statColumn(index: 1, label: NSLocalizedString("Süre", comment: ""), value: formattedDuration)
+                    statColumn(index: 2, label: NSLocalizedString("Adım", comment: ""), value: formattedSteps, valueColor: PinlyTheme.gold)
+                    statColumn(index: 3, label: NSLocalizedString("Ziyaret Edilen", comment: ""), value: "\(displayedVisited) / \(totalStops)")
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 16)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(PinlyTheme.fillMuted)
-                )
 
                 VStack(spacing: 10) {
                     if let share = onShareMemory {
@@ -123,12 +125,12 @@ struct RouteCompletionOverlay: View {
                         onDismiss()
                     } label: {
                         Text(NSLocalizedString("Haritaya Dön", comment: ""))
-                            .fontWeight(.semibold)
-                            .foregroundColor(.secondary)
+                            .fontWeight(.bold)
+                            .foregroundColor(PinlyTheme.onAccent)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(PinlyTheme.fillMuted)
-                            .cornerRadius(14)
+                            .padding(.vertical, 15)
+                            .background(PinlyTheme.primary)
+                            .clipShape(Capsule())
                     }
                     .opacity(shareCardAppeared ? 1 : 0)
                     .accessibilityHidden(!shareCardAppeared)
@@ -146,13 +148,30 @@ struct RouteCompletionOverlay: View {
         .onAppear(perform: runSequence)
     }
 
+    // Claude Design mockup'ındaki üçlü sütun istatistik dizilimi — ikon+etiket+değer
+    // satırı yerine büyük rakam + küçük etiket, yan yana (birebir).
     @ViewBuilder
-    private func statRow(index: Int, icon: String, label: String, value: String) -> some View {
+    private func statColumn(index: Int, label: String, value: String, valueColor: Color = .primary) -> some View {
         let revealed = revealedStatCount > index
-        CompletionStatRow(icon: icon, label: label, value: value)
-            .opacity(revealed ? 1 : 0)
-            .offset(y: reduceMotion ? 0 : (revealed ? 0 : 8))
-            .accessibilityHidden(!revealed)
+        VStack(spacing: 4) {
+            Text(value)
+                .font(.system(.title3, design: .rounded).weight(.bold))
+                .foregroundColor(valueColor)
+                .monospacedDigit()
+                .contentTransition(.numericText())
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            Text(label)
+                .font(.caption2)
+                .foregroundColor(.secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(label) \(value)")
+        .opacity(revealed ? 1 : 0)
+        .offset(y: reduceMotion ? 0 : (revealed ? 0 : 8))
+        .accessibilityHidden(!revealed)
     }
 
     @ViewBuilder
@@ -249,27 +268,6 @@ struct RouteCompletionOverlay: View {
                 shareCardAppeared = true
             }
             HapticPlayer.routeCompleted()
-        }
-    }
-}
-
-struct CompletionStatRow: View {
-    let icon: String
-    let label: String
-    let value: String
-
-    var body: some View {
-        HStack {
-            Image(systemName: icon)
-                .foregroundColor(PinlyTheme.primary)
-                .frame(width: 24)
-            Text(label)
-                .foregroundColor(.secondary)
-            Spacer()
-            Text(value)
-                .fontWeight(.semibold)
-                .monospacedDigit()
-                .contentTransition(.numericText())
         }
     }
 }

@@ -21,6 +21,9 @@ struct NearbyPlacesView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                header
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
                 categoryPicker
                     .padding(.vertical, 12)
 
@@ -69,8 +72,7 @@ struct NearbyPlacesView: View {
                 }
             }
             .background(PinlyTheme.groundGradient)
-            .navigationTitle(NSLocalizedString("Yakınımda", comment: ""))
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar(.hidden, for: .tabBar)
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
@@ -108,6 +110,36 @@ struct NearbyPlacesView: View {
                 PaywallView { showPaywall = false }
             }
         }
+    }
+
+    // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki "Yakınımda" header'ı —
+    // seigaiha dokulu kart + kalın başlık + yarıçap/sonuç sayısı alt satırı (birebir),
+    // sistem large-title'ın yerine. Toolbar (kategori/yarıçap/harita/yenile) korunuyor.
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text(NSLocalizedString("Yakınımda", comment: ""))
+                .font(.title3)
+                .fontWeight(.heavy)
+                .foregroundColor(.primary)
+            Text(String(format: NSLocalizedString("%@ yarıçapında %lld mekan", comment: ""), radiusLabel(radiusMeters), viewModel.results.count))
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 18)
+        .frame(height: 80)
+        .background(
+            ZStack {
+                PinlyTheme.surface
+                Image("SeigaihaPattern")
+                    .resizable()
+                    .scaledToFill()
+                    .opacity(0.3)
+                    .allowsHitTesting(false)
+            }
+            .clipped()
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 
     private var categoryPicker: some View {
@@ -192,20 +224,22 @@ private struct NearbyPlaceRow: View {
     let onAdd: () -> Void
 
     var body: some View {
+        // Claude Design mockup'ındaki satır — dolu renkli kare rozet + beyaz glif,
+        // sağda mesafe (birebir); artı/tik butonu mevcut ekle işlevi için korunuyor.
         HStack(spacing: 12) {
             ZStack {
-                Circle()
-                    .fill(place.category.color.opacity(0.12))
-                    .frame(width: 44, height: 44)
+                RoundedRectangle(cornerRadius: 9)
+                    .fill(place.category.color)
+                    .frame(width: 34, height: 34)
                 Image(systemName: place.category.icon)
                     .font(.callout)
-                    .foregroundColor(place.category.color)
+                    .foregroundColor(.white)
             }
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(place.name)
                     .font(.subheadline)
-                    .fontWeight(.semibold)
+                    .fontWeight(.bold)
                     .lineLimit(1)
                 if !place.address.isEmpty {
                     Text(place.address)
@@ -213,13 +247,13 @@ private struct NearbyPlaceRow: View {
                         .foregroundColor(.secondary)
                         .lineLimit(1)
                 }
-                Text(place.formattedDistance)
-                    .font(.caption2)
-                    .fontWeight(.medium)
-                    .foregroundColor(place.category.color)
             }
 
             Spacer()
+
+            Text(place.formattedDistance)
+                .font(.caption)
+                .foregroundColor(.secondary)
 
             Button(action: onAdd) {
                 Image(systemName: isAdded ? "checkmark.circle.fill" : "plus.circle")
@@ -228,8 +262,15 @@ private struct NearbyPlaceRow: View {
             }
             .disabled(isAdded)
         }
-        .padding(12)
-        .background(PinlyTheme.surface)
-        .cornerRadius(14)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(PinlyTheme.surface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .strokeBorder(PinlyTheme.hairline, lineWidth: 1)
+                )
+        )
     }
 }
