@@ -113,9 +113,19 @@ struct MainTab: View {
                     .background(
                         ZStack {
                             PinlyTheme.heroWarmGradient
-                            WavePattern(waveLength: 55, amplitude: 8, rowSpacing: 14)
-                                .stroke(PinlyTheme.navy.opacity(0.20), lineWidth: 1)
-                                .clipShape(WavyHorizonMask())
+                            // Mockup'ta gerçek seigaiha-cream PNG'si %16 opaklıkta, kartın ALT
+                            // kıyısına organik dalga kırpılmış — önceki vektör WavePattern
+                            // (ince çizgi noktaları) burada YANLIŞTI, gerçek dokuya çevrildi.
+                            VStack {
+                                Spacer()
+                                Image("SeigaihaPattern")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(height: 90)
+                                    .clipped()
+                                    .clipShape(WavyHorizonMask())
+                                    .opacity(0.4)
+                            }
                         }
                     )
                     .cornerRadius(22)

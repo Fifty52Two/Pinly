@@ -90,13 +90,21 @@ struct WeeklyReportView: View {
         .background(
             ZStack {
                 PinlyTheme.slate
-                Image("SeigaihaPattern")
-                    .resizable()
-                    .scaledToFill()
-                    .opacity(0.3)
-                    .allowsHitTesting(false)
+                // Mockup'ta doku panelin TAMAMını değil, alt kıyıyı kaplıyor (clip-path
+                // dalgası) — düz dikdörtgen doldurma yerine WavyHorizonMask ile birebir.
+                VStack {
+                    Spacer()
+                    Image("SeigaihaPattern")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 80)
+                        .clipped()
+                        .clipShape(WavyHorizonMask())
+                        .opacity(0.3)
+                }
             }
             .clipped()
+            .allowsHitTesting(false)
         )
     }
 

@@ -13,9 +13,12 @@ struct RouteShareCardView: View {
     /// Durak fotoğrafları (varsa) — en fazla 3'ü kolaj şeridi olarak gösterilir.
     var photos: [UIImage] = []
 
-    // Kart her modda koyu — dynamic tema renkleri yerine sabit açık tonlar
-    private let mint = Color(red: 0.616, green: 0.690, blue: 0.761) // açık toz mavi #9DB0C2
-    private let pine = Color(red: 0.133, green: 0.118, blue: 0.169) // koyu lacivert #221E2B
+    // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki (32 · Rota paylaşım kartı)
+    // sıcak turuncu hero gradyanı + gerçek seigaiha dokusu — önceki koyu lacivert +
+    // bulanık "bokeh" daireleri tasarımının yerine, birebir. Kart her modda sabit sıcak
+    // ton (dynamic tema renkleri yerine).
+    private let mint = Color.white.opacity(0.9) // eski toz mavi vurgunun yerine — sıcak turuncu zeminde beyaz
+    private let pine = Color(red: 0.133, green: 0.118, blue: 0.169) // koyu lacivert #221E2B — numara rozetleri
 
     private var dateText: String {
         date.formatted(date: .abbreviated, time: .omitted)
@@ -138,25 +141,19 @@ struct RouteShareCardView: View {
         .frame(width: 540, height: 675)
         .background(
             ZStack {
-                PinlyTheme.nightGradient
-                // Dekoratif coral parıltı
-                Circle()
-                    .fill(pine.opacity(0.30))
-                    .frame(width: 380, height: 380)
-                    .blur(radius: 90)
-                    .offset(x: 200, y: -260)
-                Circle()
-                    .fill(mint.opacity(0.12))
-                    .frame(width: 320, height: 320)
-                    .blur(radius: 90)
-                    .offset(x: -200, y: 280)
-
-                // Alt kısımda ince dalga şeridi
-                WavePattern(waveLength: 50, amplitude: 6, rowSpacing: 10)
-                    .stroke(mint.opacity(0.10), lineWidth: 1)
-                    .frame(height: 120)
-                    .frame(maxHeight: .infinity, alignment: .bottom)
-                    .clipped()
+                PinlyTheme.heroWarmGradient
+                // Mockup'ta gerçek seigaiha-cream PNG'si %30 opaklıkta, kartın orta-alt
+                // bandına dalgalı kırpılmış.
+                VStack {
+                    Spacer()
+                    Image("SeigaihaPattern")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 340)
+                        .clipped()
+                        .clipShape(WavyHorizonMask())
+                        .opacity(0.3)
+                }
             }
         )
     }

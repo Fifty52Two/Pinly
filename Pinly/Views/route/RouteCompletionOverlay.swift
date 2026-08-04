@@ -129,8 +129,18 @@ struct RouteCompletionOverlay: View {
                             .foregroundColor(PinlyTheme.onAccent)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 15)
-                            .background(PinlyTheme.primary)
-                            .clipShape(Capsule())
+                            .background(
+                                // Mockup'ın alt bandındaki gerçek seigaiha PNG dokusu —
+                                // önceki turda hiç eklenmemişti, düz primary'ydi.
+                                ZStack {
+                                    PinlyTheme.primary
+                                    Image("SeigaihaPattern")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .opacity(0.35)
+                                }
+                                .clipShape(Capsule())
+                            )
                     }
                     .opacity(shareCardAppeared ? 1 : 0)
                     .accessibilityHidden(!shareCardAppeared)

@@ -140,18 +140,22 @@ private struct BadgeCell: View {
         .padding(.horizontal, 4)
     }
 
+    // Ham SwiftUI sistem renkleri (.yellow/.purple/.blue...) seigaiha paletiyle
+    // ÇAKIŞIYORDU — CLAUDE.md "renkler Theme'den alınır, hardcode edilmez" kuralının
+    // eski bir ihlaliydi, mockup'taki muted altın/sage tonlarıyla hiç örtüşmüyordu.
+    // Artık paletin 5 token'ına (primary/primaryWarm/accent/gold/slate) eşleniyor.
     private var badgeColor: Color {
         switch badge.color {
-        case "yellow":  return .yellow
-        case "orange":  return .orange
-        case "purple":  return .purple
-        case "red":     return .red
+        case "yellow":  return PinlyTheme.gold
+        case "orange":  return PinlyTheme.accent
+        case "purple":  return PinlyTheme.primaryWarm
+        case "red":     return PinlyTheme.accent
         case "green":   return PinlyTheme.success
-        case "teal":    return .teal
-        case "indigo":  return .indigo
-        case "pink":    return .pink
-        case "cyan":    return .cyan
-        default:        return .blue
+        case "teal":    return PinlyTheme.slate
+        case "indigo":  return PinlyTheme.primary
+        case "pink":    return PinlyTheme.accent
+        case "cyan":    return PinlyTheme.primaryWarm
+        default:        return PinlyTheme.primary
         }
     }
 }
@@ -164,18 +168,22 @@ struct BadgeBannerView: View {
 
     @State private var visible = false
 
+    // Ham SwiftUI sistem renkleri (.yellow/.purple/.blue...) seigaiha paletiyle
+    // ÇAKIŞIYORDU — CLAUDE.md "renkler Theme'den alınır, hardcode edilmez" kuralının
+    // eski bir ihlaliydi, mockup'taki muted altın/sage tonlarıyla hiç örtüşmüyordu.
+    // Artık paletin 5 token'ına (primary/primaryWarm/accent/gold/slate) eşleniyor.
     private var badgeColor: Color {
         switch badge.color {
-        case "yellow":  return .yellow
-        case "orange":  return .orange
-        case "purple":  return .purple
-        case "red":     return .red
+        case "yellow":  return PinlyTheme.gold
+        case "orange":  return PinlyTheme.accent
+        case "purple":  return PinlyTheme.primaryWarm
+        case "red":     return PinlyTheme.accent
         case "green":   return PinlyTheme.success
-        case "teal":    return .teal
-        case "indigo":  return .indigo
-        case "pink":    return .pink
-        case "cyan":    return .cyan
-        default:        return .blue
+        case "teal":    return PinlyTheme.slate
+        case "indigo":  return PinlyTheme.primary
+        case "pink":    return PinlyTheme.accent
+        case "cyan":    return PinlyTheme.primaryWarm
+        default:        return PinlyTheme.primary
         }
     }
 
