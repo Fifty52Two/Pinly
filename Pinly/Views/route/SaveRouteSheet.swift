@@ -10,6 +10,30 @@ struct SaveRouteSheet: View {
     var body: some View {
         NavigationStack {
             Form {
+                // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki (30 · Rota kaydet)
+                // dolu sage pin rozeti — Form'un üstüne, sistem large-title yerine.
+                Section {
+                    HStack {
+                        Spacer()
+                        VStack(spacing: 10) {
+                            ZStack {
+                                Circle()
+                                    .fill(PinlyTheme.success)
+                                    .frame(width: 56, height: 56)
+                                    .shadow(color: PinlyTheme.success.opacity(0.3), radius: 8, y: 4)
+                                Image(systemName: "mappin")
+                                    .font(.system(size: 22, weight: .semibold))
+                                    .foregroundColor(.white)
+                            }
+                            Text(NSLocalizedString("Rotayı Kaydet", comment: ""))
+                                .font(.headline)
+                                .fontWeight(.heavy)
+                        }
+                        Spacer()
+                    }
+                }
+                .listRowBackground(Color.clear)
+
                 Section(header: Text(NSLocalizedString("Rota Bilgileri", comment: ""))) {
                     TextField(NSLocalizedString("Rota Adı", comment: ""), text: $routeName)
                     Picker(NSLocalizedString("Rota Türü", comment: ""), selection: $routeCategory) {
@@ -26,7 +50,8 @@ struct SaveRouteSheet: View {
                     }
                 }
             }
-            .navigationTitle(NSLocalizedString("Rotayı Kaydet", comment: ""))
+            .scrollContentBackground(.hidden)
+            .background(PinlyTheme.groundGradient)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

@@ -56,8 +56,15 @@ struct UsernameSetupSheet: View {
                         TextField(NSLocalizedString("orn_gezgin34", comment: ""), text: $username)
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
-                            .padding(12)
-                            .background(RoundedRectangle(cornerRadius: 12).fill(PinlyTheme.fillMuted))
+                            .padding(14)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(PinlyTheme.surface)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .strokeBorder(Color.primary.opacity(0.1), lineWidth: 1)
+                                    )
+                            )
                         Text(NSLocalizedString("3-20 karakter, sadece küçük harf/rakam/alt çizgi (_).", comment: ""))
                             .font(.caption2)
                             .foregroundColor(.secondary)

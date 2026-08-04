@@ -44,6 +44,8 @@ struct QuickAddSheet: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(PinlyTheme.groundGradient)
             .navigationTitle(NSLocalizedString("Hızlı Mekan Ekle", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: toolbarContent)
