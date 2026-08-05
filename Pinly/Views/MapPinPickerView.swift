@@ -69,15 +69,18 @@ struct MapPinPickerView: View {
     // MARK: - Merkez Pin
 
     private var centerPin: some View {
+        // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki (34 · Harita pin seç)
+        // gerçek damla biçimli pin, accent renginde (birebir) — önceki dairesel
+        // "mappin.circle.fill" rozet görünümünün yerine.
         VStack(spacing: 0) {
-            Image(systemName: "mappin.circle.fill")
+            Image(systemName: "mappin")
                 .font(.system(size: 40))
-                .foregroundStyle(.white, PinlyTheme.primary)
+                .foregroundColor(PinlyTheme.accent)
                 .shadow(color: .black.opacity(0.25), radius: 4, x: 0, y: 2) // bilinçli: canlı harita üzerinde yüzen pin
 
             // Pin çubuğu
             Rectangle()
-                .fill(PinlyTheme.primary)
+                .fill(PinlyTheme.accent)
                 .frame(width: 3, height: 10)
 
             // Gölge — pin havadayken küçülür

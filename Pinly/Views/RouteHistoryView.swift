@@ -145,35 +145,61 @@ private struct MemoryHistoryCard: View {
 private struct RouteHistoryRow: View {
     let history: RouteHistory
 
+    private var category: RouteCategory? {
+        history.categoryRaw.flatMap(RouteCategory.init(rawValue:))
+    }
+    private var iconColor: Color {
+        switch category {
+        case .city:          return PinlyTheme.primary
+        case .dayTrip:       return PinlyTheme.slate
+        case .international: return PinlyTheme.gold
+        case .none:          return PinlyTheme.primary
+        }
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text(history.routeName)
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                Spacer()
-                Text(history.date, style: .date)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+        // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki (15 · Rota geçmişi)
+        // dolu renkli kare ikon rozeti sol tarafta (birebir) — altındaki mesafe/süre/
+        // adım pill'leri ve mekan listesi mevcut işlevsellik, korunuyor.
+        HStack(alignment: .top, spacing: 14) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(iconColor)
+                    .frame(width: 52, height: 52)
+                Image(systemName: category?.icon ?? "flag.pattern.checkered")
+                    .font(.title3)
+                    .foregroundColor(.white)
             }
 
-            // Mekan listesi
-            if !history.placeNames.isEmpty {
-                Text(history.placeNames.joined(separator: " → "))
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(2)
-            }
-
-            // İstatistikler
-            HStack(spacing: 0) {
-                HistoryStatPill(icon: "figure.walk", value: history.formattedDistance, color: PinlyTheme.primary)
-                HistoryStatPill(icon: "clock", value: history.formattedDuration, color: PinlyTheme.success)
-                if history.stepCount > 0 {
-                    HistoryStatPill(icon: "shoeprints.fill", value: "\(history.stepCount) adım", color: PinlyTheme.warning)
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Text(history.routeName)
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    Spacer()
+                    Text(history.date, style: .date)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
-                if history.averageSpeedKmh > 0 {
-                    HistoryStatPill(icon: "speedometer", value: String(format: "%.1f km/s", history.averageSpeedKmh), color: PinlyTheme.primaryWarm)
+
+                // Mekan listesi
+                if !history.placeNames.isEmpty {
+                    Text(history.placeNames.joined(separator: " → "))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(2)
+                }
+
+                // İstatistikler
+                HStack(spacing: 0) {
+                    HistoryStatPill(icon: "figure.walk", value: history.formattedDistance, color: PinlyTheme.primary)
+                    HistoryStatPill(icon: "clock", value: history.formattedDuration, color: PinlyTheme.success)
+                    if history.stepCount > 0 {
+                        HistoryStatPill(icon: "shoeprints.fill", value: "\(history.stepCount) adım", color: PinlyTheme.warning)
+                    }
+                    if history.averageSpeedKmh > 0 {
+                        HistoryStatPill(icon: "speedometer", value: String(format: "%.1f km/s", history.averageSpeedKmh), color: PinlyTheme.primaryWarm)
+                    }
                 }
             }
         }

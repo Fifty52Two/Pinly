@@ -26,11 +26,15 @@ struct MemoryDetailView: View {
         // NavigationStack .zoom geçişini kırar (bkz. specs/FAZ6_UI_YON.md Wow #2).
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
+                heroBanner
+
                 Text(history.date, style: .date)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
 
-                if !loadedPhotos.isEmpty {
+                // heroBanner zaten ilk fotoğrafı büyük gösteriyor — grid kalan
+                // fotoğrafları (varsa) listeler, birinciyi tekrarlamaz.
+                if loadedPhotos.count > 1 {
                     photoGrid
                 }
 
@@ -81,10 +85,37 @@ struct MemoryDetailView: View {
         }
     }
 
+    // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki (26 · Anı detayı) hero
+    // banner — foto varsa ilk anı fotoğrafı, yoksa primaryWarm + gerçek seigaiha
+    // dokusu (birebir; önceden bu banner hiç yoktu).
+    @ViewBuilder
+    private var heroBanner: some View {
+        if let first = loadedPhotos.first {
+            Image(uiImage: first)
+                .resizable()
+                .scaledToFill()
+                .frame(height: 220)
+                .frame(maxWidth: .infinity)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+        } else {
+            ZStack {
+                PinlyTheme.primaryWarm
+                Image("SeigaihaPattern")
+                    .resizable()
+                    .scaledToFill()
+                    .opacity(0.35)
+                    .allowsHitTesting(false)
+            }
+            .frame(height: 220)
+            .frame(maxWidth: .infinity)
+            .clipShape(RoundedRectangle(cornerRadius: 18))
+        }
+    }
+
     private var photoGrid: some View {
         let columns = [GridItem(.flexible(), spacing: 8), GridItem(.flexible(), spacing: 8)]
         return LazyVGrid(columns: columns, spacing: 8) {
-            ForEach(Array(loadedPhotos.enumerated()), id: \.offset) { _, image in
+            ForEach(Array(loadedPhotos.dropFirst().enumerated()), id: \.offset) { _, image in
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()

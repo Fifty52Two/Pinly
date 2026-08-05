@@ -176,6 +176,30 @@ private struct CommunityRouteCard: View {
     }
 
     var body: some View {
+        // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki (16 · Topluluk akışı)
+        // her kartın üstündeki sage + seigaiha dokulu, kart kenarlarına tam oturan
+        // banner — mevcut içerik (isim/açıklama/mekanlar/favoriler) korunuyor,
+        // sadece üste eklendi.
+        VStack(alignment: .leading, spacing: 0) {
+            ZStack {
+                PinlyTheme.slate
+                Image("SeigaihaPattern")
+                    .resizable()
+                    .scaledToFill()
+                    .opacity(0.4)
+                    .allowsHitTesting(false)
+            }
+            .frame(height: 80)
+
+            innerContent
+                .padding(14)
+        }
+        .background(PinlyTheme.surface)
+        .cornerRadius(16)
+        .clipped()
+    }
+
+    private var innerContent: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 3) {
@@ -256,8 +280,5 @@ private struct CommunityRouteCard: View {
                 .buttonStyle(.plain)
             }
         }
-        .padding(14)
-        .background(PinlyTheme.surface)
-        .cornerRadius(16)
     }
 }

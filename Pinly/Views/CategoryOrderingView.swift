@@ -27,39 +27,44 @@ struct CategoryOrderingView: View {
                 .padding(.bottom, 20)
 
             List {
+                // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki (35 · Kategori
+                // sırala) kart satırı — sol tutamaç + dolu renkli kare ikon + isim
+                // (birebir); sıra numarası mockup'ta yok ama erişilebilirlik için
+                // korunuyor (küçük, ikincil).
                 ForEach(Array(routeManager.selectedCategories.enumerated()), id: \.element) { index, category in
-                    HStack(spacing: 14) {
-                        ZStack {
-                            Circle()
-                                .fill(PinlyTheme.primary)
-                                .frame(width: 28, height: 28)
-                            Text("\(index + 1)")
-                                .font(.caption)
-                                .fontWeight(.bold)
-                                .foregroundColor(PinlyTheme.onAccent)
-                        }
+                    HStack(spacing: 12) {
+                        Image(systemName: "line.3.horizontal")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary.opacity(0.6))
 
-                        Image(systemName: icon(for: category))
-                            .foregroundColor(color(for: category))
-                            .font(.title3)
-                            .frame(width: 30)
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(color(for: category))
+                                .frame(width: 28, height: 28)
+                            Image(systemName: icon(for: category))
+                                .font(.caption)
+                                .foregroundColor(.white)
+                        }
 
                         Text(category)
                             .font(.body)
-                            .fontWeight(.medium)
+                            .fontWeight(.semibold)
 
                         Spacer()
 
-                        Image(systemName: "line.3.horizontal")
+                        Text("\(index + 1)")
+                            .font(.caption2)
                             .foregroundColor(.secondary)
                     }
-                    .padding(.vertical, 6)
+                    .padding(.vertical, 8)
+                    .listRowBackground(PinlyTheme.surface)
                 }
                 .onMove { from, to in
                     routeManager.selectedCategories.move(fromOffsets: from, toOffset: to)
                 }
             }
             .listStyle(.plain)
+            .scrollContentBackground(.hidden)
             .environment(\.editMode, .constant(.active))
 
             Button {
@@ -79,6 +84,7 @@ struct CategoryOrderingView: View {
                 .padding(.bottom, 30)
             }
         }
+        .background(PinlyTheme.groundGradient)
         .navigationTitle(NSLocalizedString("Sıralama", comment: ""))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

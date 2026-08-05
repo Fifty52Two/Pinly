@@ -10,29 +10,32 @@ struct NavigationBanner: View {
     let completionPct: Double
 
     var body: some View {
+        // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki (29 · Navigasyon) dolu
+        // navy talimat kartı — yarı saydam materyal + renkli ikon kutusu yerine
+        // (birebir); "Durak x/y" etiketi mockup'ta yok ama mevcut işlevsellik,
+        // altına küçük bir aksesuar olarak korunuyor.
         VStack(spacing: 0) {
             HStack(spacing: 14) {
                 Image(systemName: "arrow.turn.up.right")
                     .font(.title2)
-                    .foregroundColor(PinlyTheme.onAccent)
-                    .frame(width: 44, height: 44)
-                    .background(PinlyTheme.primary)
-                    .cornerRadius(10)
+                    .foregroundColor(PinlyTheme.cream)
+                    .frame(width: 30, height: 30)
                     .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(String(format: NSLocalizedString("Durak %lld / %lld", comment: ""), stopIndex, totalStops))
                         .font(.caption2)
                         .fontWeight(.semibold)
-                        .foregroundColor(PinlyTheme.primary)
+                        .foregroundColor(PinlyTheme.cream.opacity(0.6))
                     Text(instruction.isEmpty ? NSLocalizedString("Devam edin", comment: "") : instruction)
                         .font(.subheadline)
-                        .fontWeight(.semibold)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
                         .lineLimit(2)
                     if !distance.isEmpty {
                         Text(distance)
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(PinlyTheme.cream.opacity(0.6))
                     }
                 }
                 .accessibilityElement(children: .combine)
@@ -45,10 +48,10 @@ struct NavigationBanner: View {
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     Rectangle()
-                        .fill(PinlyTheme.fillMuted)
+                        .fill(Color.white.opacity(0.15))
                         .frame(height: 3)
                     Rectangle()
-                        .fill(PinlyTheme.primary)
+                        .fill(PinlyTheme.cream)
                         .frame(width: geo.size.width * CGFloat(completionPct), height: 3)
                         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: completionPct)
                 }
@@ -57,7 +60,7 @@ struct NavigationBanner: View {
             .padding(.horizontal, 16)
             .padding(.bottom, 10)
         }
-        .background(.regularMaterial)
+        .background(PinlyTheme.navy)
     }
 }
 
@@ -83,35 +86,26 @@ struct RouteOverviewPanel: View {
     }
 
     var body: some View {
+        // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki (24 · Rota özeti)
+        // ikonsuz, büyük rakamlı istatistik dizilimi (birebir).
         HStack(spacing: 0) {
-            RouteStatItem(value: formattedDistance, label: NSLocalizedString("Toplam Yürüyüş", comment: ""), icon: "figure.walk")
-            Divider().frame(height: 32)
-            RouteStatItem(value: formattedTime, label: NSLocalizedString("Tahmini Süre", comment: ""), icon: "clock")
-            Divider().frame(height: 32)
-            RouteStatItem(value: "\(stopCount)", label: NSLocalizedString("Durak", comment: ""), icon: "mappin.circle.fill")
+            RouteStatItem(value: formattedDistance, label: NSLocalizedString("Mesafe", comment: ""))
+            RouteStatItem(value: formattedTime, label: NSLocalizedString("Süre", comment: ""))
+            RouteStatItem(value: "\(stopCount)", label: NSLocalizedString("Mekan", comment: ""))
         }
-        .padding(.vertical, 14)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(PinlyTheme.fillMuted)
-        )
     }
 }
 
 struct RouteStatItem: View {
     let value: String
     let label: String
-    let icon: String
 
     var body: some View {
-        VStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.caption)
-                .foregroundColor(PinlyTheme.primary)
-                .accessibilityHidden(true)
+        VStack(spacing: 3) {
             Text(value)
-                .font(.subheadline)
-                .fontWeight(.bold)
+                .font(.system(.body, design: .rounded).weight(.bold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
             Text(label)
                 .font(.caption2)
                 .foregroundColor(.secondary)

@@ -312,18 +312,18 @@ struct PlaceRow: View {
     let onTap: () -> Void
 
     var body: some View {
+        // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki (33 · Sırayla mekan
+        // seç) satır — solda dolu renkli kategori ikonu + sağda seçiliyken beliren
+        // check dairesi, 2px vurgu konturu (birebir).
         Button(action: onTap) {
             HStack(spacing: 14) {
                 ZStack {
-                    Circle()
-                        .fill(isSelected ? PinlyTheme.primary : PinlyTheme.fillMuted)
-                        .frame(width: 28, height: 28)
-                    if isSelected {
-                        Image(systemName: "checkmark")
-                            .font(.caption)
-                            .fontWeight(.bold)
-                            .foregroundColor(PinlyTheme.onAccent)
-                    }
+                    RoundedRectangle(cornerRadius: 9)
+                        .fill(place.categoryColor)
+                        .frame(width: 34, height: 34)
+                    Image(systemName: place.categoryIcon)
+                        .font(.subheadline)
+                        .foregroundColor(.white)
                 }
 
                 VStack(alignment: .leading, spacing: 3) {
@@ -337,14 +337,20 @@ struct PlaceRow: View {
                 }
 
                 Spacer()
+
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.title3)
+                        .foregroundColor(PinlyTheme.primary)
+                }
             }
             .padding(14)
             .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(isSelected ? PinlyTheme.primary.opacity(0.08) : PinlyTheme.fillMuted)
+                    .fill(PinlyTheme.surface)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
-                            .stroke(isSelected ? PinlyTheme.primary : .clear, lineWidth: 1.5)
+                            .stroke(isSelected ? PinlyTheme.primary : PinlyTheme.hairline, lineWidth: isSelected ? 2 : 1)
                     )
             )
         }

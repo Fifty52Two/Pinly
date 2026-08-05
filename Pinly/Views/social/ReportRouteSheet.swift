@@ -63,6 +63,8 @@ struct ReportRouteSheet: View {
                         .foregroundColor(PinlyTheme.danger)
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(PinlyTheme.groundGradient)
             .navigationTitle(NSLocalizedString("Rotayı Bildir", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
