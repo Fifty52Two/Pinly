@@ -3,28 +3,23 @@ import MapKit
 import CoreLocation
 @testable import Pinly
 
-/// Gerçek `RouteManager`'ın 2 protokole (RouteCalculating/RouteNavigationTracking)
-/// tek sınıf olarak conform olma desenini tekrar eder. Live Activity yönetimi
-/// RouteLiveActivityController'a ayrıldığı için RouteManager (ve bu mock) artık
-/// RouteLiveActivityPresenting'e conform olmuyor — startLiveActivity() vb.
-/// çağrı sayaçları düz metod olarak kalıyor.
+/// Mock RouteManager — RouteNavigationTracking protokolune conform.
+/// Hesaplama (RouteCalculating) artik ayri RouteCalculator sinifinda;
+/// RouteManager sadece navigasyon state'i yonetiyor.
 @MainActor
-final class MockRouteManager: RouteCalculating, RouteNavigationTracking {
-    // RouteCalculating
+final class MockRouteManager: RouteNavigationTracking {
+    // Route data (RouteManager'da hala @Published olarak var)
     var routePolylines: [MKPolyline] = []
     var stepsPerSegment: [[MKRoute.Step]] = []
     var segmentDistances: [Double] = []
     var totalRouteDistance: Double = 0
     var totalRouteTime: TimeInterval = 0
     var isRecalculating: Bool = false
+    var failedLegCount: Int = 0
+    var unroutableStopCount: Int = 0
     var calculateRoutesCallCount = 0
 
-    func calculateRoutes(from userLocation: CLLocationCoordinate2D?, completion: @escaping () -> Void) {
-        calculateRoutesCallCount += 1
-        completion()
-    }
-
-    func recalculateCurrentSegment(from userLocation: CLLocation) { }
+    var breadcrumbPolyline: MKPolyline? = nil
 
     // RouteNavigationTracking
     var selectedCategories: [String] = []
@@ -65,7 +60,7 @@ final class MockRouteManager: RouteCalculating, RouteNavigationTracking {
     func updateNavigation(userLocation: CLLocation) { }
     func resumeNavigation() { }
 
-    // Live Activity çağrı sayaçları (RouteManager'daki forwarding metodların taklidi)
+    // Live Activity cagri sayaclari
     var startLiveActivityCallCount = 0
     var updateLiveActivityCallCount = 0
     var endLiveActivityCallCount = 0

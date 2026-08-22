@@ -92,6 +92,10 @@ private struct SocialKey: EnvironmentKey {
     static let defaultValue: SocialServicing = NoOpSocialService.shared
 }
 
+private struct SharedRoutesKey: EnvironmentKey {
+    static let defaultValue: SharedRouteServicing = NoOpSharedRouteService.shared
+}
+
 extension EnvironmentValues {
     var entitlements: EntitlementProviding {
         get { self[EntitlementsKey.self] }
@@ -196,5 +200,10 @@ extension EnvironmentValues {
     var social: SocialServicing {
         get { self[SocialKey.self] }
         set { self[SocialKey.self] = newValue }
+    }
+
+    var sharedRoutes: SharedRouteServicing {
+        get { self[SharedRoutesKey.self] }
+        set { self[SharedRoutesKey.self] = newValue }
     }
 }

@@ -578,3 +578,39 @@
 "Durak %lld: %@" = "Durak %lld: %@";
 "Tamamlandı" = "Tamamlandı";
 "Dışa Aktarma Seçenekleri" = "Dışa Aktarma Seçenekleri";
+
+// MARK: - Apple ile Giriş + Ortak Rota (2026-08-06 lokalizasyon eksikliği tamamlandı)
+"%@ yarıçapında %lld mekan" = "%@ yarıçapında %lld mekan";
+"%lld rota tamamladın" = "%lld rota tamamladın";
+"Apple ile Giriş Yap" = "Apple ile Giriş Yap";
+"Apple ile giriş başarısız oldu, tekrar dene." = "Apple ile giriş başarısız oldu, tekrar dene.";
+"Apple ile giriş yapıldı" = "Apple ile giriş yapıldı";
+"Bu Hafta" = "Bu Hafta";
+"Bu anıyı hikaye ya da gönderi olarak paylaş" = "Bu anıyı hikaye ya da gönderi olarak paylaş";
+"Bugün nereyi keşfedelim?" = "Bugün nereyi keşfedelim?";
+"Geçerli bir doğum yılı girin (1900–\\(currentYear - 5))" = "Geçerli bir doğum yılı girin";
+"Geçerli bir doğum yılı girin (1900–%d)" = "Geçerli bir doğum yılı girin (1900–%d)";
+"Giriş yapıldı" = "Giriş yapıldı";
+"Henüz mekan yok — sağ üstten ekle." = "Henüz mekan yok — sağ üstten ekle.";
+"Katılım bekleniyor — linki paylaş, açan kişi otomatik katılır." = "Katılım bekleniyor — linki paylaş, açan kişi otomatik katılır.";
+"Kopyalandı" = "Kopyalandı";
+"Link Kopyala" = "Link Kopyala";
+"Mekan ara" = "Mekan ara";
+"Oluştur" = "Oluştur";
+"Oluşturulamadı, tekrar dene." = "Oluşturulamadı, tekrar dene.";
+"Ortak Rota" = "Ortak Rota";
+"Ortak Rota Oluştur" = "Ortak Rota Oluştur";
+"Ortak rota için önce Apple ile giriş yapmalısın (Profil sekmesi)." = "Ortak rota için önce Apple ile giriş yapmalısın (Profil sekmesi).";
+"Rota adı" = "Rota adı";
+"Rota yüklenemedi. Bağlantını kontrol edip tekrar dene." = "Rota yüklenemedi. Bağlantını kontrol edip tekrar dene.";
+"Rozetlerin" = "Rozetlerin";
+"Yürüyüş rotası" = "Yürüyüş rotası";
+"veya elle doldur" = "veya elle doldur";
+"Çıkış Yap" = "Çıkış Yap";
+"İkiniz de canlı düzenliyorsunuz." = "İkiniz de canlı düzenliyorsunuz.";
+
+// MARK: - Ortak Rotalarım listesi (2026-08-06)
+"Ortak Rotalarım" = "Ortak Rotalarım";
+"Henüz ortak rotan yok" = "Henüz ortak rotan yok";
+"Ortak Rota Oluştur ile başlat, linki arkadaşınla paylaş." = "Ortak Rota Oluştur ile başlat, linki arkadaşınla paylaş.";
+"Katılım bekleniyor" = "Katılım bekleniyor";

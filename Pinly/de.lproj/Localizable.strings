@@ -577,3 +577,39 @@
 "Durak %lld: %@" = "Stopp %lld: %@";
 "Tamamlandı" = "Abgeschlossen";
 "Dışa Aktarma Seçenekleri" = "Exportoptionen";
+
+// MARK: - Apple ile Giriş + Ortak Rota (2026-08-06 lokalizasyon eksikliği tamamlandı)
+"%@ yarıçapında %lld mekan" = "%2$lld Orte im Umkreis von %1$@";
+"%lld rota tamamladın" = "Du hast %lld Routen abgeschlossen";
+"Apple ile Giriş Yap" = "Mit Apple anmelden";
+"Apple ile giriş başarısız oldu, tekrar dene." = "Anmeldung mit Apple fehlgeschlagen, bitte erneut versuchen.";
+"Apple ile giriş yapıldı" = "Mit Apple angemeldet";
+"Bu Hafta" = "Diese Woche";
+"Bu anıyı hikaye ya da gönderi olarak paylaş" = "Teile diese Erinnerung als Story oder Beitrag";
+"Bugün nereyi keşfedelim?" = "Was erkunden wir heute?";
+"Geçerli bir doğum yılı girin (1900–\\(currentYear - 5))" = "Gib ein gültiges Geburtsjahr ein";
+"Geçerli bir doğum yılı girin (1900–%d)" = "Gib ein gültiges Geburtsjahr ein (1900–%d)";
+"Giriş yapıldı" = "Angemeldet";
+"Henüz mekan yok — sağ üstten ekle." = "Noch keine Orte — füge oben rechts einen hinzu.";
+"Katılım bekleniyor — linki paylaş, açan kişi otomatik katılır." = "Warte auf einen Teilnehmer — teile den Link, wer ihn öffnet, tritt automatisch bei.";
+"Kopyalandı" = "Kopiert";
+"Link Kopyala" = "Link kopieren";
+"Mekan ara" = "Orte suchen";
+"Oluştur" = "Erstellen";
+"Oluşturulamadı, tekrar dene." = "Konnte nicht erstellt werden, bitte erneut versuchen.";
+"Ortak Rota" = "Gemeinsame Route";
+"Ortak Rota Oluştur" = "Gemeinsame Route erstellen";
+"Ortak rota için önce Apple ile giriş yapmalısın (Profil sekmesi)." = "Für gemeinsame Routen musst du dich zuerst mit Apple anmelden (Profil-Tab).";
+"Rota adı" = "Routenname";
+"Rota yüklenemedi. Bağlantını kontrol edip tekrar dene." = "Route konnte nicht geladen werden. Verbindung prüfen und erneut versuchen.";
+"Rozetlerin" = "Deine Abzeichen";
+"Yürüyüş rotası" = "Spazierroute";
+"veya elle doldur" = "oder manuell ausfüllen";
+"Çıkış Yap" = "Abmelden";
+"İkiniz de canlı düzenliyorsunuz." = "Ihr bearbeitet beide live.";
+
+// MARK: - Ortak Rotalarım listesi (2026-08-06)
+"Ortak Rotalarım" = "Meine gemeinsamen Routen";
+"Henüz ortak rotan yok" = "Noch keine gemeinsamen Routen";
+"Ortak Rota Oluştur ile başlat, linki arkadaşınla paylaş." = "Starte mit Gemeinsame Route erstellen und teile den Link mit einem Freund.";
+"Katılım bekleniyor" = "Warte auf einen Teilnehmer";

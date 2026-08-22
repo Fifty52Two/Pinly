@@ -75,7 +75,7 @@ struct ProfileEditSheet: View {
                                 )
                         )
                         if !birthYearText.isEmpty && validBirthYear == nil {
-                            Text(NSLocalizedString("Geçerli bir doğum yılı girin (1900–\(currentYear - 5))", comment: ""))
+                            Text(String(format: NSLocalizedString("Geçerli bir doğum yılı girin (1900–%d)", comment: ""), currentYear - 5))
                                 .font(.caption)
                                 .foregroundColor(PinlyTheme.accent)
                         }

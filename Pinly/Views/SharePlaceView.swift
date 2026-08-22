@@ -5,6 +5,7 @@ struct SharePlaceView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.routeURLCoding) private var routeURLCoding
     @Environment(\.qrCodeGenerator) private var qrCodeGenerator
+    @Environment(\.colorScheme) private var colorScheme
 
     @State private var showCopiedConfirmation = false
 
@@ -51,11 +52,15 @@ struct SharePlaceView: View {
                 .background(
                     ZStack {
                         PinlyTheme.primary
-                        Image("SeigaihaPattern")
-                            .resizable()
-                            .scaledToFill()
-                            .opacity(0.3)
-                            .allowsHitTesting(false)
+                        GeometryReader { geo in
+                            Image(PinlyTheme.seigaihaLinesOnInk(colorScheme))
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: geo.size.width, height: geo.size.height)
+                                .clipShape(Rectangle())
+                        }
+                        .opacity(0.3)
+                        .allowsHitTesting(false)
                     }
                     .clipped()
                 )

@@ -35,6 +35,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate, Lo
 
     private var isNavigationTracking = false
     private var navigationTimer: Timer?
+    /// Kullanıcı durduğunda accuracy'i düşürüp pil tasarrufu yapar.
+    private var isAdaptiveReduced = false
 
     init(geocoding: GeocodingProviding = DefaultGeocodingService.shared) {
         self.geocoding = geocoding
@@ -57,11 +59,9 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate, Lo
 
     func startNavigationTracking() {
         isNavigationTracking = true
-        // kCLLocationAccuracyBest yerine NearestTenMeters — yürüyüş için yeterli, %30+ pil tasarrufu
+        manager.activityType = .fitness          // Yürüyüş navigasyonu — iOS pil yönetimi buna göre optimize eder
         manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-        manager.distanceFilter = 10
-        // Telefon cebe girince de takip sürsün — UIBackgroundModes/location gerektirir.
-        // "While Using" izniyle çalışır; sistem mavi göstergeyi gösterir.
+        manager.distanceFilter = 10              // 10 m hareket olmadan güncelleme gelmesin
         manager.allowsBackgroundLocationUpdates = true
         manager.pausesLocationUpdatesAutomatically = false
         manager.showsBackgroundLocationIndicator = true
@@ -78,11 +78,13 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate, Lo
         isNavigationTracking = false
         navigationTimer?.invalidate()
         navigationTimer = nil
+        manager.stopUpdatingLocation()
         manager.allowsBackgroundLocationUpdates = false
+        manager.showsBackgroundLocationIndicator = false
         manager.pausesLocationUpdatesAutomatically = true
+        manager.activityType = .other
         manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         manager.distanceFilter = kCLDistanceFilterNone
-        manager.stopUpdatingLocation()
     }
 
     // MARK: - Delegate
@@ -100,9 +102,22 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate, Lo
         guard let location = locations.last else { return }
         userLocation = location
         if !isNavigationTracking {
-            // Navigasyon yoksa durdur (requestLocation() zaten bir kez çağırır ama güvenlik için)
             manager.stopUpdatingLocation()
             reverseGeocode(location: location)
+        } else {
+            // Adaptive accuracy: kullanıcı durduğunda (hız < 0.3 m/s ≈ hareketsiz)
+            // accuracy'i düşür → GPS çipi daha az çalışır → pil tasarrufu.
+            // Hareket başlayınca (hız > 0.5 m/s) tekrar yükselt.
+            let speed = max(0, location.speed)
+            if speed < 0.3 && !isAdaptiveReduced {
+                isAdaptiveReduced = true
+                manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+                manager.distanceFilter = 25
+            } else if speed > 0.5 && isAdaptiveReduced {
+                isAdaptiveReduced = false
+                manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                manager.distanceFilter = 10
+            }
         }
     }
 

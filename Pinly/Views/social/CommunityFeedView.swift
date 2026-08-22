@@ -171,6 +171,8 @@ private struct CommunityRouteCard: View {
     let onReport: () -> Void
     let onBlock: () -> Void
 
+    @Environment(\.colorScheme) private var colorScheme
+
     private var categoryIcon: String {
         RouteCategory(rawValue: route.category)?.icon ?? "map.fill"
     }
@@ -183,11 +185,15 @@ private struct CommunityRouteCard: View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack {
                 PinlyTheme.slate
-                Image("SeigaihaPattern")
-                    .resizable()
-                    .scaledToFill()
-                    .opacity(0.4)
-                    .allowsHitTesting(false)
+                GeometryReader { geo in
+                    Image(PinlyTheme.seigaihaLinesOnInk(colorScheme))
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .clipShape(Rectangle())
+                }
+                .opacity(0.4)
+                .allowsHitTesting(false)
             }
             .frame(height: 80)
 

@@ -14,6 +14,7 @@ struct MemoryDetailView: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.analytics) private var analytics
+    @Environment(\.colorScheme) private var colorScheme
     @State private var showShareFormatPicker = false
 
     private var loadedPhotos: [UIImage] {
@@ -100,11 +101,15 @@ struct MemoryDetailView: View {
         } else {
             ZStack {
                 PinlyTheme.primaryWarm
-                Image("SeigaihaPattern")
-                    .resizable()
-                    .scaledToFill()
-                    .opacity(0.35)
-                    .allowsHitTesting(false)
+                GeometryReader { geo in
+                    Image(PinlyTheme.seigaihaLinesOnInk(colorScheme))
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .clipShape(Rectangle())
+                }
+                .opacity(0.35)
+                .allowsHitTesting(false)
             }
             .frame(height: 220)
             .frame(maxWidth: .infinity)

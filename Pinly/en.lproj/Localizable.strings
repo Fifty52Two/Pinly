@@ -579,3 +579,39 @@
 "Durak %lld: %@" = "Stop %lld: %@";
 "Tamamlandı" = "Completed";
 "Dışa Aktarma Seçenekleri" = "Export Options";
+
+// MARK: - Apple ile Giriş + Ortak Rota (2026-08-06 lokalizasyon eksikliği tamamlandı)
+"%@ yarıçapında %lld mekan" = "%2$lld places within %1$@";
+"%lld rota tamamladın" = "You completed %lld routes";
+"Apple ile Giriş Yap" = "Sign in with Apple";
+"Apple ile giriş başarısız oldu, tekrar dene." = "Sign in with Apple failed, try again.";
+"Apple ile giriş yapıldı" = "Signed in with Apple";
+"Bu Hafta" = "This Week";
+"Bu anıyı hikaye ya da gönderi olarak paylaş" = "Share this memory as a story or post";
+"Bugün nereyi keşfedelim?" = "Where shall we explore today?";
+"Geçerli bir doğum yılı girin (1900–\\(currentYear - 5))" = "Enter a valid birth year";
+"Geçerli bir doğum yılı girin (1900–%d)" = "Enter a valid birth year (1900–%d)";
+"Giriş yapıldı" = "Signed in";
+"Henüz mekan yok — sağ üstten ekle." = "No places yet — add one from the top right.";
+"Katılım bekleniyor — linki paylaş, açan kişi otomatik katılır." = "Waiting for someone to join — share the link, whoever opens it joins automatically.";
+"Kopyalandı" = "Copied";
+"Link Kopyala" = "Copy Link";
+"Mekan ara" = "Search places";
+"Oluştur" = "Create";
+"Oluşturulamadı, tekrar dene." = "Couldn't create it, try again.";
+"Ortak Rota" = "Shared Route";
+"Ortak Rota Oluştur" = "Create Shared Route";
+"Ortak rota için önce Apple ile giriş yapmalısın (Profil sekmesi)." = "You need to sign in with Apple first for shared routes (Profile tab).";
+"Rota adı" = "Route name";
+"Rota yüklenemedi. Bağlantını kontrol edip tekrar dene." = "Couldn't load the route. Check your connection and try again.";
+"Rozetlerin" = "Your Badges";
+"Yürüyüş rotası" = "Walking route";
+"veya elle doldur" = "or fill in manually";
+"Çıkış Yap" = "Sign Out";
+"İkiniz de canlı düzenliyorsunuz." = "You're both editing live.";
+
+// MARK: - Ortak Rotalarım listesi (2026-08-06)
+"Ortak Rotalarım" = "My Shared Routes";
+"Henüz ortak rotan yok" = "No shared routes yet";
+"Ortak Rota Oluştur ile başlat, linki arkadaşınla paylaş." = "Start with Create Shared Route, then share the link with a friend.";
+"Katılım bekleniyor" = "Waiting for someone to join";

@@ -34,39 +34,63 @@ struct HomeView: View {
     }
 
     var body: some View {
-        ZStack(alignment: .top) {
-            TabView(selection: $selectedTab) {
-                MainTab(selectedTab: $selectedTab)
-                    .toolbar(.hidden, for: .tabBar)
-                    .tag(0)
+        GeometryReader { rootGeo in
+            // Fiziksel home indicator yüksekliği — bar'ı GERÇEKTEN fiziksel alt kenara
+            // kaydırmak için kullanılır (bkz. PinlyTabBar.extraBottomInset yorumu).
+            let bottomInset = rootGeo.safeAreaInsets.bottom
 
-                DiscoverView()
-                    .toolbar(.hidden, for: .tabBar)
-                    .tag(1)
+            ZStack(alignment: .top) {
+                TabView(selection: $selectedTab) {
+                    MainTab(selectedTab: $selectedTab)
+                        .toolbar(.hidden, for: .tabBar)
+                        .tag(0)
 
-                SavedRoutesView()
-                    .toolbar(.hidden, for: .tabBar)
-                    .tag(2)
+                    DiscoverView()
+                        .toolbar(.hidden, for: .tabBar)
+                        .tag(1)
 
-                ProfileTab(selectedTab: $selectedTab)
-                    .toolbar(.hidden, for: .tabBar)
-                    .tag(3)
-            }
-            .tint(PinlyTheme.primary)
-            // Yüzen çentikli tab bar — safe area inset olduğu için
-            // listeler/scroll'lar içeriğini otomatik olarak üstünde bitirir
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                PinlyTabBar(selection: $selectedTab, items: tabItems)
-                    .ignoresSafeArea(.keyboard, edges: .bottom)
-            }
+                    SavedRoutesView()
+                        .toolbar(.hidden, for: .tabBar)
+                        .tag(2)
 
-            // Rozet banner — tüm sekmelerin üzerinde
-            if let badge = placeStore.pendingBadges.first {
-                BadgeBannerView(badge: badge) {
-                    placeStore.pendingBadges.removeFirst()
+                    ProfileTab(selectedTab: $selectedTab)
+                        .toolbar(.hidden, for: .tabBar)
+                        .tag(3)
                 }
-                .padding(.top, 56)
-                .zIndex(999)
+                .tint(PinlyTheme.primary)
+                // TabView içeriği için görünmez boşluk — gerçek bar aşağıda overlay olarak
+                // çizilir. `.safeAreaInset` içine konan view'da `.ignoresSafeArea` fiziksel alt
+                // kenara ulaşmıyor (SwiftUI o slot'u kendi ayırdığı alana klipliyor) — bu yüzden
+                // TabView'in boşluğu görünmez bir spacer'la, gerçek bar ise overlay'le sağlanıyor.
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    Color.clear.frame(height: PinlyTabBar.reservedHeight(extraBottomInset: bottomInset))
+                }
+
+                // Rozet banner — tüm sekmelerin üzerinde. `.id(badge)` ŞART: kimliksiz
+                // olunca SwiftUI aynı banner'ı "aynı view" sayıp `.onAppear`'ı bir daha
+                // tetiklemeyebiliyordu VEYA arka arkaya iki rozet açılınca (ör. yakın
+                // mekan eklerken art arda check tetiklenmesi) eski banner'ın 3 saniyelik
+                // auto-dismiss zamanlayıcısı YENİ banner göründükten SONRA da ateşleyip
+                // `removeFirst()`'ü dizide eleman kalmamışken çağırıyordu — gerçek cihazda
+                // görülen "Fatal error: Can't remove first element from an empty
+                // collection" çökmesinin kaynağı buydu. `.id` her rozet için taze bir
+                // view (taze zamanlayıcı) garantiler; `isEmpty` kontrolü de ikinci bir
+                // güvenlik katmanı.
+                if let badge = placeStore.pendingBadges.first {
+                    BadgeBannerView(badge: badge) {
+                        if !placeStore.pendingBadges.isEmpty {
+                            placeStore.pendingBadges.removeFirst()
+                        }
+                    }
+                    .id(badge)
+                    .padding(.top, 56)
+                    .zIndex(999)
+                }
+            }
+            // Yüzen çentikli tab bar — fiziksel alt kenara kadar kayıyor (bkz. extraBottomInset)
+            .overlay(alignment: .bottom) {
+                PinlyTabBar(selection: $selectedTab, items: tabItems, extraBottomInset: bottomInset)
+                    .ignoresSafeArea([.container, .keyboard], edges: .bottom)
             }
         }
         // Deep link handler

@@ -3,7 +3,6 @@ import CoreLocation
 import SwiftData
 @testable import Pinly
 
-@MainActor
 final class MockSavedRouteRepository: SavedRouteRepository {
     var saveCallCount = 0
     var deleteCallCount = 0

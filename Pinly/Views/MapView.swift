@@ -294,10 +294,10 @@ struct MainMapView: UIViewRepresentable {
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             guard let placeAnnotation = annotation as? PlaceAnnotation else { return nil }
 
-            let view = mapView.dequeueReusableAnnotationView(
+            let view = (mapView.dequeueReusableAnnotationView(
                 withIdentifier: "place",
                 for: annotation
-            ) as! MKMarkerAnnotationView
+            ) as? MKMarkerAnnotationView) ?? MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "place")
 
             view.annotation = annotation
             view.markerTintColor = UIColor(placeAnnotation.place.categoryColor)

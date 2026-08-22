@@ -5,12 +5,11 @@ import SwiftData
 // MARK: - SavedRouteRepository
 
 /// Kayıtlı rotaların kalıcılığı ve uzaklık hesabı.
-@MainActor
 protocol SavedRouteRepository: AnyObject {
-    func save(name: String, categoryRaw: String?, places: [Place], context: ModelContext)
+    @MainActor func save(name: String, categoryRaw: String?, places: [Place], context: ModelContext)
     /// Kullanıcının mevcut konumu ile rotanın merkezi arasındaki mesafe (km)
     func distanceKm(from userLocation: CLLocation?, to route: SavedRoute) -> Double?
-    func delete(_ route: SavedRoute, context: ModelContext)
+    @MainActor func delete(_ route: SavedRoute, context: ModelContext)
 }
 
 // MARK: - SnapshotPlaceResolver
@@ -27,13 +26,12 @@ enum SnapshotPlaceResolver {
     }
 }
 
-@MainActor
 final class DefaultSavedRouteRepository: SavedRouteRepository {
     static let shared = DefaultSavedRouteRepository()
 
     // MARK: - Kayıtlı rotayı SwiftData'ya ekle
 
-    func save(
+    @MainActor func save(
         name: String,
         categoryRaw: String?,
         places: [Place],
@@ -83,7 +81,7 @@ final class DefaultSavedRouteRepository: SavedRouteRepository {
 
     // MARK: - Silme
 
-    func delete(_ route: SavedRoute, context: ModelContext) {
+    @MainActor func delete(_ route: SavedRoute, context: ModelContext) {
         context.delete(route)
         try? context.save()
     }

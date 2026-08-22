@@ -11,6 +11,7 @@ struct PlaceDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(\.placePhotos) private var placePhotos
+    @Environment(\.colorScheme) private var colorScheme
 
     @State private var showEdit = false
     @State private var showShare = false
@@ -82,11 +83,15 @@ struct PlaceDetailView: View {
         } else {
             ZStack {
                 PinlyTheme.primary
-                Image("SeigaihaPattern")
-                    .resizable()
-                    .scaledToFill()
-                    .opacity(0.4)
-                    .allowsHitTesting(false)
+                GeometryReader { geo in
+                    Image(PinlyTheme.seigaihaLinesOnInk(colorScheme))
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .clipShape(Rectangle())
+                }
+                .opacity(0.4)
+                .allowsHitTesting(false)
             }
             .frame(maxWidth: .infinity)
             .frame(height: 220)

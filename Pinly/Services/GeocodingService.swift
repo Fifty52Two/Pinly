@@ -149,19 +149,26 @@ final class DefaultNearbySearchService: NearbySearching {
     ) async -> [NearbyPlace] {
         let items: [MKMapItem]
         if let poiCategories = NearbyCategoryResolver.poiCategories(for: category) {
-            // Kategori bazlı POI araması — metin eşleşmesi yok, yanlış kategori giremez.
-            let request = MKLocalPointsOfInterestRequest(center: coordinate, radius: radiusMeters)
-            request.pointOfInterestFilter = MKPointOfInterestFilter(including: poiCategories)
-            items = (try? await MKLocalSearch(request: request).start().mapItems) ?? []
+            // MKLocalPointsOfInterestRequest dahili sonuç sınırı (~25) yüzünden yoğun
+            // kategorilerde (restoran vb.) geniş yarıçap seçilse bile tüm sonuçlar
+            // merkezin hemen çevresinden doluyordu — 5 km seçince bile 500 m ötesini
+            // göremiyordun. Çözüm: >1 km yarıçapta aramayı merkez + 4 yönde kaydırılmış
+            // noktalardan paralel yapıp sonuçları birleştirmek (spatial subdivision).
+            if radiusMeters > 1000 {
+                items = await searchPOIMultiCenter(
+                    center: coordinate,
+                    radius: radiusMeters,
+                    poiCategories: poiCategories
+                )
+            } else {
+                let request = MKLocalPointsOfInterestRequest(center: coordinate, radius: radiusMeters)
+                request.pointOfInterestFilter = MKPointOfInterestFilter(including: poiCategories)
+                items = (try? await MKLocalSearch(request: request).start().mapItems) ?? []
+            }
         } else {
-            // POI karşılığı olmayan kategoriler (tarihi yer, genel) metinle aranır,
-            // sonuçlar resolvedCategory ile ayıklanır.
             let request = MKLocalSearch.Request()
             request.naturalLanguageQuery = category.localizedName
             request.resultTypes = .pointOfInterest
-            // MKCoordinateRegion'ın latitudinalMeters/longitudinalMeters'ı TOPLAM span'dır
-            // (çap), yarıçap değil — radiusMeters'ı doğrudan vermek etkin aramayı yarıya
-            // düşürüyordu (kullanıcı 3/5 km seçince gerçekte ~1.5/2.5 km aranıyordu).
             request.region = MKCoordinateRegion(
                 center: coordinate,
                 latitudinalMeters: radiusMeters * 2,
@@ -181,7 +188,6 @@ final class DefaultNearbySearchService: NearbySearching {
             let distance = origin.distance(
                 from: CLLocation(latitude: itemCoordinate.latitude, longitude: itemCoordinate.longitude)
             )
-            // Metin araması region'ı taşabilir — yarıçapı burada da uygula.
             guard distance <= radiusMeters else { return nil }
             let address = [
                 item.placemark.thoroughfare,
@@ -196,6 +202,58 @@ final class DefaultNearbySearchService: NearbySearching {
             )
         }
         return NearbyResultBander.diversify(places, radius: radiusMeters)
+    }
+
+    /// Geniş yarıçapta POI aramasını merkez + 4 yönde kaydırılmış noktalardan
+    /// paralel yaparak Apple'ın dahili sonuç sınırını (~25) aşar. Tekilleştirme
+    /// isim+koordinat ile yapılır.
+    private func searchPOIMultiCenter(
+        center: CLLocationCoordinate2D,
+        radius: Double,
+        poiCategories: [MKPointOfInterestCategory]
+    ) async -> [MKMapItem] {
+        let offset = radius * 0.5
+        let latOffset = offset / 111_320
+        let lonOffset = offset / (111_320 * cos(center.latitude * .pi / 180))
+
+        let centers = [
+            center,
+            CLLocationCoordinate2D(latitude: center.latitude + latOffset, longitude: center.longitude),
+            CLLocationCoordinate2D(latitude: center.latitude - latOffset, longitude: center.longitude),
+            CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude + lonOffset),
+            CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude - lonOffset),
+        ]
+
+        let subRadius = radius * 0.6
+
+        let allItems = await withTaskGroup(of: [MKMapItem].self) { group in
+            for c in centers {
+                group.addTask {
+                    let request = MKLocalPointsOfInterestRequest(center: c, radius: subRadius)
+                    request.pointOfInterestFilter = MKPointOfInterestFilter(including: poiCategories)
+                    return (try? await MKLocalSearch(request: request).start().mapItems) ?? []
+                }
+            }
+            var merged: [MKMapItem] = []
+            for await batch in group { merged.append(contentsOf: batch) }
+            return merged
+        }
+
+        // Tekilleştir: aynı isim + ~50m içindeki sonuçlar aynı mekan
+        var seen: [(String, CLLocationCoordinate2D)] = []
+        return allItems.filter { item in
+            guard let name = item.name else { return false }
+            let isDuplicate = seen.contains { existing in
+                existing.0 == name &&
+                CLLocation(latitude: existing.1.latitude, longitude: existing.1.longitude)
+                    .distance(from: CLLocation(latitude: item.placemark.coordinate.latitude,
+                                               longitude: item.placemark.coordinate.longitude)) < 50
+            }
+            if !isDuplicate {
+                seen.append((name, item.placemark.coordinate))
+            }
+            return !isDuplicate
+        }
     }
 }
 

@@ -101,6 +101,9 @@ secrets.json
 Config.xcconfig
 APIKeys.swift
 
+# Firebase config (API key'ler içerir, CI'da GitHub Secrets'tan inject edilir)
+Pinly/GoogleService-Info.plist
+
 # AI tools (Claude, Cursor, etc)
 .claude/
 .cursorrules

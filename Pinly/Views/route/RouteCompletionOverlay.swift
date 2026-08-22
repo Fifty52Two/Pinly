@@ -51,6 +51,7 @@ struct RouteCompletionOverlay: View {
     let onDismiss: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
 
     // Kutlama animasyon durumu
     @State private var appeared = false
@@ -134,10 +135,14 @@ struct RouteCompletionOverlay: View {
                                 // önceki turda hiç eklenmemişti, düz primary'ydi.
                                 ZStack {
                                     PinlyTheme.primary
-                                    Image("SeigaihaPattern")
-                                        .resizable()
-                                        .scaledToFill()
-                                        .opacity(0.35)
+                                    GeometryReader { geo in
+                                        Image(PinlyTheme.seigaihaLinesOnInk(colorScheme))
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: geo.size.width, height: geo.size.height)
+                                            .clipShape(Rectangle())
+                                    }
+                                    .opacity(0.35)
                                 }
                                 .clipShape(Capsule())
                             )

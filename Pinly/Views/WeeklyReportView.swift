@@ -8,6 +8,7 @@ struct WeeklyReportView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.weeklyStats) private var weeklyStats
     @Environment(\.notificationScheduling) private var notificationScheduling
+    @Environment(\.colorScheme) private var colorScheme
     @Query(sort: \RouteHistory.date, order: .reverse) private var histories: [RouteHistory]
 
     /// Kullanıcı haftalık bildirim CTA'sına dokundu mu (izin isteme anı — FAZ 5.4)
@@ -48,11 +49,14 @@ struct WeeklyReportView: View {
             }
             .background(PinlyTheme.groundGradient)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button { dismiss() } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.secondary)
+                            .font(.title2)
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.white.opacity(0.8), .black.opacity(0.3))
                     }
                 }
             }
@@ -61,9 +65,8 @@ struct WeeklyReportView: View {
 
     // MARK: - Başlık
 
-    // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki sage renkli dalgalı
-    // header — gerçek seigaiha PNG dokusu + "Bu Hafta" etiketi + kalın başlık,
-    // altına taşan istatistik kartı (birebir).
+    // Sage renkli header — "Bu Hafta" etiketi + kalın başlık,
+    // altına taşan istatistik kartı.
     private var header: some View {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -85,18 +88,17 @@ struct WeeklyReportView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 24)
-        .padding(.top, 24)
+        .padding(.top, 12)
         .padding(.bottom, stats.isEmpty ? 24 : 48)
         .background(
             ZStack {
                 PinlyTheme.slate
-                // Mockup'ta doku panelin TAMAMını değil, alt kıyıyı kaplıyor (clip-path
-                // dalgası) — düz dikdörtgen doldurma yerine WavyHorizonMask ile birebir.
                 VStack {
                     Spacer()
-                    Image("SeigaihaPattern")
+                    Image(PinlyTheme.seigaihaLinesOnInk(colorScheme))
                         .resizable()
                         .scaledToFill()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .frame(height: 80)
                         .clipped()
                         .clipShape(WavyHorizonMask())

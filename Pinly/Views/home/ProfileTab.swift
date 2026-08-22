@@ -12,10 +12,8 @@ struct ProfileTab: View {
     @EnvironmentObject var languageManager: LanguageManager
     @Environment(\.badges) private var badges
     @Environment(\.profile) private var profileService
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.routeMemories) private var routeMemories
-    @Environment(\.openURL) private var openURL
     @Environment(\.social) private var social
+    @Environment(\.colorScheme) private var colorScheme
 
     @Query(sort: \SavedRoute.createdAt, order: .reverse) private var savedRoutes: [SavedRoute]
 
@@ -25,8 +23,6 @@ struct ProfileTab: View {
     @State private var showLanguagePicker = false
     @State private var showStats = false
     @State private var showEditProfile = false
-    @State private var showDeleteAllConfirm = false
-    @State private var showDiagnostics = false
     @State private var profile: UserProfile? = nil
     @State private var profilePhoto: UIImage? = nil
     @State private var pickerItem: PhotosPickerItem? = nil
@@ -40,49 +36,7 @@ struct ProfileTab: View {
     private var visitedCount: Int { placeStore.places.filter { $0.isVisited }.count }
     /// FAZ 5 V1 — Rotalarım kartı için son 5 kayıtlı rota (en yeni önce).
     private var recentSavedRoutes: [SavedRoute] { Array(savedRoutes.prefix(5)) }
-    @AppStorage("pinly.appearance") private var appearance = "system"
 
-    private var appVersionText: String {
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
-        return "\(version) (\(build))"
-    }
-
-    private func settingsIcon(_ name: String, color: Color) -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 10)
-                .fill(color.opacity(0.15))
-                .frame(width: 40, height: 40)
-            Image(systemName: name)
-                .foregroundColor(color)
-                .font(.headline)
-        }
-        .accessibilityHidden(true)
-    }
-
-    /// TAM sıfırlama: SwiftData modelleri + tüm UserDefaults (onboarding, isPro,
-    /// rozetler dahil) + profil fotoğrafı. Kullanıcı onboarding'e döner —
-    /// KVKK/GDPR "verilerimi sil" talebinin yerel karşılığı.
-    private func deleteAllData() {
-        // Anı fotoğraf klasörleri: batch delete `RouteHistory.id`'leri geçmez,
-        // o yüzden silmeden ÖNCE her kaydın RouteMemories klasörü tek tek temizlenir.
-        if let histories = try? modelContext.fetch(FetchDescriptor<RouteHistory>()) {
-            for history in histories {
-                routeMemories.deleteAll(historyID: history.id)
-            }
-        }
-        try? modelContext.delete(model: Place.self)
-        try? modelContext.delete(model: RouteHistory.self)
-        try? modelContext.delete(model: SavedRoute.self)
-        try? modelContext.save()
-        if let bundleID = Bundle.main.bundleIdentifier {
-            UserDefaults.standard.removePersistentDomain(forName: bundleID)
-        }
-        profileService.deletePhoto()
-        placeStore.load(context: modelContext)
-        profile = nil
-        profilePhoto = nil
-    }
 
     var body: some View {
         NavigationStack {
@@ -154,9 +108,10 @@ struct ProfileTab: View {
                             RoundedRectangle(cornerRadius: 20)
                                 .fill(PinlyTheme.surface)
                                 .overlay(RoundedRectangle(cornerRadius: 20).strokeBorder(PinlyTheme.hairline, lineWidth: 1))
-                            Image("SeigaihaPattern")
+                            Image(PinlyTheme.seigaihaLinesOnPaper(colorScheme))
                                 .resizable()
                                 .scaledToFill()
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .frame(width: 150, height: 150)
                                 .clipShape(Circle())
                                 .offset(x: 40, y: -50)
@@ -288,93 +243,17 @@ struct ProfileTab: View {
                         icon: "globe",
                         iconColor: PinlyTheme.primary,
                         title: "Dil / Language",
-                        subtitle: current.map { "\($0.flag) \($0.name)" } ?? "Türkçe"
+                        subtitle: current.map { $0.name } ?? "Türkçe"
                     ) {
                         showLanguagePicker = true
                     }
-
-                    // Görünüm (Sistem / Açık / Koyu)
-                    HStack(spacing: 14) {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(PinlyTheme.slate.opacity(0.15))
-                                .frame(width: 40, height: 40)
-                            Image(systemName: "circle.lefthalf.filled")
-                                .foregroundColor(PinlyTheme.slate)
-                                .font(.headline)
-                        }
-                        .accessibilityHidden(true)
-                        Text(NSLocalizedString("Görünüm", comment: ""))
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                        Spacer()
-                        Picker("", selection: $appearance) {
-                            Text(NSLocalizedString("Sistem", comment: "")).tag("system")
-                            Text(NSLocalizedString("Açık", comment: "")).tag("light")
-                            Text(NSLocalizedString("Koyu", comment: "")).tag("dark")
-                        }
-                        .pickerStyle(.menu)
-                        .labelsHidden()
-                        .tint(PinlyTheme.primary)
-                    }
                 }
                 .listRowBackground(PinlyTheme.surface)
 
-                // Hakkında / Destek / Veri
-                Section {
-                    HStack(spacing: 14) {
-                        settingsIcon("info.circle.fill", color: PinlyTheme.primaryWarm)
-                        Text(NSLocalizedString("Sürüm", comment: ""))
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                        Spacer()
-                        Text(appVersionText)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-
-                    Button {
-                        openURL(URL(string: "mailto:akkopru_ferhat65@outlook.com?subject=Pinly%20Destek")!)
-                    } label: {
-                        HStack(spacing: 14) {
-                            settingsIcon("envelope.fill", color: PinlyTheme.slate)
-                            Text(NSLocalizedString("Destek", comment: ""))
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundColor(.primary)
-                            Spacer()
-                            Image(systemName: "arrow.up.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .buttonStyle(.plain)
-
-                    MoreRow(icon: "stethoscope", iconColor: PinlyTheme.slate,
-                            title: NSLocalizedString("Tanılama Günlüğü", comment: ""),
-                            subtitle: NSLocalizedString("Crash ve performans kayıtları", comment: "")) {
-                        showDiagnostics = true
-                    }
-
-                    Button(role: .destructive) {
-                        showDeleteAllConfirm = true
-                    } label: {
-                        HStack(spacing: 14) {
-                            settingsIcon("trash.fill", color: PinlyTheme.danger)
-                            Text(NSLocalizedString("Tüm Verilerimi Sil", comment: ""))
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundColor(PinlyTheme.danger)
-                            Spacer()
-                        }
-                    }
-                    .buttonStyle(.plain)
-                }
-                .listRowBackground(PinlyTheme.surface)
             }
             .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
-            .contentMargins(.bottom, 32, for: .scrollContent)
+            .contentMargins(.bottom, 120, for: .scrollContent)
             .background(PinlyTheme.groundGradient)
             .navigationTitle(NSLocalizedString("Profil", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
@@ -399,22 +278,9 @@ struct ProfileTab: View {
             LanguagePickerSheet()
                 .environmentObject(languageManager)
         }
-        .sheet(isPresented: $showDiagnostics) {
-            DiagnosticsView()
-        }
         .sheet(isPresented: $showEditProfile, onDismiss: reloadProfile) {
             ProfileEditSheet(onSaved: reloadProfile)
                 .presentationDetents([.medium, .large])
-        }
-        .confirmationDialog(
-            NSLocalizedString("Tüm verilerin kalıcı olarak silinecek — mekanlar, rotalar, rozetler ve profil. Uygulama ilk kurulum durumuna döner. Bu işlem geri alınamaz.", comment: ""),
-            isPresented: $showDeleteAllConfirm,
-            titleVisibility: .visible
-        ) {
-            Button(NSLocalizedString("Tüm Verilerimi Sil", comment: ""), role: .destructive) {
-                deleteAllData()
-            }
-            Button(NSLocalizedString("Vazgeç", comment: ""), role: .cancel) {}
         }
         .onChange(of: pickerItem) { _, item in
             guard let item else { return }
@@ -442,7 +308,7 @@ struct ProfileTab: View {
             } else {
                 ZStack {
                     PinlyTheme.heroGradient
-                    Text(profile?.initials.isEmpty == false ? profile!.initials : "?")
+                    Text((profile?.initials).flatMap { $0.isEmpty ? nil : $0 } ?? "?")
                         .font(.system(size: 36, weight: .semibold, design: .rounded))
                         .foregroundColor(.white)
                 }
@@ -596,8 +462,15 @@ private struct LanguagePickerSheet: View {
                         dismiss()
                     } label: {
                         HStack {
-                            Text(lang.flag).font(.title2)
-                                .accessibilityHidden(true)
+                            ZStack {
+                                Circle()
+                                    .fill(PinlyTheme.primary.opacity(0.12))
+                                    .frame(width: 30, height: 30)
+                                Text(lang.code.uppercased())
+                                    .font(.caption2.weight(.bold))
+                                    .foregroundColor(PinlyTheme.primary)
+                            }
+                            .accessibilityHidden(true)
                             Text(lang.name)
                                 .foregroundStyle(.primary)
                             Spacer()

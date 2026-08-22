@@ -5,24 +5,14 @@ import SwiftUI
 struct OnboardingView: View {
     let onFinish: () -> Void
 
-    @Environment(\.swarmImporting) private var swarmImporting
-    @Environment(\.entitlements) private var entitlements
-    @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject var placeStore: PlaceStore
-
     @State private var page = 0
-    @State private var showSwarmPicker = false
-    @State private var isImportingSwarm = false
-    @State private var swarmImportedCount: Int? = nil
-    @State private var swarmTruncated = false
-    @State private var swarmError = false
 
     private let pages: [OnboardingPage] = [
         OnboardingPage(
             icon: "mappin.and.ellipse",
             accent: PinlyTheme.primary,
             title: NSLocalizedString("Mekanlarını Kaydet", comment: ""),
-            subtitle: NSLocalizedString("Gittiğin ya da gitmek istediğin her yeri kategorilerle sakla. Swarm geçmişini tek dokunuşla içeri aktar.", comment: "")
+            subtitle: NSLocalizedString("Gittiğin ya da gitmek istediğin her yeri kategorilerle sakla.", comment: "")
         ),
         OnboardingPage(
             icon: "figure.walk.motion",
@@ -42,20 +32,6 @@ struct OnboardingView: View {
         ZStack {
             PinlyTheme.groundGradient
                 .ignoresSafeArea()
-
-            // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki organik "kıyı" şekli —
-            // gerçek seigaiha PNG dokusu (SeigaihaPattern asset'i), WavyHorizonMask'e kırpılmış.
-            VStack {
-                Spacer()
-                Image("SeigaihaPattern")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
-                    .clipped()
-                    .clipShape(WavyHorizonMask())
-            }
-            .ignoresSafeArea()
-            .allowsHitTesting(false)
 
             VStack(spacing: 0) {
                 HStack {
@@ -77,19 +53,12 @@ struct OnboardingView: View {
                         OnboardingPageView(page: p)
                             .tag(index)
                     }
-                    SwarmOnboardingPageView(
-                        isImporting: isImportingSwarm,
-                        importedCount: swarmImportedCount,
-                        truncated: swarmTruncated,
-                        onPickFile: { showSwarmPicker = true }
-                    )
-                    .tag(pages.count)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
 
                 // Sayfa göstergesi
                 HStack(spacing: 8) {
-                    ForEach(0..<(pages.count + 1), id: \.self) { i in
+                    ForEach(0..<pages.count, id: \.self) { i in
                         Capsule()
                             .fill(i == page ? PinlyTheme.primary : Color.primary.opacity(0.15))
                             .frame(width: i == page ? 24 : 8, height: 8)
@@ -99,7 +68,7 @@ struct OnboardingView: View {
                 .padding(.bottom, 28)
 
                 Button {
-                    if page < pages.count {
+                    if page < pages.count - 1 {
                         withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
                             page += 1
                         }
@@ -107,7 +76,7 @@ struct OnboardingView: View {
                         onFinish()
                     }
                 } label: {
-                    Text(page < pages.count
+                    Text(page < pages.count - 1
                          ? NSLocalizedString("Devam Et", comment: "")
                          : NSLocalizedString("Başla", comment: ""))
                 }
@@ -115,44 +84,6 @@ struct OnboardingView: View {
                 .padding(.horizontal, 28)
                 .padding(.bottom, 44)
             }
-        }
-        .fileImporter(
-            isPresented: $showSwarmPicker,
-            allowedContentTypes: [.json],
-            allowsMultipleSelection: false
-        ) { result in
-            handleSwarmFile(result)
-        }
-        .alert(NSLocalizedString("Dosya Okunamadı", comment: ""), isPresented: $swarmError) {
-            Button(NSLocalizedString("Tamam", comment: ""), role: .cancel) {}
-        } message: {
-            Text(NSLocalizedString("Geçerli bir Swarm checkins.json dosyası seçin.", comment: ""))
-        }
-    }
-
-    private func handleSwarmFile(_ result: Result<[URL], Error>) {
-        guard let url = try? result.get().first,
-              url.startAccessingSecurityScopedResource()
-        else { swarmError = true; return }
-        defer { url.stopAccessingSecurityScopedResource() }
-        guard let data = try? Data(contentsOf: url),
-              let parsed = swarmImporting.parseSwarm(data: data),
-              !parsed.isEmpty
-        else { swarmError = true; return }
-
-        // Onboarding'de paywall gösterilmez — ücretsiz limit kadar aktarılır
-        let capacity = entitlements.isPro
-            ? parsed.count
-            : max(0, entitlements.freeLimit - placeStore.places.count)
-        let toImport = Array(parsed.prefix(capacity))
-        swarmTruncated = parsed.count > toImport.count
-        isImportingSwarm = true
-        Task {
-            for item in toImport {
-                await placeStore.importPlace(item, context: modelContext)
-            }
-            swarmImportedCount = toImport.count
-            isImportingSwarm = false
         }
     }
 }
@@ -221,82 +152,3 @@ private struct OnboardingPageView: View {
     }
 }
 
-// MARK: - Swarm İçe Aktarma Sayfası
-
-private struct SwarmOnboardingPageView: View {
-    let isImporting: Bool
-    let importedCount: Int?
-    let truncated: Bool
-    let onPickFile: () -> Void
-
-    var body: some View {
-        VStack(spacing: 32) {
-            Spacer()
-
-            ZStack {
-                Circle()
-                    .stroke(PinlyTheme.gold.opacity(0.10), lineWidth: 1.5)
-                    .frame(width: 220, height: 220)
-                Circle()
-                    .stroke(PinlyTheme.gold.opacity(0.18), lineWidth: 1.5)
-                    .frame(width: 164, height: 164)
-                Circle()
-                    .fill(PinlyTheme.gold.opacity(0.12))
-                    .frame(width: 128, height: 128)
-                Image(systemName: "square.and.arrow.down.on.square")
-                    .font(.system(size: 54, weight: .medium))
-                    .foregroundStyle(PinlyTheme.gold)
-            }
-
-            VStack(spacing: 14) {
-                Text(NSLocalizedString("Swarm'dan Taşın", comment: ""))
-                    .font(.title.bold())
-                    .multilineTextAlignment(.center)
-                Text(NSLocalizedString("Foursquare/Swarm geçmişin mi var? checkins.json dosyanı seç, mekanların saniyeler içinde Pinly'de olsun.", comment: ""))
-                    .font(.body)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(3)
-                    .padding(.horizontal, 36)
-            }
-
-            if let count = importedCount {
-                VStack(spacing: 6) {
-                    Label(
-                        String(format: NSLocalizedString("%lld mekan içe aktarıldı", comment: ""), count),
-                        systemImage: "checkmark.circle.fill"
-                    )
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundColor(PinlyTheme.success)
-                    if truncated {
-                        Text(NSLocalizedString("Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin.", comment: ""))
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 36)
-                    }
-                }
-            } else if isImporting {
-                ProgressView()
-            } else {
-                VStack(spacing: 10) {
-                    Button(action: onPickFile) {
-                        Label(NSLocalizedString("Swarm Dosyası Seç", comment: ""), systemImage: "doc.badge.arrow.up")
-                            .fontWeight(.semibold)
-                            .padding(.horizontal, 24)
-                            .padding(.vertical, 12)
-                            .background(PinlyTheme.gold.opacity(0.12))
-                            .foregroundColor(PinlyTheme.gold)
-                            .cornerRadius(14)
-                    }
-                    Text(NSLocalizedString("İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir", comment: ""))
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                }
-            }
-
-            Spacer()
-            Spacer()
-        }
-    }
-}

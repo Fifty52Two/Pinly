@@ -577,3 +577,39 @@
 "Durak %lld: %@" = "Остановка %lld: %@";
 "Tamamlandı" = "Завершено";
 "Dışa Aktarma Seçenekleri" = "Параметры экспорта";
+
+// MARK: - Apple ile Giriş + Ortak Rota (2026-08-06 lokalizasyon eksikliği tamamlandı)
+"%@ yarıçapında %lld mekan" = "%2$lld мест в радиусе %1$@";
+"%lld rota tamamladın" = "Вы завершили %lld маршрутов";
+"Apple ile Giriş Yap" = "Войти через Apple";
+"Apple ile giriş başarısız oldu, tekrar dene." = "Не удалось войти через Apple, попробуйте снова.";
+"Apple ile giriş yapıldı" = "Вход через Apple выполнен";
+"Bu Hafta" = "На этой неделе";
+"Bu anıyı hikaye ya da gönderi olarak paylaş" = "Поделитесь этим воспоминанием как историей или постом";
+"Bugün nereyi keşfedelim?" = "Что исследуем сегодня?";
+"Geçerli bir doğum yılı girin (1900–\\(currentYear - 5))" = "Введите корректный год рождения";
+"Geçerli bir doğum yılı girin (1900–%d)" = "Введите корректный год рождения (1900–%d)";
+"Giriş yapıldı" = "Вход выполнен";
+"Henüz mekan yok — sağ üstten ekle." = "Мест пока нет — добавьте через кнопку сверху справа.";
+"Katılım bekleniyor — linki paylaş, açan kişi otomatik katılır." = "Ожидание участника — поделитесь ссылкой, тот, кто её откроет, присоединится автоматически.";
+"Kopyalandı" = "Скопировано";
+"Link Kopyala" = "Скопировать ссылку";
+"Mekan ara" = "Поиск мест";
+"Oluştur" = "Создать";
+"Oluşturulamadı, tekrar dene." = "Не удалось создать, попробуйте снова.";
+"Ortak Rota" = "Общий маршрут";
+"Ortak Rota Oluştur" = "Создать общий маршрут";
+"Ortak rota için önce Apple ile giriş yapmalısın (Profil sekmesi)." = "Для общих маршрутов сначала войдите через Apple (вкладка Профиль).";
+"Rota adı" = "Название маршрута";
+"Rota yüklenemedi. Bağlantını kontrol edip tekrar dene." = "Не удалось загрузить маршрут. Проверьте соединение и попробуйте снова.";
+"Rozetlerin" = "Ваши значки";
+"Yürüyüş rotası" = "Пеший маршрут";
+"veya elle doldur" = "или заполните вручную";
+"Çıkış Yap" = "Выйти";
+"İkiniz de canlı düzenliyorsunuz." = "Вы оба редактируете в реальном времени.";
+
+// MARK: - Ortak Rotalarım listesi (2026-08-06)
+"Ortak Rotalarım" = "Мои общие маршруты";
+"Henüz ortak rotan yok" = "Пока нет общих маршрутов";
+"Ortak Rota Oluştur ile başlat, linki arkadaşınla paylaş." = "Начните с «Создать общий маршрут» и поделитесь ссылкой с другом.";
+"Katılım bekleniyor" = "Ожидание участника";

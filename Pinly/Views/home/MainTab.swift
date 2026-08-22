@@ -20,8 +20,6 @@ struct MainTab: View {
     @State private var showPaywall = false
     @State private var detailPlace: Place? = nil
 
-    private var greeting: (text: String, symbol: String) { viewModel.greeting() }
-
     private var visitedCount: Int { viewModel.visitedCount(placeStore.places) }
 
     private var recentPlaces: [Place] { viewModel.recentPlaces(placeStore.places) }
@@ -31,19 +29,9 @@ struct MainTab: View {
             VStack(alignment: .leading, spacing: 22) {
                 // Üst başlık
                 HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack(spacing: 6) {
-                            Image(systemName: greeting.symbol)
-                                .font(.caption)
-                                .foregroundColor(PinlyTheme.gold)
-                            Text(greeting.text)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                        }
-                        Text(NSLocalizedString("Ne yapmak istiyorsun?", comment: ""))
-                            .font(.title)
-                            .fontWeight(.bold)
-                    }
+                    Text(NSLocalizedString("Ne yapmak istiyorsun?", comment: ""))
+                        .font(.title)
+                        .fontWeight(.bold)
                     Spacer()
                     if !locationManager.currentDistrict.isEmpty {
                         Label(locationManager.currentDistrict, systemImage: "location.fill")
@@ -118,9 +106,10 @@ struct MainTab: View {
                             // (ince çizgi noktaları) burada YANLIŞTI, gerçek dokuya çevrildi.
                             VStack {
                                 Spacer()
-                                Image("SeigaihaPattern")
+                                Image("SeigaihaLinesPale")
                                     .resizable()
                                     .scaledToFill()
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                                     .frame(height: 90)
                                     .clipped()
                                     .clipShape(WavyHorizonMask())
@@ -160,11 +149,6 @@ struct MainTab: View {
                                     subtitle: NSLocalizedString("Sonrası için planla", comment: "")) {
                         showPlanRoute = true
                     }
-                }
-
-                // Boş kullanıcıya hazır rota teaser
-                if placeStore.places.isEmpty {
-                    starterRoutesTeaser
                 }
 
                 // Son eklenenler
@@ -234,39 +218,6 @@ struct MainTab: View {
         }
     }
 
-    // MARK: - Hazır rota yönlendirme kartı (boş uygulama problemi)
-
-    private var starterRoutesTeaser: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 10) {
-                Image(systemName: "map.fill")
-                    .font(.title3)
-                    .foregroundColor(PinlyTheme.primary)
-                    .accessibilityHidden(true)
-                Text(NSLocalizedString("Hazır İstanbul rotalarını dene", comment: ""))
-                    .font(.headline)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.85)
-            }
-            Text(NSLocalizedString("Küratörlü yürüyüş rotaları — tek dokunuşla rotalarına ekle.", comment: ""))
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            Button {
-                selectedTab = 2
-            } label: {
-                Text(NSLocalizedString("Keşfetmeye Başla", comment: ""))
-                    .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
-                    .background(PinlyTheme.primary)
-                    .foregroundColor(PinlyTheme.onAccent)
-                    .cornerRadius(12)
-            }
-        }
-        .padding(16)
-        .pinlyCard()
-        .padding(.horizontal, 20)
-    }
 }
 
 // MARK: - Hızlı Aksiyon Kartı

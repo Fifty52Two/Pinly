@@ -19,13 +19,13 @@
 		</dict>
 	</array>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-7849418614739862~9682238844</string>
+	<string>$(GAD_APPLICATION_IDENTIFIER)</string>
 	<key>RevenueCatAPIKey</key>
-	<string>appl_RUAmxHPfjrHHoKGQwOmrVllWMiH</string>
+	<string>$(REVENUECAT_API_KEY)</string>
 	<key>SupabaseURL</key>
-	<string>https://ddodromuhgqznmhrwqbt.supabase.co</string>
+	<string>$(SUPABASE_URL)</string>
 	<key>SupabasePublishableKey</key>
-	<string>sb_publishable_0sjg2ErAZPv8YuoVcGYRkg_TeruwoMW</string>
+	<string>$(SUPABASE_PUBLISHABLE_KEY)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>UILaunchScreen</key>

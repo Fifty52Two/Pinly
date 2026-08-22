@@ -22,9 +22,9 @@ struct RouteSummaryView: View {
     @State private var showRatingSheet = false
     @State private var showCompletionOverlay = false
     @State private var noteSaved = false
+    /// Kullanıcı navigasyonda haritayı kaydırınca true — harita üstünde "Konuma Dön" butonunu tetikler.
+    @State private var userManuallyPanned = false
     @State private var showSharePicker = false
-    @State private var showGPXPaywall = false
-    @State private var showPDFPaywall = false
     @State private var showSaveRouteSheet = false
     @State private var showSoftPaywall = false
     @State private var showShareFormatPicker = false
@@ -37,18 +37,45 @@ struct RouteSummaryView: View {
             VStack(spacing: 0) {
 
                 // Map
-                NavigationMapView(
-                    region: $region,
-                    routePolylines: $routeManager.routePolylines,
-                    routePlaces: routePlaces,
-                    userLocation: locationManager.userLocation,
-                    nextWaypointCoordinate: routeManager.nextWaypointCoordinate,
-                    currentWaypointIndex: routeManager.currentWaypointIndex,
-                    isNavigating: routeManager.isNavigating,
-                    isPausedAtStop: routeManager.isPausedAtStop
-                )
+                ZStack(alignment: .topTrailing) {
+                    NavigationMapView(
+                        region: $region,
+                        routePolylines: $routeManager.routePolylines,
+                        userManuallyPanned: $userManuallyPanned,
+                        breadcrumbPolyline: routeManager.breadcrumbPolyline,
+                        routePlaces: routePlaces,
+                        userLocation: locationManager.userLocation,
+                        nextWaypointCoordinate: routeManager.nextWaypointCoordinate,
+                        currentWaypointIndex: routeManager.currentWaypointIndex,
+                        isNavigating: routeManager.isNavigating,
+                        isPausedAtStop: routeManager.isPausedAtStop
+                    )
+
+                    // Recenter butonu: kullanıcı navigasyonda haritayı kaydırınca çıkar
+                    if userManuallyPanned && routeManager.isNavigating && !routeManager.isPausedAtStop {
+                        Button {
+                            userManuallyPanned = false
+                        } label: {
+                            HStack(spacing: 6) {
+                                Image(systemName: "location.fill")
+                                    .font(.caption)
+                                Text(NSLocalizedString("Konuma Dön", comment: ""))
+                                    .font(.caption.weight(.semibold))
+                            }
+                            .foregroundColor(PinlyTheme.primary)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(.regularMaterial, in: Capsule())
+                            .shadow(color: .black.opacity(0.12), radius: 4, y: 2)
+                        }
+                        .padding(.top, 12)
+                        .padding(.trailing, 12)
+                        .transition(.scale.combined(with: .opacity))
+                    }
+                }
                 .frame(height: routeManager.isNavigating ? 280 : 340)
                 .animation(.spring(response: 0.4, dampingFraction: 0.8), value: routeManager.isNavigating)
+                .animation(.spring(response: 0.3, dampingFraction: 0.8), value: userManuallyPanned)
 
                 // Navigation banner
                 if routeManager.isNavigating && !routeManager.isPausedAtStop {
@@ -313,42 +340,24 @@ struct RouteSummaryView: View {
         .navigationTitle(routeManager.isNavigating ? NSLocalizedString("Navigasyon", comment: "") : NSLocalizedString("Rota Hazır", comment: ""))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            // Dışa aktarma (GPX/PDF) niş bir Pro özelliği — ana buton yığınında birincil
-            // aksiyonlarla (Paylaş/Kaydet/Navigasyon) aynı görsel ağırlıkta durmasın diye
-            // ikincil bir menüye taşındı; sadece navigasyon başlamadan önce anlamlı.
+            // GPX/PDF disa aktarma — v1'de Coming Soon, ileride Pro ozellik olarak acilacak.
             if !routeManager.isNavigating {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
-                        Button {
-                            if viewModel.isPro {
-                                shareGPX()
-                            } else {
-                                showGPXPaywall = true
-                            }
-                        } label: {
-                            Label(NSLocalizedString("GPX İndir", comment: ""), systemImage: "square.and.arrow.down")
+                        Button { } label: {
+                            Label(NSLocalizedString("GPX İndir", comment: "") + " (\(NSLocalizedString("ÇOK YAKINDA", comment: "")))", systemImage: "square.and.arrow.down")
                         }
-                        Button {
-                            if viewModel.isPro {
-                                sharePDF()
-                            } else {
-                                showPDFPaywall = true
-                            }
-                        } label: {
-                            Label(NSLocalizedString("PDF İndir", comment: ""), systemImage: "doc.richtext")
+                        .disabled(true)
+                        Button { } label: {
+                            Label(NSLocalizedString("PDF İndir", comment: "") + " (\(NSLocalizedString("ÇOK YAKINDA", comment: "")))", systemImage: "doc.richtext")
                         }
+                        .disabled(true)
                     } label: {
                         Image(systemName: "ellipsis.circle")
                             .foregroundColor(.secondary)
                             .font(.title3)
                     }
                     .accessibilityLabel(NSLocalizedString("Dışa Aktarma Seçenekleri", comment: ""))
-                    .sheet(isPresented: $showGPXPaywall) {
-                        PaywallView { showGPXPaywall = false }
-                    }
-                    .sheet(isPresented: $showPDFPaywall) {
-                        PaywallView { showPDFPaywall = false }
-                    }
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
@@ -396,6 +405,12 @@ struct RouteSummaryView: View {
                 showRatingSheet = true
             }
             routeManager.arrivedAtPlace = nil
+        }
+        .onChange(of: routeManager.isPausedAtStop) { _, paused in
+            if paused { userManuallyPanned = false }
+        }
+        .onChange(of: routeManager.isNavigating) { _, navigating in
+            if !navigating { userManuallyPanned = false }
         }
         .onChange(of: routeManager.isRouteComplete) { _, isComplete in
             guard isComplete else { return }
@@ -604,7 +619,9 @@ struct RouteSummaryView: View {
                                 )
                                 placeStore.pendingBadges.append(contentsOf: newBadges)
                                 showSaveRouteSheet = false
-                                viewModel.saveRouteSuccess = true
+                                viewModel.showInterstitialThenProceed {
+                                    viewModel.saveRouteSuccess = true
+                                }
                             }
                         )
                         .presentationDetents([.medium])
@@ -639,15 +656,17 @@ struct RouteSummaryView: View {
                     }
 
                     Button {
-                        viewModel.routeStartDate = Date()
-                        viewModel.recordRouteStarted()
-                        HapticPlayer.routeStarted()
-                        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                            routeManager.isNavigating = true
-                            locationManager.startNavigationTracking()
-                            routeManager.startLiveActivity()
+                        viewModel.showInterstitialThenProceed {
+                            viewModel.routeStartDate = Date()
+                            viewModel.recordRouteStarted()
+                            HapticPlayer.routeStarted()
+                            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                                routeManager.isNavigating = true
+                                locationManager.startNavigationTracking()
+                                routeManager.startLiveActivity()
+                            }
+                            Task { await viewModel.requestHealthKitAuthorization() }
                         }
-                        Task { await viewModel.requestHealthKitAuthorization() }
                     } label: {
                         HStack {
                             Image(systemName: "location.fill")

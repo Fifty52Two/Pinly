@@ -15,12 +15,12 @@ final class LanguageManager: ObservableObject, LanguagePreferenceStoring {
     @Published var currentLanguage: String
     @Published var refreshID = UUID()
 
-    static let supported: [(code: String, name: String, flag: String)] = [
-        ("tr", "Türkçe", "🇹🇷"),
-        ("en", "English", "🇬🇧"),
-        ("es", "Español", "🇪🇸"),
-        ("de", "Deutsch", "🇩🇪"),
-        ("ru", "Русский", "🇷🇺"),
+    static let supported: [(code: String, name: String)] = [
+        ("tr", "Türkçe"),
+        ("en", "English"),
+        ("es", "Español"),
+        ("de", "Deutsch"),
+        ("ru", "Русский"),
     ]
 
     init() {

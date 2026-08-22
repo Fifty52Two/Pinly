@@ -23,8 +23,8 @@ struct ContentView: View {
     @State private var showRouteImportSheet = false
     @AppStorage("pinly.hasSeenOnboarding") private var hasSeenOnboarding = false
     @AppStorage("pinly.hasSetupProfile") private var hasSetupProfile = false
-    @AppStorage("pinly.appearance") private var appearance = "system"
     @State private var hasRequestedAdConsent = false
+    @State private var sharedRouteId: String? = nil
 
     var body: some View {
         Group {
@@ -56,16 +56,18 @@ struct ContentView: View {
         }
         .onAppear {
             placeStore.load(context: modelContext)
-            applyAppearance(appearance)
+            // Koyu mod tasarımı henüz tamamlanmadı — kullanıcı seçimi geçici olarak devre dışı,
+            // uygulama sabit açık görünümde kalıyor (bkz. ProfileTab'daki "Görünüm" satırı kaldırıldı).
+            applyAppearance("light")
             requestAdConsentIfNeeded()
-        }
-        .onChange(of: appearance) { _, newValue in
-            applyAppearance(newValue)
         }
         .onOpenURL { url in
             if url.host == "navigation" {
                 // Live Activity butonundan gelen deep link — navigasyon zaten aktif, sadece ön plana al
                 // HomeView'deki fullScreenCover routeManager.isNavigating'i izliyor
+            } else if url.host == "sharedroute" {
+                // Ortak rota özelliği V2'de açılacak — derin bağlantı şimdilik yok sayılır.
+                _ = url
             } else if let data = routeURLCoding.parse(url: url) {
                 pendingImport = data
                 showImportSheet = true
@@ -98,6 +100,14 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showDeepLinkPaywall) {
             PaywallView { showDeepLinkPaywall = false }
+        }
+        .fullScreenCover(isPresented: Binding(
+            get: { sharedRouteId != nil },
+            set: { if !$0 { sharedRouteId = nil } }
+        )) {
+            if let id = sharedRouteId {
+                SharedRouteEditorView(routeId: id, autoJoin: true)
+            }
         }
         .alert(NSLocalizedString("Hata", comment: ""), isPresented: Binding(
             get: { placeStore.lastError != nil },

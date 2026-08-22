@@ -10,6 +10,7 @@
 		0A00D6722F7C57AF0031F556 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A00D6712F7C57AF0031F556 /* WidgetKit.framework */; };
 		0A00D6742F7C57AF0031F556 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A00D6732F7C57AF0031F556 /* SwiftUI.framework */; };
 		0A00D6832F7C57AF0031F556 /* PinlyLiveActivityExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0A00D66F2F7C57AF0031F556 /* PinlyLiveActivityExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0A836EFC30392B9500BB0C3A /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 0A836EFB30392B9500BB0C3A /* Config.xcconfig */; };
 		0A93820E2F8010CB00EF3C24 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 0A93820D2F8010CB00EF3C24 /* GoogleMobileAds */; };
 		0A963A143006882E001B1587 /* GoogleUserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = 0A963A133006882E001B1587 /* GoogleUserMessagingPlatform */; };
 		0AAC824C30082E5D005FE580 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0AAC824B30082E5D005FE580 /* FirebaseAnalytics */; };
@@ -56,6 +57,7 @@
 		0A00D6712F7C57AF0031F556 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		0A00D6732F7C57AF0031F556 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		0A7F0B0B300585CA0003CCCD /* PinlyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PinlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A836EFB30392B9500BB0C3A /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		0AC0FA692F2F9CE300C6C26F /* Pinly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pinly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3DF6A7ECBFA83FD1B26E2F7 /* Pinly.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pinly.storekit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -169,6 +171,7 @@
 				D3DF6A7ECBFA83FD1B26E2F7 /* Pinly.storekit */,
 				0A00D6702F7C57AF0031F556 /* Frameworks */,
 				0AC0FA6A2F2F9CE300C6C26F /* Products */,
+				0A836EFB30392B9500BB0C3A /* Config.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -328,6 +331,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A836EFC30392B9500BB0C3A /* Config.xcconfig in Resources */,
 				DC3DC36FA7AF8E68FB0C168D /* Pinly.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -357,10 +361,11 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/crashlytics_build_marker",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\ntouch \"${DERIVED_FILE_DIR}/crashlytics_build_marker\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -408,7 +413,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J7LKGD5LY5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PinlyLiveActivity/Info.plist;
@@ -419,7 +424,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.farad.pinly.LiveActivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -435,7 +440,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J7LKGD5LY5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PinlyLiveActivity/Info.plist;
@@ -446,7 +451,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.farad.pinly.LiveActivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -461,10 +466,10 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J7LKGD5LY5;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ferhatakkopru.PinlyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -479,10 +484,10 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J7LKGD5LY5;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ferhatakkopru.PinlyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -494,6 +499,7 @@
 		};
 		0AC0FA722F2F9CE400C6C26F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0A836EFB30392B9500BB0C3A /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -526,7 +532,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = J7LKGD5LY5;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -558,6 +564,7 @@
 		};
 		0AC0FA732F2F9CE400C6C26F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0A836EFB30392B9500BB0C3A /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -621,7 +628,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Pinly/Pinly.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J7LKGD5LY5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -636,12 +643,12 @@
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Sana daha alakalı reklamlar gösterebilmek için bu veri diğer şirketlerdeki uygulama ve web sitelerinde kullanılacak.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.farad.pinly;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -658,7 +665,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Pinly/Pinly.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J7LKGD5LY5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -673,12 +680,12 @@
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Sana daha alakalı reklamlar gösterebilmek için bu veri diğer şirketlerdeki uygulama ve web sitelerinde kullanılacak.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.farad.pinly;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

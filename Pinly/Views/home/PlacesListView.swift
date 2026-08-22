@@ -183,12 +183,11 @@ struct PlacesListView: View {
                                 Image(systemName: "arrow.up.arrow.down")
                             }
                             .accessibilityLabel(NSLocalizedString("Sırala", comment: ""))
-                            Button {
-                                showSwarmPicker = true
-                            } label: {
+                            Button { } label: {
                                 Image(systemName: "square.and.arrow.down")
                             }
-                            .accessibilityLabel(NSLocalizedString("Swarm'dan İçe Aktar", comment: ""))
+                            .disabled(true)
+                            .accessibilityLabel(NSLocalizedString("Swarm'dan İçe Aktar", comment: "") + " (\(NSLocalizedString("ÇOK YAKINDA", comment: "")))")
                             Button {
                                 showQRScanner = true
                             } label: {

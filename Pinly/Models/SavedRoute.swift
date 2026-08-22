@@ -3,14 +3,14 @@ import SwiftData
 
 // MARK: - SavedPlaceSnapshot
 
-struct SavedPlaceSnapshot: Codable {
+struct SavedPlaceSnapshot: Codable, Equatable {
     let name: String
     let category: String
     let address: String
     let notes: String
     let latitude: Double
     let longitude: Double
-    let sortIndex: Int
+    var sortIndex: Int
     /// Kaynak Place'in kimliği — isimle eşleşme kırılganlığının kalıcı çözümü (FAZ 5.2).
     /// Eski kayıtlarda ve dışarıdan gelen rotalarda nil; o zaman isimle eşleşmeye düşülür.
     var placeId: UUID? = nil

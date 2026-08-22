@@ -15,6 +15,7 @@ struct NearbyPlacesView: View {
     @State private var showPaywall = false
     @State private var showMap = false
     @AppStorage("pinly.nearbyRadiusMeters") private var radiusMeters = 1000.0
+    @State private var mapPosition: MapCameraPosition = .automatic
 
     private static let radiusOptions: [Double] = [500, 1000, 2000, 5000]
 
@@ -56,19 +57,22 @@ struct NearbyPlacesView: View {
                     Spacer()
                 } else if showMap {
                     resultsMap
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    List(viewModel.results) { place in
-                        NearbyPlaceRow(
-                            place: place,
-                            isAdded: addedIDs.contains(place.id)
-                        ) {
-                            addPlace(place)
+                    ScrollView {
+                        LazyVStack(spacing: 8) {
+                            ForEach(viewModel.results) { place in
+                                NearbyPlaceRow(
+                                    place: place,
+                                    isAdded: addedIDs.contains(place.id)
+                                ) {
+                                    addPlace(place)
+                                }
+                            }
                         }
-                        .listRowBackground(Color.clear)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 20)
                     }
-                    .listStyle(.plain)
                 }
             }
             .background(PinlyTheme.groundGradient)
@@ -100,10 +104,10 @@ struct NearbyPlacesView: View {
                 }
             }
             .task { await runSearch() }
-            .onChange(of: viewModel.selectedCategory) { _ in
+            .onChange(of: viewModel.selectedCategory) {
                 Task { await runSearch() }
             }
-            .onChange(of: radiusMeters) { _ in
+            .onChange(of: radiusMeters) {
                 Task { await runSearch() }
             }
             .sheet(isPresented: $showPaywall) {
@@ -112,9 +116,6 @@ struct NearbyPlacesView: View {
         }
     }
 
-    // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki "Yakınımda" header'ı —
-    // seigaiha dokulu kart + kalın başlık + yarıçap/sonuç sayısı alt satırı (birebir),
-    // sistem large-title'ın yerine. Toolbar (kategori/yarıçap/harita/yenile) korunuyor.
     private var header: some View {
         VStack(alignment: .leading, spacing: 5) {
             Text(NSLocalizedString("Yakınımda", comment: ""))
@@ -127,19 +128,15 @@ struct NearbyPlacesView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 18)
-        .frame(height: 80)
+        .padding(.vertical, 16)
         .background(
-            ZStack {
-                PinlyTheme.surface
-                Image("SeigaihaPattern")
-                    .resizable()
-                    .scaledToFill()
-                    .opacity(0.3)
-                    .allowsHitTesting(false)
-            }
-            .clipped()
+            RoundedRectangle(cornerRadius: 16)
+                .fill(PinlyTheme.surface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(PinlyTheme.hairline, lineWidth: 1)
+                )
         )
-        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 
     private var categoryPicker: some View {
@@ -174,7 +171,7 @@ struct NearbyPlacesView: View {
     }
 
     private var resultsMap: some View {
-        Map {
+        Map(position: $mapPosition) {
             UserAnnotation()
             ForEach(viewModel.results) { place in
                 Marker(place.name, systemImage: place.category.icon, coordinate: place.coordinate)
@@ -182,6 +179,15 @@ struct NearbyPlacesView: View {
             }
         }
         .mapControlVisibility(.hidden)
+        .onAppear {
+            if let coord = locationManager.userLocation?.coordinate {
+                mapPosition = .region(MKCoordinateRegion(
+                    center: coord,
+                    latitudinalMeters: radiusMeters * 2.5,
+                    longitudinalMeters: radiusMeters * 2.5
+                ))
+            }
+        }
     }
 
     private func radiusLabel(_ radius: Double) -> String {

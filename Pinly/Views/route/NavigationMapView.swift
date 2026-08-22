@@ -5,6 +5,10 @@ import MapKit
 struct NavigationMapView: UIViewRepresentable {
     @Binding var region: MKCoordinateRegion
     @Binding var routePolylines: [MKPolyline]
+    /// Kullanıcı navigasyon sırasında haritayı manuel kaydırırsa true olur;
+    /// RouteSummaryView bunu izleyerek "Konuma Dön" butonu gösterir.
+    @Binding var userManuallyPanned: Bool
+    var breadcrumbPolyline: MKPolyline? = nil
     let routePlaces: [Place]
     let userLocation: CLLocation?
     let nextWaypointCoordinate: CLLocationCoordinate2D?
@@ -20,22 +24,26 @@ struct NavigationMapView: UIViewRepresentable {
         map.showsUserLocation = true
         map.mapType = .mutedStandard
         map.setRegion(region, animated: false)
+        context.coordinator.parent = self
         return map
     }
 
     func updateUIView(_ map: MKMapView, context: Context) {
         let coordinator = context.coordinator
+        coordinator.parent = self
+        coordinator.breadcrumbPolyline = breadcrumbPolyline
+        coordinator.currentWaypointIndex = currentWaypointIndex
 
-        // Camera: follow user during active navigation, manual region otherwise.
-        // Region yalnızca binding'den yeni bir değer geldiğinde uygulanır —
-        // aksi halde kullanıcı haritayı kaydıramaz (her update geri fırlatır).
+        // Camera: follow user with heading during active navigation, manual region otherwise.
+        // `userManuallyPanned` true ise kullanıcı kendi kaydırmış — followWithHeading'i
+        // yeniden zorlamayız; recenter butonuyla false yapılınca tekrar kilitlenir.
         let shouldTrack = isNavigating && !isPausedAtStop
-        if shouldTrack {
-            if map.userTrackingMode != .follow {
-                map.setUserTrackingMode(.follow, animated: true)
+        if shouldTrack && !userManuallyPanned {
+            if map.userTrackingMode != .followWithHeading {
+                map.setUserTrackingMode(.followWithHeading, animated: true)
             }
             coordinator.lastAppliedRegion = nil
-        } else {
+        } else if !shouldTrack {
             if map.userTrackingMode != .none {
                 map.setUserTrackingMode(.none, animated: false)
             }
@@ -50,15 +58,33 @@ struct NavigationMapView: UIViewRepresentable {
             }
         }
 
-        // Overlay'ler yalnızca polyline seti veya tamamlanan segment sayısı
-        // değişince yeniden kurulur — her konum güncellemesinde silip eklemek
-        // titremeye ve gereksiz CPU yüküne yol açıyordu.
+        // Handle breadcrumb polyline (live user walked track)
+        let breadcrumbID = breadcrumbPolyline.map { ObjectIdentifier($0) }
+        if coordinator.lastBreadcrumbID != breadcrumbID {
+            if let oldBreadcrumb = coordinator.lastBreadcrumbPolyline {
+                map.removeOverlay(oldBreadcrumb)
+            }
+            coordinator.lastBreadcrumbID = breadcrumbID
+            coordinator.lastBreadcrumbPolyline = breadcrumbPolyline
+            if let breadcrumbPolyline {
+                map.addOverlay(breadcrumbPolyline, level: .aboveRoads)
+            }
+        }
+
+        // Overlay'ler yalnızca polyline seti veya tamamlanan segment sayısı değişince yeniden kurulur
         let completedCount = isPausedAtStop ? currentWaypointIndex + 1 : currentWaypointIndex
         let polylineIDs = routePolylines.map { ObjectIdentifier($0) }
         if coordinator.lastPolylineIDs != polylineIDs || coordinator.completedSegmentCount != completedCount {
             coordinator.completedSegmentCount = completedCount
             coordinator.lastPolylineIDs = polylineIDs
-            map.removeOverlays(map.overlays)
+            coordinator.segmentIndexByPolylineID.removeAll()
+            for (index, polyline) in routePolylines.enumerated() where polyline.pointCount > 0 {
+                coordinator.segmentIndexByPolylineID[ObjectIdentifier(polyline)] = index
+            }
+            map.removeOverlays(map.overlays.filter { overlay in
+                if let lastBC = coordinator.lastBreadcrumbPolyline, overlay === lastBC { return false }
+                return true
+            })
             map.addOverlays(routePolylines.filter { $0.pointCount > 0 })
         }
 
@@ -71,7 +97,6 @@ struct NavigationMapView: UIViewRepresentable {
         if coordinator.lastAnnotationSignature != annotationSignature {
             coordinator.lastAnnotationSignature = annotationSignature
             map.removeAnnotations(map.annotations.filter { $0 is RouteAnnotation })
-            // Numbered stop annotations (skip current active waypoint — use pulse)
             for (index, place) in routePlaces.enumerated() {
                 guard let coord = place.coordinate else { continue }
                 if isNavigating && !isPausedAtStop && index == currentWaypointIndex { continue }
@@ -79,7 +104,7 @@ struct NavigationMapView: UIViewRepresentable {
             }
         }
 
-        // Pulsing annotation for next waypoint: koordinat değişmediyse dokunma
+        // Pulsing annotation for next waypoint
         if isNavigating && !isPausedAtStop, let coord = nextWaypointCoordinate {
             let changed = coordinator.currentNextWaypointCoordinate.map {
                 abs($0.latitude - coord.latitude) > 0.0001 || abs($0.longitude - coord.longitude) > 0.0001
@@ -96,21 +121,55 @@ struct NavigationMapView: UIViewRepresentable {
     }
 
     class Coordinator: NSObject, MKMapViewDelegate {
+        var parent: NavigationMapView?
         var completedSegmentCount: Int = 0
+        var currentWaypointIndex: Int = 0
+        var breadcrumbPolyline: MKPolyline? = nil
+        var lastBreadcrumbID: ObjectIdentifier? = nil
+        var lastBreadcrumbPolyline: MKPolyline? = nil
         var currentNextWaypointCoordinate: CLLocationCoordinate2D? = nil
         var lastAppliedRegion: MKCoordinateRegion? = nil
         var lastPolylineIDs: [ObjectIdentifier] = []
         var lastAnnotationSignature: String = ""
+        var segmentIndexByPolylineID: [ObjectIdentifier: Int] = [:]
+
+        /// Kullanıcı navigasyon sırasında haritayı elle kaydırınca MapKit tracking modunu
+        /// .none'a düşürür. Bu delegate bunu yakalar ve recenter butonunu göstermek için
+        /// SwiftUI tarafına bildirir.
+        func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
+            guard mode == .none,
+                  let p = parent, p.isNavigating, !p.isPausedAtStop else { return }
+            DispatchQueue.main.async {
+                p.userManuallyPanned = true
+            }
+        }
 
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             if let polyline = overlay as? MKPolyline {
+                // Check if this overlay is the live breadcrumb polyline
+                if let bc = lastBreadcrumbPolyline, polyline === bc {
+                    let renderer = MKPolylineRenderer(polyline: polyline)
+                    renderer.strokeColor = UIColor(PinlyTheme.gold) // Canlı yürünen iz (Canlı Altın/Turuncu iz)
+                    renderer.lineWidth = 4
+                    renderer.lineDashPattern = nil // Solid line
+                    return renderer
+                }
+
                 let renderer = MKPolylineRenderer(polyline: polyline)
-                let overlayIndex = mapView.overlays.firstIndex(where: { $0 === polyline }) ?? 0
-                renderer.strokeColor = overlayIndex < completedSegmentCount
-                    ? UIColor(PinlyTheme.routeCompleted)
-                    : UIColor(red: 0.35, green: 0.45, blue: 0.65, alpha: 1)
-                renderer.lineWidth = 5
-                renderer.lineDashPattern = [8, 4]
+                let segmentIndex = segmentIndexByPolylineID[ObjectIdentifier(polyline)] ?? 0
+                
+                // 3-Tier segment styling: Completed, Active Current, Future Upcoming
+                if segmentIndex < completedSegmentCount {
+                    renderer.strokeColor = UIColor(PinlyTheme.routeCompleted) // Yeşilimsi tamamlanan
+                    renderer.lineWidth = 4
+                } else if segmentIndex == currentWaypointIndex {
+                    renderer.strokeColor = UIColor(PinlyTheme.primary) // Parlak aktif accent mavi
+                    renderer.lineWidth = 6
+                } else {
+                    renderer.strokeColor = UIColor(PinlyTheme.primary).withAlphaComponent(0.40) // Soluk gelecek segment
+                    renderer.lineWidth = 4
+                }
+                renderer.lineDashPattern = nil // DÜZ ÇİZGİ — no dash pattern
                 return renderer
             }
             return MKOverlayRenderer(overlay: overlay)

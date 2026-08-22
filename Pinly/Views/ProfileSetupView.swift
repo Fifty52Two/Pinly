@@ -4,11 +4,14 @@ struct ProfileSetupView: View {
     let onComplete: () -> Void
 
     @Environment(\.profile) private var profileService
+    @Environment(\.colorScheme) private var colorScheme
+    @ObservedObject private var appleAuth = AppleAuthService.shared
     @State private var firstName = ""
     @State private var lastName  = ""
     @State private var birthYearText = ""
     @State private var showError = false
     @State private var errorMessage = ""
+    @State private var isSigningInWithApple = false
 
     private let currentYear = Calendar.current.component(.year, from: Date())
 
@@ -35,9 +38,10 @@ struct ProfileSetupView: View {
                     Circle()
                         .fill(PinlyTheme.ground)
                         .frame(width: 132, height: 132)
-                    Image("SeigaihaPattern")
+                    Image(PinlyTheme.seigaihaLinesOnPaper(colorScheme))
                         .resizable()
                         .scaledToFill()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .frame(width: 132, height: 132)
                         .clipShape(Circle())
                     Circle()
@@ -59,6 +63,62 @@ struct ProfileSetupView: View {
                         Text(NSLocalizedString("Sana özel bir deneyim için kendini tanıt.", comment: ""))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
+                    }
+
+                    // Apple ile Giriş — cihazlar arası aynı hesap/veri için en hızlı yol.
+                    // Başarılı olursa Apple'ın verdiği ad-soyadı (varsa) forma otomatik doldurur,
+                    // kullanıcı yine de gözden geçirip "Başla"ya kendisi basar (zorla atlamaz).
+                    VStack(spacing: 10) {
+                        if appleAuth.isSignedIn {
+                            HStack(spacing: 8) {
+                                Image(systemName: "checkmark.seal.fill")
+                                    .foregroundColor(PinlyTheme.success)
+                                Text(NSLocalizedString("Apple ile giriş yapıldı", comment: ""))
+                                    .font(.subheadline.weight(.medium))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(RoundedRectangle(cornerRadius: 14).fill(PinlyTheme.success.opacity(0.1)))
+                        } else {
+                            Button {
+                                Task {
+                                    isSigningInWithApple = true
+                                    await appleAuth.signInWithApple()
+                                    isSigningInWithApple = false
+                                    if let name = appleAuth.displayName {
+                                        let parts = name.split(separator: " ", maxSplits: 1)
+                                        if firstName.isEmpty { firstName = parts.first.map(String.init) ?? "" }
+                                        if lastName.isEmpty, parts.count > 1 { lastName = String(parts[1]) }
+                                    }
+                                }
+                            } label: {
+                                HStack(spacing: 8) {
+                                    if isSigningInWithApple {
+                                        ProgressView().tint(.white)
+                                    } else {
+                                        Image(systemName: "apple.logo")
+                                    }
+                                    Text(NSLocalizedString("Apple ile Giriş Yap", comment: ""))
+                                        .fontWeight(.semibold)
+                                }
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 14)
+                                .background(RoundedRectangle(cornerRadius: 14).fill(Color.black))
+                            }
+                            .disabled(isSigningInWithApple)
+                            if let error = appleAuth.errorMessage {
+                                Text(error).font(.caption).foregroundColor(PinlyTheme.danger)
+                            }
+                        }
+
+                        HStack {
+                            Rectangle().fill(Color.primary.opacity(0.1)).frame(height: 1)
+                            Text(NSLocalizedString("veya elle doldur", comment: ""))
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Rectangle().fill(Color.primary.opacity(0.1)).frame(height: 1)
+                        }
                     }
 
                     // Ad
@@ -110,7 +170,7 @@ struct ProfileSetupView: View {
                                 )
                         )
                         if !birthYearText.isEmpty && validBirthYear == nil {
-                            Text(NSLocalizedString("Geçerli bir doğum yılı girin (1900–\(currentYear - 5))", comment: ""))
+                            Text(String(format: NSLocalizedString("Geçerli bir doğum yılı girin (1900–%d)", comment: ""), currentYear - 5))
                                 .font(.caption)
                                 .foregroundColor(PinlyTheme.accent)
                         }

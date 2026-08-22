@@ -146,9 +146,10 @@ struct RouteShareCardView: View {
                 // bandına dalgalı kırpılmış.
                 VStack {
                     Spacer()
-                    Image("SeigaihaPattern")
+                    Image("SeigaihaLinesPale")
                         .resizable()
                         .scaledToFill()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .frame(height: 340)
                         .clipped()
                         .clipShape(WavyHorizonMask())

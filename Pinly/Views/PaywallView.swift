@@ -77,24 +77,16 @@ struct PaywallView: View {
                     .foregroundColor(.white)
             }
 
-            Text(NSLocalizedString(isSoftPaywall ? "Sınırsız keşif" : "Mekan Limitine Ulaştın", comment: ""))
+            Text(NSLocalizedString(isSoftPaywall ? "Harika bir rota tamamladın!" : "Pinly Pro'yu Keşfet", comment: ""))
                 .font(.title2)
                 .fontWeight(.bold)
                 .foregroundColor(.white)
 
-            if isSoftPaywall {
-                Text(NSLocalizedString("Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç.", comment: ""))
-                    .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.85))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 24)
-            } else {
-                Text(String(format: NSLocalizedString("Ücretsiz planda en fazla %lld mekan kaydedebilirsin.\nSınırsız mekan için Pro'ya geç.", comment: ""), entitlements.freeLimit))
-                    .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.85))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 24)
-            }
+            Text(NSLocalizedString("Reklamsız keşfet. Yakında: çevrimdışı harita ve topluluk rotaları.", comment: ""))
+                .font(.subheadline)
+                .foregroundColor(.white.opacity(0.85))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 24)
         }
         .padding(.top, 36)
         .padding(.bottom, 26)
@@ -104,11 +96,15 @@ struct PaywallView: View {
             // hero gradyanı (Ana sekme kartıyla aynı, mod bağımsız) + gerçek seigaiha PNG dokusu.
             ZStack {
                 PinlyTheme.heroWarmGradient
-                Image("SeigaihaPattern")
-                    .resizable()
-                    .scaledToFill()
-                    .opacity(0.55)
-                    .allowsHitTesting(false)
+                GeometryReader { geo in
+                    Image("SeigaihaLinesPale")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .clipShape(Rectangle())
+                }
+                .opacity(0.55)
+                .allowsHitTesting(false)
             }
             .clipped()
             .ignoresSafeArea(edges: .top)
@@ -119,21 +115,17 @@ struct PaywallView: View {
 
     private var featureList: some View {
         VStack(alignment: .leading, spacing: 14) {
-            ProFeatureRow(icon: "mappin.and.ellipse", color: PinlyTheme.primary,
-                          title: NSLocalizedString("Sınırsız Mekan", comment: ""),
-                          subtitle: NSLocalizedString("İstediğin kadar mekan kaydet", comment: ""),
-                          badge: nil)
-            ProFeatureRow(icon: "square.and.arrow.down.on.square", color: PinlyTheme.primaryWarm,
-                          title: NSLocalizedString("GPX & PDF Dışa Aktar", comment: ""),
-                          subtitle: NSLocalizedString("Rotalarını dışa aktar ve arşivle", comment: ""),
-                          badge: nil)
             ProFeatureRow(icon: "nosign", color: PinlyTheme.accent,
                           title: NSLocalizedString("Reklamsız Kullanım", comment: ""),
-                          subtitle: NSLocalizedString("Kesintisiz keşfet", comment: ""),
+                          subtitle: NSLocalizedString("Kesintisiz, reklam olmadan keşfet", comment: ""),
                           badge: nil)
             ProFeatureRow(icon: "wifi.slash", color: PinlyTheme.slate,
                           title: NSLocalizedString("Çevrimdışı Harita", comment: ""),
                           subtitle: NSLocalizedString("İnternetsiz de çalışır", comment: ""),
+                          badge: NSLocalizedString("Yakında", comment: ""))
+            ProFeatureRow(icon: "person.3.fill", color: PinlyTheme.primary,
+                          title: NSLocalizedString("Topluluk Rotaları", comment: ""),
+                          subtitle: NSLocalizedString("Şehirdeki gezginlerin rotalarına eriş", comment: ""),
                           badge: NSLocalizedString("Yakında", comment: ""))
         }
         .padding(.horizontal, 24)

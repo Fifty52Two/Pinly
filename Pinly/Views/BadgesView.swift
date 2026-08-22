@@ -6,6 +6,7 @@ struct BadgesView: View {
     @Environment(\.badges) private var badgeService
     @EnvironmentObject var placeStore: PlaceStore
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     private var unlocked: Set<Badge> { badgeService.unlockedBadges }
@@ -26,11 +27,14 @@ struct BadgesView: View {
             }
             .background(PinlyTheme.groundGradient)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button { dismiss() } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.secondary)
+                            .font(.title2)
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.secondary, PinlyTheme.surface)
                     }
                 }
             }
@@ -44,43 +48,49 @@ struct BadgesView: View {
     // (birebir). İlerleme çubuğu mockup'ta yok ama mevcut işlevsellik korunuyor — başlık
     // altına küçük bir aksesuar olarak eklendi (görsel restyle, davranış aynı).
     private var header: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(NSLocalizedString("Rozetlerin", comment: ""))
-                .font(.title2)
-                .fontWeight(.heavy)
-                .foregroundColor(.primary)
-            Text(String(format: NSLocalizedString("%lld/%lld rozet kazanıldı", comment: ""), earned, total))
-                .font(.footnote)
-                .foregroundColor(.secondary)
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(PinlyTheme.fillMuted)
-                        .frame(height: 6)
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(PinlyTheme.gold)
-                        .frame(width: geo.size.width * fraction, height: 6)
-                        .animation(.spring(response: 0.4), value: fraction)
+        ZStack(alignment: .leading) {
+            PinlyTheme.surface
+            Image(PinlyTheme.seigaihaLinesOnPaper(colorScheme))
+                .resizable()
+                .scaledToFill()
+                .frame(height: 100)
+                .clipShape(Rectangle())
+                .opacity(0.5)
+                .allowsHitTesting(false)
+
+            LinearGradient(
+                colors: [PinlyTheme.surface.opacity(0.92), PinlyTheme.surface.opacity(0.75), PinlyTheme.surface.opacity(0)],
+                startPoint: .leading,
+                endPoint: .trailing
+            )
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text(NSLocalizedString("Rozetlerin", comment: ""))
+                    .font(.title2)
+                    .fontWeight(.heavy)
+                    .foregroundColor(.primary)
+                Text(String(format: NSLocalizedString("%lld/%lld rozet kazanıldı", comment: ""), earned, total))
+                    .font(.footnote)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.primary.opacity(0.65))
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(PinlyTheme.fillMuted)
+                            .frame(height: 6)
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(PinlyTheme.gold)
+                            .frame(width: geo.size.width * fraction, height: 6)
+                            .animation(.spring(response: 0.4), value: fraction)
+                    }
                 }
+                .frame(height: 6)
+                .padding(.top, 6)
             }
-            .frame(height: 6)
-            .padding(.top, 6)
+            .padding(.horizontal, 24)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 24)
-        .padding(.top, 24)
-        .padding(.bottom, 22)
-        .background(
-            ZStack {
-                PinlyTheme.surface
-                Image("SeigaihaPattern")
-                    .resizable()
-                    .scaledToFill()
-                    .opacity(0.5)
-                    .allowsHitTesting(false)
-            }
-            .clipped()
-        )
+        .frame(height: 100)
+        .clipShape(Rectangle())
     }
 
     // MARK: - Rozet grid

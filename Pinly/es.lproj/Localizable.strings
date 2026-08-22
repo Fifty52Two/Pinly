@@ -577,3 +577,39 @@
 "Durak %lld: %@" = "Parada %lld: %@";
 "Tamamlandı" = "Completado";
 "Dışa Aktarma Seçenekleri" = "Opciones de exportación";
+
+// MARK: - Apple ile Giriş + Ortak Rota (2026-08-06 lokalizasyon eksikliği tamamlandı)
+"%@ yarıçapında %lld mekan" = "%2$lld lugares en %1$@";
+"%lld rota tamamladın" = "Completaste %lld rutas";
+"Apple ile Giriş Yap" = "Iniciar sesión con Apple";
+"Apple ile giriş başarısız oldu, tekrar dene." = "No se pudo iniciar sesión con Apple, inténtalo de nuevo.";
+"Apple ile giriş yapıldı" = "Sesión iniciada con Apple";
+"Bu Hafta" = "Esta Semana";
+"Bu anıyı hikaye ya da gönderi olarak paylaş" = "Comparte este recuerdo como historia o publicación";
+"Bugün nereyi keşfedelim?" = "¿Qué exploramos hoy?";
+"Geçerli bir doğum yılı girin (1900–\\(currentYear - 5))" = "Introduce un año de nacimiento válido";
+"Geçerli bir doğum yılı girin (1900–%d)" = "Introduce un año de nacimiento válido (1900–%d)";
+"Giriş yapıldı" = "Sesión iniciada";
+"Henüz mekan yok — sağ üstten ekle." = "Aún no hay lugares — añade uno desde arriba a la derecha.";
+"Katılım bekleniyor — linki paylaş, açan kişi otomatik katılır." = "Esperando a que alguien se una — comparte el enlace, quien lo abra se unirá automáticamente.";
+"Kopyalandı" = "Copiado";
+"Link Kopyala" = "Copiar enlace";
+"Mekan ara" = "Buscar lugares";
+"Oluştur" = "Crear";
+"Oluşturulamadı, tekrar dene." = "No se pudo crear, inténtalo de nuevo.";
+"Ortak Rota" = "Ruta Compartida";
+"Ortak Rota Oluştur" = "Crear Ruta Compartida";
+"Ortak rota için önce Apple ile giriş yapmalısın (Profil sekmesi)." = "Primero debes iniciar sesión con Apple para rutas compartidas (pestaña Perfil).";
+"Rota adı" = "Nombre de la ruta";
+"Rota yüklenemedi. Bağlantını kontrol edip tekrar dene." = "No se pudo cargar la ruta. Comprueba tu conexión e inténtalo de nuevo.";
+"Rozetlerin" = "Tus Insignias";
+"Yürüyüş rotası" = "Ruta a pie";
+"veya elle doldur" = "o completa manualmente";
+"Çıkış Yap" = "Cerrar sesión";
+"İkiniz de canlı düzenliyorsunuz." = "Ambos están editando en vivo.";
+
+// MARK: - Ortak Rotalarım listesi (2026-08-06)
+"Ortak Rotalarım" = "Mis Rutas Compartidas";
+"Henüz ortak rotan yok" = "Aún no tienes rutas compartidas";
+"Ortak Rota Oluştur ile başlat, linki arkadaşınla paylaş." = "Empieza con Crear Ruta Compartida y comparte el enlace con un amigo.";
+"Katılım bekleniyor" = "Esperando a que alguien se una";

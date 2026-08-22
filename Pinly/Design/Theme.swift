@@ -175,6 +175,32 @@ enum PinlyTheme {
     static var nightGradient: LinearGradient {
         LinearGradient(colors: [navy, navyLight], startPoint: .top, endPoint: .bottom)
     }
+
+    // MARK: - Seigaiha Doku Varyantı Seçimi
+    //
+    // `Assets.xcassets`'teki SeigaihaLinesDark (lacivert çizgi) / SeigaihaLinesPale (krem
+    // çizgi) asset'leri artık sabit — sistem light/dark moduna göre KENDİLİĞİNDEN değişmez
+    // (eski tek "SeigaihaPattern" asset'i böyle davranıyordu ve adaptif zeminlerle ters
+    // eşleşip dokuyu görünmez kılıyordu). Doğru varyant, dokunun üzerine bindiği zeminin
+    // GERÇEK parlaklığına göre burada elle seçilir — iki yön var:
+    //
+    // - "ink" zeminler (primary/primaryWarm/slate): light modda KOYU, dark modda AÇIK —
+    //   yani sistemle TERS yönde parlaklaşır.
+    // - "paper" zeminler (surface/ground/groundGradient): light modda AÇIK, dark modda
+    //   KOYU — sistemle AYNI yönde parlaklaşır.
+    //
+    // Sabit renkler (heroWarmGradient gibi UIColor{trait} SARMALAMAYAN, her modda aynı
+    // kalan zeminler) buraya girmez — çağıran taraf sabit "SeigaihaLinesPale" kullanır.
+
+    /// primary / primaryWarm / slate gibi "ink" tonlu adaptif zeminler için.
+    static func seigaihaLinesOnInk(_ colorScheme: ColorScheme) -> String {
+        colorScheme == .dark ? "SeigaihaLinesDark" : "SeigaihaLinesPale"
+    }
+
+    /// surface / ground gibi "paper" tonlu adaptif zeminler için.
+    static func seigaihaLinesOnPaper(_ colorScheme: ColorScheme) -> String {
+        colorScheme == .dark ? "SeigaihaLinesPale" : "SeigaihaLinesDark"
+    }
 }
 
 // MARK: - Buton Stilleri

@@ -15,7 +15,6 @@ struct DiscoverView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.entitlements) private var entitlements
     @Environment(\.nearbySearch) private var nearbySearch
-    @Environment(\.starterRoutes) private var starterRoutes
     @Environment(\.analytics) private var analytics
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Query private var savedRoutes: [SavedRoute]
@@ -28,19 +27,19 @@ struct DiscoverView: View {
     @State private var cameraPosition: MapCameraPosition = .automatic
     @State private var selectedPlace: Place? = nil
 
-    // Panel
+    // Panel — native `.sheet` DENENDİ ama sheet UIKit'te TÜM PENCEREYİ kaplayan modal bir
+    // katman; HomeView'daki floating PinlyTabBar (custom `.overlay`) SwiftUI hiyerarşisinde
+    // ayrı bir dal olduğu için sheet'in ALTINDA kalıp kayboluyordu (Keşfet'e girince bar
+    // gizleniyordu şikayeti). Panel bu yüzden embedded (view hiyerarşisinin İÇİNDE) yapıya
+    // geri alındı — bu sefer tab bar'ın kapladığı alan da hesaba katılarak (bkz. tabBarClearance).
     @State private var panelDetent: PanelDetent = .half
-    @GestureState private var panelDrag: CGFloat = 0
-
-    // Wow #2: kategori kartı → detay listesi zoom geçişi (iOS 18+, specs/FAZ6_UI_YON.md)
-    @Namespace private var zoomNamespace
-
-    // Yakınımda önerileri
-    @State private var nearbySuggestions: [NearbyPlace] = []
-    @State private var addedNearbyIDs: Set<UUID> = []
-    @State private var showNearbyAll = false
-    @State private var showPaywall = false
-    @State private var showCommunityFeed = false
+    // `@GestureState` KASITLI OLARAK kullanılmıyor — gesture biter bitmez otomatik olarak
+    // (KENDİ implicit animasyonuyla) 0'a dönüyor, bu da `.animation(value: panelDetent)`
+    // spring'iyle AYNI ANDA, İKİ AYRI transaction olarak tetiklenip panel bırakılırken
+    // görünür bir "titreme/sıçrama" yaratıyordu (gerçek cihazdaki şikayet buydu). Düz
+    // `@State` + `.onChanged`/`.onEnded` ile TEK bir `withAnimation` transaction'ı içinde
+    // hem offset'i sıfırlayıp hem detent'i değiştirerek bu çakışma ortadan kaldırılıyor.
+    @State private var panelDrag: CGFloat = 0
 
     enum PanelDetent {
         case collapsed, half, expanded
@@ -69,6 +68,16 @@ struct DiscoverView: View {
         }
     }
 
+    // Wow #2: kategori kartı → detay listesi zoom geçişi (iOS 18+, specs/FAZ6_UI_YON.md)
+    @Namespace private var zoomNamespace
+
+    // Yakınımda önerileri
+    @State private var nearbySuggestions: [NearbyPlace] = []
+    @State private var addedNearbyIDs: Set<UUID> = []
+    @State private var showNearbyAll = false
+    @State private var showPaywall = false
+    @State private var showCommunityFeed = false
+
     // MARK: Türetilmiş veriler
 
     private var filteredPlaces: [Place] {
@@ -84,11 +93,6 @@ struct DiscoverView: View {
             let places = placeStore.places.filter { PlaceCategory.from($0.category) == cat }
             return places.isEmpty ? nil : (cat, places)
         }
-    }
-
-    private var availableStarters: [StarterRouteDefinition] {
-        let existing = Set(savedRoutes.map(\.name))
-        return starterRoutes.loadAll().filter { !existing.contains($0.name) }
     }
 
     var body: some View {
@@ -128,10 +132,14 @@ struct DiscoverView: View {
         }
     }
 
-    /// Konum veya seçili kategori değişince önerileri yenilemek için task kimliği
+    /// Konum veya seçili kategori değişince önerileri yenilemek için task kimliği.
+    /// Koordinat ~1 km hassasiyete (2 ondalık) yuvarlanır — küçük GPS salınımları
+    /// her seferinde 9 MKLocalSearch isteği tetiklemesin.
     private var taskKey: String {
         let coord = locationManager.userLocation?.coordinate
-        return "\(selectedCategory?.rawValue ?? "-")|\(coord?.latitude ?? 0)|\(coord?.longitude ?? 0)"
+        let lat = coord.map { (($0.latitude  * 100).rounded() / 100) } ?? 0.0
+        let lon = coord.map { (($0.longitude * 100).rounded() / 100) } ?? 0.0
+        return "\(selectedCategory?.rawValue ?? "-")|\(lat)|\(lon)"
     }
 
     // MARK: - Harita
@@ -161,8 +169,41 @@ struct DiscoverView: View {
                     }
                 }
             }
+            // Yakınımda önerileri — önceden SADECE alt panelde kart olarak listeleniyordu,
+            // haritada hiç görünmüyorlardı (kullanıcı "haritada keşfedilecek yerleri görme
+            // çalışmıyor" dedi — Apple'ın kendi POI etiketleri görünüp TIKLANAMADIĞI için
+            // öyle hissettiriyordu). Kayıtlı mekanlardan ayrışsın diye kesikli/anahat stil.
+            ForEach(nearbySuggestions) { nearby in
+                Annotation(nearby.name, coordinate: nearby.coordinate) {
+                    Button {
+                        addNearbyPlace(nearby)
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(PinlyTheme.surface)
+                                .frame(width: 30, height: 30)
+                                .overlay(
+                                    Circle().strokeBorder(
+                                        style: StrokeStyle(lineWidth: 2, dash: [3, 2])
+                                    )
+                                    .foregroundColor(nearby.category.color)
+                                )
+                            Image(systemName: addedNearbyIDs.contains(nearby.id) ? "checkmark" : nearby.category.icon)
+                                .font(.caption2)
+                                .foregroundColor(nearby.category.color)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(addedNearbyIDs.contains(nearby.id))
+                    .accessibilityLabel(nearby.name)
+                }
+            }
         }
-        .mapStyle(.standard(emphasis: .muted))
+        // Apple'ın varsayılan POI etiketleri (restoran/kafe adları) burada KAPALI —
+        // haritada görünüp tıklanamadıkları için "çalışmıyor" izlenimi veriyorlardı;
+        // artık haritadaki TEK etkileşimli katman kendi mekanlarımız + Yakınımda önerileri.
+        .mapStyle(.standard(emphasis: .muted, pointsOfInterest: .excludingAll))
+        .mapControls { }
         .ignoresSafeArea(edges: .top)
     }
 
@@ -195,12 +236,25 @@ struct DiscoverView: View {
                     }
                 }
             }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(.ultraThinMaterial, in: Capsule())
+            .shadow(color: Color.black.opacity(0.08), radius: 4, x: 0, y: 2)
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
         }
     }
 
     // MARK: - Çekilebilir panel
+
+    /// HomeView'daki yüzen `PinlyTabBar` bu ekranın DIŞINDA (`.overlay` ile) çizilip
+    /// EN ÜSTTE duruyor — panel bu payı bilmeden tam ekran yüksekliğine göre
+    /// konumlanırsa daraltılmış hâli barın ARKASINDA/ALTINDA kalır, grabber'a
+    /// dokunmak barın hemen üstünde imkansızlaşır. Bar'ın gerçek yüksekliği + home
+    /// indicator kadar pay bırakılıyor.
+    private var tabBarClearance: CGFloat {
+        PinlyTabBar.height
+    }
 
     private func panelHeight(for detent: PanelDetent, in geo: GeometryProxy) -> CGFloat {
         switch detent {
@@ -212,69 +266,74 @@ struct DiscoverView: View {
 
     private func panel(in geo: GeometryProxy) -> some View {
         let baseHeight = panelHeight(for: panelDetent, in: geo)
-        let height = min(
+        let clampedHeight = min(
             max(baseHeight - panelDrag, panelHeight(for: .collapsed, in: geo)),
             panelHeight(for: .expanded, in: geo)
         )
+        // Panel yüksekliği + tab bar boşluğu — arka plan ekranın altına kadar uzanır,
+        // harita alt boşluktan görünmez.
+        let totalHeight = clampedHeight + tabBarClearance
 
         return VStack(spacing: 0) {
-            // Grabber + sürükleme alanı
+            // Grabber + sürükleme alanı — dokunma hedefi Apple HIG'in önerdiği 44pt.
             Capsule()
                 .fill(Color.secondary.opacity(0.4))
                 .frame(width: 40, height: 5)
-                .padding(.vertical, 8)
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, minHeight: 44)
                 .background(Color.clear)
                 .contentShape(Rectangle())
                 .gesture(
-                    DragGesture()
-                        .updating($panelDrag) { value, state, _ in
-                            state = value.translation.height
+                    DragGesture(minimumDistance: 8)
+                        .onChanged { value in
+                            panelDrag = value.translation.height
                         }
                         .onEnded { value in
                             let projected = baseHeight - value.predictedEndTranslation.height
                             let candidates: [PanelDetent] = [.collapsed, .half, .expanded]
-                            panelDetent = candidates.min {
+                            let next = candidates.min {
                                 abs(panelHeight(for: $0, in: geo) - projected)
                                     < abs(panelHeight(for: $1, in: geo) - projected)
                             } ?? .half
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+                                panelDrag = 0
+                                panelDetent = next
+                            }
                         }
                 )
-                // Sürükleme gesture'ı VoiceOver'a görünmez — panel yüksekliği bu olmadan
-                // VoiceOver kullanıcısı için hiç değiştirilemezdi. Adjustable trait ile
-                // yukarı/aşağı kaydırma jesti .increment/.decrement'e eşlenir.
                 .accessibilityElement()
                 .accessibilityLabel(NSLocalizedString("Panel Yüksekliği", comment: ""))
                 .accessibilityValue(panelDetent.accessibilityDescription)
                 .accessibilityAdjustableAction { direction in
-                    switch direction {
-                    case .increment: panelDetent = panelDetent.expanded()
-                    case .decrement: panelDetent = panelDetent.collapsed()
-                    default: break
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+                        switch direction {
+                        case .increment: panelDetent = panelDetent.expanded()
+                        case .decrement: panelDetent = panelDetent.collapsed()
+                        default: break
+                        }
                     }
                 }
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     nearbySection
-                    starterRoutesSection
                     communitySection
                     collectionSection
                 }
                 .padding(.top, 4)
-                .padding(.bottom, 24)
+                .padding(.bottom, 24 + tabBarClearance)
             }
             .scrollDisabled(panelDetent != .expanded)
+
+            Spacer(minLength: 0)
         }
-        .frame(height: height)
+        .frame(height: totalHeight)
         .frame(maxWidth: .infinity)
         .background(
             UnevenRoundedRectangle(topLeadingRadius: 20, topTrailingRadius: 20)
-                .fill(PinlyTheme.surface)
+                .fill(PinlyTheme.ground)
                 .shadow(color: .black.opacity(0.12), radius: 8, y: -2)
         )
         .frame(maxHeight: .infinity, alignment: .bottom)
-        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: panelDetent)
     }
 
     // MARK: - Yakınımda şeridi
@@ -295,7 +354,12 @@ struct DiscoverView: View {
             }
             .padding(.horizontal, 16)
 
-            if nearbySuggestions.isEmpty {
+            if locationManager.userLocation == nil {
+                Text(NSLocalizedString("Konum alınıyor…", comment: ""))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal, 16)
+            } else if nearbySuggestions.isEmpty {
                 Text(NSLocalizedString("Çevrende öneri bulunamadı.", comment: ""))
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -318,35 +382,11 @@ struct DiscoverView: View {
         }
     }
 
-    // MARK: - Hazır rotalar şeridi
-
-    @ViewBuilder
-    private var starterRoutesSection: some View {
-        if !availableStarters.isEmpty {
-            VStack(alignment: .leading, spacing: 10) {
-                Text(NSLocalizedString("Hazır Rotalar", comment: ""))
-                    .font(.headline)
-                    .padding(.horizontal, 16)
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 10) {
-                        ForEach(availableStarters) { definition in
-                            StarterRouteMiniCard(definition: definition) {
-                                modelContext.insert(starterRoutes.makeSavedRoute(from: definition))
-                                try? modelContext.save()
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 16)
-                }
-            }
-        }
-    }
-
     // MARK: - Topluluk rotaları (FAZ 5 V2)
 
     private var communitySection: some View {
         Button {
-            showCommunityFeed = true
+            // V2'de açılacak — şimdilik tıklanamaz.
         } label: {
             HStack(spacing: 14) {
                 ZStack {
@@ -367,6 +407,7 @@ struct DiscoverView: View {
                         .foregroundColor(.secondary)
                 }
                 Spacer()
+                ComingSoonBadge(title: NSLocalizedString("ÇOK YAKINDA", comment: ""))
                 Image(systemName: "chevron.right")
                     .font(.caption)
                     .fontWeight(.semibold)
@@ -377,6 +418,7 @@ struct DiscoverView: View {
             .padding(.horizontal, 16)
         }
         .buttonStyle(.plain)
+        .disabled(true)
     }
 
     // MARK: - Koleksiyonum
@@ -416,12 +458,30 @@ struct DiscoverView: View {
 
     private func loadNearbySuggestions() async {
         guard let coord = locationManager.userLocation?.coordinate else { return }
-        let found = await nearbySearch.searchNearby(
-            coordinate: coord,
-            category: selectedCategory ?? .restaurant,
-            radiusMeters: 1000
-        )
-        nearbySuggestions = Array(found.prefix(5))
+        if let category = selectedCategory {
+            let found = await nearbySearch.searchNearby(coordinate: coord, category: category, radiusMeters: 1000)
+            nearbySuggestions = Array(found.prefix(5))
+            return
+        }
+        // "Tümü" seçiliyken — Apple MKLocalSearch rate-limit aşımını önlemek için 3'erli batch'ler halinde aranır
+        var merged: [NearbyPlace] = []
+        let categories = PlaceCategory.allCases
+        let batchSize = 3
+        for i in stride(from: 0, to: categories.count, by: batchSize) {
+            let batch = Array(categories[i..<min(i + batchSize, categories.count)])
+            let batchResults = await withTaskGroup(of: [NearbyPlace].self) { group in
+                for category in batch {
+                    group.addTask {
+                        await nearbySearch.searchNearby(coordinate: coord, category: category, radiusMeters: 1000)
+                    }
+                }
+                var res: [NearbyPlace] = []
+                for await r in group { res.append(contentsOf: r) }
+                return res
+            }
+            merged.append(contentsOf: batchResults)
+        }
+        nearbySuggestions = Array(merged.sorted { $0.distanceMeters < $1.distanceMeters }.prefix(5))
     }
 
     private func addNearbyPlace(_ nearby: NearbyPlace) {
@@ -533,53 +593,6 @@ private struct NearbySuggestionCard: View {
         }
         .padding(10)
         .frame(width: 170, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(PinlyTheme.fillMuted)
-        )
-    }
-}
-
-// MARK: - Hazır rota mini kartı
-
-private struct StarterRouteMiniCard: View {
-    let definition: StarterRouteDefinition
-    let onAdd: () -> Void
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Image(systemName: "map.fill")
-                    .font(.caption)
-                    .foregroundColor(PinlyTheme.primary)
-                    .accessibilityHidden(true)
-                Text(definition.name)
-                    .font(.caption.weight(.semibold))
-                    .lineLimit(1)
-            }
-            Text(definition.places.prefix(2).map(\.name).joined(separator: " → ")
-                 + (definition.places.count > 2 ? " +\(definition.places.count - 2)" : ""))
-                .font(.caption2)
-                .foregroundColor(.secondary)
-                .lineLimit(1)
-                .accessibilityHidden(true) // Buton kendi label'ında rota adını zaten söylüyor
-
-            Button(action: onAdd) {
-                HStack(spacing: 4) {
-                    Image(systemName: "plus.circle.fill")
-                        .accessibilityHidden(true)
-                    Text(NSLocalizedString("Rotalarıma Ekle", comment: ""))
-                }
-                .font(.caption2.weight(.semibold))
-                .foregroundColor(PinlyTheme.slate)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
-                .background(Capsule().fill(PinlyTheme.slate.opacity(0.10)))
-            }
-            .accessibilityLabel(String(format: NSLocalizedString("%@ rotalarıma ekle", comment: ""), definition.name))
-        }
-        .padding(10)
-        .frame(width: 200, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: 14)
                 .fill(PinlyTheme.fillMuted)

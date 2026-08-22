@@ -52,10 +52,8 @@ final class LocalEntitlementService: EntitlementProviding, ObservableObject {
     }
 
     func canAddPlace(currentCount: Int) -> Bool {
-        // TestFlight betasında limit uygulanmaz — paywall gate'leri hiç tetiklenmez
-        // (FAZ 6.1; RevenueCat gelince kaldırılacak)
-        if FeatureFlags.unlimitedPlacesInBeta { return true }
-        return isPro || currentCount < freeLimit
+        // Mekan ekleme artık ücretsiz ve sınırsız — Pro değer önerisi GPX/PDF + reklamsız.
+        return true
     }
 }
 
@@ -112,7 +110,7 @@ final class RevenueCatEntitlementService: EntitlementProviding, ObservableObject
     }
 
     func canAddPlace(currentCount: Int) -> Bool {
-        if FeatureFlags.unlimitedPlacesInBeta { return true }
-        return isPro || currentCount < freeLimit
+        // Mekan ekleme artık ücretsiz ve sınırsız — Pro değer önerisi GPX/PDF + reklamsız.
+        return true
     }
 }

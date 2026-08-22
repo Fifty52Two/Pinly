@@ -10,14 +10,17 @@ struct EmptyStateMedallion: View {
     let icon: String
     var badgeColor: Color = PinlyTheme.accent
 
+    @Environment(\.colorScheme) private var colorScheme
+
     var body: some View {
         ZStack {
             Circle()
                 .fill(PinlyTheme.ground)
                 .frame(width: 132, height: 132)
-            Image("SeigaihaPattern")
+            Image(PinlyTheme.seigaihaLinesOnPaper(colorScheme))
                 .resizable()
                 .scaledToFill()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .frame(width: 132, height: 132)
                 .clipShape(Circle())
             Circle()

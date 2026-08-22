@@ -22,10 +22,20 @@ enum SocialConfig {
 
 // MARK: - SocialServiceError
 
-enum SocialServiceError: Error {
+enum SocialServiceError: LocalizedError {
     /// Rota merkezinin şehir/ülkesi reverse-geocode ile çözülemedi (city NOT NULL kısıtı).
     case cityUnresolved
     case publishFailed
+    /// Client-side rate limit — çok sık tekrarlanan mutasyon (OWASP A04).
+    case rateLimited
+
+    var errorDescription: String? {
+        switch self {
+        case .cityUnresolved: return NSLocalizedString("Rota konumu belirlenemedi.", comment: "")
+        case .publishFailed:  return NSLocalizedString("Rota yayınlanamadı.", comment: "")
+        case .rateLimited:    return NSLocalizedString("Çok hızlı istekte bulundunuz, lütfen bekleyin.", comment: "")
+        }
+    }
 }
 
 // MARK: - RouteFeedProviding
@@ -74,12 +84,29 @@ final class SupabaseSocialService: RouteFeedProviding, ProfileSyncing {
     private let client: SupabaseClient
     private let geocoding: GeocodingProviding
 
+    /// Client-side rate limiting — mutating çağrıları (publish, favorite)
+    /// kısa aralıklarda tekrar tetiklemeyi önler (OWASP A04).
+    private var lastMutationTimestamps: [String: Date] = [:]
+    private let mutationCooldown: TimeInterval = 2.0
+
     init(
         client: SupabaseClient = SocialConfig.client,
         geocoding: GeocodingProviding = DefaultGeocodingService.shared
     ) {
         self.client = client
         self.geocoding = geocoding
+    }
+
+    /// Rate limit kontrolü — aynı aksiyon `mutationCooldown` saniye içinde
+    /// tekrar çağrılırsa false döner.
+    private func checkRateLimit(action: String) -> Bool {
+        let now = Date()
+        if let last = lastMutationTimestamps[action],
+           now.timeIntervalSince(last) < mutationCooldown {
+            return false
+        }
+        lastMutationTimestamps[action] = now
+        return true
     }
 
     /// Var olan oturumu kullanır; yoksa anonim oturum sessizce açılır. `currentUser` local'de
@@ -115,6 +142,7 @@ final class SupabaseSocialService: RouteFeedProviding, ProfileSyncing {
 
     @discardableResult
     func publish(_ route: SavedRoute) async throws -> String {
+        guard checkRateLimit(action: "publish") else { throw SocialServiceError.rateLimited }
         let owner = try await ensureSession()
         let coordinate = CLLocationCoordinate2D(
             latitude: route.centerLatitude,
@@ -154,6 +182,7 @@ final class SupabaseSocialService: RouteFeedProviding, ProfileSyncing {
     }
 
     func favorite(routeId: String) async throws {
+        guard checkRateLimit(action: "favorite_\(routeId)") else { return }
         let userId = try await ensureSession()
         struct FavoriteInsert: Encodable {
             let userId: String

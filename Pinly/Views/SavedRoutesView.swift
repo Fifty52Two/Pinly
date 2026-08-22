@@ -24,6 +24,7 @@ struct SavedRoutesView: View {
     @State private var showDeleteAlert = false
     @State private var showRouteSummary = false
     @State private var showEditRoute = false
+    // Ortak rota state'leri V2'ye ertelendi — buton/sheet'ler kilidi kaldırılınca geri açılacak.
 
     var body: some View {
         NavigationStack {
@@ -54,6 +55,7 @@ struct SavedRoutesView: View {
                     .environmentObject(locationManager)
                     .environmentObject(placeStore)
             }
+            // Ortak rota sheet'leri V2'de geri açılacak.
             .sheet(isPresented: $showEditRoute, onDismiss: { viewModel.routeToEdit = nil }) {
                 if let route = viewModel.routeToEdit {
                     PlanRouteView(editingRoute: route)

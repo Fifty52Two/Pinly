@@ -16,11 +16,23 @@ struct PinlyTabItem {
 struct PinlyTabBar: View {
     @Binding var selection: Int
     let items: [PinlyTabItem]
+    /// Cihazın alt safe area'sı (home indicator). Bar İNCE kalır (büyümez) — bunun yerine
+    /// bar'ın TAMAMI bu kadar aşağı kaydırılır, ta ki düz alt kenarı fiziksel ekran kenarına
+    /// değsin (önceki deneme bar'ı bu kadar UZATMIŞTI, "kalın" görünüyordu — o yerine burada
+    /// sadece pozisyon kayıyor, boyut aynı kalıyor).
+    var extraBottomInset: CGFloat = 0
+
+    /// TabView'in altına bırakması gereken görünmez boşluk — bar aşağı kaydığı için
+    /// artık normalden `extraBottomInset` kadar AZ (bar'ın tepesi de o kadar aşağı iniyor).
+    static func reservedHeight(extraBottomInset: CGFloat) -> CGFloat {
+        max(0, height - extraBottomInset)
+    }
+    static let height: CGFloat = 78 + 16
 
     // MARK: Palet — tek yerden değiştir
     // Bar açık renk (light'ta beyaz, dark'ta zeminden bir ton açık slate) —
     // zeminle aynılaşmasın diye koyu navy'den vazgeçildi (kullanıcı kararı)
-    private var barColor: Color { PinlyTheme.surface }
+    private var barColor: Color { PinlyTheme.ground }
     // Claude Design "Pinly Seigaiha Uygulama" mockup'ındaki (17 · Ana sekme) sabit
     // navy baloncuk — primary'nin aksine mod bağımsız, HER modda koyu kalır (CLAUDE.md
     // "navy... tab bar... sabit" kararıyla birebir). İkon de onunla eşleşen sabit krem.
@@ -29,15 +41,20 @@ struct PinlyTabBar: View {
     private var activeIconColor: Color { PinlyTheme.cream }
     private var inactiveIconColor: Color { Color.primary.opacity(0.45) }
 
-    // MARK: Geometri
-    private let barHeight: CGFloat = 55
-    private let circleSize: CGFloat = 46
+    // MARK: Geometri — kullanıcı geri bildirimiyle iki kez büyütüldü (55 → 62 → 78,
+    // orijinalden ~%42 daha büyük), baloncuk/ikon oranları da orantılı büyüdü.
+    private let barHeight: CGFloat = 78
+    private let circleSize: CGFloat = 54
     private let haloWidth: CGFloat = 1       // baloncuğun hemen etrafındaki zemin renkli halka
     private let gapClearance: CGFloat = 4   // baloncuk (halo dahil) ile çukur duvarı arası boşluk
-    private let circleCenterY: CGFloat = 8   // bar üst kenarına göre baloncuk merkezi (büyüdükçe gömülür)
-    private let notchHalfWidth: CGFloat = 47 // çukurun üst kenardaki yarı genişliği
-    /// Slotlar bar kenarlarından bu kadar içeriden dağıtılır
-    private let edgeInset: CGFloat = 50
+    private let circleCenterY: CGFloat = 11   // bar üst kenarına göre baloncuk merkezi (büyüdükçe gömülür)
+    private let notchHalfWidth: CGFloat = 52 // çukurun üst kenardaki yarı genişliği
+    /// Slotlar bar kenarlarından bu kadar içeriden dağıtılır — çukur (notch) en soldaki/sağdaki
+    /// slotun doğal merkezini stadyum ucuna taşmasın diye KIRPIYOR (bkz. notchX clamp aşağıda);
+    /// bar büyütülünce (notchHalfWidth 47→52) bu kırpma daha SIK devreye girip baloncuğu ikonun
+    /// üstünden kaydırıyordu ("en sol/sağda daire ortalamıyor" şikayeti). edgeInset'i büyütüp
+    /// ilk/son slotun doğal merkezini kırpma sınırının İÇİNE almak, kırpmayı hiç tetiklemiyor.
+    private let edgeInset: CGFloat = 62
 
     // Çukurun ortası baloncuğu bu yarıçapla saran gerçek bir daire yayı —
     // ikonun etrafından eşit boşlukla süzülür, asla değmez
@@ -110,7 +127,7 @@ struct PinlyTabBar: View {
                             select(index)
                         } label: {
                             Image(systemName: items[index].icon)
-                                .font(.system(size: 20, weight: isSelected ? .semibold : .medium))
+                                .font(.system(size: 23, weight: isSelected ? .semibold : .medium))
                                 .foregroundColor(isSelected ? activeIconColor : inactiveIconColor)
                                 .offset(y: isSelected ? -(barHeight / 2 - circleCenterY) : 0)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -147,6 +164,9 @@ struct PinlyTabBar: View {
             }
             .ignoresSafeArea(edges: .bottom)
         )
+        // Bar'ı OLDUĞU GİBİ (boyutu değişmeden) fiziksel alt kenara doğru kaydırır —
+        // düz alt kenarı artık home indicator'ın biraz altına, ekranın gerçek kenarına yakın oturur.
+        .offset(y: extraBottomInset)
     }
 
     private func select(_ index: Int) {
