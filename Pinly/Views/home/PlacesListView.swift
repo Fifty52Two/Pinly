@@ -29,7 +29,6 @@ struct PlacesListView: View {
     @EnvironmentObject var routeManager: RouteManager
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.entitlements) private var entitlements
     @Environment(\.swarmImporting) private var swarmImporting
     @Environment(\.analytics) private var analytics
 
@@ -38,7 +37,6 @@ struct PlacesListView: View {
     @State private var showAddPlace = false
     @State private var showMap = false
     @State private var showQRScanner = false
-    @State private var showPaywall = false
     @State private var showSwarmPicker = false
     @State private var pendingSwarmPlaces: [PlaceImportData] = []
     @State private var showSwarmImport = false
@@ -195,11 +193,7 @@ struct PlacesListView: View {
                             }
                             .accessibilityLabel(NSLocalizedString("QR Tara", comment: ""))
                             Button {
-                                if entitlements.canAddPlace(currentCount: placeStore.places.count) {
-                                    showAddPlace = true
-                                } else {
-                                    showPaywall = true
-                                }
+                                showAddPlace = true
                             } label: {
                                 Image(systemName: "plus")
                             }
@@ -230,13 +224,9 @@ struct PlacesListView: View {
                 QRScannerView()
                     .environmentObject(placeStore)
             }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView { showPaywall = false }
-            }
             .sheet(isPresented: $showSwarmImport) {
                 SwarmImportView(
                     places: pendingSwarmPlaces,
-                    currentCount: placeStore.places.count,
                     onConfirm: { importSwarm() },
                     onCancel: { showSwarmImport = false }
                 )
@@ -274,13 +264,6 @@ struct PlacesListView: View {
     }
 
     private func importSwarm() {
-        guard entitlements.canAddPlace(
-            currentCount: placeStore.places.count + pendingSwarmPlaces.count - 1
-        ) else {
-            showSwarmImport = false
-            showPaywall = true
-            return
-        }
         let toImport = pendingSwarmPlaces
         showSwarmImport = false
         pendingSwarmPlaces = []

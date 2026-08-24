@@ -30,6 +30,47 @@ struct PaywallView: View {
             && yearlyTrialEligible
     }
 
+    /// Yıllık planın aylığa göre tasarrufu — App Store Connect'teki GERÇEK fiyatlardan
+    /// hesaplanır. Daha önce "%33" olarak sabit yazılıydı; fiyat değiştiği gün rozet
+    /// yalan söyleyecekti (App Store Guideline 2.3.1 — yanıltıcı metadata).
+    /// Her iki paket de yoksa veya tasarruf anlamlı değilse rozet gösterilmez.
+    private var yearlySavingsPercent: Int? {
+        guard let yearly = yearlyPackage?.storeProduct.price as NSDecimalNumber?,
+              let monthly = monthlyPackage?.storeProduct.price as NSDecimalNumber?
+        else { return nil }
+        let yearlyValue = yearly.doubleValue
+        let monthlyTotal = monthly.doubleValue * 12
+        guard monthlyTotal > 0, yearlyValue > 0, yearlyValue < monthlyTotal else { return nil }
+        let percent = Int(((1 - yearlyValue / monthlyTotal) * 100).rounded())
+        return percent >= 5 ? percent : nil
+    }
+
+    /// Abonelik süresi + yenileme fiyatı + trial bitişinde ne olacağı aynı ekranda
+    /// açıkça yazılmalı (App Store Guideline 3.1.2). Fiyat mağazadan gelir, hardcode edilmez.
+    private var renewalDisclosure: String? {
+        guard let package = selectedPackage else { return nil }
+        let price = package.storeProduct.localizedPriceString
+        let isYearly = package.identifier == yearlyPackage?.identifier
+        let period = isYearly
+            ? NSLocalizedString("yıl", comment: "")
+            : NSLocalizedString("ay", comment: "")
+
+        if isYearly, hasFreeTrial {
+            return String(
+                format: NSLocalizedString(
+                    "7 gün ücretsiz, ardından %@ / %@. İptal edilmediği sürece otomatik yenilenir. Dilediğin zaman App Store ayarlarından iptal edebilirsin.",
+                    comment: ""
+                ), price, period
+            )
+        }
+        return String(
+            format: NSLocalizedString(
+                "%@ / %@. İptal edilmediği sürece otomatik yenilenir. Dilediğin zaman App Store ayarlarından iptal edebilirsin.",
+                comment: ""
+            ), price, period
+        )
+    }
+
     var body: some View {
         ZStack {
             // Paywall daha önce hiç temalanmamıştı (sistem varsayılan sheet zemini) —
@@ -82,7 +123,7 @@ struct PaywallView: View {
                 .fontWeight(.bold)
                 .foregroundColor(.white)
 
-            Text(NSLocalizedString("Reklamsız keşfet. Yakında: çevrimdışı harita ve topluluk rotaları.", comment: ""))
+            Text(NSLocalizedString("Reklamsız keşfet, rotalarını GPX ve PDF olarak dışa aktar.", comment: ""))
                 .font(.subheadline)
                 .foregroundColor(.white.opacity(0.85))
                 .multilineTextAlignment(.center)
@@ -115,18 +156,22 @@ struct PaywallView: View {
 
     private var featureList: some View {
         VStack(alignment: .leading, spacing: 14) {
+            // Buradaki HER madde bugün ÇALIŞAN bir özellik olmalı. Önceden 3 maddenin
+            // 2'si "Yakında" rozetliydi (Çevrimdışı Harita, Topluluk Rotaları) — ücretli
+            // bir ürünün fayda listesini var olmayan özelliklerle doldurmak hem App Store
+            // review riski (Guideline 2.3.1 / 3.1.2) hem de zayıf bir değer önerisi.
             ProFeatureRow(icon: "nosign", color: PinlyTheme.accent,
                           title: NSLocalizedString("Reklamsız Kullanım", comment: ""),
                           subtitle: NSLocalizedString("Kesintisiz, reklam olmadan keşfet", comment: ""),
                           badge: nil)
-            ProFeatureRow(icon: "wifi.slash", color: PinlyTheme.slate,
-                          title: NSLocalizedString("Çevrimdışı Harita", comment: ""),
-                          subtitle: NSLocalizedString("İnternetsiz de çalışır", comment: ""),
-                          badge: NSLocalizedString("Yakında", comment: ""))
-            ProFeatureRow(icon: "person.3.fill", color: PinlyTheme.primary,
-                          title: NSLocalizedString("Topluluk Rotaları", comment: ""),
-                          subtitle: NSLocalizedString("Şehirdeki gezginlerin rotalarına eriş", comment: ""),
-                          badge: NSLocalizedString("Yakında", comment: ""))
+            ProFeatureRow(icon: "square.and.arrow.down", color: PinlyTheme.slate,
+                          title: NSLocalizedString("GPX Dışa Aktarma", comment: ""),
+                          subtitle: NSLocalizedString("Rotanı saat ve harita uygulamalarında kullan", comment: ""),
+                          badge: nil)
+            ProFeatureRow(icon: "doc.richtext", color: PinlyTheme.primary,
+                          title: NSLocalizedString("PDF Gezi Planı", comment: ""),
+                          subtitle: NSLocalizedString("Rotanı yazdırılabilir plan olarak indir", comment: ""),
+                          badge: nil)
         }
         .padding(.horizontal, 24)
         .padding(.top, 28)
@@ -184,7 +229,9 @@ struct PaywallView: View {
                     price: "\(yearly.storeProduct.localizedPriceString) \(NSLocalizedString("/ yıl", comment: ""))",
                     badge: hasFreeTrial
                         ? NSLocalizedString("7 Gün Ücretsiz", comment: "")
-                        : NSLocalizedString("%33 Tasarruf", comment: ""),
+                        : yearlySavingsPercent.map {
+                            String(format: NSLocalizedString("%%%lld Tasarruf", comment: ""), $0)
+                        },
                     isSelected: selectedPackage?.identifier == yearly.identifier
                 ) { selectedPackage = yearly }
             }
@@ -217,6 +264,18 @@ struct PaywallView: View {
             .buttonStyle(PinlyPrimaryButtonStyle())
             .disabled(isPurchasing || selectedPackage == nil)
 
+            // Otomatik yenileme açıklaması — App Store Guideline 3.1.2 gereği abonelik
+            // süresi, yenileme fiyatı ve trial bitişinde ne olacağı satın alma butonuyla
+            // AYNI ekranda görünmek zorunda.
+            if let renewalDisclosure {
+                Text(renewalDisclosure)
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 2)
+            }
+
             Button {
                 Task { await restore() }
             } label: {
@@ -225,6 +284,8 @@ struct PaywallView: View {
                     .foregroundColor(.secondary)
             }
             .disabled(isPurchasing)
+
+            legalFooter
 
             Button { onDismiss() } label: {
                 Text(NSLocalizedString("Şimdi Değil", comment: ""))
@@ -235,6 +296,25 @@ struct PaywallView: View {
         .padding(.horizontal, 24)
         .padding(.top, 12)
         .padding(.bottom, 32)
+    }
+
+    /// Gizlilik Politikası + Kullanım Koşulları — abonelik satan ekranda zorunlu
+    /// (App Store Guideline 3.1.2). Adresler `PinlyLegal`'da tek yerde tutulur.
+    private var legalFooter: some View {
+        HStack(spacing: 6) {
+            if let privacy = PinlyLegal.privacyPolicyURL {
+                Link(NSLocalizedString("Gizlilik Politikası", comment: ""), destination: privacy)
+            }
+            if PinlyLegal.privacyPolicyURL != nil, PinlyLegal.termsOfUseURL != nil {
+                Text("·")
+            }
+            if let terms = PinlyLegal.termsOfUseURL {
+                Link(NSLocalizedString("Kullanım Koşulları", comment: ""), destination: terms)
+            }
+        }
+        .font(.caption2)
+        .foregroundColor(.secondary)
+        .padding(.top, 2)
     }
 
     private var ctaTitle: String {

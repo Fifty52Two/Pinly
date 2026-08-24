@@ -212,16 +212,19 @@ struct SavedRoutesView: View {
                     }
                     .tint(PinlyTheme.primary)
                 }
-                .swipeActions(edge: .leading, allowsFullSwipe: false) {
-                    if !route.isPublic {
-                        Button {
-                            viewModel.publish(route, context: modelContext)
-                        } label: {
-                            Label(NSLocalizedString("Paylaş", comment: ""), systemImage: "globe")
-                        }
-                        .tint(PinlyTheme.slate)
-                    }
-                }
+                // "Paylaş" (topluluğa yayınla) swipe action'ı V1'de KAPALI.
+                //
+                // Topluluk feed'i zaten "ÇOK YAKINDA" ile kilitli (bkz. DiscoverView), ama
+                // yayınlama açık kalmıştı: kullanıcılar göremedikleri bir feed'e rota
+                // gönderiyordu. Daha kötüsü, `SocialService.publish()` rotayı `SavedPlaceSnapshot`
+                // olarak SANITIZE ETMEDEN yolluyor — kullanıcının ÖZEL mekan notları, adresi ve
+                // tam koordinatı herkese açık `public_routes` tablosuna yazılıyordu.
+                //
+                // V1.1'de sosyal katman açılmadan önce çözülmesi ZORUNLU olanlar:
+                //   1. Public payload için ayrı DTO (notes/placeId gönderilmemeli)
+                //   2. Uygulama içinden hesap silme (App Store Guideline 5.1.1(v))
+                //   3. Engellemenin feed sorgusunda gerçekten uygulanması (Guideline 1.2)
+                //   4. Anonim → Apple hesap geçişinde veri taşıma (şu an orphan kalıyor)
                 .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)

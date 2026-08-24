@@ -139,15 +139,8 @@ struct RouteImportView: View {
 
 struct SwarmImportView: View {
     let places: [PlaceImportData]
-    let currentCount: Int
     let onConfirm: () -> Void
     let onCancel: () -> Void
-
-    @Environment(\.entitlements) private var entitlements
-
-    private var canAddAll: Bool {
-        entitlements.canAddPlace(currentCount: currentCount + places.count - 1)
-    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -218,17 +211,8 @@ struct SwarmImportView: View {
             Spacer()
 
             VStack(spacing: 12) {
-                if !canAddAll {
-                    Text(NSLocalizedString("Ücretsiz limitini aşıyor. Pro'ya geçerek tümünü ekle.", comment: ""))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 20)
-                }
                 Button(action: onConfirm) {
-                    Text(canAddAll
-                         ? String(format: NSLocalizedString("Tümünü Ekle (%lld)", comment: ""), places.count)
-                         : NSLocalizedString("Pro'ya Geç", comment: ""))
+                    Text(String(format: NSLocalizedString("Tümünü Ekle (%lld)", comment: ""), places.count))
                         .font(.headline)
                         .foregroundColor(PinlyTheme.onAccent)
                         .frame(maxWidth: .infinity)

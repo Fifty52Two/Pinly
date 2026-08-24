@@ -12,12 +12,10 @@ struct NearbyPlacesView: View {
     @EnvironmentObject var placeStore: PlaceStore
     @Environment(\.nearbySearch) private var nearbySearch
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.entitlements) private var entitlements
     @Environment(\.analytics) private var analytics
 
     @StateObject private var viewModel = NearbyPlacesViewModel()
     @State private var addedIDs: Set<String> = []
-    @State private var showPaywall = false
     @State private var showMap = false
     @AppStorage("pinly.nearbyRadiusMeters") private var radiusMeters = 1000.0
     // `.automatic` KULLANILMIYOR — harita içeriği her değiştiğinde kamerayı yeniden
@@ -139,9 +137,6 @@ struct NearbyPlacesView: View {
                 guard newValue != nil, viewModel.results.isEmpty else { return }
                 Task { await runSearch() }
             }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView { showPaywall = false }
-            }
         }
     }
 
@@ -245,10 +240,6 @@ struct NearbyPlacesView: View {
     }
 
     private func addPlace(_ nearby: NearbyPlace) {
-        guard entitlements.canAddPlace(currentCount: placeStore.places.count) else {
-            showPaywall = true
-            return
-        }
         Task {
             await placeStore.addPlace(
                 name: nearby.name,

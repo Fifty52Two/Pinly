@@ -20,15 +20,10 @@ final class QRScannerViewModel: ObservableObject {
         self.analytics = analytics
     }
 
-    /// Freemium limiti aşılıyorsa false döner (çağıran taraf paywall göstermeli).
-    func importPlace(_ data: PlaceImportData, placeStore: PlaceRepository, context: ModelContext) async -> Bool {
-        guard entitlements.canAddPlace(currentCount: placeStore.places.count) else {
-            return false
-        }
+    func importPlace(_ data: PlaceImportData, placeStore: PlaceRepository, context: ModelContext) async {
         isSaving = true
         await placeStore.importPlace(data, context: context)
         isSaving = false
         analytics.track(.placeAdded(source: .qr))
-        return true
     }
 }

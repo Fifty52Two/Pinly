@@ -5,7 +5,6 @@ import GoogleMobileAds
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.entitlements) private var entitlements
     @Environment(\.badges) private var badges
     @Environment(\.routeURLCoding) private var routeURLCoding
     @Environment(\.notificationScheduling) private var notificationScheduling
@@ -18,13 +17,11 @@ struct ContentView: View {
     @State private var pendingImport: PlaceImportData? = nil
     @State private var showImportSheet = false
     @State private var isImporting = false
-    @State private var showDeepLinkPaywall = false
     @State private var pendingRouteImport: RouteImport? = nil
     @State private var showRouteImportSheet = false
     @AppStorage("pinly.hasSeenOnboarding") private var hasSeenOnboarding = false
     @AppStorage("pinly.hasSetupProfile") private var hasSetupProfile = false
     @State private var hasRequestedAdConsent = false
-    @State private var sharedRouteId: String? = nil
 
     var body: some View {
         Group {
@@ -98,17 +95,11 @@ struct ContentView: View {
                 .presentationDetents([.medium, .large])
             }
         }
-        .sheet(isPresented: $showDeepLinkPaywall) {
-            PaywallView { showDeepLinkPaywall = false }
-        }
-        .fullScreenCover(isPresented: Binding(
-            get: { sharedRouteId != nil },
-            set: { if !$0 { sharedRouteId = nil } }
-        )) {
-            if let id = sharedRouteId {
-                SharedRouteEditorView(routeId: id, autoJoin: true)
-            }
-        }
+        // Ortak rota düzenleyici (SharedRouteEditorView) V1'de sunulmuyor: `sharedroute`
+        // deep link'i yukarıda yok sayıldığı için `sharedRouteId` hiç set edilmiyordu ve bu
+        // cover ölüydü. Ayrıca o ekran `AppleAuthService` üzerinden hesap açıyor — V1'de
+        // hesap silme akışı olmadığı için hiçbir hesap oluşturma yolu bırakılmadı
+        // (App Store Guideline 5.1.1(v)). V1.1'de sosyal katmanla birlikte geri gelecek.
         .alert(NSLocalizedString("Hata", comment: ""), isPresented: Binding(
             get: { placeStore.lastError != nil },
             set: { if !$0 { placeStore.lastError = nil } }
@@ -157,13 +148,6 @@ struct ContentView: View {
 
     private func importRoute() {
         guard let routeImport = pendingRouteImport else { return }
-        guard entitlements.canAddPlace(
-            currentCount: placeStore.places.count + routeImport.places.count - 1
-        ) else {
-            showRouteImportSheet = false
-            showDeepLinkPaywall = true
-            return
-        }
         let toImport = routeImport.places
         showRouteImportSheet = false
         pendingRouteImport = nil
@@ -211,11 +195,6 @@ struct ContentView: View {
     }
 
     private func importPendingPlace(_ data: PlaceImportData) {
-        guard entitlements.canAddPlace(currentCount: placeStore.places.count) else {
-            showImportSheet = false
-            showDeepLinkPaywall = true
-            return
-        }
         isImporting = true
         analytics.track(.placeAdded(source: .deeplink))
         Task {

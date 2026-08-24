@@ -27,6 +27,7 @@ struct RouteSummaryView: View {
     @State private var showSharePicker = false
     @State private var showSaveRouteSheet = false
     @State private var showSoftPaywall = false
+    @State private var showExportPaywall = false
     @State private var showShareFormatPicker = false
     @State private var isComposingMemoryCard = false
 
@@ -340,18 +341,27 @@ struct RouteSummaryView: View {
         .navigationTitle(routeManager.isNavigating ? NSLocalizedString("Navigasyon", comment: "") : NSLocalizedString("Rota Hazır", comment: ""))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            // GPX/PDF disa aktarma — v1'de Coming Soon, ileride Pro ozellik olarak acilacak.
+            // GPX/PDF dışa aktarma — Pro'nun somut karşılığı.
+            //
+            // Dışa aktarma kodu (`sharePDF`/`shareGPX`) zaten tam çalışır durumdaydı, sadece
+            // UI'dan bağlanmamış ve "ÇOK YAKINDA" ile kilitliydi. Bu haliyle Pro aboneliğin
+            // tek somut faydası "reklamsızlık" kalıyordu; ücretli bir ürünün fayda listesinin
+            // çoğunun var olmayan özellik olması hem review riski hem zayıf değer önerisi.
+            // Free kullanıcıda paywall açılır — export fonksiyonlarının kendisinde Pro
+            // kontrolü YOKTU, gate burada eklendi.
             if !routeManager.isNavigating {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
-                        Button { } label: {
-                            Label(NSLocalizedString("GPX İndir", comment: "") + " (\(NSLocalizedString("ÇOK YAKINDA", comment: "")))", systemImage: "square.and.arrow.down")
+                        Button {
+                            if viewModel.isPro { shareGPX() } else { showExportPaywall = true }
+                        } label: {
+                            Label(NSLocalizedString("GPX İndir", comment: ""), systemImage: "square.and.arrow.down")
                         }
-                        .disabled(true)
-                        Button { } label: {
-                            Label(NSLocalizedString("PDF İndir", comment: "") + " (\(NSLocalizedString("ÇOK YAKINDA", comment: "")))", systemImage: "doc.richtext")
+                        Button {
+                            if viewModel.isPro { sharePDF() } else { showExportPaywall = true }
+                        } label: {
+                            Label(NSLocalizedString("PDF İndir", comment: ""), systemImage: "doc.richtext")
                         }
-                        .disabled(true)
                     } label: {
                         Image(systemName: "ellipsis.circle")
                             .foregroundColor(.secondary)
@@ -458,6 +468,9 @@ struct RouteSummaryView: View {
                     showRatingSheet = false
                 }
             }
+        }
+        .sheet(isPresented: $showExportPaywall) {
+            PaywallView(source: "export_locked") { showExportPaywall = false }
         }
         .sheet(isPresented: $showSoftPaywall, onDismiss: {
             // Soft paywall akışın SON adımı: kapanınca (satın alma ya da "Şimdi Değil")

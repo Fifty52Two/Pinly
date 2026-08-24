@@ -13,7 +13,6 @@ struct QRScannerView: View {
 
     @State private var showImportConfirm = false
     @State private var cameraPermissionDenied = false
-    @State private var showPaywall = false
 
     var body: some View {
         NavigationStack {
@@ -73,22 +72,15 @@ struct QRScannerView: View {
                     .presentationDetents([.medium])
                 }
             }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView { showPaywall = false }
-            }
         }
     }
 
     private func importPlace(_ data: PlaceImportData) {
         Task {
-            let success = await viewModel.importPlace(data, placeStore: placeStore, context: modelContext)
+            await viewModel.importPlace(data, placeStore: placeStore, context: modelContext)
             await MainActor.run {
                 showImportConfirm = false
-                if success {
-                    dismiss()
-                } else {
-                    showPaywall = true
-                }
+                dismiss()
             }
         }
     }

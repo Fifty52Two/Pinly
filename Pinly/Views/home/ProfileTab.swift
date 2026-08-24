@@ -12,10 +12,11 @@ struct ProfileTab: View {
     @EnvironmentObject var languageManager: LanguageManager
     @Environment(\.badges) private var badges
     @Environment(\.profile) private var profileService
-    @Environment(\.social) private var social
     @Environment(\.colorScheme) private var colorScheme
 
     @Query(sort: \SavedRoute.createdAt, order: .reverse) private var savedRoutes: [SavedRoute]
+
+    @Environment(\.entitlements) private var entitlements
 
     @State private var showHistory = false
     @State private var showWeeklyReport = false
@@ -23,15 +24,13 @@ struct ProfileTab: View {
     @State private var showLanguagePicker = false
     @State private var showStats = false
     @State private var showEditProfile = false
+    @State private var showPaywall = false
     @State private var profile: UserProfile? = nil
     @State private var profilePhoto: UIImage? = nil
     @State private var pickerItem: PhotosPickerItem? = nil
 
     /// FAZ 5 V2 — Kamu Profili: kullanıcı adı (varsa) + yayınlanan rota sayısı + toplam alınan fav.
     /// Kullanıcı adı hiç ayarlanmadıysa (sosyal katmana hiç dokunmadıysa) bölüm gizlenir.
-    @State private var socialProfile: SocialProfileDTO? = nil
-    @State private var publishedRoutesCount = 0
-    @State private var totalFavsReceived = 0
 
     private var visitedCount: Int { placeStore.places.filter { $0.isVisited }.count }
     /// FAZ 5 V1 — Rotalarım kartı için son 5 kayıtlı rota (en yeni önce).
@@ -212,30 +211,30 @@ struct ProfileTab: View {
                 }
                 .listRowBackground(PinlyTheme.surface)
 
-                // Kamu Profili — FAZ 5 V2: kullanıcı adı ayarlandıysa (ilk yayın/fav sonrası)
-                // yayınlanan rota sayısı + toplam alınan fav gösterilir.
-                if let username = socialProfile?.username {
-                    Section {
-                        Text(NSLocalizedString("Herkese Açık Profil", comment: ""))
-                            .font(.headline)
+                // "Herkese Açık Profil" bölümü V1'de GİZLİ — sosyal katman kapalı
+                // (bkz. SavedRoutesView'daki yayınlama notu). V1.1'de geri gelecek.
 
-                        HStack(spacing: 36) {
-                            VStack(spacing: 2) {
-                                Text("@\(username)")
-                                    .font(.subheadline.bold())
-                                    .lineLimit(1)
-                                Text(NSLocalizedString("Kullanıcı Adı", comment: ""))
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-                            }
-                            profileMiniStat(value: publishedRoutesCount, label: NSLocalizedString("Yayınlanan", comment: ""))
-                            profileMiniStat(value: totalFavsReceived, label: NSLocalizedString("Alınan Fav", comment: ""))
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 4)
+                // Pinly Pro — KALICI giriş noktası.
+                //
+                // `canAddPlace` artık koşulsuz `true` döndüğü için ona bağlı tüm hard
+                // gate'ler ölü; kullanıcının satın alma ekranını görebildiği TEK an, ilk
+                // rota sonrası ömür boyu bir kez açılan soft paywall'dı. Onu bir kez kapatan
+                // kullanıcı bir daha ASLA abone olamıyordu — gelir modeli fiilen kapalıydı.
+                Section {
+                    MoreRow(
+                        icon: entitlements.isPro ? "crown.fill" : "crown",
+                        iconColor: PinlyTheme.gold,
+                        title: entitlements.isPro
+                            ? NSLocalizedString("Pinly Pro", comment: "")
+                            : NSLocalizedString("Pinly Pro'ya Geç", comment: ""),
+                        subtitle: entitlements.isPro
+                            ? NSLocalizedString("Aboneliğin aktif", comment: "")
+                            : NSLocalizedString("Reklamsız kullanım, GPX ve PDF dışa aktarma", comment: "")
+                    ) {
+                        showPaywall = true
                     }
-                    .listRowBackground(PinlyTheme.surface)
                 }
+                .listRowBackground(PinlyTheme.surface)
 
                 Section {
                     let current = LanguageManager.supported.first { $0.code == languageManager.currentLanguage }
@@ -258,6 +257,9 @@ struct ProfileTab: View {
             .navigationTitle(NSLocalizedString("Profil", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(.hidden, for: .tabBar)
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(source: "profile") { showPaywall = false }
         }
         .sheet(isPresented: $showStats) {
             ProfileStatsView()
@@ -296,7 +298,6 @@ struct ProfileTab: View {
             }
         }
         .onAppear { reloadProfile() }
-        .task { await loadSocialProfile() }
     }
 
     private var profileAvatar: some View {
@@ -340,22 +341,6 @@ struct ProfileTab: View {
         profilePhoto = profileService.loadPhoto()
     }
 
-    /// Sadece kullanıcı adı ZATEN ayarlıysa (yani sosyal katmana en az bir kez dokunulduysa)
-    /// profil + istatistikleri çeker; aksi halde ağa hiç çıkmaz — sessiz "çevrimdışı" davranışıyla
-    /// tutarlı (bkz. specs/FAZ5_SUPABASE_MIMARI.md "hesap sürtünmesi sıfır").
-    private func loadSocialProfile() async {
-        // `social.hasLocalSession` kontrolü olmadan `myProfile()` HER ProfileTab açılışında
-        // (yani hemen hemen her kullanıcıda) sessizce anonim Supabase hesabı açardı — sosyal
-        // katmana hiç dokunmamış kullanıcılar için de. Sadece daha önce feed/publish/favorite
-        // üzerinden bir oturum kurulduysa profil sorgula.
-        guard social.hasLocalSession else { return }
-        guard let profile = try? await social.myProfile(), profile.username != nil else { return }
-        socialProfile = profile
-        if let published = try? await social.myPublishedRoutes() {
-            publishedRoutesCount = published.count
-            totalFavsReceived = published.reduce(0) { $0 + $1.favCount }
-        }
-    }
 }
 
 // MARK: - MoreRow

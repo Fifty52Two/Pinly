@@ -21,14 +21,12 @@ struct MapView: View {
     @EnvironmentObject var routeManager: RouteManager
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.entitlements) private var entitlements
 
     @StateObject private var viewModel = MapViewModel()
 
     @State private var showRouteFlow = false
     @State private var showAddPlace = false
     @State private var navigateToSinglePlace = false
-    @State private var showPaywall = false
 
     var visiblePlaces: [Place] { viewModel.visiblePlaces(placeStore.places) }
 
@@ -125,11 +123,7 @@ struct MapView: View {
                     }
                     Spacer()
                     Button {
-                        if entitlements.canAddPlace(currentCount: placeStore.places.count) {
-                            showAddPlace = true
-                        } else {
-                            showPaywall = true
-                        }
+                        showAddPlace = true
                     } label: {
                         Image(systemName: "plus")
                             .font(.title3)
@@ -181,9 +175,6 @@ struct MapView: View {
             EditPlaceView(place: place)
                 .environmentObject(placeStore)
                 .environmentObject(locationManager)
-        }
-        .sheet(isPresented: $showPaywall) {
-            PaywallView { showPaywall = false }
         }
     }
 }

@@ -9,7 +9,6 @@ struct QuickAddSheet: View {
     @EnvironmentObject var placeStore: PlaceStore
 
     @StateObject private var viewModel = QuickAddViewModel()
-    @State private var showPaywall = false
 
     var body: some View {
         NavigationStack {
@@ -51,7 +50,6 @@ struct QuickAddSheet: View {
             .toolbar(content: toolbarContent)
         }
         .onAppear { viewModel.observeLocation(locationManager) }
-        .sheet(isPresented: $showPaywall) { PaywallView(onDismiss: { showPaywall = false }) }
     }
 
     // MARK: - Toolbar
@@ -70,11 +68,7 @@ struct QuickAddSheet: View {
     // MARK: - Kaydet
 
     private func save() {
-        let success = viewModel.save(placeStore: placeStore, userLocation: locationManager.userLocation, context: modelContext)
-        if success {
-            dismiss()
-        } else {
-            showPaywall = true
-        }
+        viewModel.save(placeStore: placeStore, userLocation: locationManager.userLocation, context: modelContext)
+        dismiss()
     }
 }

@@ -7,7 +7,6 @@ struct MainTab: View {
     @EnvironmentObject var placeStore: PlaceStore
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var routeManager: RouteManager
-    @Environment(\.entitlements) private var entitlements
     @Environment(\.badges) private var badges
 
     @StateObject private var viewModel = MainTabViewModel()
@@ -17,7 +16,6 @@ struct MainTab: View {
     @State private var showAddPlace = false
     @State private var showQRScanner = false
     @State private var showPlanRoute = false
-    @State private var showPaywall = false
     @State private var detailPlace: Place? = nil
 
     private var visitedCount: Int { viewModel.visitedCount(placeStore.places) }
@@ -133,11 +131,7 @@ struct MainTab: View {
                     QuickActionCard(icon: "plus.circle.fill", color: PinlyTheme.primaryWarm,
                                     title: NSLocalizedString("Mekan Ekle", comment: ""),
                                     subtitle: NSLocalizedString("Yeni bir yer kaydet", comment: "")) {
-                        if entitlements.canAddPlace(currentCount: placeStore.places.count) {
-                            showAddPlace = true
-                        } else {
-                            showPaywall = true
-                        }
+                        showAddPlace = true
                     }
                     QuickActionCard(icon: "qrcode.viewfinder", color: PinlyTheme.slate,
                                     title: NSLocalizedString("QR Tara", comment: ""),
@@ -205,9 +199,6 @@ struct MainTab: View {
             PlanRouteView()
                 .environmentObject(locationManager)
                 .environmentObject(placeStore)
-        }
-        .sheet(isPresented: $showPaywall) {
-            PaywallView { showPaywall = false }
         }
         .sheet(item: $detailPlace) { place in
             NavigationStack {

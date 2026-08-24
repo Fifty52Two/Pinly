@@ -5,13 +5,11 @@ struct ProfileSetupView: View {
 
     @Environment(\.profile) private var profileService
     @Environment(\.colorScheme) private var colorScheme
-    @ObservedObject private var appleAuth = AppleAuthService.shared
     @State private var firstName = ""
     @State private var lastName  = ""
     @State private var birthYearText = ""
     @State private var showError = false
     @State private var errorMessage = ""
-    @State private var isSigningInWithApple = false
 
     private let currentYear = Calendar.current.component(.year, from: Date())
 
@@ -65,61 +63,15 @@ struct ProfileSetupView: View {
                             .foregroundColor(.secondary)
                     }
 
-                    // Apple ile Giriş — cihazlar arası aynı hesap/veri için en hızlı yol.
-                    // Başarılı olursa Apple'ın verdiği ad-soyadı (varsa) forma otomatik doldurur,
-                    // kullanıcı yine de gözden geçirip "Başla"ya kendisi basar (zorla atlamaz).
-                    VStack(spacing: 10) {
-                        if appleAuth.isSignedIn {
-                            HStack(spacing: 8) {
-                                Image(systemName: "checkmark.seal.fill")
-                                    .foregroundColor(PinlyTheme.success)
-                                Text(NSLocalizedString("Apple ile giriş yapıldı", comment: ""))
-                                    .font(.subheadline.weight(.medium))
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(RoundedRectangle(cornerRadius: 14).fill(PinlyTheme.success.opacity(0.1)))
-                        } else {
-                            Button {
-                                Task {
-                                    isSigningInWithApple = true
-                                    await appleAuth.signInWithApple()
-                                    isSigningInWithApple = false
-                                    if let name = appleAuth.displayName {
-                                        let parts = name.split(separator: " ", maxSplits: 1)
-                                        if firstName.isEmpty { firstName = parts.first.map(String.init) ?? "" }
-                                        if lastName.isEmpty, parts.count > 1 { lastName = String(parts[1]) }
-                                    }
-                                }
-                            } label: {
-                                HStack(spacing: 8) {
-                                    if isSigningInWithApple {
-                                        ProgressView().tint(.white)
-                                    } else {
-                                        Image(systemName: "apple.logo")
-                                    }
-                                    Text(NSLocalizedString("Apple ile Giriş Yap", comment: ""))
-                                        .fontWeight(.semibold)
-                                }
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
-                                .background(RoundedRectangle(cornerRadius: 14).fill(Color.black))
-                            }
-                            .disabled(isSigningInWithApple)
-                            if let error = appleAuth.errorMessage {
-                                Text(error).font(.caption).foregroundColor(PinlyTheme.danger)
-                            }
-                        }
-
-                        HStack {
-                            Rectangle().fill(Color.primary.opacity(0.1)).frame(height: 1)
-                            Text(NSLocalizedString("veya elle doldur", comment: ""))
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Rectangle().fill(Color.primary.opacity(0.1)).frame(height: 1)
-                        }
-                    }
+                    // Apple ile Giriş V1'de KALDIRILDI.
+                    //
+                    // Supabase'de gerçek bir `auth.users` kaydı açıyordu, ama uygulamada
+                    // hesap silme akışı yok — App Store Guideline 5.1.1(v) hesap oluşturan
+                    // her uygulamada uygulama içi hesap silme ZORUNLU kılıyor. Üstelik
+                    // sosyal katman V1'de kapalı olduğu için (bkz. SavedRoutesView) bu
+                    // butonun tek işlevi ad-soyadı forma önceden doldurmaktı; cihazlar arası
+                    // senkron da yok. `AppleAuthService` silinmedi — V1.1'de sosyal katman,
+                    // hesap silme ve anonim→Apple veri taşımayla birlikte geri gelecek.
 
                     // Ad
                     VStack(alignment: .leading, spacing: 10) {

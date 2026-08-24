@@ -13,7 +13,6 @@ struct DiscoverView: View {
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var routeManager: RouteManager
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.entitlements) private var entitlements
     @Environment(\.nearbySearch) private var nearbySearch
     @Environment(\.analytics) private var analytics
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -87,8 +86,6 @@ struct DiscoverView: View {
     @State private var nearbySuggestions: [NearbyPlace] = []
     @State private var addedNearbyIDs: Set<String> = []
     @State private var showNearbyAll = false
-    @State private var showPaywall = false
-    @State private var showCommunityFeed = false
 
     // MARK: Türetilmiş veriler
 
@@ -133,13 +130,6 @@ struct DiscoverView: View {
             NearbyPlacesView(initialCategory: selectedCategory)
                 .environmentObject(locationManager)
                 .environmentObject(placeStore)
-        }
-        .sheet(isPresented: $showPaywall) {
-            PaywallView { showPaywall = false }
-        }
-        .sheet(isPresented: $showCommunityFeed) {
-            CommunityFeedView()
-                .environmentObject(locationManager)
         }
         .task(id: taskKey) {
             await loadNearbySuggestions()
@@ -522,10 +512,6 @@ struct DiscoverView: View {
     }
 
     private func addNearbyPlace(_ nearby: NearbyPlace) {
-        guard entitlements.canAddPlace(currentCount: placeStore.places.count) else {
-            showPaywall = true
-            return
-        }
         Task {
             await placeStore.addPlace(
                 name: nearby.name,

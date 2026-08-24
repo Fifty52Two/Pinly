@@ -57,13 +57,10 @@ final class QuickAddViewModel: ObservableObject {
         address = parts.joined(separator: ", ")
     }
 
-    /// Freemium limiti aşılıyorsa false döner (çağıran taraf paywall göstermeli).
-    /// Mekan adı boşsa (henüz yazılmamışsa) sessizce true döner — kaydetme yapılmaz.
-    @discardableResult
-    func save(placeStore: PlaceRepository, userLocation: CLLocation?, context: ModelContext) -> Bool {
+    /// Mekan adı boşsa (henüz yazılmamışsa) sessizce çıkar — kaydetme yapılmaz.
+    func save(placeStore: PlaceRepository, userLocation: CLLocation?, context: ModelContext) {
         let trimmed = name.trimmingCharacters(in: .whitespaces)
-        guard !trimmed.isEmpty else { return true }
-        guard entitlements.canAddPlace(currentCount: placeStore.places.count) else { return false }
+        guard !trimmed.isEmpty else { return }
 
         let place = Place(name: trimmed, category: category.rawValue, address: address)
         if let loc = userLocation {
@@ -78,6 +75,5 @@ final class QuickAddViewModel: ObservableObject {
         let newBadges = badges.check(placeStore: placeStore)
         placeStore.pendingBadges.append(contentsOf: newBadges)
         analytics.track(.placeAdded(source: .quickAdd))
-        return true
     }
 }
