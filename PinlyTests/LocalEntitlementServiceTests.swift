@@ -8,14 +8,13 @@ final class LocalEntitlementServiceTests: XCTestCase {
         return LocalEntitlementService(defaults: defaults)
     }
 
-    func test_freeUser_canAddPlace_belowLimit() {
+    /// Mekan ekleme artık ücretsiz ve sınırsız — eski 20 mekanlık freemium
+    /// limiti kaldırıldı, Pro değer önerisi GPX/PDF export + reklamsız kullanım.
+    func test_placeAdding_isUnlimited_forFreeUser() {
         let service = makeService(suiteName: #function)
-        XCTAssertTrue(service.canAddPlace(currentCount: 19))
-    }
-
-    func test_freeUser_cannotAddPlace_atLimit() {
-        let service = makeService(suiteName: #function)
-        XCTAssertFalse(service.canAddPlace(currentCount: 20))
+        XCTAssertTrue(service.canAddPlace(currentCount: 0))
+        XCTAssertTrue(service.canAddPlace(currentCount: 20))
+        XCTAssertTrue(service.canAddPlace(currentCount: 5_000))
     }
 
     func test_proUser_hasNoLimit() {
@@ -46,10 +45,5 @@ final class LocalEntitlementServiceTests: XCTestCase {
 
         XCTAssertNil(defaults.object(forKey: "notiongo.isPro"))
         XCTAssertFalse(service.isPro)
-    }
-
-    func test_freeLimit_isTwenty() {
-        let service = makeService(suiteName: #function)
-        XCTAssertEqual(service.freeLimit, 20)
     }
 }

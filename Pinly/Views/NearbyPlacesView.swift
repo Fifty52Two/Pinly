@@ -3,6 +3,11 @@ import CoreLocation
 import MapKit
 
 struct NearbyPlacesView: View {
+    /// Keşfet'teki "Tümünü Gör" bu ekranı kullanıcının O ANDA seçili olduğu kategoriyle
+    /// açar. Aksi halde karışık bir öneri şeridinden hep `.restaurant` listesine düşülüyor
+    /// ve kullanıcı bambaşka bir ekrana geldiğini sanıyordu.
+    var initialCategory: PlaceCategory? = nil
+
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var placeStore: PlaceStore
     @Environment(\.nearbySearch) private var nearbySearch
@@ -11,11 +16,21 @@ struct NearbyPlacesView: View {
     @Environment(\.analytics) private var analytics
 
     @StateObject private var viewModel = NearbyPlacesViewModel()
-    @State private var addedIDs: Set<UUID> = []
+    @State private var addedIDs: Set<String> = []
     @State private var showPaywall = false
     @State private var showMap = false
     @AppStorage("pinly.nearbyRadiusMeters") private var radiusMeters = 1000.0
-    @State private var mapPosition: MapCameraPosition = .automatic
+    // `.automatic` KULLANILMIYOR — harita içeriği her değiştiğinde kamerayı yeniden
+    // çerçeveleyip `position` binding'ine geri yazıyor, bu da body'yi yeniden değerlendirip
+    // yeni içerik üretiyor (kendi kendini besleyen render döngüsü). Bkz. `DiscoverView`.
+    @State private var mapPosition: MapCameraPosition = .userLocation(
+        fallback: .region(
+            MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: 41.015137, longitude: 28.979530),
+                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+            )
+        )
+    )
 
     private static let radiusOptions: [Double] = [500, 1000, 2000, 5000]
 
@@ -64,7 +79,7 @@ struct NearbyPlacesView: View {
                             ForEach(viewModel.results) { place in
                                 NearbyPlaceRow(
                                     place: place,
-                                    isAdded: addedIDs.contains(place.id)
+                                    isAdded: isAlreadySaved(place)
                                 ) {
                                     addPlace(place)
                                 }
@@ -103,11 +118,25 @@ struct NearbyPlacesView: View {
                     .disabled(viewModel.isLoading)
                 }
             }
-            .task { await runSearch() }
+            .task {
+                if let initialCategory {
+                    viewModel.selectedCategory = initialCategory
+                }
+                await runSearch()
+            }
             .onChange(of: viewModel.selectedCategory) {
                 Task { await runSearch() }
             }
             .onChange(of: radiusMeters) {
+                Task { await runSearch() }
+            }
+            // `LocationManager` tek seferlik `requestLocation()` kullanıyor, yani konum
+            // ASENKRON geliyor. Bu olmadan: sheet konum gelmeden bir an önce açılırsa
+            // `runSearch()` "Konum bilgisi alınamadı." yazıp çıkıyor ve BİR DAHA hiç
+            // denemiyordu — ekran kalıcı olarak hatada takılı kalıyordu. Sheet bir saniye
+            // geç açılınca çalışması, "bazen çalışıyor bazen çalışmıyor" şikayetinin sebebiydi.
+            .onChange(of: locationManager.userLocation?.coordinate.latitude) { _, newValue in
+                guard newValue != nil, viewModel.results.isEmpty else { return }
                 Task { await runSearch() }
             }
             .sheet(isPresented: $showPaywall) {
@@ -200,6 +229,19 @@ struct NearbyPlacesView: View {
             return
         }
         await viewModel.search(coordinate: coord, radiusMeters: radiusMeters)
+    }
+
+    /// `addedIDs` yalnızca bu oturumda eklenenleri bilir; uygulama kapanıp açılınca
+    /// sıfırlanıyor ve kullanıcı AYNI mekanı ikinci kez ekleyebiliyordu. Gerçek koleksiyon
+    /// da kontrol ediliyor (aynı isim + ~50 m yakınlık = aynı mekan).
+    private func isAlreadySaved(_ nearby: NearbyPlace) -> Bool {
+        if addedIDs.contains(nearby.id) { return true }
+        return placeStore.places.contains { saved in
+            guard saved.name == nearby.name, let coord = saved.coordinate else { return false }
+            return CLLocation(latitude: coord.latitude, longitude: coord.longitude)
+                .distance(from: CLLocation(latitude: nearby.coordinate.latitude,
+                                           longitude: nearby.coordinate.longitude)) < 50
+        }
     }
 
     private func addPlace(_ nearby: NearbyPlace) {

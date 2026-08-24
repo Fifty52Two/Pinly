@@ -11,6 +11,13 @@ final class NearbyPlacesViewModel: ObservableObject {
     private let nearbySearch: NearbySearching
     private let analytics: AnalyticsTracking
 
+    /// Uçuşta olan arama. Kategori/yarıçap hızlıca değiştirildiğinde önceki arama
+    /// İPTAL EDİLİR — aksi halde N eşzamanlı `MKLocalSearch` başlıyor ve EN SON DÖNEN
+    /// kazanıyordu, yani seçili kategoriyle alakasız (eski) sonuçlar ekranda kalabiliyordu.
+    /// Ayrıca ilk biten `isLoading`'i temizlediği için spinner erken kayboluyor ve geç
+    /// gelen boş sonuç, dolu bir listenin önüne "sonuç bulunamadı" hatası yazabiliyordu.
+    private var searchTask: Task<Void, Never>?
+
     init(nearbySearch: NearbySearching = DefaultNearbySearchService.shared,
          analytics: AnalyticsTracking = NoOpAnalyticsService.shared) {
         self.nearbySearch = nearbySearch
@@ -18,23 +25,42 @@ final class NearbyPlacesViewModel: ObservableObject {
     }
 
     func search(coordinate: CLLocationCoordinate2D, radiusMeters: Double = 1000) async {
-        isLoading = true
-        errorMessage = nil
-        analytics.track(.nearbySearch(category: selectedCategory.rawValue))
-        defer { isLoading = false }
-        let found = await nearbySearch.searchNearby(
-            coordinate: coordinate,
-            category: selectedCategory,
-            radiusMeters: radiusMeters
-        )
-        if found.isEmpty {
-            errorMessage = NSLocalizedString("Yakında sonuç bulunamadı.", comment: "")
+        searchTask?.cancel()
+
+        let category = selectedCategory
+        let task = Task { [weak self] in
+            guard let self else { return }
+            self.isLoading = true
+            self.errorMessage = nil
+            self.analytics.track(.nearbySearch(category: category.rawValue))
+
+            let found = await self.nearbySearch.searchNearby(
+                coordinate: coordinate,
+                category: category,
+                radiusMeters: radiusMeters
+            )
+
+            // İptal edildiysek hiçbir @Published alana DOKUNMA — yerimize geçen
+            // yeni arama zaten kendi isLoading/results/errorMessage'ını yönetiyor.
+            guard !Task.isCancelled else { return }
+
+            self.results = found
+            self.errorMessage = found.isEmpty
+                ? NSLocalizedString("Yakında sonuç bulunamadı.", comment: "")
+                : nil
+            self.isLoading = false
         }
-        results = found
+        searchTask = task
+        await task.value
     }
 
     func reset() {
+        searchTask?.cancel()
+        searchTask = nil
         results = []
         errorMessage = nil
+        isLoading = false
     }
+
+    deinit { searchTask?.cancel() }
 }

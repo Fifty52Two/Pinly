@@ -8,22 +8,18 @@ import RevenueCat
 /// View'lar bu protokole `@Environment(\.entitlements)` üzerinden erişir.
 protocol EntitlementProviding: AnyObject {
     var isPro: Bool { get set }
-    var freeLimit: Int { get }
     func canAddPlace(currentCount: Int) -> Bool
 }
 
 // MARK: - LocalEntitlementService
 
-/// UserDefaults tabanlı yerel implementasyon.
-///
-/// NOT: Apple Developer hesabı alınınca bu sınıf RevenueCat destekli bir
-/// implementasyonla değiştirilecek (`Purchases.shared.cachedCustomerInfo?
-/// .entitlements[entitlementID]?.isActive == true`). Protokol sabit kaldığı
-/// için call site'lar değişmeyecek.
+/// UserDefaults tabanlı yerel implementasyon — DEBUG build'lerinde ve
+/// `RevenueCatEntitlementService`'in `pinly.isPro` aynasını okuyan
+/// ViewModel default'larında kullanılır (bkz. `RevenueCatEntitlementService`).
+/// Release'te gerçeğin kaynağı RevenueCat'tir (bkz. `PinlyApp`).
 final class LocalEntitlementService: EntitlementProviding, ObservableObject {
     static let shared = LocalEntitlementService()
 
-    let freeLimit = 20
     let entitlementID = "pro"
 
     private let proKey = "pinly.isPro"
@@ -70,8 +66,6 @@ final class LocalEntitlementService: EntitlementProviding, ObservableObject {
 /// default'larından okurlar) aynı anahtarı okuyarak dolaylı biçimde güncel kalması için.
 final class RevenueCatEntitlementService: EntitlementProviding, ObservableObject {
     static let shared = RevenueCatEntitlementService()
-
-    let freeLimit = 20
 
     private let proMirrorKey = "pinly.isPro"
     private let defaults: UserDefaults

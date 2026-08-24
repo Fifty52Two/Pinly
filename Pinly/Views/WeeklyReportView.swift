@@ -14,19 +14,25 @@ struct WeeklyReportView: View {
     /// Kullanıcı haftalık bildirim CTA'sına dokundu mu (izin isteme anı — FAZ 5.4)
     @AppStorage("pinly.weeklyNotifOptIn") private var weeklyNotifOptIn = false
 
-    private var stats: WeeklyStats {
-        weeklyStats.computeStats(places: placeStore.places, histories: histories)
-    }
+    /// `.task(id:)` ile histories değişince bir kez hesaplanır — her body
+    /// değerlendirmesinde (drag/animasyon dahil) yeniden hesaplama yapılmaz.
+    @State private var stats = WeeklyStats(
+        routesCompleted: 0, totalSteps: 0, totalDistanceMeters: 0,
+        topCategory: nil, topDistrict: nil, weekStart: Date(), weekEnd: Date()
+    )
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
                     header
-                        .padding(.bottom, stats.isEmpty ? 0 : -24)
-                    if !stats.isEmpty {
-                        statsOverlapCard
-                    }
+                        .overlay(alignment: .bottom) {
+                            if !stats.isEmpty {
+                                statsOverlapCard
+                                    .offset(y: 24)
+                            }
+                        }
+                        .padding(.bottom, stats.isEmpty ? 0 : 24)
                     if !weeklyNotifOptIn {
                         notificationCTACard
                             .padding(.horizontal, 20)
@@ -60,6 +66,9 @@ struct WeeklyReportView: View {
                     }
                 }
             }
+            .task(id: histories.count) {
+                stats = weeklyStats.computeStats(places: placeStore.places, histories: histories)
+            }
         }
     }
 
@@ -88,8 +97,8 @@ struct WeeklyReportView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 24)
-        .padding(.top, 12)
-        .padding(.bottom, stats.isEmpty ? 24 : 48)
+        .padding(.top, 56)
+        .padding(.bottom, 24)
         .background(
             ZStack {
                 PinlyTheme.slate
@@ -108,6 +117,10 @@ struct WeeklyReportView: View {
             .clipped()
             .allowsHitTesting(false)
         )
+        // Saydam nav bar'ın (aşağıda .toolbarBackground(.hidden,...)) arkasını da bu
+        // header'ın kendi zeminiyle dolduruyor — aksi halde X butonunun arkasından sunan
+        // ekran (ProfileTab) sızıp başlığın üstte "kesik" görünmesine yol açıyordu.
+        .ignoresSafeArea(edges: .top)
     }
 
     // MARK: - Taşan istatistik kartı

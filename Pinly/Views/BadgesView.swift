@@ -38,6 +38,10 @@ struct BadgesView: View {
                     }
                 }
             }
+            // Nav bar arkaplanı bilinçli olarak saydam (yukarıda .toolbarBackground(.hidden,...))
+            // — bu ekranın kendi header'ı sistem large-title'ın yerine geçiyor (bkz. mockup notu).
+            // Header .ignoresSafeArea(edges: .top) ile o saydam alanı da kendi zeminiyle dolduruyor;
+            // aksi halde X butonunun arkasında sunan ekran (ProfileTab) sızıp başlığın "kesik" görünmesine yol açıyordu.
         }
     }
 
@@ -48,49 +52,52 @@ struct BadgesView: View {
     // (birebir). İlerleme çubuğu mockup'ta yok ama mevcut işlevsellik korunuyor — başlık
     // altına küçük bir aksesuar olarak eklendi (görsel restyle, davranış aynı).
     private var header: some View {
-        ZStack(alignment: .leading) {
-            PinlyTheme.surface
-            Image(PinlyTheme.seigaihaLinesOnPaper(colorScheme))
-                .resizable()
-                .scaledToFill()
-                .frame(height: 100)
-                .clipShape(Rectangle())
-                .opacity(0.5)
-                .allowsHitTesting(false)
-
-            LinearGradient(
-                colors: [PinlyTheme.surface.opacity(0.92), PinlyTheme.surface.opacity(0.75), PinlyTheme.surface.opacity(0)],
-                startPoint: .leading,
-                endPoint: .trailing
-            )
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(NSLocalizedString("Rozetlerin", comment: ""))
-                    .font(.title2)
-                    .fontWeight(.heavy)
-                    .foregroundColor(.primary)
-                Text(String(format: NSLocalizedString("%lld/%lld rozet kazanıldı", comment: ""), earned, total))
-                    .font(.footnote)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.primary.opacity(0.65))
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(PinlyTheme.fillMuted)
-                            .frame(height: 6)
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(PinlyTheme.gold)
-                            .frame(width: geo.size.width * fraction, height: 6)
-                            .animation(.spring(response: 0.4), value: fraction)
-                    }
-                }
-                .frame(height: 6)
-                .padding(.top, 6)
+        VStack(alignment: .leading, spacing: 6) {
+            Text(NSLocalizedString("Rozetlerin", comment: ""))
+                .font(.title2)
+                .fontWeight(.heavy)
+                .foregroundColor(.primary)
+            Text(String(format: NSLocalizedString("%lld/%lld rozet kazanıldı", comment: ""), earned, total))
+                .font(.footnote)
+                .fontWeight(.semibold)
+                .foregroundColor(.primary.opacity(0.65))
+            // Kilitli/kazanılmış rozet oranı — sabit yükseklikli iki katmanlı kapsül,
+            // dolu kısım GeometryReader yerine leading-anchor scaleEffect ile daraltılıyor
+            // (genişlik hesabı için ayrı bir layout geçişi gerekmiyor).
+            ZStack(alignment: .leading) {
+                Capsule().fill(PinlyTheme.fillMuted)
+                Capsule().fill(PinlyTheme.gold)
+                    .scaleEffect(x: max(0.02, fraction), y: 1, anchor: .leading)
+                    .animation(.spring(response: 0.4), value: fraction)
             }
-            .padding(.horizontal, 24)
+            .frame(height: 6)
+            .padding(.top, 6)
         }
-        .frame(height: 100)
-        .clipShape(Rectangle())
+        .padding(.horizontal, 24)
+        .padding(.top, 56)
+        .padding(.bottom, 20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            ZStack(alignment: .leading) {
+                PinlyTheme.surface
+                Image(PinlyTheme.seigaihaLinesOnPaper(colorScheme))
+                    .resizable()
+                    .scaledToFill()
+                    .opacity(0.5)
+                    .allowsHitTesting(false)
+                LinearGradient(
+                    colors: [PinlyTheme.surface.opacity(0.92), PinlyTheme.surface.opacity(0.75), PinlyTheme.surface.opacity(0)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            }
+            .clipped()
+        )
+        // Header, saydam nav bar'ın arkasını da kendi zeminiyle dolduruyor (X butonu üstünde
+        // yüzüyor) — sistem large-title'ın birebir yerine geçen mockup tasarımı bu şekilde
+        // tamamlanıyor. Sabit .frame(height:) kaldırıldı: büyük Dynamic Type'ta içerik artık
+        // kırpılmak yerine header'ı doğal biçimde büyütüyor.
+        .ignoresSafeArea(edges: .top)
     }
 
     // MARK: - Rozet grid

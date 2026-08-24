@@ -3,9 +3,10 @@ import Foundation
 
 final class MockEntitlementProviding: EntitlementProviding {
     var isPro = false
-    let freeLimit = 20
 
+    /// Production ile aynı davranış: mekan ekleme ücretsiz ve sınırsız.
+    /// (Pro değer önerisi GPX/PDF export + reklamsız kullanım.)
     func canAddPlace(currentCount: Int) -> Bool {
-        isPro || currentCount < freeLimit
+        true
     }
 }

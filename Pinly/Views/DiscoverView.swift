@@ -24,7 +24,19 @@ struct DiscoverView: View {
     @State private var showUnvisitedOnly = false
 
     // Harita
-    @State private var cameraPosition: MapCameraPosition = .automatic
+    // `.automatic` KULLANILMIYOR: harita İÇERİĞİ her değiştiğinde (Yakınımda önerileri
+    // yenilenince) kamerayı yeniden çerçeveliyor, bu da `position` binding'ine geri yazıyor,
+    // bu da body'yi yeniden değerlendirip yeni içerik üretiyor → kendi kendini besleyen
+    // render döngüsü ve görünür panel titremesi. `.userLocation` içerik değişiminde yeniden
+    // çerçeveleme YAPMAZ, döngü bu sayede kırılır.
+    @State private var cameraPosition: MapCameraPosition = .userLocation(
+        fallback: .region(
+            MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: 41.015137, longitude: 28.979530),
+                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+            )
+        )
+    )
     @State private var selectedPlace: Place? = nil
 
     // Panel — native `.sheet` DENENDİ ama sheet UIKit'te TÜM PENCEREYİ kaplayan modal bir
@@ -73,7 +85,7 @@ struct DiscoverView: View {
 
     // Yakınımda önerileri
     @State private var nearbySuggestions: [NearbyPlace] = []
-    @State private var addedNearbyIDs: Set<UUID> = []
+    @State private var addedNearbyIDs: Set<String> = []
     @State private var showNearbyAll = false
     @State private var showPaywall = false
     @State private var showCommunityFeed = false
@@ -115,8 +127,10 @@ struct DiscoverView: View {
             }
         }
         .sheet(isPresented: $showNearbyAll) {
-            // NearbyPlacesView kendi NavigationStack'ini içerir
-            NearbyPlacesView()
+            // NearbyPlacesView kendi NavigationStack'ini içerir.
+            // Seçili kategori TAŞINIYOR: aksi halde kullanıcı karışık bir öneri şeridinden
+            // "Tümünü Gör"e basıp hep restoran listesine düşüyordu.
+            NearbyPlacesView(initialCategory: selectedCategory)
                 .environmentObject(locationManager)
                 .environmentObject(placeStore)
         }
@@ -188,13 +202,13 @@ struct DiscoverView: View {
                                     )
                                     .foregroundColor(nearby.category.color)
                                 )
-                            Image(systemName: addedNearbyIDs.contains(nearby.id) ? "checkmark" : nearby.category.icon)
+                            Image(systemName: isAlreadySaved(nearby) ? "checkmark" : nearby.category.icon)
                                 .font(.caption2)
                                 .foregroundColor(nearby.category.color)
                         }
                     }
                     .buttonStyle(.plain)
-                    .disabled(addedNearbyIDs.contains(nearby.id))
+                    .disabled(isAlreadySaved(nearby))
                     .accessibilityLabel(nearby.name)
                 }
             }
@@ -370,7 +384,7 @@ struct DiscoverView: View {
                         ForEach(nearbySuggestions) { nearby in
                             NearbySuggestionCard(
                                 place: nearby,
-                                isAdded: addedNearbyIDs.contains(nearby.id)
+                                isAdded: isAlreadySaved(nearby)
                             ) {
                                 addNearbyPlace(nearby)
                             }
@@ -446,7 +460,7 @@ struct DiscoverView: View {
                         }
                         .buttonStyle(.plain)
                         .pinlyZoomSource(id: cat.rawValue, in: zoomNamespace)
-                        .discoverCardScrollTransition(skipsAnimation: reduceMotion)
+                        .discoverCardScrollTransition(skipsAnimation: reduceMotion || panelDetent != .expanded)
                     }
                 }
                 .padding(.horizontal, 16)
@@ -481,7 +495,30 @@ struct DiscoverView: View {
             }
             merged.append(contentsOf: batchResults)
         }
-        nearbySuggestions = Array(merged.sorted { $0.distanceMeters < $1.distanceMeters }.prefix(5))
+        // Tekilleştirme ŞART: "Tümü" modunda 8 kategori ayrı ayrı aranıyor ve `.general`
+        // metin sorgusu sonuçları gerçek kategorilerine yeniden damgalandığı için aynı
+        // mekan birden fazla batch'ten dönebiliyor. `NearbyPlace.id` artık isim+koordinattan
+        // türeyen STABİL bir değer olduğundan mükerrer kayıtlar aynı kimliğe çarpar ve
+        // `ForEach` yinelenen ID uyarısı verirdi.
+        var seen = Set<String>()
+        nearbySuggestions = merged
+            .sorted { $0.distanceMeters < $1.distanceMeters }
+            .filter { seen.insert($0.id).inserted }
+            .prefix(5)
+            .map { $0 }
+    }
+
+    /// `addedNearbyIDs` yalnızca bu oturumda eklenenleri bilir; uygulama kapanıp açılınca
+    /// sıfırlanıyor ve kullanıcı AYNI mekanı ikinci kez ekleyebiliyordu. Gerçek koleksiyon
+    /// da kontrol ediliyor (aynı isim + ~50 m yakınlık = aynı mekan).
+    private func isAlreadySaved(_ nearby: NearbyPlace) -> Bool {
+        if addedNearbyIDs.contains(nearby.id) { return true }
+        return placeStore.places.contains { saved in
+            guard saved.name == nearby.name, let coord = saved.coordinate else { return false }
+            return CLLocation(latitude: coord.latitude, longitude: coord.longitude)
+                .distance(from: CLLocation(latitude: nearby.coordinate.latitude,
+                                           longitude: nearby.coordinate.longitude)) < 50
+        }
     }
 
     private func addNearbyPlace(_ nearby: NearbyPlace) {

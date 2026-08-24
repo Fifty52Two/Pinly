@@ -17,7 +17,19 @@ protocol GeocodingProviding: AnyObject {
 // MARK: - NearbySearching
 
 struct NearbyPlace: Identifiable {
-    let id = UUID()
+    /// Kimlik, aynı gerçek mekanın ARAMALAR ARASINDA aynı kalması için isim +
+    /// ~11 m'ye yuvarlanmış koordinattan türetilir; `UUID()` DEĞİLDİR.
+    ///
+    /// Rastgele UUID kullanıldığında her arama aynı mekana yeni bir kimlik veriyordu:
+    /// `ForEach` diff yapamayıp harita pinlerini ve öneri kartlarını komple yıkıp yeniden
+    /// kuruyordu (görünür titreme), "Eklendi" tikleri sıfırlanıyordu ve Keşfet şeridinde
+    /// aynı mekan iki farklı kimlikle mükerrer kart olarak çıkabiliyordu.
+    var id: String {
+        let lat = (coordinate.latitude * 10_000).rounded() / 10_000
+        let lon = (coordinate.longitude * 10_000).rounded() / 10_000
+        return "\(name)|\(lat)|\(lon)"
+    }
+
     let name: String
     let address: String
     let coordinate: CLLocationCoordinate2D
@@ -103,6 +115,13 @@ enum NearbyCategoryResolver {
 /// böylece geniş yarıçap gerçekten daha uzak sonuçlar da getirir.
 enum NearbyResultBander {
     static func diversify(_ places: [NearbyPlace], radius: Double) -> [NearbyPlace] {
+        // `NearbyPlace.id` isim+koordinattan türeyen STABİL bir değer olduğu için, aynı
+        // mekanı iki farklı aramadan (çok merkezli POI taraması, `.general` metin sorgusu)
+        // yakalayan mükerrer kayıtlar aynı kimliğe çarpar. `ForEach` yinelenen ID ile
+        // çalışmaz — tekilleştirme bu yüzden bandlamadan ÖNCE, tek yerde yapılır.
+        var seen = Set<String>()
+        let places = places.filter { seen.insert($0.id).inserted }
+
         guard radius > 1000 else {
             return Array(places.sorted { $0.distanceMeters < $1.distanceMeters }.prefix(25))
         }
