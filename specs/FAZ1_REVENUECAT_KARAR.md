@@ -2,14 +2,17 @@
 
 ## MAĞAZA KURULUMU TAMAMLANDI (2026-07-23) — Sonnet için gerçek değerler
 - RevenueCat proje `proj5955a1be`, App Store app `appc32f960641` (com.farad.pinly), her iki
-  ASC anahtarı işli. **Public SDK key: `appl_RUAmxHPfjrHHoKGQwOmrVllWMiH`** → Info.plist
-  `RevenueCatAPIKey`.
+  ASC anahtarı işli. Public SDK key `Config.xcconfig` içindeki `RevenueCatAPIKey`'den
+  Info.plist'e enjekte edilir (bu dosya `.gitignore`'da). RevenueCat'in public SDK key'i
+  tasarım gereği istemcide görünür bir değerdir, yine de repoya yazılmaz — sırların tek
+  yeri `Config.xcconfig`.
 - Entitlement **`pro`** (`entlb8f28bde64`) · Offering **`default`**: `$rc_monthly` + `$rc_annual`
   paketlerinde gerçek ürünler; Test Store örnek ürünleri de `pro`ya bağlı (StoreKit'siz hızlı test).
 - ASC: abonelik grubu "Pinly Pro", 5 dil lokalizasyon, 175 bölge, yearly'de 7 gün FREE_TRIAL —
   hepsi girildi. Tek eksik review screenshot (paywall UI bitince yüklenecek; o yüzden
   MISSING_METADATA görünür, sandbox akışını ENGELLEMEZ).
-- Sandbox test hesabı: deneme_pinly@tester.com (Türkiye).
+- Sandbox test hesabı: App Store Connect → Users and Access → Sandbox Testers (Türkiye).
+  Hesap adresi/parolası repoya YAZILMAZ.
 
 ## Ürün kurgusu (GÜNCEL — gerçek fiyatlar, 2026-07-23 Ferhat kararı)
 - Entitlement: `pro` · Offering: `default` · Ürünler: `pinly_pro_monthly` **$2.99 / ₺149,99**,

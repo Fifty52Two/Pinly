@@ -632,9 +632,10 @@ struct RouteSummaryView: View {
                                 )
                                 placeStore.pendingBadges.append(contentsOf: newBadges)
                                 showSaveRouteSheet = false
-                                viewModel.showInterstitialThenProceed {
-                                    viewModel.saveRouteSuccess = true
-                                }
+                                // Kaydetme onayının önüne reklam konmuyordu: "Kaydet →
+                                // reklam → Başlat → reklam" zinciri arka arkaya iki tam
+                                // ekran reklam çıkarabiliyordu.
+                                viewModel.saveRouteSuccess = true
                             }
                         )
                         .presentationDetents([.medium])
@@ -668,18 +669,23 @@ struct RouteSummaryView: View {
                         }
                     }
 
+                    // Navigasyon başlatılırken interstitial GÖSTERİLMEZ.
+                    //
+                    // Kullanıcı bu noktada dışarıda, telefonu elinde ve yürümeye hazır;
+                    // uygulamanın çekirdek eylemini tam ekran reklamla bloke etmek güveni
+                    // yıkıyor, yanlış dokunma üretiyor ve "beklenmedik/kesintiye uğratan
+                    // interstitial" tanımına yaklaşıyor. Reklam yalnızca doğal geçiş
+                    // noktalarında kalıyor: rota tamamlama ve link paylaşımı.
                     Button {
-                        viewModel.showInterstitialThenProceed {
-                            viewModel.routeStartDate = Date()
-                            viewModel.recordRouteStarted()
-                            HapticPlayer.routeStarted()
-                            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                                routeManager.isNavigating = true
-                                locationManager.startNavigationTracking()
-                                routeManager.startLiveActivity()
-                            }
-                            Task { await viewModel.requestHealthKitAuthorization() }
+                        viewModel.routeStartDate = Date()
+                        viewModel.recordRouteStarted()
+                        HapticPlayer.routeStarted()
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                            routeManager.isNavigating = true
+                            locationManager.startNavigationTracking()
+                            routeManager.startLiveActivity()
                         }
+                        Task { await viewModel.requestHealthKitAuthorization() }
                     } label: {
                         HStack {
                             Image(systemName: "location.fill")

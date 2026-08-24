@@ -25,6 +25,7 @@ struct ProfileTab: View {
     @State private var showStats = false
     @State private var showEditProfile = false
     @State private var showPaywall = false
+    @State private var showDiagnostics = false
     @State private var profile: UserProfile? = nil
     @State private var profilePhoto: UIImage? = nil
     @State private var pickerItem: PhotosPickerItem? = nil
@@ -237,6 +238,22 @@ struct ProfileTab: View {
                 .listRowBackground(PinlyTheme.surface)
 
                 Section {
+                    // Tanılama günlüğü — `DiagnosticsCollector` MetricKit üzerinden crash/hang
+                    // verisi TOPLUYOR (bkz. PinlyApp.register()) ama bu ekran hiçbir yerden
+                    // açılmadığı için veri görüntülenemiyordu. Beta sırasında cihaz bazlı
+                    // hafif tanılama için değerli.
+                    MoreRow(
+                        icon: "stethoscope",
+                        iconColor: PinlyTheme.slate,
+                        title: NSLocalizedString("Tanılama", comment: ""),
+                        subtitle: NSLocalizedString("Çökme ve takılma günlüğü", comment: "")
+                    ) {
+                        showDiagnostics = true
+                    }
+                }
+                .listRowBackground(PinlyTheme.surface)
+
+                Section {
                     let current = LanguageManager.supported.first { $0.code == languageManager.currentLanguage }
                     MoreRow(
                         icon: "globe",
@@ -257,6 +274,9 @@ struct ProfileTab: View {
             .navigationTitle(NSLocalizedString("Profil", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(.hidden, for: .tabBar)
+        }
+        .sheet(isPresented: $showDiagnostics) {
+            DiagnosticsView()
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView(source: "profile") { showPaywall = false }

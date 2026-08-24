@@ -16,13 +16,29 @@ final class AdManager: NSObject, AdPresenting {
         #endif
     }()
 
+    /// Gösterim sıklığı sınırı. Öncesinde HİÇBİR sınır yoktu: reklam hazırsa her çağrıda
+    /// gösteriliyordu, yani art arda iki kullanıcı eylemi iki tam ekran reklam çıkarabiliyordu.
+    /// Bunlar AdMob'un teknik kuralı değil, ürün kararı — erken aşamada retention, eCPM'den
+    /// çok daha değerli.
+    private static let minimumInterval: TimeInterval = 7 * 60
+    private static let maximumPerSession = 2
+
     private let entitlements: EntitlementProviding
     private var interstitial: InterstitialAd?
     private var onDismissCompletion: (() -> Void)?
+    private var lastShownAt: Date?
+    private var shownThisSession = 0
 
     init(entitlements: EntitlementProviding = LocalEntitlementService.shared) {
         self.entitlements = entitlements
         super.init()
+    }
+
+    /// Sıklık sınırı içinde miyiz? (Pro/hazır-değil kontrolü çağıranda ayrıca yapılır.)
+    private var isWithinFrequencyCap: Bool {
+        guard shownThisSession < Self.maximumPerSession else { return false }
+        guard let lastShownAt else { return true }
+        return Date().timeIntervalSince(lastShownAt) >= Self.minimumInterval
     }
 
     /// UMP/ATT rıza akışı tamamlandıktan SONRA çağrılmalı (bkz. `ConsentManager`) —
@@ -45,7 +61,7 @@ final class AdManager: NSObject, AdPresenting {
     // Pro kullanıcılara reklam gösterilmez.
     // Reklam hazır değilse veya Pro ise completion hemen çağrılır.
     func showInterstitialIfNeeded(then completion: @escaping () -> Void) {
-        guard !entitlements.isPro, interstitial != nil else {
+        guard !entitlements.isPro, interstitial != nil, isWithinFrequencyCap else {
             completion()
             return
         }
@@ -64,6 +80,8 @@ final class AdManager: NSObject, AdPresenting {
             self.onDismissCompletion = completion
             ad.present(from: presenter)
             self.interstitial = nil
+            self.lastShownAt = Date()
+            self.shownThisSession += 1
         }
     }
 

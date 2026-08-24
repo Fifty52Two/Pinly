@@ -114,13 +114,13 @@ Paywall placeholder olduğu sürece App Store'a çıkılamaz; her şey bunun ark
 - [x] ASC'de abonelik grubu "Pinly Pro" + `pinly_pro_monthly`, `pinly_pro_yearly` açıldı.
       **GERÇEKLEŞEN fiyat (plandan farklı, Ferhat kararı):** aylık $2,99 / ₺149,99 —
       yıllık $29,99 / ₺1.499,99 (+7 gün ücretsiz deneme)
-- [x] Sandbox test hesabı: deneme_pinly@tester.com (Türkiye)
+- [x] Sandbox test hesabı oluşturuldu (App Store Connect → Users and Access → Sandbox Testers, Türkiye). Adres/parola repoya yazılmaz.
 
 **Claude (mağaza kurulumu ✅ 2026-07-23):**
 - [x] RevenueCat: App Store app'i `appc32f960641` (com.farad.pinly), entitlement **`pro`**
       (`entlb8f28bde64`), ürünler RevenueCat'te oluşturulup `pro`ya + `default` offering'in
       `$rc_monthly`/`$rc_annual` paketlerine bağlandı (Test Store ürünleri de `pro`da — sandbox testi için).
-      Public SDK key: `appl_RUAmxHPfjrHHoKGQwOmrVllWMiH` (Info.plist `RevenueCatAPIKey`).
+      Public SDK key `Config.xcconfig`'teki `RevenueCatAPIKey`'den Info.plist'e enjekte edilir (gitignore'da).
 - [x] ASC metadata Claude tarafından ASC API ile dolduruldu: 5 dil ürün adı+açıklama, "Pinly Pro"
       grup adı 5 dil, 175 bölge availability, yearly'de 175 bölgede 7 gün FREE_TRIAL intro offer.
       Kalan tek eksik: **review ekran görüntüsü** (gerçek paywall UI'ı çıkınca yüklenecek;

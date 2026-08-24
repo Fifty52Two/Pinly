@@ -11,10 +11,12 @@ Foursquare City Guide Aralık 2024'te kapandı; Türkiye o platformun global tra
 - Turn-by-turn yürüyüş navigasyonu, rota sapması algılama, kilit ekranı Live Activity + Dynamic Island
 - Kayıtlı rotalar, rota geçmişi, haftalık rapor, profil istatistikleri
 - 21 rozetlik ödül sistemi
-- Paylaşım: QR kod, rota linki, GPX/PDF export, Instagram paylaşım kartı, Swarm (Foursquare) import
+- Paylaşım: QR kod, rota linki, Instagram paylaşım kartı
 - Yakınımda önerileri ve Keşfet haritası
 - 5 dil desteği (Türkçe, İngilizce, İspanyolca, Almanca, Rusça), uygulama içinden değiştirilebilir
-- Freemium model (20 mekan ücretsiz limiti) + Ana ekran hızlı ekle widget'ı
+- Ana ekran hızlı ekle widget'ı
+- Freemium: mekan kaydetme ücretsiz ve **sınırsız**; Pinly Pro (abonelik) reklamsız kullanım
+  ile GPX ve PDF dışa aktarma sağlar
 
 ## Teknik Stack
 
@@ -22,7 +24,9 @@ Foursquare City Guide Aralık 2024'te kapandı; Türkiye o platformun global tra
 - MapKit (yürüyüş rotası hesaplama ve harita gösterimi)
 - ActivityKit (Live Activity), WidgetKit
 - HealthKit (adım/mesafe), AVFoundation (QR tarama), CoreImage (QR üretme)
-- Firebase (Crashlytics + Analytics), GoogleMobileAds
+- RevenueCat (abonelik), GoogleMobileAds + UMP consent + App Tracking Transparency
+- Firebase (Crashlytics + Analytics)
+- Supabase (sosyal katman — V1'de kapalı, bkz. Proje Durumu)
 - MVVM + protokol tabanlı servis katmanı mimarisi
 
 ## Gereksinimler
@@ -53,13 +57,23 @@ Pinly/
   Views/       SwiftUI ekranları
   Design/      Tasarım sistemi (Theme.swift)
 PinlyTests/    Unit testler
+content/       Hazır başlangıç rotaları (şehir bazlı JSON katalog)
+specs/         Faz bazlı tasarım kararları
+docs/archive/  Tamamlanmış plan belgeleri (tarihsel — güncel durumu tarif etmez)
 ```
 
 Mimarinin ve her dosyanın detaylı açıklaması için `CLAUDE.md`'ye bakın.
 
 ## Proje Durumu
 
-Uygulama şu an TestFlight beta aşamasında. Güncel yol haritası ve ilerleme durumu için `RELEASE_PLAN.md` dosyasına bakın.
+Uygulama TestFlight beta aşamasında, App Store'a ilk sürüm (V1) hazırlığı sürüyor.
+Güncel yol haritası: `GROWTH_PLAN.md`.
+
+**Sosyal katman (topluluk rotaları, rota yayınlama, Apple ile giriş) V1'de kapalıdır.**
+Kod yerinde duruyor ama arayüzden erişilemez. V1.1'de açılmadan önce şunlar tamamlanmalı:
+uygulama içi hesap silme (App Store Guideline 5.1.1(v)), yayınlanan rota içeriğinin
+kullanıcı notlarından arındırılması, engellemenin sunucu tarafında gerçekten uygulanması
+ve anonim → Apple hesap geçişinde veri taşıma.
 
 ## Lisans
 
