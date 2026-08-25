@@ -28,8 +28,8 @@ final class CommunityFeedViewModel: ObservableObject {
     private var pendingAction: (() -> Void)?
 
     init(
-        social: SocialServicing = SupabaseSocialService.shared,
-        analytics: AnalyticsTracking = NoOpAnalyticsService.shared
+        social: SocialServicing = SocialFeaturePolicy.socialService,
+        analytics: AnalyticsTracking = RuntimeAnalyticsService.shared
     ) {
         self.social = social
         self.analytics = analytics

@@ -47,6 +47,9 @@
 "Bu kategoride mekan bulunamadı" = "В этой категории нет мест";
 "Bu adımı atla" = "Пропустить этот шаг";
 "Arama Yarıçapı" = "Радиус поиска";
+"Listeyi Göster" = "Показать список";
+"Haritayı Göster" = "Показать карту";
+"Sonuçları Yenile" = "Обновить результаты";
 "Anlık konumuna göre hangi mesafedeki mekanlar gösterilsin?" = "На каком расстоянии от тебя показывать места?";
 "Tümü" = "Все";
 "Tüm kayıtlı mekanları göster" = "Показать все сохранённые места";
@@ -308,7 +311,6 @@
 
 // MARK: - Paywall
 "Mekan Limitine Ulaştın" = "Достигнут лимит мест";
-"Ücretsiz planda en fazla %lld mekan kaydedebilirsin.\nSınırsız mekan için Pro'ya geç." = "Бесплатный план — до %lld мест.\nОформи Pro для безлимита.";
 "Sınırsız Mekan" = "Безлимит мест";
 "İstediğin kadar mekan kaydet" = "Сохраняй сколько угодно мест";
 "Sınırsız Rota" = "Безлимит маршрутов";
@@ -325,7 +327,6 @@
 "Satın Alımları Geri Yükle" = "Восстановить покупки";
 "Şimdi Değil" = "Не сейчас";
 "Sınırsız keşif" = "Исследуй без границ";
-"Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç." = "Ты завершил маршрут! Оформи Pro для безлимита мест, экспорта и работы без рекламы.";
 "GPX & PDF Dışa Aktar" = "Экспорт GPX и PDF";
 "Rotalarını dışa aktar ve arşivle" = "Экспортируй и архивируй маршруты";
 "Reklamsız Kullanım" = "Без рекламы";
@@ -451,7 +452,6 @@
 "Foursquare/Swarm geçmişin mi var? checkins.json dosyanı seç, mekanların saniyeler içinde Pinly'de olsun." = "Есть история Foursquare/Swarm? Выберите файл checkins.json — и ваши места окажутся в Pinly за секунды.";
 "Swarm Dosyası Seç" = "Выбрать файл Swarm";
 "%lld mekan içe aktarıldı" = "Импортировано мест: %lld";
-"Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin." = "Бесплатная версия ограничена 20 местами — остальное доступно в Pro.";
 "İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir" = "Подсказка: Swarm → Профиль → Настройки → Скачать мои данные";
 
 // MARK: - Faz 4: Оптимизация маршрута
@@ -613,3 +613,8 @@
 "Henüz ortak rotan yok" = "Пока нет общих маршрутов";
 "Ortak Rota Oluştur ile başlat, linki arkadaşınla paylaş." = "Начните с «Создать общий маршрут» и поделитесь ссылкой с другом.";
 "Katılım bekleniyor" = "Ожидание участника";
+"Konum İzni Ver" = "Разрешить геолокацию";
+"Şimdilik Değil" = "Не сейчас";
+"Profil bilgilerin yalnız bu cihazda saklanır; hesabın oluşturulmaz." = "Профиль хранится только на этом устройстве; аккаунт не создаётся.";
+"Reklam Gizlilik Seçenekleri" = "Настройки конфиденциальности рекламы";
+"Takip iznini reddetmek temel özellikleri kapatmaz. Gerekli bölgelerde reklam gizlilik seçenekleri burada görünür. Pro kullanıcıya reklam gösterilmez." = "Отказ от отслеживания не отключает основные функции. Параметры конфиденциальности рекламы отображаются здесь, когда это требуется. Пользователи Pro не видят рекламу.";

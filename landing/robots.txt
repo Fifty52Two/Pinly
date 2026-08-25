@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# Release blocker: replace with production crawl rules and an absolute Sitemap URL
+# only after the final domain and legal content are approved.

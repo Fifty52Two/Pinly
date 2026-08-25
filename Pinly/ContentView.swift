@@ -9,6 +9,7 @@ struct ContentView: View {
     @Environment(\.routeURLCoding) private var routeURLCoding
     @Environment(\.notificationScheduling) private var notificationScheduling
     @Environment(\.analytics) private var analytics
+    @Environment(\.profile) private var profileService
     @EnvironmentObject var placeStore: PlaceStore
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var routeManager: RouteManager
@@ -21,6 +22,7 @@ struct ContentView: View {
     @State private var showRouteImportSheet = false
     @AppStorage("pinly.hasSeenOnboarding") private var hasSeenOnboarding = false
     @AppStorage("pinly.hasSetupProfile") private var hasSetupProfile = false
+    @AppStorage("pinly.hasDeferredLocationPermission") private var hasDeferredLocationPermission = false
     @State private var hasRequestedAdConsent = false
 
     var body: some View {
@@ -28,6 +30,7 @@ struct ContentView: View {
             if !hasSeenOnboarding {
                 OnboardingView {
                     hasSeenOnboarding = true
+                    analytics.track(.onboardingComplete)
                     // Bildirim izni artık burada İSTENMEZ — izin isteme anı değere bağlı,
                     // Haftalık Rapor ekranındaki CTA'dan istenir (FAZ 5.4)
                 }
@@ -36,13 +39,12 @@ struct ContentView: View {
                     hasSetupProfile = true
                 }
             } else {
-                switch locationManager.authorizationStatus {
-                case .notDetermined:
-                    PermissionView()
-                        .onAppear { locationManager.requestPermission() }
-                case .denied, .restricted:
-                    LocationDeniedView()
-                default:
+                if locationManager.authorizationStatus == .notDetermined && !hasDeferredLocationPermission {
+                    PermissionView(
+                        onAllow: { locationManager.requestPermission() },
+                        onSkip: { hasDeferredLocationPermission = true }
+                    )
+                } else {
                     HomeView()
                         .environmentObject(placeStore)
                         .environmentObject(locationManager)
@@ -56,7 +58,12 @@ struct ContentView: View {
             // Koyu mod tasarımı henüz tamamlanmadı — kullanıcı seçimi geçici olarak devre dışı,
             // uygulama sabit açık görünümde kalıyor (bkz. ProfileTab'daki "Görünüm" satırı kaldırıldı).
             applyAppearance("light")
-            requestAdConsentIfNeeded()
+            if hasSeenOnboarding && hasSetupProfile {
+                requestAdConsentIfNeeded()
+            }
+        }
+        .onChange(of: hasSetupProfile) { _, isComplete in
+            if isComplete { requestAdConsentIfNeeded() }
         }
         .onOpenURL { url in
             if url.host == "navigation" {
@@ -139,7 +146,8 @@ struct ContentView: View {
     private func requestAdConsentIfNeeded() {
         guard !hasRequestedAdConsent else { return }
         hasRequestedAdConsent = true
-        ConsentManager.shared.requestConsentAndTracking {
+        let audience = AdAudiencePolicy.category(profile: profileService.load())
+        ConsentManager.shared.requestConsentAndTracking(audience: audience) {
             guard ConsentManager.shared.canRequestAds else { return }
             MobileAds.shared.start { _ in }
             AdManager.shared.beginLoadingAds()
@@ -191,6 +199,7 @@ struct ContentView: View {
         modelContext.insert(route)
         try? modelContext.save()
         badges.recordSavedRoute()
+        analytics.track(.routeCreated)
         placeStore.refreshBadges()
     }
 

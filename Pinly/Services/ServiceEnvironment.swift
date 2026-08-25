@@ -75,7 +75,7 @@ private struct PlacePhotosKey: EnvironmentKey {
 }
 
 private struct AnalyticsKey: EnvironmentKey {
-    static let defaultValue: AnalyticsTracking = NoOpAnalyticsService.shared
+    static let defaultValue: AnalyticsTracking = RuntimeAnalyticsService.shared
 }
 
 private struct PurchasesKey: EnvironmentKey {

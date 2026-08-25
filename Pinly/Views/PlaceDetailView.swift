@@ -44,11 +44,13 @@ struct PlaceDetailView: View {
                     } label: {
                         Image(systemName: "square.and.arrow.up")
                     }
+                    .accessibilityLabel(NSLocalizedString("Paylaş", comment: ""))
                     Button {
                         showEdit = true
                     } label: {
                         Image(systemName: "pencil")
                     }
+                    .accessibilityLabel(NSLocalizedString("Düzenle", comment: ""))
                 }
             }
         }

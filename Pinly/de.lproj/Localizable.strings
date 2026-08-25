@@ -47,6 +47,9 @@
 "Bu kategoride mekan bulunamadı" = "Keine Orte in dieser Kategorie";
 "Bu adımı atla" = "Diesen Schritt überspringen";
 "Arama Yarıçapı" = "Suchradius";
+"Listeyi Göster" = "Liste anzeigen";
+"Haritayı Göster" = "Karte anzeigen";
+"Sonuçları Yenile" = "Ergebnisse aktualisieren";
 "Anlık konumuna göre hangi mesafedeki mekanlar gösterilsin?" = "In welchem Umkreis sollen Orte angezeigt werden?";
 "Tümü" = "Alle";
 "Tüm kayıtlı mekanları göster" = "Alle gespeicherten Orte anzeigen";
@@ -308,7 +311,6 @@
 
 // MARK: - Paywall
 "Mekan Limitine Ulaştın" = "Du hast das Ortslimit erreicht";
-"Ücretsiz planda en fazla %lld mekan kaydedebilirsin.\nSınırsız mekan için Pro'ya geç." = "Der kostenlose Plan erlaubt %lld Orte.\nHol dir Pro für unbegrenzte Orte.";
 "Sınırsız Mekan" = "Unbegrenzte Orte";
 "İstediğin kadar mekan kaydet" = "Speichere beliebig viele Orte";
 "Sınırsız Rota" = "Unbegrenzte Routen";
@@ -325,7 +327,6 @@
 "Satın Alımları Geri Yükle" = "Käufe wiederherstellen";
 "Şimdi Değil" = "Nicht jetzt";
 "Sınırsız keşif" = "Entdecken ohne Grenzen";
-"Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç." = "Du hast eine Route abgeschlossen! Hol dir Pro für unbegrenzte Orte, Export und ein werbefreies Erlebnis.";
 "GPX & PDF Dışa Aktar" = "GPX- & PDF-Export";
 "Rotalarını dışa aktar ve arşivle" = "Exportiere und archiviere deine Routen";
 "Reklamsız Kullanım" = "Werbefreie Nutzung";
@@ -451,7 +452,6 @@
 "Foursquare/Swarm geçmişin mi var? checkins.json dosyanı seç, mekanların saniyeler içinde Pinly'de olsun." = "Du hast eine Foursquare/Swarm-Historie? Wähle deine checkins.json und deine Orte sind in Sekunden in Pinly.";
 "Swarm Dosyası Seç" = "Swarm-Datei wählen";
 "%lld mekan içe aktarıldı" = "%lld Orte importiert";
-"Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin." = "Die Gratisversion ist auf 20 Orte begrenzt – den Rest schaltest du mit Pro frei.";
 "İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir" = "Tipp: Swarm → Profil → Einstellungen → Meine Daten laden";
 
 // MARK: - Faz 4: Routen-Optimierung
@@ -613,3 +613,8 @@
 "Henüz ortak rotan yok" = "Noch keine gemeinsamen Routen";
 "Ortak Rota Oluştur ile başlat, linki arkadaşınla paylaş." = "Starte mit Gemeinsame Route erstellen und teile den Link mit einem Freund.";
 "Katılım bekleniyor" = "Warte auf einen Teilnehmer";
+"Konum İzni Ver" = "Standort erlauben";
+"Şimdilik Değil" = "Nicht jetzt";
+"Profil bilgilerin yalnız bu cihazda saklanır; hesabın oluşturulmaz." = "Dein Profil bleibt auf diesem Gerät; es wird kein Konto erstellt.";
+"Reklam Gizlilik Seçenekleri" = "Datenschutzoptionen für Werbung";
+"Takip iznini reddetmek temel özellikleri kapatmaz. Gerekli bölgelerde reklam gizlilik seçenekleri burada görünür. Pro kullanıcıya reklam gösterilmez." = "Das Ablehnen von Tracking deaktiviert keine Kernfunktionen. Datenschutzoptionen für Werbung werden hier angezeigt, wenn sie erforderlich sind. Pro-Nutzer sehen keine Werbung.";

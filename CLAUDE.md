@@ -1,275 +1,42 @@
-# CLAUDE.md
+# Pinly Repository Guide
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Bu dosya kısa bir yönlendirme katmanıdır. Güncel ürün ve geliştirme gerçeği için:
 
----
+1. `AGENTS.md`
+2. `docs/FINAL_RELEASE_STATUS.md`
+3. production Swift kodu ve testler
+4. `README.md`
 
-## Komutlar
+`docs/archive/` ve `specs/` tarihsel karar kaydıdır; bugünkü ürün davranışını tek başına tarif etmez.
+
+## Release modu
+
+- Aktif branch: `codex/release-hardening-v1`.
+- V1 feature freeze içindedir; release blocker dışında özellik eklenmez.
+- Social/community, hesap ve Supabase yazma yolları V1 production composition root'unda kapalıdır.
+- Free: sınırsız mekan, rota planlama ve navigasyon.
+- Pro: reklamsızlık, GPX ve PDF dışa aktarma.
+- RevenueCat/StoreKit gerçek satın alma kaynağıdır; fiyatlar hardcode edilmez.
+- Release reklam kimlikleri, website hostu ve App Store ID yalnız ignored `Config.local.xcconfig` üzerinden gelir.
+
+## Güvenli doğrulama
 
 ```bash
-# Derleme (simülatör)
-xcodebuild -scheme Pinly -destination 'platform=iOS Simulator,name=iPhone 16' build
+xcodebuild -project Pinly.xcodeproj -scheme Pinly \
+  -destination 'platform=iOS Simulator,name=iPhone 16 Pro' build-for-testing
 
-# Tüm testleri koştur
-xcodebuild -scheme Pinly -destination 'platform=iOS Simulator,name=iPhone 16' test
+xcodebuild -project Pinly.xcodeproj -scheme Pinly -configuration Release \
+  -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
 
-# Tek test sınıfı veya metodu
-xcodebuild -scheme Pinly -destination 'platform=iOS Simulator,name=iPhone 16' \
-  test -only-testing:PinlyTests/RouteManagerDeviationTests
-
-# App icon yeniden üret (macOS'ta çalışır, AppKit gerekir)
-swift scripts/generate_icon.swift
+./scripts/release_preflight.sh
 ```
 
-> Test target'ı `PinlyTests` pbxproj'a eklenmiş durumda.
-> Testler XCTest + in-memory `ModelContainer` kullanıyor; `PinlyTests/Mocks/` altında 10 mock var.
-> Paylaşılan Xcode scheme (`Pinly.xcodeproj/xcshareddata/xcschemes/Pinly.xcscheme`) mevcut —
-> GitHub Actions CI (`.github/workflows/ci.yml`) temiz checkout'ta çalışabiliyor.
-> Büyüme sprinti (arka plan nav, hazır rotalar, Swarm onboarding, rota optimize, seri bildirimi,
-> Yakınımda, MetricKit) tamamlandı — detay `docs/archive/SPRINT_PLAN.md`.
+Simulator adı yerelde farklıysa `xcrun simctl list devices available` çıktısından mevcut bir iPhone seç.
 
----
+## Koruma kuralları
 
-# Pinly — Proje Bağlamı
-
-## Proje Nedir
-iOS SwiftUI uygulaması. Mekan kaydetme + yürüyüş rotası planlama + turn-by-turn navigasyon.
-Foursquare City Guide Aralık 2024'te kapandı — Türkiye global trafiğin %9'unu oluşturuyordu.
-Bu boşluğu doldurmak için konumlanmış. Türkiye + turist odaklı, ilerleyen süreçte MENA/Balkanlar.
-
-## Hedef
-Freemium model, $4.99/ay Pro. 18 ayda 100K kullanıcı → $8-15K/ay gelir.
-
-> **Aktif plan: `GROWTH_PLAN.md`** (RevenueCat, Anı Günlüğü, hazır rota fabrikası, Supabase sosyal
-> katman, UI yenileme, pazarlama + fiyat/gelir modeli) — yeni oturum önce bunu okumalı.
-> Faz bazlı tasarım kararları `specs/` altında.
->
-> ⚠️ `docs/archive/` altındaki belgeler (ROADMAP, IMPROVEMENT_PLAN, MASTER_PLAN, RELEASE_PLAN,
-> SPRINT_PLAN) **tarihsel kayıttır ve kodun bugünkü hâliyle çelişir** — kaynak olarak kullanma
-> (bkz. `docs/archive/README.md`).
-
-## Teknik Stack
-- SwiftUI + SwiftData (iOS 17+)
-- MapKit (MKDirections yürüyüş rotası, MKMapView UIViewRepresentable + yeni Map API karışık)
-- ActivityKit (Live Activity kilit ekranı + Dynamic Island), WidgetKit (Hızlı Ekle widget'ı)
-- HealthKit (adım + mesafe), AVFoundation (QR tarama), CoreImage (QR üretme)
-- GoogleMobileAds (interstitial, gerçek AdMob ID'leri girili) + UMP consent + App Tracking Transparency
-- Firebase Crashlytics + Analytics (gerçek olay takibi; `FirebaseAnalyticsService: AnalyticsTracking`)
-- Deep link: `pinly://` scheme (eski `notiongo://` backwards compat)
-- Xcode projesi: `Pinly.xcodeproj` — target'lar: `Pinly` (app), `PinlyLiveActivityExtension` (widget extension, kaynak klasörü `PinlyLiveActivity/`), `PinlyTests` (unit test bundle — target pbxproj'a eklenmiş, testler koşuyor)
-
-## SourceKit Uyarıları Hakkında
-SourceKit "Cannot find X in scope" hataları FALSE POSITIVE'dir.
-SourceKit'in Xcode build context'i yoktur. Xcode'da compile edilir, sorun yoktur.
-Bu hatalar için kod değiştirme.
-
----
-
-# MİMARİ
-
-**MVVM + protokol tabanlı servis katmanı.** Composition root `PinlyApp`; servisler SwiftUI Environment üzerinden inject edilir. Eski static `FreemiumManager` ve `BadgeManager` SİLİNDİ — asla referans verme.
-
-```
-PinlyApp (composition root)
-  ├─ .modelContainer([Place, RouteHistory, SavedRoute])   ← SwiftData
-  ├─ .environment(\.entitlements, LocalEntitlementService.shared)  ← EntitlementProviding
-  ├─ .environment(\.badges,       DefaultBadgeService.shared)      ← BadgeServicing
-  ├─ .environment(\.ads,          AdManager.shared)                ← AdPresenting
-  └─ .environmentObject(LanguageManager)
-       ContentView
-         ├─ OnboardingView (ilk açılış, pinly.hasSeenOnboarding)
-         ├─ PermissionView / LocationDeniedView (konum izni durumuna göre)
-         └─ HomeView (TabView) — PlaceStore, LocationManager, RouteManager
-              burada @StateObject olarak yaşar ve environmentObject ile dağıtılır
-```
-
-## Katmanlar
-
-### `Pinly/Services/` — Protokol tabanlı servisler (DIP)
-| Dosya | İçerik |
-|---|---|
-| `ServiceEnvironment.swift` | `\.entitlements`, `\.badges`, `\.ads`, `\.geocoding`, `\.healthStats`, `\.savedRoutes`, `\.routeURLCoding`, `\.swarmImporting`, `\.routeExporting`, `\.weeklyStats`, `\.notificationScheduling`, `\.qrCodeGenerator`, `\.profile` EnvironmentKey'leri. Default value'lar gerçek singleton'lar → preview'lar kurulum istemez, testte mock inject edilir. |
-| `EntitlementService.swift` | `EntitlementProviding` (isPro get/set, `canAddPlace(currentCount:)`) + iki implementasyon: `LocalEntitlementService` (UserDefaults `pinly.isPro`, DEBUG'da kullanılır) ve `RevenueCatEntitlementService` (Release'te gerçeğin TEK kaynağı; `customerInfoStream` dinler, sonucu `pinly.isPro`'ya AYNA yazar — böylece `LocalEntitlementService.shared`'ı default alan ViewModel'ler de güncel kalır). **`canAddPlace` artık koşulsuz `true` döner — 20 mekanlık freemium limiti KALDIRILDI**, `freeLimit` de silindi. Pro'nun karşılığı: reklamsız kullanım + GPX/PDF export. |
-| `BadgeService.swift` | `BadgeServicing` + `DefaultBadgeService`: 21 rozetin kilit mantığı (`check(placeStore:)` yeni açılanları döndürür), sayaçlar UserDefaults'ta (`pinly.completedRoutes`, `pinly.sharedRoutes`, `pinly.savedRoutes`, `pinly.consecutiveDays`, sabah/gece rota bayrakları). `recordAppOpen()` gün serisini hesaplar. |
-| `AdService.swift` | `AdPresenting` protokolü: `showInterstitialIfNeeded(then:)` — Pro'ya, reklam hazır değilse veya sıklık sınırı aşıldıysa completion hemen çalışır. |
-| `GeocodingService.swift` | `GeocodingProviding`: `forwardGeocode(query:)` / `reverseGeocode(coordinate:)`. `DefaultGeocodingService` MKLocalSearch + CLGeocoder sarmalıyor; testte mock enjekte edilir. |
-| `HealthKitService.swift` | `HealthStatsProviding`: `requestAuthorization()` + `fetchRouteStats(from:to:)` (adım+mesafe). |
-| `QRCodeGenerating.swift` | `QRCodeGenerating` protokolü: CoreImage tabanlı QR üretimi (`SharePlaceView`'de kullanılır). |
-| `ProfileService.swift` | `ProfileProviding` + `DefaultProfileService`: `UserProfile` (ad/soyad/doğum yılı) kalıcılığı `pinly.userProfile` UserDefaults anahtarında; profil fotoğrafı `Documents/profile_photo.jpg` (800px küçültme, 0.85 JPEG). `UserProfile` struct'ı kendisi yalnızca alanlar + `age`/`fullName`/`initials` computed'ları taşır, IO içermez. |
-| `AnalyticsService.swift` | `AnalyticsTracking` protokolü + `AnalyticsEvent` enum (place_added/route_started/route_completed/route_shared/paywall_shown/nearby_search). `FirebaseAnalyticsService` gerçek implementasyon (`\.analytics` environment key), `NoOpAnalyticsService` DEBUG/preview/test için. |
-| `ConsentManager.swift` | UMP (Google User Messaging Platform) rıza formu + App Tracking Transparency akışı. `AdManager.beginLoadingAds()` rızadan SONRA çağrılır. |
-| `DiagnosticsService.swift` | `DiagnosticsCollector`: MetricKit abonesi, crash/hang verisini UserDefaults'ta en fazla 50 satır tutar, profil ekranında (`DiagnosticsView`) gösterir — Crashlytics'e ek, cihaz bazlı hafif tanılama. |
-| `FeatureFlags.swift` | `isTestFlightBuild` (Release + sandbox receipt algısı) + `unlimitedPlacesInBeta`. NOT: mekan limiti artık HER build'de kaldırıldığı için bu bayrağın pratik etkisi kalmadı. |
-
-### `Pinly/Managers/` — ObservableObject state yöneticileri
-| Dosya | Rol |
-|---|---|
-| `PlaceStore.swift` | Place CRUD + `@Published places`. `addPlace` koordinat verilmezse MKLocalSearch ile geocode eder (isim+adres, sonra sadece adres fallback). `refreshBadges()` → `pendingBadges` kuyruğu → HomeView'de `BadgeBannerView`. `places(category:userLocation:radiusKm:)` kategori+yarıçap filtresi (rota akışında kullanılır; radiusKm 0 = sınırsız). `load(context:)` her çağrıda bir defalık, idempotent kategori migrasyonu da yapar (eski TR kategori string'lerini kanonik `PlaceCategory.rawValue`'ya çevirir). |
-| `RouteManager.swift` | **Navigasyonun beyni.** @MainActor. `routePlaces: [Place]` **tek gerçek kaynak** (stored `@Published`, artık computed değil). Rota verisi: `routePolylines`/`stepsPerSegment`/`segmentDistances` — hepsi `routePlaces` ile indeks hizalı; **başarısız segment boş placeholder alır, compactMap'le düşürme (bug B1)**. `setRoute(places:name:)` kategori akışını atlayan çağıranlar için (tek mekan, kayıtlı rota) — doğrudan `routePlaces` atar. `commitCategorySelection()` kategori seçim akışının (`selectedCategories`/`selectedPlaces` geçici çalışma alanı) sonunda `routePlaces`'i mühürler — çağıran (`PlacePickerStepView`) bunu `RouteSummaryView`'e geçmeden HEMEN ÖNCE, senkron çağırır (onAppear sıralamasına güvenmek riskli — RouteSummaryView'in kendi onAppear'ı routePlaces'i boşken okuyup rota hesaplamasını sessizce boş bırakabilirdi). `calculateRoutes` paralel MKDirections (TaskGroup). `calculateRoutes` kullanıcı konumu YOKKEN başa boş placeholder segment ekler (segment[i] ↔ durak[i] hizası bozulmasın; placeholder'ı sapma kontrolü konumdan doldurur). `updateNavigation`: 30 m durak varışı → ara durakta `isPausedAtStop`, son durakta `completeRoute`; adım ilerletme 20 m eşiği (adım polyline'ının SON noktasına göre — `.coordinate` orta noktayı verdiği için kullanılmaz); rotadan sapma >75 m → 10 sn cooldown'lu yeniden hesaplama (`minimumDistanceToPolyline` nokta→doğru-parçası izdüşüm mesafesi kullanır, sadece köşe noktalarına bakmaz). Live Activity çağrıları (`startLiveActivity`/`updateLiveActivity`/`endLiveActivity`) dışa aynı imzayla kalan ince sarmalayıcılar — gerçek iş `RouteLiveActivityController`'da. |
-| `RouteLiveActivityController.swift` | Kilit ekranı Live Activity (ActivityKit) yönetiminin somut implementasyonu — `RouteManager`'dan ayrılmış. `LiveActivitySnapshot` (Place tipini hiç bilmez) alıp `start`/`update`/`end` yapar; `RouteLiveActivityPresenting` protokolü burada tanımlı. `RouteManager` bu protokole artık conform DEĞİL (hiçbir yerde protokol tipi olarak referans verilmiyor), sadece `private let liveActivityController` tutar. |
-| `LocationManager.swift` | İzin `requestPermission()` ile ONBOARDING SONRASI istenir (init'te değil). Normalde tek seferlik konum (100 m doğruluk, pil dostu) + reverse geocode → `currentDistrict`. `startNavigationTracking()`: 10 m doğruluk/filtre + 2 saat güvenlik timer'ı. |
-| `SavedRouteManager.swift` | Static yardımcılar: `save` (merkez = koordinat ortalaması, koordinat yoksa İstanbul default — (0,0) yazma, bug B10), `distanceKm` (uzaklık uyarısı), `delete`. |
-| `LanguageManager.swift` | Uygulama içi dil değiştirme: Bundle swizzle (`BundleEx.localizedString`) + `pinly.appLanguage`. `refreshID` değişince HomeView `.id()` ile yeniden kurulur. Diller: tr/en/es/de/ru. |
-| `WeeklyReportManager.swift` | `WeeklyStats` hesabı (son 7 gün RouteHistory + tüm mekanlardan top kategori/ilçe) + Pazar 09:00 tekrarlı lokal bildirim. |
-| `AdManager.swift` | `AdPresenting` somut implementasyonu; AdMob interstitial, entitlements constructor-injected. Sonraki reklamı `adDidDismissFullScreenContent`'te önceden yükler (present öncesi + didFail'de çifte yükleme riski giderildi). Gerçek AdMob ID kullanıyor. |
-
-### `Pinly/Models/` — Veri modelleri
-| Dosya | İçerik |
-|---|---|
-| `Place.swift` | @Model: name, category (String!), address, notes, isVisited, visitCount, userRating(1-5), lat/lon optional, createdAt. `PlaceCategory` enum (8 kategori, renk+ikon). **DB'de eski Türkçe kategori string'leri var → daima `PlaceCategory.from(_:)` kullan, `init(rawValue:)` değil.** |
-| `SavedRoute.swift` | @Model: önceden planlanmış rota. Mekanlar `SavedPlaceSnapshot` (Codable) olarak JSON `Data` içinde — Place silinse de rota bozulmaz. `centerLatitude/Longitude` uzaklık uyarısı + thumbnail için. `isPublic`/`supabaseId` sosyal faz için hazır, kullanılmıyor. |
-| `RouteHistory.swift` | @Model: tamamlanan rota kaydı (placeNames kopya olarak, mesafe/süre/adım/kategori). |
-| `Badge.swift` | 21 rozetlik enum: başlık/açıklama lokalize key'lerden, ikon+renk, `progressText(placeStore:badges:)` kilitli rozet ilerlemesi. Kilit MANTIĞI `DefaultBadgeService.check`'te. |
-| `PlaceImporter.swift` | Tüm import/export tek yerde: tek mekan URL build/parse (`pinly://addplace?...`), rota URL (`pinly://route?data=<base64 JSON>`; yeni format `{places,name,category}` + eski düz array kabul), Swarm `checkins.json` parse (venue ID tekilleştirme, Foursquare kategori eşlemesi), GPX/PDF export (dosya adı sanitize edilir — bug B9), `save(_:placeStore:context:)` ortak import kaydı (koordinat varsa geocode atlanır). `RouteCategory` enum (Şehir İçi/Şehir Dışı/Yurt Dışı) burada. |
-| `PinlyActivityAttributes.swift` | Live Activity ContentState (talimat, kalan mesafe, durak x/y, tamamlanma %). **Her iki target'a da ekli olmalı** (`Pinly.xcodeproj/project.pbxproj`'daki `PBXFileSystemSynchronizedBuildFileExceptionSet` ile `PinlyLiveActivityExtension` target'ına açıkça eklenmiş — klasör yeniden adlandırılırsa bu exception'ın yolu da elle güncellenmeli). |
-| `UserProfile.swift` | Codable struct: firstName/lastName/birthYear + `age`/`fullName`/`initials`. Kalıcılık `Pinly/Services/ProfileService.swift` üzerinden (`ProfileProviding`, `pinly.userProfile` UserDefaults key + `Documents/profile_photo.jpg`). |
-
-### `Pinly/Design/` — Tasarım sistemi
-**TEK tema, "seigaiha"** (dual-theme/`ThemeManager.swift`/`ThemeStyle` SİLİNDİ — eski "slate/lavender" ayrımına asla referans verme). 2026-07 itibarıyla palet: krem/kağıt zemin + sage yeşili + toz mavi-gri + koyu lacivert (katmanlı dağ silueti + Japon dalga deseninden esinli illüstrasyon referansı). `Theme.swift`: `PinlyTheme` enum, sistem light/dark'a otomatik uyan renk token'ları — `primary` (toz mavi-gri, dark'ta açılır), `accent` (toprak/terracotta), `gold`/`slate` destek renkleri (bunlar tema DEĞİL, sabit renk isimleri; `slate` artık sage yeşili, `success` doğal biçimde ona bağlı), `ground`/`surface` zemin/yüzey. `navy` (#221E2B) tab bar + paylaşım kartı gibi her modda koyu kalması gereken yüzeyler için sabit. `PinlyPrimaryButtonStyle`, `PinlySecondaryButtonStyle`, `.pinlyCard()` (gölge yerine ince kontur), `StatChip`. **Yeni bileşenler renkleri BURADAN alır, hardcode etme.** Kullanıcı hâlâ sistem görünümünü (light/dark/system) `ProfileTab`'dan seçebiliyor — bu `Theme.swift`'in kendi light/dark uyarlamasıdır, ayrı bir tema sistemi değil.
-`WavePattern.swift`: seigaiha (iç içe yarım daire dalga) deseni üreten vektör `Shape` — SADECE dekoratif doku (onboarding zemini, RouteShareCard, SavedRoutesView boş durumu), raster/SVG DEĞİL (bkz. Kararlar & Notlar, illüstrasyon kartlarına dönülmedi).
-`ConfettiView.swift`: rota tamamlama kutlaması için basit parçacık animasyonu.
-
-### `Pinly/Views/` — Ekranlar
-
-**Kök & sekmeler:**
-- `ContentView.swift` — onboarding/profil kurulumu/izin/ana yönlendirme; deep link handler (`addplace` → ImportConfirmView, `route` → RouteImportView, `navigation` → HomeView'e bırakılır); import'larda freemium gate.
-- `Views/home/HomeView.swift` — 4 sekmeli TabView + rozet banner overlay + `pinly://navigation` ve `pinly://quickadd` handler'ları.
-- `Views/home/MainTab.swift` — Ana sekme: selamlama, StatChip şeridi, hero "Rota Planla" (→MapView), 4 hızlı aksiyon (Mekanlarım/Mekan Ekle/QR Tara/Rota Tasarla), Son Eklenenler (SF Symbol kategori ikonlu kartlar).
-- `DiscoverView.swift` — Keşfet: kategori grid → `CategoryPlacesView` (Gidilecek/Ziyaret Edildi bölümleri).
-- `SavedRoutesView.swift` — Rotalar sekmesi: @Query ile SavedRoute listesi, harita thumbnail'li kartlar, >1 km uzaklık uyarısı, swipe Düzenle/Sil. `loadAndStart`: snapshot'ları İSİMLE Place'e eşler (bulunamazsa koordinatlı geçici Place), `routeManager.setRoute` → RouteSummaryView fullScreenCover.
-- `Views/home/ProfileTab.swift` (`struct ProfileTab`) — Profil sekmesi: avatar+isim+mini istatistikler, görünüm (light/dark/system — `pinly.appearance`), İstatistiklerim/Geçmiş/Haftalık Rapor/Rozetler/Dil seçici. Tema seçici YOK (tek tema, bkz. `Design/`).
-- `ProfileSetupView.swift` — onboarding sonrası tek seferlik ad/soyad/doğum yılı formu (`pinly.hasSetupProfile`); `ProfileView.swift` — profil düzenleme.
-
-**Mekan CRUD:**
-- `Views/home/PlacesListView.swift` + `PlacesListViewModel.swift` — liste; arama/kategori chip/sıralama mantığı ViewModel'de (saf fonksiyonlar, test edilebilir; sıralama tercihi `pinly.sortOption`). Toolbar: sırala/Swarm import (fileImporter)/QR/ekle(gate). Swipe: sil+paylaş / ziyaret toggle.
-- `AddPlaceView.swift` / `EditPlaceView.swift` (+ `AddPlaceViewModel`/`EditPlaceViewModel`/`PlaceFormViewModel`/`PlaceFormComponents.swift`) — form; 3 konum yöntemi: adres yaz (geocode), mevcut konum, **Haritada Pinle** → `MapPinPickerView.swift` + `MapPinPickerViewModel.swift` (sabit merkez pin, harita altında kayar, kamera durunca reverse geocode — Uber deseni).
-- `PlaceDetailView.swift` — salt okunur detay + harita önizleme + Düzenle/Paylaş.
-- `QuickAddSheet.swift` + `QuickAddViewModel.swift` — widget deep link'inden hızlı ekleme (konum otomatik).
-- `SharePlaceView.swift` — QR üretimi (CoreImage) + ShareLink. `QRScannerView.swift` + `QRScannerViewModel.swift` — AVFoundation tarama + `ImportConfirmView` + freemium gate.
-
-**ViewModel katmanı:** Çoğu ekranın state/iş mantığı ayrı `@MainActor final class ...ViewModel: ObservableObject` dosyasında (`AddPlaceViewModel`, `EditPlaceViewModel`, `MapViewModel`, `MapPinPickerViewModel`, `PlanRouteViewModel`, `RouteSummaryViewModel`, `PlacePickerStepViewModel`, `QuickAddViewModel`, `QRScannerViewModel`, `SavedRoutesViewModel`, `MainTabViewModel`, `PlaceFormViewModel`). Desen: stateful/oturuma-özel bağımlılıklar (RouteManager, PlaceStore, ModelContext) constructor'da tutulmaz — metodlara parametre geçirilir; sadece varsayılan singleton'ı olan servisler (badges/entitlements/ads/geocoding/healthStats/savedRoutes/routeExporter) constructor injection ile alınır. Bu sayede mock'larla test edilebilirler (bkz. `PinlyTests/`).
-
-**Rota akışı 1 — anlık rota (MapView'den):**
-```
-MapView (tüm mekanlar MKMapView'de; pin'e dokun → PlaceCard: Navigate Here/düzenle/sil)
-  └─ "Rota Oluştur" → CategoryPickerView (kategori çoklu seç)
-       → CategoryOrderingView (sürükle sırala)
-       → PlacePickerStepView (kategori başına 1+ mekan ÇOKLU seçilebilir — toggle + "Devam Et" butonu, otomatik ilerleme yok; yarıçap filtresi @AppStorage searchRadiusKm, recursive navigationDestination)
-       → RouteSummaryView
-```
-`routeManager.selectedCategories`/`selectedPlaces` bu akışta SADECE kategori seçim adımlarının geçici çalışma alanı (gerçek kategori adlarıyla anahtarlanır; `selectedPlaces: [String: [Place]]` — kategori başına SIRALI dizi, rota sırası = seçim sırası). Son adımda `PlacePickerStepView` → `routeManager.commitCategorySelection()` çağrısıyla `routePlaces`'e mühürlenir; bu çağrı `RouteSummaryView`'e geçişle SENKRON yapılır (geçişten önce), onAppear sıralamasına güvenilmez. `setRoute(places:)` (tek mekan/kayıtlı rota akışı) `routePlaces`'e doğrudan atar — kategori seçim state'ine hiç dokunmaz.
-
-**Rota akışı 2 — önceden planla:** `PlanRouteView.swift` (3 adım: MapReader pin bırak → pine mesafeyle sıralı mekan çoklu seç → isim+kategori) → SavedRoute yazar. `editingRoute` parametresiyle düzenleme modu (snapshot eşleşmesi İSİMLE — kırılgan, bilinen sorun).
-
-**`RouteSummaryView.swift` — navigasyon merkezi:** harita (`NavigationMapView`) + durak listesi + alt buton alanı. Navigasyon öncesi: Linki Paylaş (interstitial→`RouteSharePickerView`), Rotayı Kaydet (`SaveRouteSheet`), GPX/PDF (Pro gate), Navigasyonu Başlat (badge `recordRouteStarted` + HealthKit izni + Live Activity). Navigasyonda: `NavigationBanner` (talimat+ilerleme), durakta duraklama → not ekleme + puanlama (`RatingSheetView`) + "Sonraki Durağa Git". Tamamlanınca: badge/history/HealthKit kaydı → interstitial → `RouteCompletionOverlay` → `RouteShareCard.swift` (ImageRenderer ile 1080×1350 Instagram kartı).
-
-**`\.dismissRouteFlow` environment key'i (MapView.swift'te tanımlı):** RouteSummaryView'i sunan HER fullScreenCover bunu set ETMELİ (MapView tek mekan, SavedRoutesView, HomeView deep link) — yoksa X butonu ve tamamlama overlay'i no-op olur, kullanıcı ekranda kilitli kalır (bug B5).
-
-- `NavigationMapView.swift` — UIViewRepresentable; navigasyonda `.follow` tracking, değilse region yalnızca DEĞİŞİNCE set edilir (B2); overlay/annotation yalnızca içerik değişince yeniden kurulur (B3/B4); tamamlanan segmentler yeşil çizilir; sonraki durakta pulse animasyonlu annotation.
-
-**Diğer:** `OnboardingView.swift` (3 sayfa; bitince konum izni + haftalık bildirim), `PaywallView.swift` (**bilinçli placeholder** — "Pro'ya Geç" ödemesiz isPro=true yapar; RevenueCat TODO'ları içinde), `BadgesView.swift` (grid + kilitli ilerleme + `BadgeBannerView`), `RouteHistoryView.swift`, `WeeklyReportView.swift`, `ProfileStatsView.swift`, `Views/home/ImportViews.swift` (RouteImportView: Tümünü Ekle / Kayıtlı Rotalarıma Ekle; SwarmImportView: 50 mekan önizleme + gate), `Views/home/StatusViews.swift` (izin ekranları). `DiagnosticsView.swift` (MetricKit crash/hang log'u, profil ekranından erişilir).
-
-### `PinlyLiveActivity/` — Widget extension
-- `PinlyLiveActivityBundle.swift` — @main: `PinlyLiveActivityWidget` + `QuickAddWidget` kayıtlı.
-- `PinlyLiveActivityView.swift` — GERÇEK Live Activity: kilit ekranı (talimat, durak x/y, ilerleme, `pinly://navigation` "Navigasyona Dön" butonu) + Dynamic Island.
-- `QuickAddWidget.swift` — small/medium statik widget, `pinly://quickadd` → QuickAddSheet (App Groups gerekmez).
-
-## Veri Akışı Özeti
-- **Kalıcılık:** SwiftData (Place/SavedRoute/RouteHistory) + UserDefaults (isPro, rozetler+sayaçlar, dil, onboarding, sıralama, yarıçap).
-- **Freemium:** mekan ekleme ücretsiz ve SINIRSIZ — eski 20 mekanlık gate'lerin hepsi kaldırıldı (`canAddPlace` koşulsuz `true` döndüğü için ölüydüler).
-- **Paywall'a erişim (3 nokta):** ProfileTab'daki kalıcı "Pinly Pro" satırı (`source: "profile"`), GPX/PDF export denemesi (`source: "export_locked"`), ilk rota tamamlandığında bir kerelik soft paywall (`source: "first_route_completed"`, `pinly.softPaywallShown`). **ProfileTab satırı olmadan gelir modeli fiilen kapalıydı** — soft paywall'ı bir kez kapatan kullanıcı bir daha satın alma ekranını göremiyordu.
-- **Pro gate:** GPX/PDF export (`RouteSummaryView` toolbar menüsü).
-- **Reklam (2 nokta):** rota tamamlama + link paylaşımı öncesi interstitial. Pro'ya gösterilmez. `AdManager`'da sıklık sınırı var: min 7 dk ara + oturum başına en fazla 2. **Navigasyon başlatma ve rota kaydetme öncesindeki interstitial'lar bilinçli olarak KALDIRILDI** (çekirdek eylemi bloke ediyor, art arda iki reklam çıkarabiliyordu).
-- **Rozet döngüsü:** olay → `badges.record*()` → `check(placeStore:)` → yeni rozetler `placeStore.pendingBadges` → HomeView banner (3 sn).
-- **Deep linkler:** `pinly://addplace?name=..&lat=..` | `pinly://route?data=<base64>` | `pinly://navigation` | `pinly://quickadd`.
-
-## Sosyal Katman — V1'de KAPALI
-
-`Pinly/Views/social/`, `SocialService.swift`, `SharedRouteService.swift` ve `AppleAuthService.swift`
-duruyor ama **arayüzden hiçbir erişim yolu yok**. Kapatılma sebepleri:
-
-- `SocialService.publish()` rotayı `SavedPlaceSnapshot` olarak SANITIZE ETMEDEN yolluyordu →
-  kullanıcının **özel mekan notları, adresi ve tam koordinatı** herkese açık `public_routes`
-  tablosuna yazılıyordu. (Topluluk feed'i zaten "ÇOK YAKINDA" ile kilitliydi; yani kullanıcılar
-  göremedikleri bir yere veri gönderiyordu.)
-- Uygulama içi **hesap silme yok** → hesap oluşturan her uygulama için App Store Guideline
-  5.1.1(v) ihlali. Bu yüzden onboarding'deki "Apple ile Giriş" de kaldırıldı ve `sharedroute`
-  deep link'i kapatıldı — V1'de hiçbir hesap oluşturma yolu bırakılmadı.
-- `block(userId:)` yalnızca `blocks` tablosuna satır ekliyor; feed sorgusunda ne RLS ne client
-  filtresi var → engelleme fiilen çalışmıyor (Guideline 1.2).
-- Anonim → Apple geçişinde `linkIdentity` yerine `signInWithIdToken` kullanılıyor → anonim
-  kullanıcının yayınları/favorileri orphan kalıyor.
-
-**V1.1'de sosyal açılmadan önce bu dördü de çözülmek ZORUNDA.** Supabase şeması/RLS yalnızca
-`specs/FAZ5_SUPABASE_MIMARI.md` içinde tasarım olarak duruyor — repoda versiyonlanmış SQL yok.
-
-## Bilinen Kırılganlıklar
-- SavedRoute snapshot ↔ Place eşleşmesi isimle → mekan yeniden adlandırılırsa kopar. Kısmi çözüm `SavedPlaceSnapshot.placeId` eklendi; tüm akışlarda kullanıldığı doğrulanmadı.
-- `PinlyLegal.swift`'teki gizlilik/koşullar adresleri `pinly.app` varsayıyor — **domain alınıp iki sayfa gerçekten yayına girmeden App Store'a gönderilmemeli** (ölü bağlantı, bağlantı olmaması kadar kesin ret sebebi).
-- `RouteManagerAlignmentTests.test_calculateRoutes_mixedStops_countsOnlyUnlocatedOnes` sanal ağ erişimi olmayan ortamlarda (MKDirections isteği atamıyor) kırmızı — kod regresyonu değil.
-
----
-
-## UI Yapısı
-```
-TabView (HomeView)
-  ├── Ana (house)                    — MainTab: istatistik şeridi + hero CTA + hızlı aksiyonlar + son eklenenler
-  ├── Keşfet (square.grid.2x2)       — DiscoverView: kategorilere göre mekanlar
-  ├── Rotalar (map)                  — SavedRoutesView: önceden planlanmış rotalar
-  └── Profil (person.crop.circle)    — ProfileTab: avatar, tema/görünüm, İstatistikler, Geçmiş, Haftalık Rapor, Rozetler, Dil
-```
-
-## Yapılanlar (özet — detay `docs/archive/IMPROVEMENT_PLAN.md`'de)
-- Mekan CRUD (adres/mevcut konum/haritada pinle), arama+filtre+sıralama, kategori sistemi
-- Rota oluşturma (2 akış), turn-by-turn navigasyon, sapma algılama, Live Activity + Dynamic Island
-- Kayıtlı rotalar (kaydet/düzenle/başlat/uzaklık uyarısı), rota geçmişi, haftalık rapor, profil istatistikleri
-- 21 rozet + banner sistemi, gün serisi
-- Paylaşım: QR tek mekan, rota linki (base64), GPX/PDF export (Pro), Instagram paylaşım kartı, Swarm import
-- Abonelik: RevenueCat + yasal uyumlu paywall (gizlilik/koşullar linkleri, otomatik yenileme açıklaması, dinamik tasarruf yüzdesi); AdMob interstitial (gerçek ID) + UMP consent + ATT
-- Firebase Crashlytics + Analytics (place_added/route_started/route_completed/route_shared/paywall_shown/nearby_search)
-- 5 dil (tr/en/es/de/ru) uygulama içi değiştirilebilir, onboarding, tek tema, app icon, Hızlı Ekle widget
-- MVVM + protokol servis refactor'ü (FreemiumManager/BadgeManager silindi), B1-B15 bugları düzeltildi
-- TestFlight'a çıkış: paylaşılan Xcode scheme + GitHub Actions CI, PrivacyInfo.xcprivacy, build App Store Connect'e yüklendi
-- RevenueCat entegrasyonu (`RevenueCatEntitlementService` + `PurchasesService`, gerçek StoreKit fiyatları, trial uygunluk kontrolü, restore)
-
-## Yapılacaklar (öncelik sırasıyla)
-
-> **Apple Developer hesabı ALINDI (2026-07-15).** Güncel yol haritası `GROWTH_PLAN.md`'de.
-
-- [ ] **`pinly.app` domain'i + gizlilik/koşullar sayfaları YAYINA AL** — `PinlyLegal.swift`
-      bu adresleri paywall'da linkliyor. Sayfalar yayında değilken App Store'a gönderme:
-      ölü bağlantı, bağlantının hiç olmaması kadar kesin ret sebebi (Guideline 3.1.2).
-- [ ] **App Store Connect gizlilik formu denetimi** — Xcode'da Archive → Privacy Report üretip
-      çıkan tüm SDK/veri tiplerini formdaki cevaplarla tek tek eşleştir (tahminle doldurma).
-- [ ] **Gerçek cihazda saha testi** — navigasyon, arka plan konum/pil, zayıf GPS, düşük pil modu,
-      kilit ekranı Live Activity, StoreKit sandbox satın alma + restore.
-- [ ] **TestFlight beta**: build App Store Connect'e yüklendi; onaylanınca External Testing
-      Public Link ile dış test.
-- [ ] **V1.1 — sosyal katmanın yeniden açılması** (bkz. "Sosyal Katman — V1'de KAPALI"):
-      hesap silme, public payload sanitizasyonu, engellemenin sunucuda uygulanması,
-      anonim→Apple veri taşıma. Dördü bitmeden UI'dan tekrar açma.
-- [ ] **Stitch + Claude Code design bağlantısı** (EN SON — kullanıcı kararı).
-
-### Tamamlananlar (Apple Developer hesabı sonrası — detay `docs/archive/RELEASE_PLAN.md`'de)
-AdMob gerçek ID + UMP consent + ATT izni, Firebase Crashlytics + Analytics, unit test paketi +
-GitHub Actions CI (paylaşılan Xcode scheme dahil), `SavedPlaceSnapshot.placeId` (isim eşleşmesi
-kırılganlığı çözümü), toplu mekan silme, Haritada Keşfet + "gitmediklerim" filtresi, rota
-paylaşım önizlemesi, bildirim izninin Haftalık Rapor ekranına taşınması, hazır rota paketleri
-(`StarterRouteService.swift`), Yakınımda kategori fix'i, mekan fotoğrafları.
-
-### Faz 3 (backend sonrası)
-- [ ] Supabase (hesap, feed, takip), iCloud Sync, Push, AI rota asistanı (Claude API + Edge Function proxy), Offline harita (Mapbox, Pro), Apple Watch
-
-## Kararlar & Notlar
-- Arapça lokalizasyon istenmiyor; TR/EN/ES/DE/RU tamam
-- Booking.com affiliate istenmiyor (şimdilik)
-- Sosyal feed: önce anonim paylaşım (URL scheme), sonra hesap sistemi
-- UI yönü: "seigaiha" palet (2026-07, 2. tur) — krem/kağıt zemin + sage yeşili + toz mavi-gri + koyu lacivert; katmanlı dağ silueti + Japon dalga deseninden esinli illüstrasyon referansı. Önceki "slate" (koyu slate-navy + slate-indigo aksan) ve ondan önceki "doğal çam"/coral paletleri reddedildi. Yeşil yasağı KALKTI — sage artık paletin doğal parçası. Desen kullanımı SADECE dekoratif doku (`WavePattern.swift`, vektör Shape) — tam illüstrasyon kartlarına DÖNÜLMEDİ (bkz. commit 5a8e291, illüstrasyon seti kaldırma kararı hâlâ geçerli). Tab bar: custom "gooey" PinlyTabBar (view/home/PinlyTabBar.swift)
-- Kullanıcı tercihi: büyük tasarım kararlarından ÖNCE sor (AskUserQuestion) — akışı birlikte yönetmek istiyor
-- Hazır mahalle rotaları: influencer'lar Rota Paylaşımı özelliğiyle kendi rotalarını paylaşır
-- AI Agent API key güvenliği: Supabase Edge Function proxy (client-side key kabul edilemez)
-- `landing/index.html` web varlığı olarak repoda duruyor; uygulama içi tanıtım rolü OnboardingView'de
-
-## Commit Kuralı
-`tip: açıklama` formatı (`feat:`, `fix:`, `refactor:`, `chore:`, `test:`, `docs:`).
-Tek satır, Türkçe, ne yapıldığını söyler. "hi", "." gibi anlamsız mesajlar yasak.
+- Production veritabanı, dashboard, domain, App Store veya uzak geçmiş üzerinde kullanıcı onayı olmadan değişiklik yapma.
+- `Config.local.xcconfig`, `.codex/`, `.claude/`, Google production client configleri ve credential dosyaları commit edilmez.
+- Konum, HealthKit değeri, özel not, kullanıcı rota adı veya fotoğraf metadata'sını analytics parametresi yapma.
+- Paywall yalnız bugün çalışan Pro faydalarını satar.
+- Yayın kararı yalnız `docs/FINAL_RELEASE_STATUS.md` kanıtlarıyla verilir.

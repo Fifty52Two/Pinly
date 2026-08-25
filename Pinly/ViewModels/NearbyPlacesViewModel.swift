@@ -19,7 +19,7 @@ final class NearbyPlacesViewModel: ObservableObject {
     private var searchTask: Task<Void, Never>?
 
     init(nearbySearch: NearbySearching = DefaultNearbySearchService.shared,
-         analytics: AnalyticsTracking = NoOpAnalyticsService.shared) {
+         analytics: AnalyticsTracking = RuntimeAnalyticsService.shared) {
         self.nearbySearch = nearbySearch
         self.analytics = analytics
     }

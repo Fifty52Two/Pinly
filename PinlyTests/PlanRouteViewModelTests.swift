@@ -97,7 +97,8 @@ final class PlanRouteViewModelTests: XCTestCase {
     }
 
     func test_saveRoute_requiresNameAndSelection() {
-        let vm = PlanRouteViewModel(badges: MockBadgeServicing())
+        let analytics = MockAnalyticsTracking()
+        let vm = PlanRouteViewModel(badges: MockBadgeServicing(), analytics: analytics)
         let context = makeInMemoryContext()
 
         // pin yok, isim yok, seçim yok — kaydetmemeli
@@ -111,5 +112,45 @@ final class PlanRouteViewModelTests: XCTestCase {
 
         XCTAssertTrue(vm.saveRoute(places: [place], context: context))
         XCTAssertTrue(vm.savedSuccessfully)
+        XCTAssertEqual(analytics.trackedEvents, [.routeCreated])
+    }
+
+    func test_saveRoute_whenEditing_doesNotTrackRouteCreatedAgain() throws {
+        let context = makeInMemoryContext()
+        let place = Place(name: "A")
+        place.latitude = 41.0
+        place.longitude = 29.0
+        let snapshot = SavedPlaceSnapshot(
+            name: place.name,
+            category: place.category,
+            address: place.address,
+            notes: place.notes,
+            latitude: 41.0,
+            longitude: 29.0,
+            sortIndex: 0,
+            placeId: place.id
+        )
+        let route = SavedRoute(
+            name: "Existing",
+            centerLatitude: 41.0,
+            centerLongitude: 29.0,
+            snapshots: [snapshot]
+        )
+        context.insert(route)
+        try context.save()
+
+        let analytics = MockAnalyticsTracking()
+        let vm = PlanRouteViewModel(
+            editingRoute: route,
+            badges: MockBadgeServicing(),
+            analytics: analytics
+        )
+        vm.pinCoordinate = CLLocationCoordinate2D(latitude: 41.0, longitude: 29.0)
+        vm.routeName = "Updated"
+        vm.selectedPlaceIDs = [place.id]
+
+        XCTAssertTrue(vm.saveRoute(places: [place], context: context))
+        XCTAssertEqual(route.name, "Updated")
+        XCTAssertTrue(analytics.trackedEvents.isEmpty)
     }
 }

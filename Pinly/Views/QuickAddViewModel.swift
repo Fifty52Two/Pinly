@@ -25,7 +25,7 @@ final class QuickAddViewModel: ObservableObject {
         geocoding: GeocodingProviding = DefaultGeocodingService.shared,
         entitlements: EntitlementProviding = LocalEntitlementService.shared,
         badges: BadgeServicing = DefaultBadgeService.shared,
-        analytics: AnalyticsTracking = NoOpAnalyticsService.shared
+        analytics: AnalyticsTracking = RuntimeAnalyticsService.shared
     ) {
         self.geocoding = geocoding
         self.entitlements = entitlements

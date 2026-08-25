@@ -48,9 +48,22 @@ enum ImportLimits {
     /// base64 rota payload'ının üst boyutu (QR kapasitesinin çok üstü; elle
     /// üretilmiş dev deep link'lere karşı).
     static let maxPayloadBytes = 64 * 1024
+    static let maxSinglePlaceURLBytes = 16 * 1024
+    static let maxSwarmFileBytes = 10 * 1024 * 1024
     /// Swarm içe aktarımında işlenecek en fazla check-in — kullanıcının kendi
     /// dosyası olduğundan kırpma kabul edilebilir (bellek koruması).
     static let maxSwarmItems = 500
+    static let maxNameCharacters = 160
+    static let maxCategoryCharacters = 80
+    static let maxAddressCharacters = 600
+    static let maxNotesCharacters = 2_000
+    static let maxRouteNameCharacters = 160
+}
+
+private func validatedImportedText(_ value: String, maximum: Int, required: Bool = false) -> String? {
+    let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard trimmed.count <= maximum, !required || !trimmed.isEmpty else { return nil }
+    return trimmed
 }
 
 /// Koordinat çifti ancak ikisi de sonlu ve dünya sınırları içindeyse geçerli.
@@ -102,7 +115,8 @@ struct DefaultRouteURLCoder: RouteURLCoding {
     }
 
     func parse(url: URL) -> PlaceImportData? {
-        guard let scheme = url.scheme,
+        guard url.absoluteString.utf8.count <= ImportLimits.maxSinglePlaceURLBytes,
+              let scheme = url.scheme,
               [primaryScheme, legacyScheme].contains(scheme),
               url.host == "addplace"
         else { return nil }
@@ -112,8 +126,11 @@ struct DefaultRouteURLCoder: RouteURLCoding {
 
         func value(_ key: String) -> String { query.first(where: { $0.name == key })?.value ?? "" }
 
-        let name = value("name")
-        guard !name.isEmpty else { return nil }
+        guard let name = validatedImportedText(value("name"), maximum: ImportLimits.maxNameCharacters, required: true),
+              let category = validatedImportedText(value("category"), maximum: ImportLimits.maxCategoryCharacters),
+              let address = validatedImportedText(value("address"), maximum: ImportLimits.maxAddressCharacters),
+              let notes = validatedImportedText(value("notes"), maximum: ImportLimits.maxNotesCharacters)
+        else { return nil }
 
         let rawLat = query.first(where: { $0.name == "lat" }).flatMap { Double($0.value ?? "") }
         let rawLon = query.first(where: { $0.name == "lon" }).flatMap { Double($0.value ?? "") }
@@ -121,9 +138,9 @@ struct DefaultRouteURLCoder: RouteURLCoding {
 
         return PlaceImportData(
             name: name,
-            category: value("category").isEmpty ? PlaceCategory.general.rawValue : value("category"),
-            address: value("address"),
-            notes: value("notes"),
+            category: category.isEmpty ? PlaceCategory.general.rawValue : category,
+            address: address,
+            notes: notes,
             latitude: coord.lat,
             longitude: coord.lon
         )
@@ -178,7 +195,12 @@ struct DefaultRouteURLCoder: RouteURLCoding {
         if let wrapper = json as? [String: Any],
            let arr = wrapper["places"] as? [[String: String]] {
             rawPlaces = arr
-            routeName = wrapper["name"] as? String
+            if let rawName = wrapper["name"] as? String {
+                guard let checkedName = validatedImportedText(rawName, maximum: ImportLimits.maxRouteNameCharacters) else { return nil }
+                routeName = checkedName.isEmpty ? nil : checkedName
+            } else {
+                routeName = nil
+            }
             routeCategory = (wrapper["category"] as? String).flatMap { RouteCategory(rawValue: $0) }
         } else if let arr = json as? [[String: String]] {
             // Legacy format: plain array
@@ -189,24 +211,31 @@ struct DefaultRouteURLCoder: RouteURLCoding {
             return nil
         }
 
+        guard !rawPlaces.isEmpty, rawPlaces.count <= ImportLimits.maxPlacesPerRoute else { return nil }
         let places = rawPlaces.compactMap { d -> PlaceImportData? in
-            guard let name = d["name"], !name.isEmpty else { return nil }
+            guard let rawName = d["name"],
+                  let name = validatedImportedText(rawName, maximum: ImportLimits.maxNameCharacters, required: true),
+                  let category = validatedImportedText(d["category"] ?? "", maximum: ImportLimits.maxCategoryCharacters),
+                  let address = validatedImportedText(d["address"] ?? "", maximum: ImportLimits.maxAddressCharacters),
+                  let notes = validatedImportedText(d["notes"] ?? "", maximum: ImportLimits.maxNotesCharacters)
+            else { return nil }
             let coord = validatedCoordinate(
                 lat: d["lat"].flatMap(Double.init),
                 lon: d["lon"].flatMap(Double.init)
             )
             return PlaceImportData(
                 name: name,
-                category: d["category"] ?? PlaceCategory.general.rawValue,
-                address: d["address"] ?? "",
-                notes: d["notes"] ?? "",
+                category: category.isEmpty ? PlaceCategory.general.rawValue : category,
+                address: address,
+                notes: notes,
                 latitude:  coord.lat,
                 longitude: coord.lon
             )
         }
         // Aşırı kalabalık rota REDDEDİLİR (kırpılmaz) — kırpılmış rota kullanıcıya
         // eksiksizmiş gibi görünür, yanıltıcıdır.
-        guard !places.isEmpty, places.count <= ImportLimits.maxPlacesPerRoute else { return nil }
+        // Tek bir geçersiz durak bile varsa tüm rotayı reddet; sessizce eksik rota üretme.
+        guard places.count == rawPlaces.count else { return nil }
         return RouteImport(places: places, name: routeName, category: routeCategory)
     }
 }
@@ -232,7 +261,8 @@ struct DefaultSwarmImporter: SwarmImporting {
         // Kullanıcının kendi dosyası — kırpma kabul edilebilir (bellek koruması)
         for item in items.prefix(ImportLimits.maxSwarmItems) {
             guard let venue = item["venue"] as? [String: Any],
-                  let name = venue["name"] as? String, !name.isEmpty
+                  let rawName = venue["name"] as? String,
+                  let name = validatedImportedText(rawName, maximum: ImportLimits.maxNameCharacters, required: true)
             else { continue }
 
             let venueId = (venue["id"] as? String) ?? name
@@ -246,10 +276,11 @@ struct DefaultSwarmImporter: SwarmImporting {
             )
             let lat = coord.lat
             let lon = coord.lon
-            let street = location["address"] as? String ?? ""
-            let city   = location["city"] as? String ?? ""
-            let address = [street, city].filter { !$0.isEmpty }.joined(separator: ", ")
-            let shout   = item["shout"] as? String ?? ""
+            guard let street = validatedImportedText(location["address"] as? String ?? "", maximum: ImportLimits.maxAddressCharacters),
+                  let city = validatedImportedText(location["city"] as? String ?? "", maximum: ImportLimits.maxAddressCharacters),
+                  let shout = validatedImportedText(item["shout"] as? String ?? "", maximum: ImportLimits.maxNotesCharacters)
+            else { continue }
+            let address = String([street, city].filter { !$0.isEmpty }.joined(separator: ", ").prefix(ImportLimits.maxAddressCharacters))
 
             let categories = venue["categories"] as? [[String: Any]] ?? []
             let primary = categories.first(where: { $0["primary"] as? Bool == true }) ?? categories.first

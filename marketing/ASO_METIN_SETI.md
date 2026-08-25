@@ -42,7 +42,7 @@ dönüşür. Instagram'da paylaş, arkadaşların rotanı QR kodla ya da linkle 
 görünür kıl.
 
 PRO İLE
-• Sınırsız mekan kaydı (ücretsiz sürümde 20 mekan sınırı var)
+• Free sürümde sınırsız mekan kaydı; Pro'da GPX/PDF dışa aktarma ve reklamsız kullanım
 • GPX ve PDF olarak rota dışa aktarma
 • Reklamsız deneyim
 
@@ -81,7 +81,7 @@ PROGRESS & BADGES
 visible.
 
 WITH PRO
-• Unlimited saved places (free plan caps at 20)
+• Unlimited saved places on Free; Pro adds GPX/PDF export and removes ads
 • Export routes as GPX or PDF
 • Ad-free experience
 
@@ -121,7 +121,7 @@ Pinly превращает сохранённые места в пешие ма�
 прогулкам становится наглядной.
 
 С PRO
-• Неограниченное число сохранённых мест (в бесплатной версии лимит — 20)
+• Неограниченное сохранение мест бесплатно; Pro добавляет экспорт GPX/PDF и убирает рекламу
 • Экспорт маршрутов в GPX и PDF
 • Без рекламы
 
@@ -161,7 +161,7 @@ FORTSCHRITT & ABZEICHEN
 Entdeckungsgewohnheit sichtbar.
 
 MIT PRO
-• Unbegrenzt gespeicherte Orte (kostenlos: Limit von 20)
+• Unbegrenzt Orte kostenlos speichern; Pro bietet GPX/PDF-Export und entfernt Werbung
 • Routen als GPX oder PDF exportieren
 • Werbefreie Nutzung
 
@@ -201,7 +201,7 @@ PROGRESO E INSIGNIAS
 hábito de explorar.
 
 CON PRO
-• Lugares guardados ilimitados (el plan gratis tiene un límite de 20)
+• Lugares guardados ilimitados gratis; Pro añade exportación GPX/PDF y elimina anuncios
 • Exporta rutas en GPX o PDF
 • Experiencia sin anuncios
 

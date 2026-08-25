@@ -17,15 +17,21 @@ enum PlaceAddSource: String, Equatable {
 /// Temel analytics event seti (RELEASE_PLAN FAZ 1.5).
 /// İsim/parametreler Firebase `logEvent` sözleşmesine uygun (snake_case).
 enum AnalyticsEvent: Equatable {
+    case onboardingComplete
     case placeAdded(source: PlaceAddSource)
+    case firstPlaceAdded(source: PlaceAddSource)
+    case routeCreated
     case routeStarted
     case routeCompleted
     case routeShared
     case paywallShown(source: String)
     case nearbySearch(category: String)
     case trialStarted(product: String)
+    case purchaseStarted(product: String)
     case purchaseCompleted(product: String)
     case restoreCompleted
+    case exportGPX
+    case exportPDF
     /// FAZ 4 "İlk 30 Saniye" akışı: kullanıcı hazır rota kataloğundan ya da Yakınımda
     /// fallback'inden bir rotayı kabul etti. `source`: katalog rota id'si ya da "nearby_fallback".
     case starterRouteAdopted(source: String)
@@ -40,15 +46,21 @@ enum AnalyticsEvent: Equatable {
 
     var name: String {
         switch self {
+        case .onboardingComplete: return "onboarding_complete"
         case .placeAdded:         return "place_added"
+        case .firstPlaceAdded:    return "first_place_added"
+        case .routeCreated:       return "route_created"
         case .routeStarted:       return "route_started"
         case .routeCompleted:     return "route_completed"
         case .routeShared:        return "route_shared"
-        case .paywallShown:       return "paywall_shown"
+        case .paywallShown:       return "paywall_viewed"
         case .nearbySearch:       return "nearby_search"
         case .trialStarted:       return "trial_started"
+        case .purchaseStarted:    return "purchase_started"
         case .purchaseCompleted:  return "purchase_completed"
         case .restoreCompleted:   return "restore_completed"
+        case .exportGPX:          return "export_gpx"
+        case .exportPDF:          return "export_pdf"
         case .starterRouteAdopted: return "starter_route_adopted"
         case .memoryPhotoAdded:   return "memory_photo_added"
         case .memoryCardShared:   return "memory_card_shared"
@@ -59,11 +71,12 @@ enum AnalyticsEvent: Equatable {
 
     var parameters: [String: String] {
         switch self {
-        case .placeAdded(let source):      return ["source": source.rawValue]
+        case .placeAdded(let source), .firstPlaceAdded(let source): return ["source": source.rawValue]
         case .nearbySearch(let category):  return ["category": category]
         case .paywallShown(let source):    return ["source": source]
-        case .trialStarted(let product):   return ["product": product]
-        case .purchaseCompleted(let product): return ["product": product]
+        case .trialStarted(let product),
+             .purchaseStarted(let product),
+             .purchaseCompleted(let product): return ["product": product]
         case .starterRouteAdopted(let source): return ["source": source]
         case .memoryCardShared(let format): return ["format": format]
         default:                           return [:]
@@ -76,6 +89,32 @@ enum AnalyticsEvent: Equatable {
 /// çağıran yerler sabit kalır — EntitlementService/RevenueCat deseniyle aynı.
 protocol AnalyticsTracking {
     func track(_ event: AnalyticsEvent)
+}
+
+// MARK: - RuntimeAnalyticsService
+
+/// `@StateObject` ViewModel'ler SwiftUI environment kurulmadan önce oluşturulduğu için
+/// constructor varsayılanlarının doğrudan NoOp olması production event'lerini sessizce
+/// kaybettiriyordu. Bu router tüm varsayılanların tek, sonradan yapılandırılan hedefe gitmesini
+/// sağlar; testler yine doğrudan mock enjekte eder.
+final class RuntimeAnalyticsService: AnalyticsTracking {
+    static let shared = RuntimeAnalyticsService()
+
+    private let lock = NSLock()
+    private var destination: AnalyticsTracking = NoOpAnalyticsService.shared
+
+    func configure(destination: AnalyticsTracking) {
+        lock.lock()
+        self.destination = destination
+        lock.unlock()
+    }
+
+    func track(_ event: AnalyticsEvent) {
+        lock.lock()
+        let destination = self.destination
+        lock.unlock()
+        destination.track(event)
+    }
 }
 
 // MARK: - NoOpAnalyticsService
@@ -101,8 +140,16 @@ final class NoOpAnalyticsService: AnalyticsTracking {
 final class FirebaseAnalyticsService: AnalyticsTracking {
     static let shared = FirebaseAnalyticsService()
 
+    private let firstPlaceTrackedKey = "pinly.analytics.firstPlaceTracked"
+
     func track(_ event: AnalyticsEvent) {
         Analytics.logEvent(event.name, parameters: event.parameters.isEmpty ? nil : event.parameters)
+        if case .placeAdded(let source) = event,
+           !UserDefaults.standard.bool(forKey: firstPlaceTrackedKey) {
+            UserDefaults.standard.set(true, forKey: firstPlaceTrackedKey)
+            let firstEvent = AnalyticsEvent.firstPlaceAdded(source: source)
+            Analytics.logEvent(firstEvent.name, parameters: firstEvent.parameters)
+        }
         #if DEBUG
         let params = event.parameters.isEmpty ? "" : " \(event.parameters)"
         print("📊 analytics: \(event.name)\(params)")

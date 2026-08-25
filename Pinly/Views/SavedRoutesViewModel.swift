@@ -34,8 +34,8 @@ final class SavedRoutesViewModel: ObservableObject {
     init(
         savedRoutes: SavedRouteRepository = DefaultSavedRouteRepository.shared,
         badges: BadgeServicing = DefaultBadgeService.shared,
-        analytics: AnalyticsTracking = NoOpAnalyticsService.shared,
-        social: SocialServicing = SupabaseSocialService.shared
+        analytics: AnalyticsTracking = RuntimeAnalyticsService.shared,
+        social: SocialServicing = SocialFeaturePolicy.socialService
     ) {
         self.savedRoutes = savedRoutes
         self.badges = badges

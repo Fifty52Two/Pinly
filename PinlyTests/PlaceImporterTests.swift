@@ -112,6 +112,16 @@ final class PlaceImporterTests: XCTestCase {
         XCTAssertNil(parsed?.longitude)
     }
 
+    func test_parse_oversizedSinglePlaceField_returnsNil() {
+        let coder = DefaultRouteURLCoder()
+        let name = String(repeating: "a", count: ImportLimits.maxNameCharacters + 1)
+        var components = URLComponents()
+        components.scheme = "pinly"
+        components.host = "addplace"
+        components.queryItems = [URLQueryItem(name: "name", value: name)]
+        XCTAssertNil(coder.parse(url: components.url!))
+    }
+
     func test_parseRouteFull_oversizedPayload_returnsNil() {
         let coder = DefaultRouteURLCoder()
         // 64KB sınırının üstünde base64 — parse edilmeden reddedilmeli
@@ -148,6 +158,15 @@ final class PlaceImporterTests: XCTestCase {
         let imported = coder.parseRouteFull(url: url)
         XCTAssertEqual(imported?.places.first?.name, "Durak")
         XCTAssertNil(imported?.places.first?.latitude)
+    }
+
+
+    func test_parseRouteFull_oneInvalidPlace_rejectsWholeRoute() {
+        let coder = DefaultRouteURLCoder()
+        let rawPlaces = [["name": "Geçerli"], ["name": ""]]
+        let json = try! JSONSerialization.data(withJSONObject: ["places": rawPlaces])
+        let url = URL(string: "pinly://route?data=\(json.base64EncodedString())")!
+        XCTAssertNil(coder.parseRouteFull(url: url))
     }
 
     func test_swarmImport_capsItemCount() {

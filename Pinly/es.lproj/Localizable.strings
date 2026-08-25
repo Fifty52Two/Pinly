@@ -47,6 +47,9 @@
 "Bu kategoride mekan bulunamadı" = "No hay lugares en esta categoría";
 "Bu adımı atla" = "Saltar este paso";
 "Arama Yarıçapı" = "Radio de búsqueda";
+"Listeyi Göster" = "Mostrar lista";
+"Haritayı Göster" = "Mostrar mapa";
+"Sonuçları Yenile" = "Actualizar resultados";
 "Anlık konumuna göre hangi mesafedeki mekanlar gösterilsin?" = "¿A qué distancia de tu ubicación mostrar lugares?";
 "Tümü" = "Todos";
 "Tüm kayıtlı mekanları göster" = "Mostrar todos los lugares guardados";
@@ -308,7 +311,6 @@
 
 // MARK: - Paywall
 "Mekan Limitine Ulaştın" = "Alcanzaste el límite de lugares";
-"Ücretsiz planda en fazla %lld mekan kaydedebilirsin.\nSınırsız mekan için Pro'ya geç." = "El plan gratuito permite hasta %lld lugares.\nPásate a Pro para lugares ilimitados.";
 "Sınırsız Mekan" = "Lugares ilimitados";
 "İstediğin kadar mekan kaydet" = "Guarda todos los lugares que quieras";
 "Sınırsız Rota" = "Rutas ilimitadas";
@@ -325,7 +327,6 @@
 "Satın Alımları Geri Yükle" = "Restaurar compras";
 "Şimdi Değil" = "Ahora no";
 "Sınırsız keşif" = "Explora sin límites";
-"Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç." = "¡Completaste una ruta! Hazte Pro para lugares ilimitados, exportación y una experiencia sin anuncios.";
 "GPX & PDF Dışa Aktar" = "Exportar GPX y PDF";
 "Rotalarını dışa aktar ve arşivle" = "Exporta y archiva tus rutas";
 "Reklamsız Kullanım" = "Sin anuncios";
@@ -451,7 +452,6 @@
 "Foursquare/Swarm geçmişin mi var? checkins.json dosyanı seç, mekanların saniyeler içinde Pinly'de olsun." = "¿Tienes historial de Foursquare/Swarm? Elige tu checkins.json y tus lugares estarán en Pinly en segundos.";
 "Swarm Dosyası Seç" = "Elegir archivo de Swarm";
 "%lld mekan içe aktarıldı" = "%lld lugares importados";
-"Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin." = "El plan gratuito se limita a 20 lugares; desbloquea el resto con Pro.";
 "İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir" = "Consejo: Swarm → Perfil → Ajustes → Descargar mis datos";
 
 // MARK: - Faz 4: Optimización de ruta
@@ -613,3 +613,8 @@
 "Henüz ortak rotan yok" = "Aún no tienes rutas compartidas";
 "Ortak Rota Oluştur ile başlat, linki arkadaşınla paylaş." = "Empieza con Crear Ruta Compartida y comparte el enlace con un amigo.";
 "Katılım bekleniyor" = "Esperando a que alguien se una";
+"Konum İzni Ver" = "Permitir ubicación";
+"Şimdilik Değil" = "Ahora no";
+"Profil bilgilerin yalnız bu cihazda saklanır; hesabın oluşturulmaz." = "Tu perfil permanece en este dispositivo; no se crea una cuenta.";
+"Reklam Gizlilik Seçenekleri" = "Opciones de privacidad de anuncios";
+"Takip iznini reddetmek temel özellikleri kapatmaz. Gerekli bölgelerde reklam gizlilik seçenekleri burada görünür. Pro kullanıcıya reklam gösterilmez." = "Rechazar el seguimiento no desactiva las funciones principales. Las opciones de privacidad de anuncios aparecen aquí cuando son necesarias. Los usuarios Pro no ven anuncios.";

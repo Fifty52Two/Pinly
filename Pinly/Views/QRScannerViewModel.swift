@@ -15,7 +15,7 @@ final class QRScannerViewModel: ObservableObject {
     private let analytics: AnalyticsTracking
 
     init(entitlements: EntitlementProviding = LocalEntitlementService.shared,
-         analytics: AnalyticsTracking = NoOpAnalyticsService.shared) {
+         analytics: AnalyticsTracking = RuntimeAnalyticsService.shared) {
         self.entitlements = entitlements
         self.analytics = analytics
     }

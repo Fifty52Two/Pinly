@@ -498,17 +498,17 @@ kategori akışıyla rota→navigasyon başlat→Live Activity göründü→dura
 
   jobs:
     test:
-      runs-on: macos-15
+      runs-on: macos-26
       steps:
         - uses: actions/checkout@v4
         - name: Xcode sürümünü seç
-          run: sudo xcode-select -s /Applications/Xcode_16.2.app || sudo xcode-select -s /Applications/Xcode.app
+          run: sudo xcode-select -s /Applications/Xcode_26.6.app/Contents/Developer
         - name: Simülatör listesi (teşhis için)
           run: xcrun simctl list devices available | grep iPhone | head -5
         - name: Test
           run: |
             xcodebuild test -project Pinly.xcodeproj -scheme Pinly \
-              -destination 'platform=iOS Simulator,name=iPhone 16' \
+              -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
               CODE_SIGNING_ALLOWED=NO
   ```
 - [x] **6.2 Commit disiplinini CLAUDE.md'ye yaz** (kullanıcının "hi", "." geçmişine son):

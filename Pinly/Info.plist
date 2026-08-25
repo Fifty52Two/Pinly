@@ -20,12 +20,18 @@
 	</array>
 	<key>GADApplicationIdentifier</key>
 	<string>$(GAD_APPLICATION_IDENTIFIER)</string>
+	<key>PinlyInterstitialAdUnitID</key>
+	<string>$(GAD_INTERSTITIAL_AD_UNIT_ID)</string>
 	<key>RevenueCatAPIKey</key>
 	<string>$(REVENUECAT_API_KEY)</string>
 	<key>SupabaseURL</key>
 	<string>$(SUPABASE_URL)</string>
 	<key>SupabasePublishableKey</key>
 	<string>$(SUPABASE_PUBLISHABLE_KEY)</string>
+	<key>PinlyWebsiteHost</key>
+	<string>$(PINLY_WEBSITE_HOST)</string>
+	<key>PinlyAppStoreID</key>
+	<string>$(PINLY_APP_STORE_ID)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>UILaunchScreen</key>

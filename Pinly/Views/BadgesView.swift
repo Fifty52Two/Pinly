@@ -36,6 +36,7 @@ struct BadgesView: View {
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(.secondary, PinlyTheme.surface)
                     }
+                    .accessibilityLabel(NSLocalizedString("Kapat", comment: ""))
                 }
             }
             // Nav bar arkaplanı bilinçli olarak saydam (yukarıda .toolbarBackground(.hidden,...))

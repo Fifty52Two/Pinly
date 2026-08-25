@@ -6,15 +6,21 @@ import XCTest
 /// değiştirilirse dashboard'daki event geçmişi kopar.
 final class AnalyticsEventTests: XCTestCase {
     func test_eventNames_matchSnakeCaseContract() {
+        XCTAssertEqual(AnalyticsEvent.onboardingComplete.name, "onboarding_complete")
         XCTAssertEqual(AnalyticsEvent.placeAdded(source: .manual).name, "place_added")
+        XCTAssertEqual(AnalyticsEvent.firstPlaceAdded(source: .manual).name, "first_place_added")
+        XCTAssertEqual(AnalyticsEvent.routeCreated.name, "route_created")
         XCTAssertEqual(AnalyticsEvent.routeStarted.name, "route_started")
         XCTAssertEqual(AnalyticsEvent.routeCompleted.name, "route_completed")
         XCTAssertEqual(AnalyticsEvent.routeShared.name, "route_shared")
-        XCTAssertEqual(AnalyticsEvent.paywallShown(source: "limit_reached").name, "paywall_shown")
+        XCTAssertEqual(AnalyticsEvent.paywallShown(source: "limit_reached").name, "paywall_viewed")
         XCTAssertEqual(AnalyticsEvent.nearbySearch(category: "cafe").name, "nearby_search")
         XCTAssertEqual(AnalyticsEvent.trialStarted(product: "pinly_pro_yearly").name, "trial_started")
+        XCTAssertEqual(AnalyticsEvent.purchaseStarted(product: "pinly_pro_yearly").name, "purchase_started")
         XCTAssertEqual(AnalyticsEvent.purchaseCompleted(product: "pinly_pro_monthly").name, "purchase_completed")
         XCTAssertEqual(AnalyticsEvent.restoreCompleted.name, "restore_completed")
+        XCTAssertEqual(AnalyticsEvent.exportGPX.name, "export_gpx")
+        XCTAssertEqual(AnalyticsEvent.exportPDF.name, "export_pdf")
         XCTAssertEqual(AnalyticsEvent.starterRouteAdopted(source: "nearby_fallback").name, "starter_route_adopted")
         XCTAssertEqual(AnalyticsEvent.memoryPhotoAdded.name, "memory_photo_added")
         XCTAssertEqual(AnalyticsEvent.memoryCardShared(format: "story").name, "memory_card_shared")
@@ -44,6 +50,7 @@ final class AnalyticsEventTests: XCTestCase {
 
     func test_purchaseEvents_parametersContainProduct() {
         XCTAssertEqual(AnalyticsEvent.trialStarted(product: "pinly_pro_yearly").parameters["product"], "pinly_pro_yearly")
+        XCTAssertEqual(AnalyticsEvent.purchaseStarted(product: "pinly_pro_yearly").parameters["product"], "pinly_pro_yearly")
         XCTAssertEqual(AnalyticsEvent.purchaseCompleted(product: "pinly_pro_monthly").parameters["product"], "pinly_pro_monthly")
     }
 

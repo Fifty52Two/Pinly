@@ -2,7 +2,7 @@
 
 Mekan kaydetme + yürüyüş rotası planlama + turn-by-turn navigasyon uygulaması. iOS için SwiftUI ile yazılmıştır (eski adı NotionGO).
 
-Foursquare City Guide Aralık 2024'te kapandı; Türkiye o platformun global trafiğinin yaklaşık %9'unu oluşturuyordu. Pinly bu boşluğu doldurmak için Türkiye ve turist kullanıcılar odağında geliştiriliyor.
+Foursquare City Guide'ın kapanmasının ardından Pinly, kaydedilmiş mekanları yürünebilir rotalara dönüştürmek isteyen kullanıcılar için Türkiye ve şehir gezisi odağında geliştiriliyor.
 
 ## Öne Çıkan Özellikler
 
@@ -31,17 +31,26 @@ Foursquare City Guide Aralık 2024'te kapandı; Türkiye o platformun global tra
 
 ## Gereksinimler
 
-- Xcode 16+
+- Xcode 26.6 (Apple Swift 6.3.3, iOS 26.5 SDK; CI ile aynı toolchain)
 - iOS 17+ hedef cihaz veya simülatör
 
 ## Kurulum ve Çalıştırma
 
+Repo güvenli clean-checkout varsayılanlarıyla derlenir. RevenueCat, Supabase ve production
+AdMob istemci değerleri için `Config.local.example.xcconfig` dosyasını
+`Config.local.xcconfig` adıyla kopyalayıp doldurun. Firebase Analytics/Crashlytics için
+Firebase Console'dan indirilen `GoogleService-Info.plist` dosyasını `Pinly/` altına koyun.
+Bu iki yerel dosya Git tarafından izlenmez; server-only/service-role secret'ları iOS
+uygulamasına eklemeyin.
+
 ```bash
 # Simülatörde derle
-xcodebuild -scheme Pinly -destination 'platform=iOS Simulator,name=iPhone 16' build
+xcodebuild -project Pinly.xcodeproj -scheme Pinly \
+  -destination 'platform=iOS Simulator,name=iPhone 16 Pro' build
 
 # Tüm testleri çalıştır
-xcodebuild -scheme Pinly -destination 'platform=iOS Simulator,name=iPhone 16' test
+xcodebuild -project Pinly.xcodeproj -scheme Pinly \
+  -destination 'platform=iOS Simulator,name=iPhone 16 Pro' test
 ```
 
 Ya da `Pinly.xcodeproj` dosyasını Xcode'da açıp normal şekilde çalıştırabilirsiniz.
@@ -62,12 +71,13 @@ specs/         Faz bazlı tasarım kararları
 docs/archive/  Tamamlanmış plan belgeleri (tarihsel — güncel durumu tarif etmez)
 ```
 
-Mimarinin ve her dosyanın detaylı açıklaması için `CLAUDE.md`'ye bakın.
+Güncel çalışma kuralları için `AGENTS.md`'ye bakın. `docs/archive/` altındaki planlar tarihsel kayıttır ve production davranışının kaynağı değildir.
 
 ## Proje Durumu
 
-Uygulama TestFlight beta aşamasında, App Store'a ilk sürüm (V1) hazırlığı sürüyor.
-Güncel yol haritası: `GROWTH_PLAN.md`.
+Uygulama V1 release-candidate hazırlığındadır; bu repoda doğrulanmış bir TestFlight build'i henüz yoktur.
+V1 release hazırlığı production kodu, testler ve `docs/` altındaki güncel checklist'lerle takip edilir; eski büyüme ve release planları kaynak gerçekliği değildir.
+Tek karar kaynağı `docs/FINAL_RELEASE_STATUS.md` dosyasıdır.
 
 **Sosyal katman (topluluk rotaları, rota yayınlama, Apple ile giriş) V1'de kapalıdır.**
 Kod yerinde duruyor ama arayüzden erişilemez. V1.1'de açılmadan önce şunlar tamamlanmalı:

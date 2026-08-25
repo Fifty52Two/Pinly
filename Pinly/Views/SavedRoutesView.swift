@@ -48,6 +48,7 @@ struct SavedRoutesView: View {
                     } label: {
                         Image(systemName: "plus")
                     }
+                    .accessibilityLabel(NSLocalizedString("Rota Planla", comment: ""))
                 }
             }
             .sheet(isPresented: $showPlanRoute) {
@@ -268,8 +269,8 @@ private struct SavedRouteCard: View {
         guard !coords.isEmpty else { return nil }
         let lats = coords.map { $0.latitude }
         let lons = coords.map { $0.longitude }
-        let minLat = lats.min()!, maxLat = lats.max()!
-        let minLon = lons.min()!, maxLon = lons.max()!
+        guard let minLat = lats.min(), let maxLat = lats.max(),
+              let minLon = lons.min(), let maxLon = lons.max() else { return nil }
         let center = CLLocationCoordinate2D(latitude: (minLat + maxLat) / 2, longitude: (minLon + maxLon) / 2)
         let span = MKCoordinateSpan(
             latitudeDelta: max((maxLat - minLat) * 1.5, 0.01),

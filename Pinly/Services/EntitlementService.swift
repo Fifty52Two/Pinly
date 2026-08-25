@@ -73,19 +73,22 @@ final class RevenueCatEntitlementService: EntitlementProviding, ObservableObject
 
     @Published private var isProValue: Bool
 
-    /// Salt-okunur: gerçeğin kaynağı RevenueCat'tir, kimse elle Pro yapamaz.
-    /// Yanlışlıkla çağrılırsa DEBUG'da assert eder (Release'te no-op, derlemede elenir).
+    /// Setter yalnızca Paywall'ın RevenueCat'ten dönen doğrulanmış `CustomerInfo` sonucunu
+    /// anında yansıtması için kullanılır. Stream yine uzun ömürlü gerçek kaynak olarak aynayı
+    /// sonraki SDK güncellemelerinde düzeltir.
     var isPro: Bool {
         get { isProValue }
         set {
-            assertionFailure("RevenueCatEntitlementService.isPro salt-okunur — gerçek kaynak RevenueCat müşteri bilgisidir.")
+            guard newValue != isProValue else { return }
+            isProValue = newValue
+            defaults.set(newValue, forKey: proMirrorKey)
         }
     }
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         self.isProValue = defaults.bool(forKey: proMirrorKey)
-        RevenueCatConfig.configureIfNeeded()
+        guard RevenueCatConfig.configureIfNeeded() else { return }
         listenTask = Task { [weak self] in
             for await customerInfo in Purchases.shared.customerInfoStream {
                 guard let self else { return }

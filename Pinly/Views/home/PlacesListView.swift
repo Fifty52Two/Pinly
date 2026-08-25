@@ -241,7 +241,13 @@ struct PlacesListView: View {
                       url.startAccessingSecurityScopedResource()
                 else { return }
                 defer { url.stopAccessingSecurityScopedResource() }
-                guard let data = try? Data(contentsOf: url),
+                guard let handle = try? FileHandle(forReadingFrom: url) else {
+                    swarmParseError = true
+                    return
+                }
+                defer { try? handle.close() }
+                guard let data = try? handle.read(upToCount: ImportLimits.maxSwarmFileBytes + 1),
+                      data.count <= ImportLimits.maxSwarmFileBytes,
                       let places = swarmImporting.parseSwarm(data: data)
                 else { swarmParseError = true; return }
                 pendingSwarmPlaces = places

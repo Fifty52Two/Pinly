@@ -102,17 +102,20 @@ struct NearbyPlacesView: View {
                     } label: {
                         Image(systemName: "circle.dashed")
                     }
+                    .accessibilityLabel(NSLocalizedString("Arama Yarıçapı", comment: ""))
                     Button {
                         withAnimation { showMap.toggle() }
                     } label: {
                         Image(systemName: showMap ? "list.bullet" : "map")
                     }
+                    .accessibilityLabel(NSLocalizedString(showMap ? "Listeyi Göster" : "Haritayı Göster", comment: ""))
                     .disabled(viewModel.results.isEmpty)
                     Button {
                         Task { await runSearch() }
                     } label: {
                         Image(systemName: "arrow.clockwise")
                     }
+                    .accessibilityLabel(NSLocalizedString("Sonuçları Yenile", comment: ""))
                     .disabled(viewModel.isLoading)
                 }
             }

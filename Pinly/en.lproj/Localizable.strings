@@ -47,6 +47,9 @@
 "Bu kategoride mekan bulunamadı" = "No places found in this category";
 "Bu adımı atla" = "Skip this step";
 "Arama Yarıçapı" = "Search Radius";
+"Listeyi Göster" = "Show List";
+"Haritayı Göster" = "Show Map";
+"Sonuçları Yenile" = "Refresh Results";
 "Anlık konumuna göre hangi mesafedeki mekanlar gösterilsin?" = "Which distance from your location should be shown?";
 "Tümü" = "All";
 "Tüm kayıtlı mekanları göster" = "Show all saved places";
@@ -308,7 +311,6 @@
 
 // MARK: - Paywall
 "Mekan Limitine Ulaştın" = "You've Reached the Place Limit";
-"Ücretsiz planda en fazla %lld mekan kaydedebilirsin.\nSınırsız mekan için Pro'ya geç." = "Free plan allows up to %lld places.\nGo Pro for unlimited places.";
 "Sınırsız Mekan" = "Unlimited Places";
 "İstediğin kadar mekan kaydet" = "Save as many places as you want";
 "Sınırsız Rota" = "Unlimited Routes";
@@ -325,7 +327,6 @@
 "Satın Alımları Geri Yükle" = "Restore Purchases";
 "Şimdi Değil" = "Not Now";
 "Sınırsız keşif" = "Explore without limits";
-"Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç." = "You finished a route! Go Pro for unlimited places, exporting, and an ad-free experience.";
 "GPX & PDF Dışa Aktar" = "GPX & PDF Export";
 "Rotalarını dışa aktar ve arşivle" = "Export and archive your routes";
 "Reklamsız Kullanım" = "Ad-Free Experience";
@@ -453,7 +454,6 @@
 "Foursquare/Swarm geçmişin mi var? checkins.json dosyanı seç, mekanların saniyeler içinde Pinly'de olsun." = "Have a Foursquare/Swarm history? Pick your checkins.json and your places land in Pinly in seconds.";
 "Swarm Dosyası Seç" = "Choose Swarm File";
 "%lld mekan içe aktarıldı" = "%lld places imported";
-"Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin." = "The free plan is limited to 20 places — unlock the rest with Pro.";
 "İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir" = "Tip: Swarm → Profile → Settings → Download My Data";
 
 // MARK: - Faz 4: Route Optimization
@@ -615,3 +615,8 @@
 "Henüz ortak rotan yok" = "No shared routes yet";
 "Ortak Rota Oluştur ile başlat, linki arkadaşınla paylaş." = "Start with Create Shared Route, then share the link with a friend.";
 "Katılım bekleniyor" = "Waiting for someone to join";
+"Konum İzni Ver" = "Allow Location";
+"Şimdilik Değil" = "Not Now";
+"Profil bilgilerin yalnız bu cihazda saklanır; hesabın oluşturulmaz." = "Your profile stays on this device; no account is created.";
+"Reklam Gizlilik Seçenekleri" = "Ad Privacy Options";
+"Takip iznini reddetmek temel özellikleri kapatmaz. Gerekli bölgelerde reklam gizlilik seçenekleri burada görünür. Pro kullanıcıya reklam gösterilmez." = "Declining tracking does not disable core features. Ad privacy options appear here where required. Pro users do not see ads.";

@@ -65,7 +65,7 @@ final class RouteSummaryViewModel: ObservableObject {
         healthStats: HealthStatsProviding = HealthKitService.shared,
         savedRoutes: SavedRouteRepository = DefaultSavedRouteRepository.shared,
         routeExporter: RouteExporting = DefaultRouteExporter(),
-        analytics: AnalyticsTracking = NoOpAnalyticsService.shared,
+        analytics: AnalyticsTracking = RuntimeAnalyticsService.shared,
         routeMemories: RouteMemoryStoring = DefaultRouteMemoryStore.shared,
         memoryCards: MemoryCardComposing = DefaultMemoryCardComposer.shared,
         placePhotos: PlacePhotoStoring = DefaultPlacePhotoStore.shared

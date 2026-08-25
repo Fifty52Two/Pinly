@@ -3,6 +3,9 @@ import SwiftUI
 // MARK: - İzin Bekleniyor
 
 struct PermissionView: View {
+    let onAllow: () -> Void
+    let onSkip: () -> Void
+
     var body: some View {
         VStack(spacing: 24) {
             Image(systemName: "location.circle.fill")
@@ -17,6 +20,14 @@ struct PermissionView: View {
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 30)
+            }
+            VStack(spacing: 12) {
+                Button(NSLocalizedString("Konum İzni Ver", comment: ""), action: onAllow)
+                    .buttonStyle(PinlyPrimaryButtonStyle())
+                    .padding(.horizontal, 30)
+                Button(NSLocalizedString("Şimdilik Değil", comment: ""), action: onSkip)
+                    .font(.subheadline.weight(.medium))
+                    .foregroundColor(.secondary)
             }
         }
     }
