@@ -23,6 +23,9 @@ enum SocialConfig {
 // MARK: - SocialServiceError
 
 enum SocialServiceError: LocalizedError {
+    /// V1 composition root sosyal özelliği bilerek kapalı tutar. NoOp servisler mutasyonları
+    /// sahte başarıyla yutmak yerine bu hatayla fail-closed davranır.
+    case disabled
     /// Rota merkezinin şehir/ülkesi reverse-geocode ile çözülemedi (city NOT NULL kısıtı).
     case cityUnresolved
     case publishFailed
@@ -31,6 +34,7 @@ enum SocialServiceError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
+        case .disabled:       return NSLocalizedString("Topluluk özellikleri bu sürümde kullanılamıyor.", comment: "")
         case .cityUnresolved: return NSLocalizedString("Rota konumu belirlenemedi.", comment: "")
         case .publishFailed:  return NSLocalizedString("Rota yayınlanamadı.", comment: "")
         case .rateLimited:    return NSLocalizedString("Çok hızlı istekte bulundunuz, lütfen bekleyin.", comment: "")
@@ -304,15 +308,15 @@ final class NoOpSocialService: RouteFeedProviding, ProfileSyncing {
 
     func fetchFeed(city: String, cursor: Date?) async throws -> [PublicRouteDTO] { [] }
     @discardableResult
-    func publish(_ route: SavedRoute) async throws -> String { UUID().uuidString }
-    func favorite(routeId: String) async throws {}
-    func unfavorite(routeId: String) async throws {}
+    func publish(_ route: SavedRoute) async throws -> String { throw SocialServiceError.disabled }
+    func favorite(routeId: String) async throws { throw SocialServiceError.disabled }
+    func unfavorite(routeId: String) async throws { throw SocialServiceError.disabled }
     func myFavorites() async throws -> [PublicRouteDTO] { [] }
     func myPublishedRoutes() async throws -> [PublicRouteDTO] { [] }
-    func report(routeId: String, reason: ReportReason, note: String?) async throws {}
-    func block(userId: String) async throws {}
+    func report(routeId: String, reason: ReportReason, note: String?) async throws { throw SocialServiceError.disabled }
+    func block(userId: String) async throws { throw SocialServiceError.disabled }
     var hasLocalSession: Bool { false }
     func myProfile() async throws -> SocialProfileDTO? { nil }
     func publicProfile(id: String) async throws -> SocialProfileDTO? { nil }
-    func setUsername(_ username: String) async throws {}
+    func setUsername(_ username: String) async throws { throw SocialServiceError.disabled }
 }

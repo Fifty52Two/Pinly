@@ -40,7 +40,7 @@ final class FirstRouteSetupViewModel: ObservableObject {
     init(
         starterRoutes: StarterRoutesProviding = DefaultStarterRoutesProvider(),
         nearbySearch: NearbySearching = DefaultNearbySearchService.shared,
-        analytics: AnalyticsTracking = NoOpAnalyticsService.shared
+        analytics: AnalyticsTracking = RuntimeAnalyticsService.shared
     ) {
         self.starterRoutes = starterRoutes
         self.nearbySearch = nearbySearch

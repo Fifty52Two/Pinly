@@ -17,10 +17,9 @@ struct PaywallView: View {
     @State private var isLoadingOfferings = true
     @State private var isPurchasing = false
     @State private var errorMessage: String?
-    // Optimistic varsayılan: RC'nin App Store hesabı bazlı gerçek cevabı gelene kadar (veya
-    // hiç gelmezse — offline/ilk kontrol) trial rozetini gizlemeyiz; yalnızca SDK açıkça
-    // ".ineligible" derse (kullanıcı bu ürünün denemesini daha önce kullanmış) gizleriz.
-    @State private var yearlyTrialEligible = true
+    // Trial yalnızca RevenueCat/App Store açıkça `.eligible` dediğinde gösterilir. Bilinmeyen
+    // veya offline durumda ücretsiz deneme vaat etmek yanıltıcı olabilir.
+    @State private var yearlyTrialEligible = false
 
     private var isSoftPaywall: Bool { source == "first_route_completed" }
     private var yearlyPackage: Package? { offering?.annual }
@@ -342,7 +341,7 @@ struct PaywallView: View {
         if let yearly = yearlyPackage,
            yearly.storeProduct.introductoryDiscount?.paymentMode == .freeTrial {
             let status = await purchases.checkTrialEligibility(product: yearly.storeProduct)
-            yearlyTrialEligible = status != .ineligible
+            yearlyTrialEligible = status == .eligible
         }
     }
 
@@ -353,17 +352,21 @@ struct PaywallView: View {
         do {
             let result = try await purchases.purchase(package: package)
             guard !result.userCancelled else { return }
-            // Ödeme GERÇEKLEŞTİ: event ve kapanış entitlement eşleşmesine bağlanmaz —
-            // eşleşme gelmese bile (RC konfigürasyon aksaklığı) kullanıcı parası alınmışken
-            // paywall'da kilitli bırakılmaz; Release'te customerInfoStream gecikmeli de olsa
-            // mirror'ı düzeltir.
             if package.identifier == yearlyPackage?.identifier, hasFreeTrial {
                 analytics.track(.trialStarted(product: package.storeProduct.productIdentifier))
             }
             analytics.track(.purchaseCompleted(product: package.storeProduct.productIdentifier))
-            // DEBUG'da entitlements=Local → gerçekten set eder; Release'te entitlements=RevenueCat
-            // → setter no-op (gerçek kaynak zaten customerInfoStream ile aynı anda güncellenir).
-            entitlements.isPro = EntitlementMapper.isPro(customerInfo: result.customerInfo)
+            let active = EntitlementMapper.isPro(customerInfo: result.customerInfo)
+            guard active else {
+                errorMessage = NSLocalizedString(
+                    "Satın alma tamamlandı ancak Pro erişimi henüz doğrulanamadı. Lütfen Satın Alımları Geri Yükle'yi dene.",
+                    comment: ""
+                )
+                return
+            }
+            // Doğrulanmış CustomerInfo sonucu aynaya hemen yazılır; export gate'i paywall
+            // kapanır kapanmaz ikinci bir bekleme/paywall olmadan açılır.
+            entitlements.isPro = true
             onDismiss()
         } catch {
             errorMessage = error.localizedDescription

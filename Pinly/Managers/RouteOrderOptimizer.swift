@@ -11,7 +11,9 @@ enum RouteOrderOptimizer {
     /// `start` yoksa ilk durak sabit kalır, kalanlar ona göre dizilir.
     /// Koordinatsız mekanlar sıranın sonuna orijinal sıralarıyla eklenir.
     static func nearestNeighborOrder(places: [Place], start: CLLocationCoordinate2D?) -> [Place] {
-        let located = places.filter { $0.coordinate != nil }
+        let located = places.compactMap { place in
+            place.coordinate.map { (place: place, coordinate: $0) }
+        }
         let unlocated = places.filter { $0.coordinate == nil }
         guard located.count >= 2 else { return places }
 
@@ -22,18 +24,18 @@ enum RouteOrderOptimizer {
             cursor = start
         } else {
             let first = remaining.removeFirst()
-            ordered.append(first)
-            cursor = first.coordinate!
+            ordered.append(first.place)
+            cursor = first.coordinate
         }
 
         while !remaining.isEmpty {
             let nearestIndex = remaining.indices.min(by: { a, b in
-                distance(from: cursor, to: remaining[a].coordinate!)
-                    < distance(from: cursor, to: remaining[b].coordinate!)
-            })!
+                distance(from: cursor, to: remaining[a].coordinate)
+                    < distance(from: cursor, to: remaining[b].coordinate)
+            }) ?? remaining.startIndex
             let next = remaining.remove(at: nearestIndex)
-            ordered.append(next)
-            cursor = next.coordinate!
+            ordered.append(next.place)
+            cursor = next.coordinate
         }
         return ordered + unlocated
     }

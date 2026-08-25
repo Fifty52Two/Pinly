@@ -13,6 +13,7 @@ struct ProfileTab: View {
     @Environment(\.badges) private var badges
     @Environment(\.profile) private var profileService
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.openURL) private var openURL
 
     @Query(sort: \SavedRoute.createdAt, order: .reverse) private var savedRoutes: [SavedRoute]
 
@@ -26,6 +27,7 @@ struct ProfileTab: View {
     @State private var showEditProfile = false
     @State private var showPaywall = false
     @State private var showDiagnostics = false
+    @State private var showPrivacyChoices = false
     @State private var profile: UserProfile? = nil
     @State private var profilePhoto: UIImage? = nil
     @State private var pickerItem: PhotosPickerItem? = nil
@@ -148,6 +150,45 @@ struct ProfileTab: View {
                                     : String(format: NSLocalizedString("%lld/%lld rozet kazanıldı", comment: ""), earned, total)
                             }()) {
                         showBadges = true
+                    }
+                }
+                .listRowBackground(PinlyTheme.surface)
+
+                Section {
+                    MoreRow(
+                        icon: "hand.raised.fill",
+                        iconColor: PinlyTheme.slate,
+                        title: NSLocalizedString("Gizlilik Tercihleri", comment: ""),
+                        subtitle: NSLocalizedString("Reklam, izinler ve veri kontrolleri", comment: "")
+                    ) {
+                        showPrivacyChoices = true
+                    }
+
+                    if let privacyURL = PinlyLegal.privacyPolicyURL {
+                        MoreRow(
+                            icon: "lock.shield.fill",
+                            iconColor: PinlyTheme.slate,
+                            title: NSLocalizedString("Gizlilik Politikası", comment: ""),
+                            subtitle: privacyURL.host ?? ""
+                        ) { openURL(privacyURL) }
+                    }
+
+                    if let termsURL = PinlyLegal.termsOfUseURL {
+                        MoreRow(
+                            icon: "doc.text.fill",
+                            iconColor: PinlyTheme.gold,
+                            title: NSLocalizedString("Kullanım Koşulları", comment: ""),
+                            subtitle: termsURL.host ?? ""
+                        ) { openURL(termsURL) }
+                    }
+
+                    if let supportURL = PinlyLegal.supportURL {
+                        MoreRow(
+                            icon: "questionmark.circle.fill",
+                            iconColor: PinlyTheme.primary,
+                            title: NSLocalizedString("Destek", comment: ""),
+                            subtitle: supportURL.host ?? ""
+                        ) { openURL(supportURL) }
                     }
                 }
                 .listRowBackground(PinlyTheme.surface)
@@ -277,6 +318,9 @@ struct ProfileTab: View {
         }
         .sheet(isPresented: $showDiagnostics) {
             DiagnosticsView()
+        }
+        .sheet(isPresented: $showPrivacyChoices) {
+            PrivacyChoicesView()
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView(source: "profile") { showPaywall = false }

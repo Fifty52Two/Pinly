@@ -94,12 +94,12 @@
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Unlimited places, GPX/PDF, ad-free",
+              "description" : "GPX/PDF export and an ad-free experience",
               "displayName" : "Pinly Pro Monthly",
               "locale" : "en_US"
             },
             {
-              "description" : "Sınırsız mekan, GPX/PDF, reklamsız",
+              "description" : "GPX/PDF dışa aktarma ve reklamsız deneyim",
               "displayName" : "Pinly Pro Aylık",
               "locale" : "tr_TR"
             }
@@ -132,12 +132,12 @@
           },
           "localizations" : [
             {
-              "description" : "Unlimited places, GPX/PDF, ad-free",
+              "description" : "GPX/PDF export and an ad-free experience",
               "displayName" : "Pinly Pro Yearly",
               "locale" : "en_US"
             },
             {
-              "description" : "Sınırsız mekan, GPX/PDF, reklamsız",
+              "description" : "GPX/PDF dışa aktarma ve reklamsız deneyim",
               "displayName" : "Pinly Pro Yıllık",
               "locale" : "tr_TR"
             }

@@ -37,7 +37,7 @@ class PlaceFormViewModel: ObservableObject {
         notes: String = "",
         geocoding: GeocodingProviding = DefaultGeocodingService.shared,
         photoStore: PlacePhotoStoring = DefaultPlacePhotoStore.shared,
-        analytics: AnalyticsTracking = NoOpAnalyticsService.shared
+        analytics: AnalyticsTracking = RuntimeAnalyticsService.shared
     ) {
         self.name = name
         self.category = category

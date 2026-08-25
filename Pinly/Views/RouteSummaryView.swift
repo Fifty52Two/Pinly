@@ -4,6 +4,11 @@ import SwiftData
 import StoreKit
 
 struct RouteSummaryView: View {
+    private enum PendingExport {
+        case gpx
+        case pdf
+    }
+
     @EnvironmentObject var placeStore: PlaceStore
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var routeManager: RouteManager
@@ -28,6 +33,7 @@ struct RouteSummaryView: View {
     @State private var showSaveRouteSheet = false
     @State private var showSoftPaywall = false
     @State private var showExportPaywall = false
+    @State private var pendingExport: PendingExport?
     @State private var showShareFormatPicker = false
     @State private var isComposingMemoryCard = false
 
@@ -353,12 +359,12 @@ struct RouteSummaryView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Button {
-                            if viewModel.isPro { shareGPX() } else { showExportPaywall = true }
+                            requestExport(.gpx)
                         } label: {
                             Label(NSLocalizedString("GPX İndir", comment: ""), systemImage: "square.and.arrow.down")
                         }
                         Button {
-                            if viewModel.isPro { sharePDF() } else { showExportPaywall = true }
+                            requestExport(.pdf)
                         } label: {
                             Label(NSLocalizedString("PDF İndir", comment: ""), systemImage: "doc.richtext")
                         }
@@ -469,7 +475,7 @@ struct RouteSummaryView: View {
                 }
             }
         }
-        .sheet(isPresented: $showExportPaywall) {
+        .sheet(isPresented: $showExportPaywall, onDismiss: resumePendingExportIfUnlocked) {
             PaywallView(source: "export_locked") { showExportPaywall = false }
         }
         .sheet(isPresented: $showSoftPaywall, onDismiss: {
@@ -576,7 +582,9 @@ struct RouteSummaryView: View {
                     }
                 } else {
                     Button {
-                        viewModel.showInterstitialThenProceed { showSharePicker = true }
+                        // Paylaşım Pinly'nin organik büyüme döngüsüdür; önüne reklam koymak
+                        // kullanıcı niyetini ve davet dönüşümünü düşürür.
+                        showSharePicker = true
                     } label: {
                         HStack(spacing: 8) {
                             Image(systemName: "square.and.arrow.up")
@@ -738,6 +746,33 @@ struct RouteSummaryView: View {
     private func shareGPX() {
         guard let url = viewModel.shareGPX(places: routePlaces, fallbackRouteName: routeManager.routeName) else { return }
         presentShareSheet(for: url)
+    }
+
+    private func requestExport(_ export: PendingExport) {
+        guard viewModel.isPro else {
+            pendingExport = export
+            showExportPaywall = true
+            return
+        }
+        performExport(export)
+    }
+
+    private func resumePendingExportIfUnlocked() {
+        guard let pendingExport else { return }
+        self.pendingExport = nil
+        guard viewModel.isPro else { return }
+
+        // Sheet kapanış animasyonu tamamlandıktan sonra activity controller sunulur.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            performExport(pendingExport)
+        }
+    }
+
+    private func performExport(_ export: PendingExport) {
+        switch export {
+        case .gpx: shareGPX()
+        case .pdf: sharePDF()
+        }
     }
 
     private func presentShareSheet(items: [Any]) {

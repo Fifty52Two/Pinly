@@ -10,7 +10,6 @@
 		0A00D6722F7C57AF0031F556 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A00D6712F7C57AF0031F556 /* WidgetKit.framework */; };
 		0A00D6742F7C57AF0031F556 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A00D6732F7C57AF0031F556 /* SwiftUI.framework */; };
 		0A00D6832F7C57AF0031F556 /* PinlyLiveActivityExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0A00D66F2F7C57AF0031F556 /* PinlyLiveActivityExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		0A836EFC30392B9500BB0C3A /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 0A836EFB30392B9500BB0C3A /* Config.xcconfig */; };
 		0A93820E2F8010CB00EF3C24 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 0A93820D2F8010CB00EF3C24 /* GoogleMobileAds */; };
 		0A963A143006882E001B1587 /* GoogleUserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = 0A963A133006882E001B1587 /* GoogleUserMessagingPlatform */; };
 		0AAC824C30082E5D005FE580 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0AAC824B30082E5D005FE580 /* FirebaseAnalytics */; };
@@ -66,6 +65,8 @@
 		0A00D66A2F7C57250031F556 /* Exceptions for "Pinly" folder in "Pinly" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				.claude,
+				.claude/settings.local.json,
 				Info.plist,
 			);
 			target = 0AC0FA682F2F9CE300C6C26F /* Pinly */;
@@ -331,7 +332,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A836EFC30392B9500BB0C3A /* Config.xcconfig in Resources */,
 				DC3DC36FA7AF8E68FB0C168D /* Pinly.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -365,7 +365,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\ntouch \"${DERIVED_FILE_DIR}/crashlytics_build_marker\"\n";
+			shellScript = "if [ ! -f \"${PROJECT_DIR}/Pinly/GoogleService-Info.plist\" ]; then\n  echo \"note: Crashlytics upload skipped; GoogleService-Info.plist is not present in this clean-checkout build.\"\n  touch \"${DERIVED_FILE_DIR}/crashlytics_build_marker\"\n  exit 0\nfi\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\nstatus=$?\ntouch \"${DERIVED_FILE_DIR}/crashlytics_build_marker\"\nexit $status\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -636,7 +636,6 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_NSCameraUsageDescription = "QR kod okumak ve mekan fotoğrafı çekmek için kamera gerekiyor.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Pinly, rotalarını tamamlarken adım sayını ve yürüme mesafeni kaydetmek için Sağlık verisine erişir.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Pinly Sağlık verisine yazma yapmaz; bu izin yalnızca sistem gereksinimi nedeniyle tanımlanmıştır.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Ferhat Akköprü";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Pinly, yürüyüş rotanı çizmek ve kaydettiğin mekanlara yol tarifi vermek için konumunu kullanır.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
@@ -673,7 +672,6 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_NSCameraUsageDescription = "QR kod okumak ve mekan fotoğrafı çekmek için kamera gerekiyor.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Pinly, rotalarını tamamlarken adım sayını ve yürüme mesafeni kaydetmek için Sağlık verisine erişir.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Pinly Sağlık verisine yazma yapmaz; bu izin yalnızca sistem gereksinimi nedeniyle tanımlanmıştır.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Ferhat Akköprü";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Pinly, yürüyüş rotanı çizmek ve kaydettiğin mekanlara yol tarifi vermek için konumunu kullanır.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;

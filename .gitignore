@@ -5,8 +5,8 @@
 ## User settings
 xcuserdata/
 
-## compatibility with Xcode 8 and earlier (ignoring not only xcworkspace but also xcworkspace/xcuserdata)
-*.xcworkspace/
+## Workspace user state is local; shared SwiftPM resolution is tracked below.
+*.xcworkspace/xcuserdata/
 
 ## testing
 *.xccheckout
@@ -98,11 +98,18 @@ __pycache__/
 .env.production
 .env.test
 secrets.json
-Config.xcconfig
+Config.local.xcconfig
 APIKeys.swift
 
-# Firebase config (API key'ler içerir, CI'da GitHub Secrets'tan inject edilir)
+# Firebase production client config is local. The app safely disables Firebase when absent.
 Pinly/GoogleService-Info.plist
+
+# Track the shared SwiftPM lockfile even though it lives inside an .xcworkspace.
+!Pinly.xcodeproj/project.xcworkspace/
+Pinly.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+!Pinly.xcodeproj/project.xcworkspace/xcshareddata/
+!Pinly.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+!Pinly.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 
 # AI tools (Claude, Codex, Cursor, etc)
 # NOT: .codex/config.toml MCP sunucu yapılandırması tutar ve içinde Supabase gibi

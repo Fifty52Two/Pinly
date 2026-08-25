@@ -11,10 +11,26 @@ enum RevenueCatConfig {
         Bundle.main.object(forInfoDictionaryKey: "RevenueCatAPIKey") as? String ?? ""
     }()
 
-    static func configureIfNeeded() {
-        guard !Purchases.isConfigured else { return }
+    @discardableResult
+    static func configureIfNeeded() -> Bool {
+        if Purchases.isConfigured { return true }
+        guard !apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return false
+        }
         Purchases.logLevel = .warn
         Purchases.configure(withAPIKey: apiKey)
+        return true
+    }
+}
+
+enum RevenueCatConfigurationError: LocalizedError {
+    case missingAPIKey
+
+    var errorDescription: String? {
+        switch self {
+        case .missingAPIKey:
+            return NSLocalizedString("Pinly Pro yapılandırması bu build'de mevcut değil.", comment: "")
+        }
     }
 }
 
@@ -42,19 +58,29 @@ final class RevenueCatPurchasesService: PurchasesProviding {
     }
 
     func offerings() async throws -> Offerings {
-        try await Purchases.shared.offerings()
+        guard RevenueCatConfig.configureIfNeeded() else {
+            throw RevenueCatConfigurationError.missingAPIKey
+        }
+        return try await Purchases.shared.offerings()
     }
 
     func purchase(package: Package) async throws -> (customerInfo: CustomerInfo, userCancelled: Bool) {
+        guard RevenueCatConfig.configureIfNeeded() else {
+            throw RevenueCatConfigurationError.missingAPIKey
+        }
         let result = try await Purchases.shared.purchase(package: package)
         return (result.customerInfo, result.userCancelled)
     }
 
     func restorePurchases() async throws -> CustomerInfo {
-        try await Purchases.shared.restorePurchases()
+        guard RevenueCatConfig.configureIfNeeded() else {
+            throw RevenueCatConfigurationError.missingAPIKey
+        }
+        return try await Purchases.shared.restorePurchases()
     }
 
     func checkTrialEligibility(product: StoreProduct) async -> IntroEligibilityStatus {
-        await Purchases.shared.checkTrialOrIntroDiscountEligibility(product: product)
+        guard RevenueCatConfig.configureIfNeeded() else { return .unknown }
+        return await Purchases.shared.checkTrialOrIntroDiscountEligibility(product: product)
     }
 }

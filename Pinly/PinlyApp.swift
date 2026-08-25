@@ -38,10 +38,12 @@ struct PinlyApp: App {
     private let starterRoutesProvider = DefaultStarterRoutesProvider()
     private let nearbySearchService = DefaultNearbySearchService.shared
     private let placePhotoStore = DefaultPlacePhotoStore.shared
-    private let analyticsService = FirebaseAnalyticsService.shared
+    private let analyticsService: AnalyticsTracking = RuntimeAnalyticsService.shared
     private let routeMemoryStore = DefaultRouteMemoryStore.shared
-    private let socialService: SocialServicing = SupabaseSocialService.shared
-    private let sharedRouteService: SharedRouteServicing = SupabaseSharedRouteService.shared
+    // V1 hard-off: backend implementasyonları V1.1 için repoda kalır ancak production
+    // composition root normal kullanıcı akışına ağ yazabilen servis enjekte etmez.
+    private let socialService: SocialServicing = SocialFeaturePolicy.socialService
+    private let sharedRouteService: SharedRouteServicing = SocialFeaturePolicy.sharedRouteService
 
     init() {
         // Crashlytics + Analytics: rıza gerektirmez (ATT sonrası IDFA erişimi otomatik
@@ -49,7 +51,14 @@ struct PinlyApp: App {
         // başlatılır. AdMob SDK'sı ise burada BAŞLATILMIYOR — UMP rızası + ATT izni
         // alınmadan reklam isteği atılamaz (bkz. ConsentManager); gerçek başlatma
         // ContentView'in ilk onAppear'ında, rıza akışı tamamlanınca yapılır.
-        FirebaseApp.configure()
+        if let options = FirebaseOptions.defaultOptions() {
+            FirebaseApp.configure(options: options)
+            RuntimeAnalyticsService.shared.configure(destination: FirebaseAnalyticsService.shared)
+        } else {
+            // Clean checkout/CI Firebase client dosyası olmadan da açılabilmeli.
+            // Production release checklist'i gerçek GoogleService-Info.plist'i zorunlu tutar.
+            RuntimeAnalyticsService.shared.configure(destination: NoOpAnalyticsService.shared)
+        }
         DiagnosticsCollector.shared.register()
         // İzin İSTEMEZ — yalnızca izin zaten verilmişse haftalık bildirimi yeniden planlar.
         // İzin isteme anı Haftalık Rapor ekranındaki CTA'da (FAZ 5.4).

@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: swift
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Istanbul
+    open-pull-requests-limit: 5
+    groups:
+      apple-platform-dependencies:
+        patterns:
+          - "*"
+    labels:
+      - dependencies
+      - security

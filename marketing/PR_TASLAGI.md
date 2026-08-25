@@ -37,9 +37,10 @@ sistemi öne çıkan özellikler arasında. Uygulama şu an [TestFlight beta aş
 test ediliyor / App Store'da ücretsiz olarak indirilebiliyor], Türkçe, İngilizce, İspanyolca,
 Almanca ve Rusça dil desteğiyle geliyor.
 
-Pinly, freemium bir modelle çalışıyor: ücretsiz sürümde 20 mekana kadar kayıt yapılabiliyor,
-Pro sürüm (aylık $4.99 / yıllık $39.99) sınırsız mekan kaydı, GPX/PDF rota dışa aktarma ve
-reklamsız kullanım sunuyor.
+Pinly, freemium bir modelle çalışıyor: Free sürüm sınırsız mekan kaydı ile çekirdek rota
+planlama ve navigasyonu kontrollü reklamlarla sunuyor. Pro sürüm GPX/PDF rota dışa aktarma
+ve reklamsız deneyim ekliyor. Güncel fiyat ve varsa deneme uygunluğu yalnızca App Store'daki
+satın alma ekranında gösteriliyor.
 
 **Pinly Hakkında:** Pinly, mekan kaydetme ve yürüyüş rotası planlamayı tek uygulamada birleştiren,
 Türkiye ve turist odaklı bir iOS uygulamasıdır. [TARİH]'te kuruldu, şu an [beta aşamasında /
@@ -54,9 +55,8 @@ App Store'da yayında].
 - "%9" rakamı proje briefinde verilen sabit bir endüstri istatistiği olarak kullanıldı — gönderim
   öncesi Ferhat bu rakamın halka açık bir kaynakla (haber/analiz) desteklenebildiğini teyit etsin;
   basın bir kaynak isteyebilir.
-- Fiyatlar GROWTH_PLAN'daki güncel öneriyle birebir ($4.99/$39.99) — TR bölgesel fiyat (₺129,99/
-  ₺799,99 civarı) ayrıca not düşülebilir ama basın metninde ana fiyat USD ile bırakıldı (uluslararası
-  yayın ihtimaline karşı).
+- Basın materyalinde sabit fiyat yazılmaz; bölgesel ve güncel fiyat için App Store ürün sayfasına
+  yönlendirilir.
 
 ---
 
@@ -69,7 +69,9 @@ App Store'da yayında].
 Pinly turns the places you save into walkable routes — pick a category, set your stop order,
 follow turn-by-turn navigation, and end the day with a shareable story card. Comes with curated
 starter routes in Istanbul, Ankara, Izmir, Antalya, and Bursa so you can try it with zero setup.
-Free up to 20 saved places; Pro unlocks unlimited places, GPX/PDF export, and an ad-free experience.
+Free includes unlimited saved places and the core route-planning/navigation experience with
+controlled ads. Pro adds GPX/PDF export and removes ads. Current regional pricing and any trial
+eligibility are shown by the App Store before purchase.
 ```
 
 **Maker'ın ilk yorumu (samimi, hikaye anlatan ton):**

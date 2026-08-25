@@ -308,7 +308,6 @@
 
 // MARK: - Paywall
 "Mekan Limitine Ulaştın" = "Mekan Limitine Ulaştın";
-"Ücretsiz planda en fazla %lld mekan kaydedebilirsin.\nSınırsız mekan için Pro'ya geç." = "Ücretsiz planda en fazla %lld mekan kaydedebilirsin.\nSınırsız mekan için Pro'ya geç.";
 "Sınırsız Mekan" = "Sınırsız Mekan";
 "İstediğin kadar mekan kaydet" = "İstediğin kadar mekan kaydet";
 "Sınırsız Rota" = "Sınırsız Rota";
@@ -325,7 +324,6 @@
 "Satın Alımları Geri Yükle" = "Satın Alımları Geri Yükle";
 "Şimdi Değil" = "Şimdi Değil";
 "Sınırsız keşif" = "Sınırsız keşif";
-"Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç." = "Rotanı tamamladın! Sınırsız mekan, dışa aktarma ve reklamsız deneyim için Pro'ya geç.";
 "GPX & PDF Dışa Aktar" = "GPX & PDF Dışa Aktar";
 "Rotalarını dışa aktar ve arşivle" = "Rotalarını dışa aktar ve arşivle";
 "Reklamsız Kullanım" = "Reklamsız Kullanım";
@@ -452,7 +450,6 @@
 "Foursquare/Swarm geçmişin mi var? checkins.json dosyanı seç, mekanların saniyeler içinde Pinly'de olsun." = "Foursquare/Swarm geçmişin mi var? checkins.json dosyanı seç, mekanların saniyeler içinde Pinly'de olsun.";
 "Swarm Dosyası Seç" = "Swarm Dosyası Seç";
 "%lld mekan içe aktarıldı" = "%lld mekan içe aktarıldı";
-"Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin." = "Ücretsiz sürüm 20 mekanla sınırlı — kalanını Pro ile ekleyebilirsin.";
 "İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir" = "İpucu: Swarm → Profil → Ayarlar → Verilerimi İndir";
 
 // MARK: - Faz 4: Rota Optimize
@@ -614,3 +611,6 @@
 "Henüz ortak rotan yok" = "Henüz ortak rotan yok";
 "Ortak Rota Oluştur ile başlat, linki arkadaşınla paylaş." = "Ortak Rota Oluştur ile başlat, linki arkadaşınla paylaş.";
 "Katılım bekleniyor" = "Katılım bekleniyor";
+"Konum İzni Ver" = "Konum İzni Ver";
+"Şimdilik Değil" = "Şimdilik Değil";
+"Profil bilgilerin yalnız bu cihazda saklanır; hesabın oluşturulmaz." = "Profil bilgilerin yalnız bu cihazda saklanır; hesabın oluşturulmaz.";

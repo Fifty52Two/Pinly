@@ -1,0 +1,12 @@
+// Safe clean-checkout defaults. Production client configuration belongs in the ignored
+// Config.local.xcconfig file. The Google value below is the official iOS sample app ID.
+
+REVENUECAT_API_KEY =
+SUPABASE_URL =
+SUPABASE_PUBLISHABLE_KEY =
+GAD_APPLICATION_IDENTIFIER = ca-app-pub-3940256099942544~1458002511
+GAD_INTERSTITIAL_AD_UNIT_ID = ca-app-pub-3940256099942544/4411468910
+PINLY_WEBSITE_HOST =
+PINLY_APP_STORE_ID =
+
+#include? "Config.local.xcconfig"

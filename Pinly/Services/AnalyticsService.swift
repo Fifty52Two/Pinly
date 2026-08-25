@@ -78,6 +78,32 @@ protocol AnalyticsTracking {
     func track(_ event: AnalyticsEvent)
 }
 
+// MARK: - RuntimeAnalyticsService
+
+/// `@StateObject` ViewModel'ler SwiftUI environment kurulmadan önce oluşturulduğu için
+/// constructor varsayılanlarının doğrudan NoOp olması production event'lerini sessizce
+/// kaybettiriyordu. Bu router tüm varsayılanların tek, sonradan yapılandırılan hedefe gitmesini
+/// sağlar; testler yine doğrudan mock enjekte eder.
+final class RuntimeAnalyticsService: AnalyticsTracking {
+    static let shared = RuntimeAnalyticsService()
+
+    private let lock = NSLock()
+    private var destination: AnalyticsTracking = NoOpAnalyticsService.shared
+
+    func configure(destination: AnalyticsTracking) {
+        lock.lock()
+        self.destination = destination
+        lock.unlock()
+    }
+
+    func track(_ event: AnalyticsEvent) {
+        lock.lock()
+        let destination = self.destination
+        lock.unlock()
+        destination.track(event)
+    }
+}
+
 // MARK: - NoOpAnalyticsService
 
 /// Firebase eklenmeden önceki varsayılan implementasyon: hiçbir yere göndermez,

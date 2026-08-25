@@ -24,13 +24,15 @@ struct RouteSharePickerView: View {
         guard !coords.isEmpty else { return nil }
         let lats = coords.map(\.latitude)
         let lons = coords.map(\.longitude)
+        guard let minLat = lats.min(), let maxLat = lats.max(),
+              let minLon = lons.min(), let maxLon = lons.max() else { return nil }
         let center = CLLocationCoordinate2D(
-            latitude: (lats.min()! + lats.max()!) / 2,
-            longitude: (lons.min()! + lons.max()!) / 2
+            latitude: (minLat + maxLat) / 2,
+            longitude: (minLon + maxLon) / 2
         )
         let span = MKCoordinateSpan(
-            latitudeDelta: max((lats.max()! - lats.min()!) * 1.5, 0.01),
-            longitudeDelta: max((lons.max()! - lons.min()!) * 1.5, 0.01)
+            latitudeDelta: max((maxLat - minLat) * 1.5, 0.01),
+            longitudeDelta: max((maxLon - minLon) * 1.5, 0.01)
         )
         return MKCoordinateRegion(center: center, span: span)
     }

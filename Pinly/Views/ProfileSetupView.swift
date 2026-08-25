@@ -61,6 +61,9 @@ struct ProfileSetupView: View {
                         Text(NSLocalizedString("Sana özel bir deneyim için kendini tanıt.", comment: ""))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
+                        Text(NSLocalizedString("Profil bilgilerin yalnız bu cihazda saklanır; hesabın oluşturulmaz.", comment: ""))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
 
                     // Apple ile Giriş V1'de KALDIRILDI.

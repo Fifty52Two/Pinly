@@ -26,11 +26,16 @@ protocol SharedRouteServicing {
 
 /// Realtime kanalını + token'ı saran küçük tutucu — ekran kapanınca `deinit` aboneliği keser.
 final class SharedRouteSubscription {
-    private let channel: RealtimeChannelV2
+    private let channel: RealtimeChannelV2?
     private var subscriptionTask: Task<Void, Never>?
 
     fileprivate init(channel: RealtimeChannelV2) {
         self.channel = channel
+    }
+
+    /// V1 NoOp servisi için Supabase client/channel oluşturmayan abonelik.
+    fileprivate init() {
+        self.channel = nil
     }
 
     fileprivate func start() {
@@ -40,13 +45,13 @@ final class SharedRouteSubscription {
         // şeklinde bir retain cycle'a yol açıyordu. Nesne asla gerçek anlamda serbest
         // kalamıyor, sonraki erişimlerde "deallocated with non-zero retain count" / dangling
         // reference çöküyordu (gerçek cihazda görülen SIGABRT'in kaynağı buydu).
-        let channel = self.channel
+        guard let channel else { return }
         subscriptionTask = Task { try? await channel.subscribeWithError() }
     }
 
     func cancel() {
         subscriptionTask?.cancel()
-        let channel = self.channel
+        guard let channel else { return }
         Task { await channel.unsubscribe() }
     }
 
@@ -144,22 +149,16 @@ final class NoOpSharedRouteService: SharedRouteServicing {
     static let shared = NoOpSharedRouteService()
 
     func create(name: String, category: String, places: [SavedPlaceSnapshot]) async throws -> SharedRouteDTO {
-        SharedRouteDTO(
-            id: UUID().uuidString, name: name, category: category, places: places,
-            owner: "", collaborator: nil, updatedBy: nil, createdAt: Date(), updatedAt: Date()
-        )
+        throw SocialServiceError.disabled
     }
     func fetch(id: String) async throws -> SharedRouteDTO {
-        SharedRouteDTO(
-            id: id, name: "", category: "city", places: [],
-            owner: "", collaborator: nil, updatedBy: nil, createdAt: Date(), updatedAt: Date()
-        )
+        throw SocialServiceError.disabled
     }
     @discardableResult
-    func join(id: String) async throws -> SharedRouteDTO { try await fetch(id: id) }
-    func update(id: String, name: String?, places: [SavedPlaceSnapshot]?) async throws {}
+    func join(id: String) async throws -> SharedRouteDTO { throw SocialServiceError.disabled }
+    func update(id: String, name: String?, places: [SavedPlaceSnapshot]?) async throws { throw SocialServiceError.disabled }
     func subscribe(id: String, onChange: @escaping @MainActor (SharedRouteDTO) -> Void) -> SharedRouteSubscription {
-        SharedRouteSubscription(channel: SocialConfig.client.realtimeV2.channel("noop"))
+        SharedRouteSubscription()
     }
     func myRoutes() async throws -> [SharedRouteDTO] { [] }
 }
