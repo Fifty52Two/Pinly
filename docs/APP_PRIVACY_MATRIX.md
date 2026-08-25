@@ -1,5 +1,7 @@
 # Pinly V1 App Privacy Matrix
 
+> **SUPERSEDED:** Submission için `docs/APP_PRIVACY_MATRIX_FINAL.md` kullanılır. Bu dosya önceki ayrıntılı audit anlatımı olarak korunur; App Store Connect cevabının tek kaynağı değildir.
+
 Durum: kod ve paket manifestleri incelendi; App Store Connect ve sağlayıcı dashboard teyidi bekliyor.  
 Son doğrulama: 2026-08-25
 

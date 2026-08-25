@@ -15,7 +15,7 @@
 - [ ] Distribution certificate/profile, HealthKit ve Live Activities capability doğru.
 - [ ] Release archive gerçek cihaz hedefinde oluşturuldu; Validate App başarılı.
 - [ ] dSYM upload ve Crashlytics script archive'da başarılı.
-- [ ] Exported archive privacy report `docs/APP_PRIVACY_MATRIX.md` ile karşılaştırıldı.
+- [ ] Exported archive privacy report `docs/APP_PRIVACY_MATRIX_FINAL.md` ile karşılaştırıldı.
 - [ ] `ITSAppUsesNonExemptEncryption = NO` kullanım şekliyle teyit edildi.
 
 ## StoreKit / RevenueCat
@@ -40,7 +40,7 @@
 
 - [ ] `marketing/APP_STORE_METADATA_TR_EN.md` placeholder'ları production URL'lerle değiştirildi.
 - [ ] Title/subtitle/keywords karakter limitleri App Store Connect'te yeniden kontrol edildi.
-- [ ] 6 screenshot gerçek build'den, doğru lokalizasyon ve cihaz ölçülerinde üretildi.
+- [ ] `docs/SCREENSHOT_REQUIREMENTS.md` içindeki 9 sahne gerçek build'den, doğru lokalizasyon ve cihaz ölçülerinde üretildi.
 - [ ] App icon tüm required size/appearance kontrollerinden geçti.
 - [ ] Description, website, paywall ve StoreKit aynı Free/Pro gerçeğini anlatıyor.
 - [ ] Sabit fiyat veya herkese trial vaadi yok.

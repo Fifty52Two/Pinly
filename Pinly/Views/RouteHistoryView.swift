@@ -47,6 +47,7 @@ struct RouteHistoryView: View {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundColor(.secondary)
                     }
+                    .accessibilityLabel(NSLocalizedString("Kapat", comment: ""))
                 }
             }
             .navigationDestination(for: RouteHistory.self) { history in

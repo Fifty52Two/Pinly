@@ -48,6 +48,7 @@ struct SavedRoutesView: View {
                     } label: {
                         Image(systemName: "plus")
                     }
+                    .accessibilityLabel(NSLocalizedString("Rota Planla", comment: ""))
                 }
             }
             .sheet(isPresented: $showPlanRoute) {

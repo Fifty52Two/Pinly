@@ -1,14 +1,14 @@
 # Pinly V1 Release QA Matrix
 
 Son güncelleme: 2026-08-25  
-Build gerçeği: Debug `build-for-testing` ve clean-checkout Release simulator build başarılı. Bu makinedeki CoreSimulator test runner uygulamayı başlatamadığı için “unit testler çalıştı” denmez.
+Build gerçeği: `5e94876` baseline'ında Debug `build-for-testing` ve clean-checkout Release simulator build başarılıydı. Sonraki RC çalışma ağacındaki Swift dosyaları parse edildi; sandbox SwiftPM/CoreSimulator servislerini engellediği için güncel ağacın compile ve test execution kanıtı PR CI'dan alınmalıdır.
 
 Durum anahtarı: **PASS** otomatik/yerel kanıt var; **MANUAL** gerçek cihaz/sandbox gerekir; **BLOCKED** production girdisi yok; **N/A V1** erişilemez özellik.
 
 ## P0 — submission öncesi kesin geçmeli
 
-- **PASS — Clean checkout:** izlenen `Config.xcconfig`, `Package.resolved` ve shared workspace ile Release simulator compile.
-- **PASS — Test target compile:** tüm app ve unit-test kaynakları iPhone 16 Pro / iOS 18.6 hedefinde `build-for-testing` ile derlendi.
+- **BLOCKED — Current clean checkout:** `Config.xcconfig`, `Package.resolved`, CI workflow ve güvenli Firebase fallback mevcut; güncel ağacın PR CI sonucu yok.
+- **BLOCKED — Current test target compile:** değişen kaynaklar Swift parse kontrolünden geçti; güncel `build-for-testing` sonucu PR CI'da alınmalı.
 - **BLOCKED — Otomatik test execution:** yerel CoreSimulator runner hang/corrupt runtime sorunu. Temiz CI runner sonucu zorunlu kanıt kabul edilecek.
 - **BLOCKED — Release preflight:** production website host, numeric App Store ID, production interstitial unit ID ve final legal metinler eksik.
 - **MANUAL — Archive:** gerçek signing/team ile Generic iOS Device Release archive; dSYM, embedded entitlements, privacy report ve validation.

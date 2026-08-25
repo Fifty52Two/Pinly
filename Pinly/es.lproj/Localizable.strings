@@ -47,6 +47,9 @@
 "Bu kategoride mekan bulunamadı" = "No hay lugares en esta categoría";
 "Bu adımı atla" = "Saltar este paso";
 "Arama Yarıçapı" = "Radio de búsqueda";
+"Listeyi Göster" = "Mostrar lista";
+"Haritayı Göster" = "Mostrar mapa";
+"Sonuçları Yenile" = "Actualizar resultados";
 "Anlık konumuna göre hangi mesafedeki mekanlar gösterilsin?" = "¿A qué distancia de tu ubicación mostrar lugares?";
 "Tümü" = "Todos";
 "Tüm kayıtlı mekanları göster" = "Mostrar todos los lugares guardados";
@@ -613,3 +616,5 @@
 "Konum İzni Ver" = "Permitir ubicación";
 "Şimdilik Değil" = "Ahora no";
 "Profil bilgilerin yalnız bu cihazda saklanır; hesabın oluşturulmaz." = "Tu perfil permanece en este dispositivo; no se crea una cuenta.";
+"Reklam Gizlilik Seçenekleri" = "Opciones de privacidad de anuncios";
+"Takip iznini reddetmek temel özellikleri kapatmaz. Gerekli bölgelerde reklam gizlilik seçenekleri burada görünür. Pro kullanıcıya reklam gösterilmez." = "Rechazar el seguimiento no desactiva las funciones principales. Las opciones de privacidad de anuncios aparecen aquí cuando son necesarias. Los usuarios Pro no ven anuncios.";

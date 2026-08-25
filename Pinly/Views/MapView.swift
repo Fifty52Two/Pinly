@@ -107,6 +107,7 @@ struct MapView: View {
                             .clipShape(Circle())
                             .shadow(radius: 4) // bilinçli: canlı harita üzerinde yüzen buton
                     }
+                    .accessibilityLabel(NSLocalizedString("Geri Dön", comment: ""))
                     .padding(.top, 60)
                     .padding(.leading, 16)
 
@@ -134,6 +135,7 @@ struct MapView: View {
                             .clipShape(Circle())
                             .shadow(radius: 4) // bilinçli: canlı harita üzerinde yüzen buton
                     }
+                    .accessibilityLabel(NSLocalizedString("Mekan Ekle", comment: ""))
                     .padding(.top, 60)
                     .padding(.trailing, 16)
                 }
@@ -388,6 +390,8 @@ struct PlaceCard: View {
                         .clipShape(Circle())
                 }
                 .buttonStyle(.plain)
+                .frame(minWidth: 44, minHeight: 44)
+                .accessibilityLabel(NSLocalizedString("Paylaş", comment: ""))
 
                 // Edit button
                 if let edit = onEdit {
@@ -400,6 +404,8 @@ struct PlaceCard: View {
                             .clipShape(Circle())
                     }
                     .buttonStyle(.plain)
+                    .frame(minWidth: 44, minHeight: 44)
+                    .accessibilityLabel(NSLocalizedString("Düzenle", comment: ""))
                 }
 
                 // Delete button
@@ -415,6 +421,8 @@ struct PlaceCard: View {
                             .clipShape(Circle())
                     }
                     .buttonStyle(.plain)
+                    .frame(minWidth: 44, minHeight: 44)
+                    .accessibilityLabel(NSLocalizedString("Sil", comment: ""))
                 }
 
                 Button(action: onDismiss) {
@@ -422,6 +430,8 @@ struct PlaceCard: View {
                         .foregroundColor(.secondary)
                         .font(.title3)
                 }
+                .frame(minWidth: 44, minHeight: 44)
+                .accessibilityLabel(NSLocalizedString("Kapat", comment: ""))
             }
 
             // District

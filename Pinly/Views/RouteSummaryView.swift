@@ -16,6 +16,7 @@ struct RouteSummaryView: View {
     @Environment(\.dismissRouteFlow) var dismissRouteFlow
     @Environment(\.reviewPrompt) private var reviewPrompt
     @Environment(\.requestReview) private var requestReview
+    @Environment(\.analytics) private var analytics
 
     @StateObject private var viewModel = RouteSummaryViewModel()
 
@@ -734,18 +735,22 @@ struct RouteSummaryView: View {
         }
     }
 
-    private func sharePDF() {
+    @discardableResult
+    private func sharePDF() -> Bool {
         guard let url = viewModel.sharePDF(
             places: routePlaces,
             fallbackRouteName: routeManager.routeName,
             totalDistance: routeManager.totalRouteDistance
-        ) else { return }
+        ) else { return false }
         presentShareSheet(for: url)
+        return true
     }
 
-    private func shareGPX() {
-        guard let url = viewModel.shareGPX(places: routePlaces, fallbackRouteName: routeManager.routeName) else { return }
+    @discardableResult
+    private func shareGPX() -> Bool {
+        guard let url = viewModel.shareGPX(places: routePlaces, fallbackRouteName: routeManager.routeName) else { return false }
         presentShareSheet(for: url)
+        return true
     }
 
     private func requestExport(_ export: PendingExport) {
@@ -770,8 +775,10 @@ struct RouteSummaryView: View {
 
     private func performExport(_ export: PendingExport) {
         switch export {
-        case .gpx: shareGPX()
-        case .pdf: sharePDF()
+        case .gpx:
+            if shareGPX() { analytics.track(.exportGPX) }
+        case .pdf:
+            if sharePDF() { analytics.track(.exportPDF) }
         }
     }
 

@@ -97,6 +97,7 @@ struct CategoryOrderingView: View {
                         .foregroundColor(.secondary)
                         .font(.title3)
                 }
+                .accessibilityLabel(NSLocalizedString("Kapat", comment: ""))
             }
         }
         .navigationDestination(isPresented: $goToPicker) {

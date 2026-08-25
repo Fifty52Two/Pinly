@@ -28,7 +28,7 @@ Pro değeri olarak mekan limiti, çevrimdışı harita, topluluk rotaları veya 
 - Satın alma ve restore sonucu yalnızca aktif `pro` entitlement doğrulandığında kilidi açar.
 - Doğrulanmış `CustomerInfo`, `pinly.isPro` aynasına anında yazılır; SDK stream’i sonraki değişikliklerde aynayı düzeltir.
 - GPX/PDF gate’inden açılan paywall’da satın alma başarılı olursa bekleyen export, sheet kapandıktan sonra otomatik devam eder. Kullanıcı paywall’ı satın almadan kapatırsa bekleyen export iptal edilir.
-- `trial_started`, `purchase_completed`, `restore_completed` ve `paywall_shown(source)` runtime analytics router üzerinden gerçek Firebase hedefine gider; Firebase yapılandırması olmayan clean build NoOp’a düşer.
+- `paywall_viewed(source)`, `purchase_started`, `trial_started`, `purchase_completed`, `restore_completed`, `export_gpx` ve `export_pdf` runtime analytics router üzerinden gerçek Firebase hedefine gider; Firebase yapılandırması olmayan clean build NoOp’a düşer.
 
 ## Reklam politikası
 
@@ -40,6 +40,8 @@ Pro değeri olarak mekan limiti, çevrimdışı harita, topluluk rotaları veya 
 - Reklam hazır değilse kullanıcı eylemi beklemez.
 - Pro kullanıcıda her çağrı reklamsız devam eder.
 - UMP/ATT akışı tamamlanıp `canRequestAds` true olmadan AdMob SDK başlatılmaz ve reklam yüklenmez.
+- UMP privacy-options girişi yalnız `privacyOptionsRequirementStatus == .required` olduğunda görünür.
+- Profil yalnız doğum yılı tuttuğu için 13 ve 16 yaş sınır yılları daha genç kategoriye yuvarlanır; bilinen çocuk/ergen kullanıcıya ATT sorulmaz.
 - Debug build Google’ın resmi test ad unit kimliğini kullanır; canlı kimlik Release’e özeldir.
 
 Saf sıklık politikasının otomatik testleri: `PinlyTests/InterstitialFrequencyPolicyTests.swift`.

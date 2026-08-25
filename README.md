@@ -75,8 +75,9 @@ Güncel çalışma kuralları için `AGENTS.md`'ye bakın. `docs/archive/` altı
 
 ## Proje Durumu
 
-Uygulama TestFlight beta aşamasında, App Store'a ilk sürüm (V1) hazırlığı sürüyor.
+Uygulama V1 release-candidate hazırlığındadır; bu repoda doğrulanmış bir TestFlight build'i henüz yoktur.
 V1 release hazırlığı production kodu, testler ve `docs/` altındaki güncel checklist'lerle takip edilir; eski büyüme ve release planları kaynak gerçekliği değildir.
+Tek karar kaynağı `docs/FINAL_RELEASE_STATUS.md` dosyasıdır.
 
 **Sosyal katman (topluluk rotaları, rota yayınlama, Apple ile giriş) V1'de kapalıdır.**
 Kod yerinde duruyor ama arayüzden erişilemez. V1.1'de açılmadan önce şunlar tamamlanmalı:

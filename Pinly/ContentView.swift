@@ -30,6 +30,7 @@ struct ContentView: View {
             if !hasSeenOnboarding {
                 OnboardingView {
                     hasSeenOnboarding = true
+                    analytics.track(.onboardingComplete)
                     // Bildirim izni artık burada İSTENMEZ — izin isteme anı değere bağlı,
                     // Haftalık Rapor ekranındaki CTA'dan istenir (FAZ 5.4)
                 }
@@ -198,6 +199,7 @@ struct ContentView: View {
         modelContext.insert(route)
         try? modelContext.save()
         badges.recordSavedRoute()
+        analytics.track(.routeCreated)
         placeStore.refreshBadges()
     }
 

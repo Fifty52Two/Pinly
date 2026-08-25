@@ -47,6 +47,9 @@
 "Bu kategoride mekan bulunamadı" = "Bu kategoride mekan bulunamadı";
 "Bu adımı atla" = "Bu adımı atla";
 "Arama Yarıçapı" = "Arama Yarıçapı";
+"Listeyi Göster" = "Listeyi Göster";
+"Haritayı Göster" = "Haritayı Göster";
+"Sonuçları Yenile" = "Sonuçları Yenile";
 "Anlık konumuna göre hangi mesafedeki mekanlar gösterilsin?" = "Anlık konumuna göre hangi mesafedeki mekanlar gösterilsin?";
 "Tümü" = "Tümü";
 "Tüm kayıtlı mekanları göster" = "Tüm kayıtlı mekanları göster";
@@ -614,3 +617,5 @@
 "Konum İzni Ver" = "Konum İzni Ver";
 "Şimdilik Değil" = "Şimdilik Değil";
 "Profil bilgilerin yalnız bu cihazda saklanır; hesabın oluşturulmaz." = "Profil bilgilerin yalnız bu cihazda saklanır; hesabın oluşturulmaz.";
+"Reklam Gizlilik Seçenekleri" = "Reklam Gizlilik Seçenekleri";
+"Takip iznini reddetmek temel özellikleri kapatmaz. Gerekli bölgelerde reklam gizlilik seçenekleri burada görünür. Pro kullanıcıya reklam gösterilmez." = "Takip iznini reddetmek temel özellikleri kapatmaz. Gerekli bölgelerde reklam gizlilik seçenekleri burada görünür. Pro kullanıcıya reklam gösterilmez.";

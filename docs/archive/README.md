@@ -1,13 +1,13 @@
 # Arşiv — tamamlanmış plan belgeleri
 
 Bu klasördeki belgeler **tarihsel kayıttır**; kodun bugünkü hâlini TARİF ETMEZLER ve
-bazıları onunla açıkça çelişir. Güncel durum için köke bakın:
+bazıları onunla açıkça çelişir. Güncel durum için köke ve release kontrol merkezine bakın:
 
 | Belge | Durum |
 |---|---|
-| `CLAUDE.md` (kökte) | Mimari ve dosya bazlı güncel referans |
+| `CLAUDE.md` (kökte) | Güncel kaynaklara kısa yönlendirme |
 | `README.md` (kökte) | Genel tanıtım |
-| `GROWTH_PLAN.md` (kökte) | **Tek aktif plan** |
+| `docs/FINAL_RELEASE_STATUS.md` | **Tek aktif release kontrol merkezi** |
 
 ## Buradakiler neden arşivlendi
 
@@ -18,6 +18,7 @@ bazıları onunla açıkça çelişir. Güncel durum için köke bakın:
 | `SPRINT_PLAN.md` | 2026-07-14 büyüme sprinti. İçeriği uygulandı (StarterRouteService vb.) ama kutucukları hiç işaretlenmedi — okuyan "hiçbiri yapılmamış" sanıyor. |
 | `MASTER_PLAN.md` | NotionGO → Pinly yeniden adlandırma + hijyen operasyonu; tamamlandı. |
 | `RELEASE_PLAN.md` | TestFlight'a çıkış planı. `GROWTH_PLAN.md` kendi başlığında bunu "tamamlandı" ilan ediyor. |
+| `GROWTH_PLAN.md` | Uygulanmış büyüme fazlarını ve artık geçersiz fiyat/paywall notlarını içeriyor. |
 
 Bu belgeleri kaynak olarak kullanmayın — özellikle AI destekli geliştirmede eski plan
 metinleri yanlış kod ürettirir. Bir bilgi hâlâ geçerliyse yeri `CLAUDE.md`'dir.

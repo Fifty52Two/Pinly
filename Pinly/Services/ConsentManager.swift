@@ -12,13 +12,15 @@ enum AdAudienceCategory: Equatable {
 
 enum AdAudiencePolicy {
     /// EEA ülkelerinde dijital rıza yaşı ülkeye göre 13–16 arasında değişebilir.
-    /// Ülke bilgisini güvenilir biçimde tutmadığımız için 16'yı korumacı üst sınır alıyoruz.
+    /// Ülke bilgisini ve tam doğum tarihini tutmadığımız için 16'yı korumacı üst sınır
+    /// alıyoruz. Sadece doğum yılı bilindiğinden sınır yılındaki kullanıcı henüz doğum
+    /// gününü kutlamamış olabilir; 13 ve 16 farkları güvenli biçimde genç kategoriye yuvarlanır.
     static func category(profile: UserProfile?, currentYear: Int = Calendar.current.component(.year, from: Date())) -> AdAudienceCategory {
         guard let profile else { return .unknown }
         let age = currentYear - profile.birthYear
         guard age >= 0 else { return .unknown }
-        if age < 13 { return .child }
-        if age < 16 { return .teen }
+        if age <= 13 { return .child }
+        if age <= 16 { return .teen }
         return .adult
     }
 }
@@ -38,6 +40,10 @@ final class ConsentManager {
         ConsentInformation.shared.canRequestAds
     }
 
+    var isPrivacyOptionsRequired: Bool {
+        ConsentInformation.shared.privacyOptionsRequirementStatus == .required
+    }
+
     func requestConsentAndTracking(audience: AdAudienceCategory, completion: @escaping () -> Void) {
         configureAdRequest(for: audience)
         let parameters = RequestParameters()
@@ -51,8 +57,8 @@ final class ConsentManager {
         }
     }
 
-    /// Uygun bölgelerde Google'ın reklam gizlilik seçeneklerini yeniden açar. Formun gerekli
-    /// olmadığı bölgelerde SDK hata döndürebilir; kullanıcıya anlaşılır mesajı çağıran gösterir.
+    /// UMP `.required` bildirdiğinde Google'ın reklam gizlilik seçeneklerini yeniden açar.
+    /// Görünürlük kararını çağıran `isPrivacyOptionsRequired` üzerinden verir.
     func presentPrivacyOptions(completion: @escaping (Error?) -> Void) {
         guard let rootViewController = Self.rootViewController() else {
             completion(ConsentManagerError.presenterUnavailable)

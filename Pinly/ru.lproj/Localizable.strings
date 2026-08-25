@@ -47,6 +47,9 @@
 "Bu kategoride mekan bulunamadı" = "В этой категории нет мест";
 "Bu adımı atla" = "Пропустить этот шаг";
 "Arama Yarıçapı" = "Радиус поиска";
+"Listeyi Göster" = "Показать список";
+"Haritayı Göster" = "Показать карту";
+"Sonuçları Yenile" = "Обновить результаты";
 "Anlık konumuna göre hangi mesafedeki mekanlar gösterilsin?" = "На каком расстоянии от тебя показывать места?";
 "Tümü" = "Все";
 "Tüm kayıtlı mekanları göster" = "Показать все сохранённые места";
@@ -613,3 +616,5 @@
 "Konum İzni Ver" = "Разрешить геолокацию";
 "Şimdilik Değil" = "Не сейчас";
 "Profil bilgilerin yalnız bu cihazda saklanır; hesabın oluşturulmaz." = "Профиль хранится только на этом устройстве; аккаунт не создаётся.";
+"Reklam Gizlilik Seçenekleri" = "Настройки конфиденциальности рекламы";
+"Takip iznini reddetmek temel özellikleri kapatmaz. Gerekli bölgelerde reklam gizlilik seçenekleri burada görünür. Pro kullanıcıya reklam gösterilmez." = "Отказ от отслеживания не отключает основные функции. Параметры конфиденциальности рекламы отображаются здесь, когда это требуется. Пользователи Pro не видят рекламу.";

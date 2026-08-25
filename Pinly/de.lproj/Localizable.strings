@@ -47,6 +47,9 @@
 "Bu kategoride mekan bulunamadı" = "Keine Orte in dieser Kategorie";
 "Bu adımı atla" = "Diesen Schritt überspringen";
 "Arama Yarıçapı" = "Suchradius";
+"Listeyi Göster" = "Liste anzeigen";
+"Haritayı Göster" = "Karte anzeigen";
+"Sonuçları Yenile" = "Ergebnisse aktualisieren";
 "Anlık konumuna göre hangi mesafedeki mekanlar gösterilsin?" = "In welchem Umkreis sollen Orte angezeigt werden?";
 "Tümü" = "Alle";
 "Tüm kayıtlı mekanları göster" = "Alle gespeicherten Orte anzeigen";
@@ -613,3 +616,5 @@
 "Konum İzni Ver" = "Standort erlauben";
 "Şimdilik Değil" = "Nicht jetzt";
 "Profil bilgilerin yalnız bu cihazda saklanır; hesabın oluşturulmaz." = "Dein Profil bleibt auf diesem Gerät; es wird kein Konto erstellt.";
+"Reklam Gizlilik Seçenekleri" = "Datenschutzoptionen für Werbung";
+"Takip iznini reddetmek temel özellikleri kapatmaz. Gerekli bölgelerde reklam gizlilik seçenekleri burada görünür. Pro kullanıcıya reklam gösterilmez." = "Das Ablehnen von Tracking deaktiviert keine Kernfunktionen. Datenschutzoptionen für Werbung werden hier angezeigt, wenn sie erforderlich sind. Pro-Nutzer sehen keine Werbung.";

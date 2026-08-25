@@ -21,6 +21,24 @@ require_file() {
 require_file Config.xcconfig
 require_file Pinly.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 require_file Pinly/GoogleService-Info.plist
+require_file landing/404.html
+require_file landing/robots.txt
+require_file landing/assets/app-icon.png
+require_file landing/assets/apple-touch-icon.png
+require_file landing/assets/favicon-64.png
+
+for document in \
+  FINAL_RELEASE_STATUS \
+  PINLY_BRAND_SYSTEM \
+  APP_PRIVACY_MATRIX_FINAL \
+  DEVICE_QA \
+  WEBSITE_QA \
+  APP_STORE_SUBMISSION \
+  SCREENSHOT_REQUIREMENTS \
+  ACCESSIBILITY_AUDIT \
+  SECURITY_FINAL_SWEEP; do
+  require_file "docs/$document.md"
+done
 
 if [ ! -f Config.local.xcconfig ]; then
   fail "Config.local.xcconfig is missing"
@@ -44,6 +62,12 @@ else
   pass "website release flags are cleared"
 fi
 
+if rg -q '^Disallow:[[:space:]]*/[[:space:]]*$' landing/robots.txt; then
+  fail "robots.txt still blocks the whole website"
+else
+  pass "robots.txt does not block the whole website"
+fi
+
 if rg -q 'https://pinly\.app' Pinly landing; then
   fail "unverified pinly.app URL is hard-coded"
 else
@@ -56,6 +80,7 @@ for route in privacy terms support privacy-choices; do
 done
 
 plutil -lint Pinly/Info.plist Pinly/Pinly.entitlements Pinly/PrivacyInfo.xcprivacy Pinly.xcodeproj/project.pbxproj >/dev/null || fail "plist/project lint failed"
+scripts/security_sweep.sh || fail "security sweep failed"
 git diff --check >/dev/null || fail "git diff contains whitespace errors"
 
 if [ "$failed" -ne 0 ]; then

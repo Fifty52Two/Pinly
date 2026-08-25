@@ -64,6 +64,7 @@ struct WeeklyReportView: View {
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(.white.opacity(0.8), .black.opacity(0.3))
                     }
+                    .accessibilityLabel(NSLocalizedString("Kapat", comment: ""))
                 }
             }
             .task(id: histories.count) {
@@ -279,4 +280,3 @@ struct WeeklyReportView: View {
         )
     }
 }
-

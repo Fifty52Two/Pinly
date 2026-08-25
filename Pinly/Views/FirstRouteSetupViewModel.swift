@@ -91,6 +91,7 @@ final class FirstRouteSetupViewModel: ObservableObject {
         let route = starterRoutes.makeSavedRoute(from: entry, languageCode: languageCode)
         context.insert(route)
         try? context.save()
+        analytics.track(.routeCreated)
         analytics.track(.starterRouteAdopted(source: entry.id))
         return route
     }
@@ -119,6 +120,7 @@ final class FirstRouteSetupViewModel: ObservableObject {
         )
         context.insert(route)
         try? context.save()
+        analytics.track(.routeCreated)
         analytics.track(.starterRouteAdopted(source: "nearby_fallback"))
         return route
     }

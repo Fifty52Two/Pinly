@@ -1,5 +1,7 @@
 # Pinly V1 — Final Release Hardening Report
 
+> Bu belge ayrıntılı mühendislik yorumudur. Güncel gate/status için tek kaynak `docs/FINAL_RELEASE_STATUS.md`; final puan için `docs/FINAL_SCORING_AUDIT.md` kullanılır.
+
 Tarih: 2026-08-25  
 İncelenen kapsam: iOS app, extension, SwiftData modelleri, third-party SDK'lar, CI, StoreKit/RevenueCat, AdMob/UMP/ATT, analytics, privacy manifest, social V1 sınırı, TR/EN website/legal taslakları, ASO ve release süreci.
 
@@ -156,13 +158,15 @@ Legal metinler bilinçli taslaktır, hukuk görüşü değildir. `SITE_REQUIRED_
 
 ## Doğrulama kaydı
 
+Build notu: Aşağıdaki Debug/Release build sonuçları `5e94876` baseline'ında alındı. Sonraki RC çalışma ağacında değişen Swift dosyaları parse edildi; güncel compile/test kanıtı sandbox SwiftPM/CoreSimulator kısıtı nedeniyle PR CI'a bağlıdır.
+
 Geçenler:
 
 - `plutil` — Info.plist, entitlements, privacy manifest, project file.
 - `swiftc -frontend -parse` — değiştirilen Swift/test kaynakları.
 - `git diff --check`.
-- iPhone 16 Pro / iOS 18.6 Debug `build-for-testing`: **SUCCEEDED**.
-- Clean Release simulator compile: **SUCCEEDED** (iPhone 16 Pro / iOS 18.6).
+- Baseline iPhone 16 Pro / iOS 18.6 Debug `build-for-testing`: **SUCCEEDED**.
+- Baseline clean Release simulator compile: **SUCCEEDED** (iPhone 16 Pro / iOS 18.6).
 - Clean `.app` paket taraması: geliştirme ayarı `Pinly/.claude/settings.local.json` target üyeliğinden çıkarıldı ve pakette bulunmadığı doğrulandı.
 - Website 10 rota/assets local HTTP 200; desktop ve 390 px mobile browser smoke.
 

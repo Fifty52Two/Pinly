@@ -22,10 +22,16 @@ final class PlanRouteViewModel: ObservableObject {
     @Published var savedSuccessfully = false
 
     private let badges: BadgeServicing
+    private let analytics: AnalyticsTracking
 
-    init(editingRoute: SavedRoute? = nil, badges: BadgeServicing = DefaultBadgeService.shared) {
+    init(
+        editingRoute: SavedRoute? = nil,
+        badges: BadgeServicing = DefaultBadgeService.shared,
+        analytics: AnalyticsTracking = RuntimeAnalyticsService.shared
+    ) {
         self.editingRoute = editingRoute
         self.badges = badges
+        self.analytics = analytics
     }
 
     /// Mekanları pin'e mesafeye göre sıralar
@@ -74,6 +80,7 @@ final class PlanRouteViewModel: ObservableObject {
         let selected = selectedPlaces(from: places)
         guard !name.isEmpty, !selected.isEmpty, let pin = pinCoordinate else { return false }
         isSaving = true
+        let isNewRoute = editingRoute == nil
 
         let snapshots = selected.enumerated().map { index, place in
             SavedPlaceSnapshot(
@@ -105,9 +112,20 @@ final class PlanRouteViewModel: ObservableObject {
                 snapshots: snapshots
             )
             context.insert(route)
-            badges.recordSavedRoute()
         }
-        try? context.save()
+
+        do {
+            try context.save()
+        } catch {
+            context.rollback()
+            isSaving = false
+            return false
+        }
+
+        if isNewRoute {
+            badges.recordSavedRoute()
+            analytics.track(.routeCreated)
+        }
 
         isSaving = false
         savedSuccessfully = true

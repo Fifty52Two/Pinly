@@ -2,10 +2,9 @@ import SwiftUI
 import RevenueCat
 
 struct PaywallView: View {
-    /// Hangi gate'in açtığını taşır (`paywall_shown` analytics param'ı + soft/hard metin
-    /// seçimi). Varsayılan "limit_reached" — mevcut 10 hard-gate çağrı sitesi hiç
-    /// değişmeden bu default'u kullanır (bkz. specs/FAZ1_REVENUECAT_KARAR.md).
-    var source: String = "limit_reached"
+    /// Paywall'ı açan doğrulanmış ürün yüzeyini `paywall_viewed` event'ine ekler.
+    /// Bugünkü üç kaynak: `export_locked`, `first_route_completed` ve `profile`.
+    var source: String = "profile"
     let onDismiss: () -> Void
 
     @Environment(\.entitlements) private var entitlements
@@ -350,12 +349,9 @@ struct PaywallView: View {
         isPurchasing = true
         defer { isPurchasing = false }
         do {
+            analytics.track(.purchaseStarted(product: package.storeProduct.productIdentifier))
             let result = try await purchases.purchase(package: package)
             guard !result.userCancelled else { return }
-            if package.identifier == yearlyPackage?.identifier, hasFreeTrial {
-                analytics.track(.trialStarted(product: package.storeProduct.productIdentifier))
-            }
-            analytics.track(.purchaseCompleted(product: package.storeProduct.productIdentifier))
             let active = EntitlementMapper.isPro(customerInfo: result.customerInfo)
             guard active else {
                 errorMessage = NSLocalizedString(
@@ -364,6 +360,10 @@ struct PaywallView: View {
                 )
                 return
             }
+            if package.identifier == yearlyPackage?.identifier, hasFreeTrial {
+                analytics.track(.trialStarted(product: package.storeProduct.productIdentifier))
+            }
+            analytics.track(.purchaseCompleted(product: package.storeProduct.productIdentifier))
             // Doğrulanmış CustomerInfo sonucu aynaya hemen yazılır; export gate'i paywall
             // kapanır kapanmaz ikinci bir bekleme/paywall olmadan açılır.
             entitlements.isPro = true

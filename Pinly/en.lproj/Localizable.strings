@@ -47,6 +47,9 @@
 "Bu kategoride mekan bulunamadı" = "No places found in this category";
 "Bu adımı atla" = "Skip this step";
 "Arama Yarıçapı" = "Search Radius";
+"Listeyi Göster" = "Show List";
+"Haritayı Göster" = "Show Map";
+"Sonuçları Yenile" = "Refresh Results";
 "Anlık konumuna göre hangi mesafedeki mekanlar gösterilsin?" = "Which distance from your location should be shown?";
 "Tümü" = "All";
 "Tüm kayıtlı mekanları göster" = "Show all saved places";
@@ -615,3 +618,5 @@
 "Konum İzni Ver" = "Allow Location";
 "Şimdilik Değil" = "Not Now";
 "Profil bilgilerin yalnız bu cihazda saklanır; hesabın oluşturulmaz." = "Your profile stays on this device; no account is created.";
+"Reklam Gizlilik Seçenekleri" = "Ad Privacy Options";
+"Takip iznini reddetmek temel özellikleri kapatmaz. Gerekli bölgelerde reklam gizlilik seçenekleri burada görünür. Pro kullanıcıya reklam gösterilmez." = "Declining tracking does not disable core features. Ad privacy options appear here where required. Pro users do not see ads.";

@@ -158,6 +158,7 @@ struct PlacePickerStepView: View {
                         .foregroundColor(.secondary)
                         .font(.title3)
                 }
+                .accessibilityLabel(NSLocalizedString("Kapat", comment: ""))
             }
             ToolbarItem(placement: .primaryAction) {
                 Button {

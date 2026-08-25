@@ -9,12 +9,14 @@ struct PrivacyChoicesView: View {
         NavigationStack {
             List {
                 Section {
-                    Button {
-                        ConsentManager.shared.presentPrivacyOptions { error in
-                            if let error { errorMessage = error.localizedDescription }
+                    if ConsentManager.shared.isPrivacyOptionsRequired {
+                        Button {
+                            ConsentManager.shared.presentPrivacyOptions { error in
+                                if let error { errorMessage = error.localizedDescription }
+                            }
+                        } label: {
+                            Label(NSLocalizedString("Reklam Gizlilik Seçenekleri", comment: ""), systemImage: "rectangle.badge.checkmark")
                         }
-                    } label: {
-                        Label(NSLocalizedString("Reklam Gizlilik Seçenekleri", comment: ""), systemImage: "rectangle.badge.checkmark")
                     }
 
                     Button {
@@ -26,7 +28,7 @@ struct PrivacyChoicesView: View {
                 } header: {
                     Text(NSLocalizedString("İzinler ve Reklam", comment: ""))
                 } footer: {
-                    Text(NSLocalizedString("Takip iznini reddetmek temel özellikleri kapatmaz. Pro kullanıcıya reklam gösterilmez.", comment: ""))
+                    Text(NSLocalizedString("Takip iznini reddetmek temel özellikleri kapatmaz. Gerekli bölgelerde reklam gizlilik seçenekleri burada görünür. Pro kullanıcıya reklam gösterilmez.", comment: ""))
                 }
 
                 Section {
