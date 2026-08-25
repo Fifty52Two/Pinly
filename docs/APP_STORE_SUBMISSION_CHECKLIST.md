@@ -10,6 +10,8 @@
 
 ## Build ve signing
 
+- [ ] Aynı RC commit'i `macos-26` + sabit Xcode 26.6 CI'da Debug tests ve Release compile job'larını geçti; loglar Apple Swift 6.3.3 ve iOS 26.5 SDK'yı doğruluyor.
+- [ ] App Store'a gönderilecek archive Xcode 26 veya sonrası ve iOS 26 SDK veya sonrası ile üretildi (28 Nisan 2026 upload şartı).
 - [ ] Bundle ID `com.farad.pinly`, Live Activity extension ID ve App Store kaydı eşleşiyor.
 - [ ] Marketing version `2.0`; build number benzersiz ve artırılmış.
 - [ ] Distribution certificate/profile, HealthKit ve Live Activities capability doğru.

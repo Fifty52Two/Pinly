@@ -31,7 +31,7 @@ Foursquare City Guide'ın kapanmasının ardından Pinly, kaydedilmiş mekanlar�
 
 ## Gereksinimler
 
-- Xcode 16+
+- Xcode 26.6 (Apple Swift 6.3.3, iOS 26.5 SDK; CI ile aynı toolchain)
 - iOS 17+ hedef cihaz veya simülatör
 
 ## Kurulum ve Çalıştırma

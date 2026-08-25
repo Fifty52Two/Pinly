@@ -30,7 +30,9 @@ Subjektif ürün/release puanları (10 üzerinden, karşılaştırmalı kalite s
 - Clean checkout'un derlenmesini engelleyen gitignore/config/package state düzeltildi.
 - Güvenli örnek `Config.xcconfig` izleniyor; production client değerleri ignored `Config.local.xcconfig` içinde kalıyor.
 - Package lock izleniyor ve CI otomatik dependency resolution'a güvenmiyor.
-- CI mevcut iPhone simulator'ı dinamik seçiyor; Debug test ve Release compile artifact üretiyor.
+- Debug test ve Release compile job'ları `macos-26` runner üzerinde tam `/Applications/Xcode_26.6.app/Contents/Developer` yolunu seçiyor; eski/default Xcode fallback'i yok. Xcode 26.6 (17F113), Apple Swift 6.3.3 ve iOS 26.5 SDK ile Supabase/Firebase'ın Swift tools 6.1+ gereksinimini ve 28 Nisan 2026 sonrası App Store upload şartını karşılıyor.
+- Her iki job `xcodebuild -version`, `swift --version`, `xcode-select -p` ve iOS SDK sürümünü logluyor; SwiftPM cache anahtarı runner mimarisi ve Xcode 26.6 pinini içeriyor.
+- CI runner envanterindeki iPhone 17 Pro / iOS 26.5 simulator'ını doğrulayıp UDID ile seçiyor; Debug test ve Release compile artifact üretiyor.
 - Firebase/RevenueCat config yoksa app clean build'de crash etmek yerine güvenli NoOp/fail-closed çalışıyor.
 - Dependabot Swift package güncellemeleri haftalık tanımlandı.
 
@@ -189,6 +191,9 @@ Geçmeyen/bloklu:
 ## Resmi kaynaklar
 
 - [Apple App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
+- [Apple upcoming submission requirements](https://developer.apple.com/news/upcoming-requirements/)
+- [GitHub-hosted macOS 26 Arm64 runner image inventory](https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md)
+- [Xcode 26.6 release notes](https://developer.apple.com/documentation/xcode-release-notes/xcode-26_6-release-notes)
 - [Apple App privacy details](https://developer.apple.com/app-store/app-privacy-details/)
 - [Apple required-reason API guidance](https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api)
 - [Apple auto-renewable subscriptions](https://developer.apple.com/app-store/subscriptions/)

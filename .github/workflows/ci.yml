@@ -9,10 +9,13 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  XCODE_DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+
 jobs:
   tests:
     name: Debug tests
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
@@ -24,19 +27,32 @@ jobs:
           plutil -lint Pinly/Info.plist Pinly/PrivacyInfo.xcprivacy Pinly.xcodeproj/project.pbxproj
           scripts/security_sweep.sh
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app || sudo xcode-select -s /Applications/Xcode.app
-
-      - name: Select an available iPhone simulator
+      - name: Select Xcode 26.6
         run: |
-          SIMULATOR_ID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone 16 Pro \(/ { print $2; exit }')"
+          test -d "$XCODE_DEVELOPER_DIR"
+          sudo xcode-select --switch "$XCODE_DEVELOPER_DIR"
+
+      - name: Toolchain diagnostics
+        run: |
+          xcodebuild -version
+          swift --version
+          xcode-select -p
+          xcrun --sdk iphoneos --show-sdk-version
+
+      - name: Select and boot the iPhone simulator
+        run: |
+          xcrun simctl list runtimes
+          xcrun simctl list devices available
+          SIMULATOR_ID="$(xcrun simctl list devices available | awk -F '[()]' '
+            /^-- iOS 26\.5 --/ { in_runtime = 1; next }
+            /^-- / { in_runtime = 0 }
+            in_runtime && /iPhone 17 Pro \(/ { print $2; exit }
+          ')"
           if [ -z "$SIMULATOR_ID" ]; then
-            SIMULATOR_ID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ { print $2; exit }')"
-          fi
-          if [ -z "$SIMULATOR_ID" ]; then
-            echo "No available iPhone simulator found" >&2
+            echo "Required iPhone 17 Pro / iOS 26.5 simulator is not available on this runner image" >&2
             exit 1
           fi
+          echo "Selected iPhone 17 Pro / iOS 26.5 simulator: $SIMULATOR_ID"
           echo "SIMULATOR_ID=$SIMULATOR_ID" >> "$GITHUB_ENV"
           xcrun simctl boot "$SIMULATOR_ID" || true
           xcrun simctl bootstatus "$SIMULATOR_ID" -b
@@ -45,8 +61,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/Library/Developer/Xcode/DerivedData/Pinly/SourcePackages
-          key: ${{ runner.os }}-spm-${{ hashFiles('Pinly.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
-          restore-keys: ${{ runner.os }}-spm-
+          key: ${{ runner.os }}-${{ runner.arch }}-xcode-26.6-spm-${{ hashFiles('Pinly.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-xcode-26.6-spm-
 
       - name: Resolve Swift packages
         run: |
@@ -95,7 +111,7 @@ jobs:
 
   release-compile:
     name: Release compile
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
@@ -107,15 +123,24 @@ jobs:
           plutil -lint Pinly/Info.plist Pinly/PrivacyInfo.xcprivacy Pinly.xcodeproj/project.pbxproj
           scripts/security_sweep.sh
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app || sudo xcode-select -s /Applications/Xcode.app
+      - name: Select Xcode 26.6
+        run: |
+          test -d "$XCODE_DEVELOPER_DIR"
+          sudo xcode-select --switch "$XCODE_DEVELOPER_DIR"
+
+      - name: Toolchain diagnostics
+        run: |
+          xcodebuild -version
+          swift --version
+          xcode-select -p
+          xcrun --sdk iphoneos --show-sdk-version
 
       - name: Cache Swift packages
         uses: actions/cache@v4
         with:
           path: ~/Library/Developer/Xcode/DerivedData/Pinly-Release/SourcePackages
-          key: ${{ runner.os }}-spm-release-${{ hashFiles('Pinly.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
-          restore-keys: ${{ runner.os }}-spm-release-
+          key: ${{ runner.os }}-${{ runner.arch }}-xcode-26.6-spm-release-${{ hashFiles('Pinly.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-xcode-26.6-spm-release-
 
       - name: Resolve Swift packages
         run: |
