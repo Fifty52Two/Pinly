@@ -99,37 +99,6 @@ struct SavedRoutesView: View {
                     Text(String(format: NSLocalizedString("\"%@\" rotasını silmek istiyor musun?", comment: ""), route.name))
                 }
             }
-            .sheet(isPresented: $viewModel.showUsernameSetup) {
-                UsernameSetupSheet {
-                    viewModel.usernameSetupSucceeded()
-                }
-            }
-            .alert(
-                NSLocalizedString("Rota Yayınlandı", comment: ""),
-                isPresented: Binding(
-                    get: { viewModel.publishedRouteName != nil },
-                    set: { if !$0 { viewModel.publishedRouteName = nil } }
-                )
-            ) {
-                Button(NSLocalizedString("Tamam", comment: "")) { viewModel.publishedRouteName = nil }
-            } message: {
-                if let name = viewModel.publishedRouteName {
-                    Text(String(format: NSLocalizedString("\"%@\" artık topluluk feed'inde görünüyor.", comment: ""), name))
-                }
-            }
-            .alert(
-                NSLocalizedString("Yayınlanamadı", comment: ""),
-                isPresented: Binding(
-                    get: { viewModel.publishErrorMessage != nil },
-                    set: { if !$0 { viewModel.publishErrorMessage = nil } }
-                )
-            ) {
-                Button(NSLocalizedString("Tamam", comment: "")) { viewModel.publishErrorMessage = nil }
-            } message: {
-                if let message = viewModel.publishErrorMessage {
-                    Text(message)
-                }
-            }
         }
     }
 

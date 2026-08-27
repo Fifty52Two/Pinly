@@ -63,15 +63,9 @@ struct ProfileSetupView: View {
                             .foregroundColor(.secondary)
                     }
 
-                    // Apple ile Giriş V1'de KALDIRILDI.
-                    //
-                    // Supabase'de gerçek bir `auth.users` kaydı açıyordu, ama uygulamada
-                    // hesap silme akışı yok — App Store Guideline 5.1.1(v) hesap oluşturan
-                    // her uygulamada uygulama içi hesap silme ZORUNLU kılıyor. Üstelik
-                    // sosyal katman V1'de kapalı olduğu için (bkz. SavedRoutesView) bu
-                    // butonun tek işlevi ad-soyadı forma önceden doldurmaktı; cihazlar arası
-                    // senkron da yok. `AppleAuthService` silinmedi — V1.1'de sosyal katman,
-                    // hesap silme ve anonim→Apple veri taşımayla birlikte geri gelecek.
+                    // Apple ile Giriş V1'de YOK: hesap silme akışı olmadan hesap
+                    // oluşturmak App Store Guideline 5.1.1(v) ihlali. Sosyal katmanla
+                    // birlikte V1.1'de yeniden tasarlanacak.
 
                     // Ad
                     VStack(alignment: .leading, spacing: 10) {

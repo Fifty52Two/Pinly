@@ -95,11 +95,9 @@ struct ContentView: View {
                 .presentationDetents([.medium, .large])
             }
         }
-        // Ortak rota düzenleyici (SharedRouteEditorView) V1'de sunulmuyor: `sharedroute`
-        // deep link'i yukarıda yok sayıldığı için `sharedRouteId` hiç set edilmiyordu ve bu
-        // cover ölüydü. Ayrıca o ekran `AppleAuthService` üzerinden hesap açıyor — V1'de
-        // hesap silme akışı olmadığı için hiçbir hesap oluşturma yolu bırakılmadı
-        // (App Store Guideline 5.1.1(v)). V1.1'de sosyal katmanla birlikte geri gelecek.
+        // `sharedroute` deep link'i V1'de yok sayılır — sosyal katman kaldırıldı
+        // (bkz. commit geçmişi). V1.1'de hesap silme + veri sanitizasyonu ile birlikte
+        // yeniden tasarlanacak (App Store Guideline 5.1.1(v) ve 1.2).
         .alert(NSLocalizedString("Hata", comment: ""), isPresented: Binding(
             get: { placeStore.lastError != nil },
             set: { if !$0 { placeStore.lastError = nil } }
