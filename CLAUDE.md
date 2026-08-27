@@ -99,7 +99,6 @@ PinlyApp (composition root)
 | `AnalyticsService.swift` | `AnalyticsTracking` protokolü + `AnalyticsEvent` enum (place_added/route_started/route_completed/route_shared/paywall_shown/nearby_search). `FirebaseAnalyticsService` gerçek implementasyon (`\.analytics` environment key), `NoOpAnalyticsService` DEBUG/preview/test için. |
 | `ConsentManager.swift` | UMP (Google User Messaging Platform) rıza formu + App Tracking Transparency akışı. `AdManager.beginLoadingAds()` rızadan SONRA çağrılır. |
 | `DiagnosticsService.swift` | `DiagnosticsCollector`: MetricKit abonesi, crash/hang verisini UserDefaults'ta en fazla 50 satır tutar, profil ekranında (`DiagnosticsView`) gösterir — Crashlytics'e ek, cihaz bazlı hafif tanılama. |
-| `FeatureFlags.swift` | `isTestFlightBuild` (Release + sandbox receipt algısı) + `unlimitedPlacesInBeta`. NOT: mekan limiti artık HER build'de kaldırıldığı için bu bayrağın pratik etkisi kalmadı. |
 
 ### `Pinly/Managers/` — ObservableObject state yöneticileri
 | Dosya | Rol |
@@ -161,7 +160,7 @@ MapView (tüm mekanlar MKMapView'de; pin'e dokun → PlaceCard: Navigate Here/d�
 
 **Rota akışı 2 — önceden planla:** `PlanRouteView.swift` (3 adım: MapReader pin bırak → pine mesafeyle sıralı mekan çoklu seç → isim+kategori) → SavedRoute yazar. `editingRoute` parametresiyle düzenleme modu (snapshot eşleşmesi İSİMLE — kırılgan, bilinen sorun).
 
-**`RouteSummaryView.swift` — navigasyon merkezi:** harita (`NavigationMapView`) + durak listesi + alt buton alanı. Navigasyon öncesi: Linki Paylaş (interstitial→`RouteSharePickerView`), Rotayı Kaydet (`SaveRouteSheet`), GPX/PDF (Pro gate), Navigasyonu Başlat (badge `recordRouteStarted` + HealthKit izni + Live Activity). Navigasyonda: `NavigationBanner` (talimat+ilerleme), durakta duraklama → not ekleme + puanlama (`RatingSheetView`) + "Sonraki Durağa Git". Tamamlanınca: badge/history/HealthKit kaydı → interstitial → `RouteCompletionOverlay` → `RouteShareCard.swift` (ImageRenderer ile 1080×1350 Instagram kartı).
+**`RouteSummaryView.swift` — navigasyon merkezi:** harita (`NavigationMapView`) + durak listesi + alt buton alanı. Navigasyon öncesi: Linki Paylaş (interstitial→`RouteSharePickerView`), Rotayı Kaydet (`SaveRouteSheet`), GPX/PDF (Pro gate), Navigasyonu Başlat (badge `recordRouteStarted` + HealthKit izni + Live Activity). Navigasyonda: `NavigationBanner` (talimat+ilerleme), durakta duraklama → not ekleme + puanlama (`RatingSheetView`) + "Sonraki Durağa Git". Tamamlanınca: badge/history/HealthKit kaydı → interstitial → `RouteCompletionOverlay` → anı kartı (`MemoryCardComposing`, ImageRenderer ile story 1080×1920 / post 1080×1350).
 
 **`\.dismissRouteFlow` environment key'i (MapView.swift'te tanımlı):** RouteSummaryView'i sunan HER fullScreenCover bunu set ETMELİ (MapView tek mekan, SavedRoutesView, HomeView deep link) — yoksa X butonu ve tamamlama overlay'i no-op olur, kullanıcı ekranda kilitli kalır (bug B5).
 
@@ -183,25 +182,30 @@ MapView (tüm mekanlar MKMapView'de; pin'e dokun → PlaceCard: Navigate Here/d�
 - **Rozet döngüsü:** olay → `badges.record*()` → `check(placeStore:)` → yeni rozetler `placeStore.pendingBadges` → HomeView banner (3 sn).
 - **Deep linkler:** `pinly://addplace?name=..&lat=..` | `pinly://route?data=<base64>` | `pinly://navigation` | `pinly://quickadd`.
 
-## Sosyal Katman — V1'de KAPALI
+## Sosyal Katman — V1'de KALDIRILDI
 
-`Pinly/Views/social/`, `SocialService.swift`, `SharedRouteService.swift` ve `AppleAuthService.swift`
-duruyor ama **arayüzden hiçbir erişim yolu yok**. Kapatılma sebepleri:
+Sosyal katmanın **tamamı koddan silindi** (`Pinly/Views/social/`, `SocialService.swift`,
+`SharedRouteService.swift`, `AppleAuthService.swift`, `PublicRouteDTO`, `SharedRouteDTO`,
+`UsernameSetupSheet`) ve `supabase-swift` SPM bağımlılığı projeden çıkarıldı. Kod git
+geçmişinde duruyor — geri getirmek için `temizlik/olu-kod-kaldirma` dalından önceki
+commit'lere bakılır.
+
+**Neden silindi (yeniden yazılmadan geri getirilemez):**
 
 - `SocialService.publish()` rotayı `SavedPlaceSnapshot` olarak SANITIZE ETMEDEN yolluyordu →
-  kullanıcının **özel mekan notları, adresi ve tam koordinatı** herkese açık `public_routes`
-  tablosuna yazılıyordu. (Topluluk feed'i zaten "ÇOK YAKINDA" ile kilitliydi; yani kullanıcılar
-  göremedikleri bir yere veri gönderiyordu.)
+  kullanıcının özel mekan notları, adresi ve tam koordinatı herkese açık `public_routes`
+  tablosuna yazılıyordu.
 - Uygulama içi **hesap silme yok** → hesap oluşturan her uygulama için App Store Guideline
-  5.1.1(v) ihlali. Bu yüzden onboarding'deki "Apple ile Giriş" de kaldırıldı ve `sharedroute`
-  deep link'i kapatıldı — V1'de hiçbir hesap oluşturma yolu bırakılmadı.
-- `block(userId:)` yalnızca `blocks` tablosuna satır ekliyor; feed sorgusunda ne RLS ne client
-  filtresi var → engelleme fiilen çalışmıyor (Guideline 1.2).
-- Anonim → Apple geçişinde `linkIdentity` yerine `signInWithIdToken` kullanılıyor → anonim
-  kullanıcının yayınları/favorileri orphan kalıyor.
+  5.1.1(v) ihlali.
+- `block(userId:)` yalnızca `blocks` tablosuna satır ekliyordu; feed sorgusunda ne RLS ne
+  client filtresi vardı → engelleme fiilen çalışmıyordu (Guideline 1.2).
+- Anonim → Apple geçişinde `linkIdentity` yerine `signInWithIdToken` kullanılıyordu → anonim
+  kullanıcının yayınları/favorileri orphan kalıyordu.
 
-**V1.1'de sosyal açılmadan önce bu dördü de çözülmek ZORUNDA.** Supabase şeması/RLS yalnızca
-`specs/FAZ5_SUPABASE_MIMARI.md` içinde tasarım olarak duruyor — repoda versiyonlanmış SQL yok.
+**KALAN İZLER (bilinçli):** `SavedRoute.isPublic` ve `SavedRoute.supabaseId` alanları SwiftData
+şemasında DURUYOR — silmek migration gerektirirdi, iki kullanılmayan alan zararsız.
+Supabase şeması/RLS tasarımı `specs/FAZ5_SUPABASE_MIMARI.md`'de duruyor; repoda versiyonlanmış
+SQL yok. V1.1'de sosyal yeniden yazılırsa yukarıdaki dördü ÖNCE çözülmeli.
 
 ## Bilinen Kırılganlıklar
 - SavedRoute snapshot ↔ Place eşleşmesi isimle → mekan yeniden adlandırılırsa kopar. Kısmi çözüm `SavedPlaceSnapshot.placeId` eklendi; tüm akışlarda kullanıldığı doğrulanmadı.
@@ -245,9 +249,9 @@ TabView (HomeView)
       kilit ekranı Live Activity, StoreKit sandbox satın alma + restore.
 - [ ] **TestFlight beta**: build App Store Connect'e yüklendi; onaylanınca External Testing
       Public Link ile dış test.
-- [ ] **V1.1 — sosyal katmanın yeniden açılması** (bkz. "Sosyal Katman — V1'de KAPALI"):
+- [ ] **V1.1 — sosyal katmanın SIFIRDAN yazılması** (bkz. "Sosyal Katman — V1'de KALDIRILDI"):
       hesap silme, public payload sanitizasyonu, engellemenin sunucuda uygulanması,
-      anonim→Apple veri taşıma. Dördü bitmeden UI'dan tekrar açma.
+      anonim→Apple veri taşıma. Dördü tasarıma girmeden koda başlama.
 - [ ] **Stitch + Claude Code design bağlantısı** (EN SON — kullanıcı kararı).
 
 ### Tamamlananlar (Apple Developer hesabı sonrası — detay `docs/archive/RELEASE_PLAN.md`'de)

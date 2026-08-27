@@ -26,7 +26,6 @@ Foursquare City Guide Aralık 2024'te kapandı; Türkiye o platformun global tra
 - HealthKit (adım/mesafe), AVFoundation (QR tarama), CoreImage (QR üretme)
 - RevenueCat (abonelik), GoogleMobileAds + UMP consent + App Tracking Transparency
 - Firebase (Crashlytics + Analytics)
-- Supabase (sosyal katman — V1'de kapalı, bkz. Proje Durumu)
 - MVVM + protokol tabanlı servis katmanı mimarisi
 
 ## Gereksinimler
@@ -69,11 +68,11 @@ Mimarinin ve her dosyanın detaylı açıklaması için `CLAUDE.md`'ye bakın.
 Uygulama TestFlight beta aşamasında, App Store'a ilk sürüm (V1) hazırlığı sürüyor.
 Güncel yol haritası: `GROWTH_PLAN.md`.
 
-**Sosyal katman (topluluk rotaları, rota yayınlama, Apple ile giriş) V1'de kapalıdır.**
-Kod yerinde duruyor ama arayüzden erişilemez. V1.1'de açılmadan önce şunlar tamamlanmalı:
-uygulama içi hesap silme (App Store Guideline 5.1.1(v)), yayınlanan rota içeriğinin
-kullanıcı notlarından arındırılması, engellemenin sunucu tarafında gerçekten uygulanması
-ve anonim → Apple hesap geçişinde veri taşıma.
+**Sosyal katman (topluluk rotaları, rota yayınlama, Apple ile giriş) koddan kaldırıldı.**
+Arayüzden hiçbir girişi olmadığı için ölü koddu; Supabase bağımlılığıyla birlikte silindi
+(git geçmişinde duruyor). V1.1'de sıfırdan yazılacak — önce şunlar çözülmeli: uygulama içi
+hesap silme (App Store Guideline 5.1.1(v)), yayınlanan rota içeriğinin kullanıcı notlarından
+arındırılması, engellemenin sunucu tarafında uygulanması ve anonim → Apple veri taşıma.
 
 ## Lisans
 

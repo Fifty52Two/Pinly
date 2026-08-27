@@ -3,7 +3,7 @@ import UIKit
 
 // MARK: - MemoryCardComposing
 //
-// Rota tamamlama "anı kartı" üretimi — `RouteShareCardView` deseninin devamı:
+// Rota tamamlama "anı kartı" üretimi:
 // ImageRenderer ile SwiftUI view'ı görsele çevirir. İki format: dikey "story"
 // (1080×1920, Instagram/TikTok hikaye) ve "post" (1080×1350, klasik gönderi).
 // Harita izi zaten render edilmiş `mapSnapshot` olarak parametre alınır (bkz.
